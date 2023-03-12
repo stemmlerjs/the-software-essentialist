@@ -1,0 +1,4 @@
+
+describe('palindrome checker', () => {
+
+})
