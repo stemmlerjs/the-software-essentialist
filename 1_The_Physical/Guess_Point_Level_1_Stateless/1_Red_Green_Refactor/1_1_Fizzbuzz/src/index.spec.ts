@@ -10,7 +10,11 @@ describe("fizzbuzz", () => {
     expect(() => fizzbuzz(n)).not.toThrow(RangeError)
   })
 
-  test.each([3,6,9,15])("should return Fizz if number is multiple of 3", (n) => {
+  test.each([3, 6, 9, 21])("should return Fizz if number is multiple of 3", (n) => {
     expect(fizzbuzz(n)).toEqual("Fizz")
+  })
+
+  test.each([5, 10, 20, 50])("should return Buzz if number is multiple of 5", (n) => {
+    expect(fizzbuzz(n)).toEqual("Buzz")
   })
 });
