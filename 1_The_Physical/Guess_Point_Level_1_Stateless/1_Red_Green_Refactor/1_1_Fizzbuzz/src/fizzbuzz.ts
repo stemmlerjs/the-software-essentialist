@@ -1,8 +1,8 @@
-const MAX_NUMBER_INPUT = 100
 const MIN_NUMBER_INPUT = 1
+const MAX_NUMBER_INPUT = 100
 
 function isInRange(num: number): boolean {
-  return MIN_NUMBER_INPUT >= num && num <= MAX_NUMBER_INPUT
+  return num >= MIN_NUMBER_INPUT && num <= MAX_NUMBER_INPUT
 }
 
 /**
