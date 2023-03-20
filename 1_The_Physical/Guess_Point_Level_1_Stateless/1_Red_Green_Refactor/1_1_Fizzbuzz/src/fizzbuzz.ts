@@ -15,6 +15,14 @@ export function fizzbuzz(input: number) {
   if (!isInRange(input)) {
     throw new RangeError(`Number ${input} is outside of range`)
   }
+
+  let output = ''
+
+  if (input % 3 === 0) {
+    output = 'Fizz'
+  }
+
+  return output
 }
 
 export default fizzbuzz
