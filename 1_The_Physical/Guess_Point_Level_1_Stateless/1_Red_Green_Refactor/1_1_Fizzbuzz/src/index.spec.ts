@@ -17,4 +17,8 @@ describe("fizzbuzz", () => {
   test.each([5, 10, 20, 50])("should return Buzz if number is multiple of 5", (n) => {
     expect(fizzbuzz(n)).toEqual("Buzz")
   })
+
+  test.each([15, 30, 45, 60])("should return FizzBuzz if number is multiple of 3 and 5", (n) => {
+    expect(fizzbuzz(n)).toEqual("FizzBuzz")
+  })
 });
