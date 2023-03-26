@@ -21,6 +21,11 @@ describe('fizzbuzz', () => {
     expect(() => fizzbuzz(101)).toThrowError('Input is out of 1 to 100 range');
   });
   // TODO: returns "Fizz" for multiples of 3
+  it('returns "Fizz" for multiples of 3', () => {
+    expect(fizzbuzz(3)).toBe('Fizz');
+    expect(fizzbuzz(54)).toBe('Fizz');
+    expect(fizzbuzz(81)).toBe('Fizz');
+  });
   // TODO: returns "Buzz" for multiples of 5
   // TODO: returns "FizzBuzz" for multiples of 3 and 5
 });
