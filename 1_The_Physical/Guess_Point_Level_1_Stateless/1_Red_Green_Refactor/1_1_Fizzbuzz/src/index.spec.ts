@@ -15,7 +15,11 @@ describe('fizzbuzz', () => {
     expect(() => fizzbuzz()).toThrowError('Invalid input');
     expect(() => fizzbuzz('10')).toThrowError('Invalid input');
   });
-  // TODO: requires numbers to between 1 and 100 only, throws "Input is out of 1 to 100 range"
+  // TODO: throws "Input is out of 1 to 100 range" error when argument is out of acceptable range
+  it('throws error when argument is out of acceptable range', () => {
+    expect(() => fizzbuzz(0)).toThrowError('Input is out of 1 to 100 range');
+    expect(() => fizzbuzz(101)).toThrowError('Input is out of 1 to 100 range');
+  });
   // TODO: returns "Fizz" for multiples of 3
   // TODO: returns "Buzz" for multiples of 5
   // TODO: returns "FizzBuzz" for multiples of 3 and 5
