@@ -4,6 +4,13 @@ export const fizzbuzz = (number: number): string => {
 
   const isMultipleOf3 = number % 3 === 0;
   const isMultipleOf5 = number % 5 === 0;
+  const isMultipleOfBoth = isMultipleOf3 && isMultipleOf5;
 
-  return isMultipleOf3 ? 'Fizz' : isMultipleOf5 ? 'Buzz' : number.toString();
+  return isMultipleOfBoth
+    ? 'FizzBuzz'
+    : isMultipleOf3
+    ? 'Fizz'
+    : isMultipleOf5
+    ? 'Buzz'
+    : number.toString();
 };
