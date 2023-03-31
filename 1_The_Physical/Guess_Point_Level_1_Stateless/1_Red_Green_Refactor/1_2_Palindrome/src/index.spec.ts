@@ -13,6 +13,12 @@ describe('palindrome checker', () => {
     expect(() => palindromeChecker('   ')).toThrowError('Input should contain at least 3 letters');
   });
   // TODO: returns true if the input is a palindrome and false if not
+  it('should return true if the input string is a palindrome and false if not', () => {
+    expect(palindromeChecker('dad')).toBe(true);
+    expect(palindromeChecker('tom')).toBe(false);
+    expect(palindromeChecker('racecar')).toBe(true);
+    expect(palindromeChecker('tact')).toBe(false);
+  });
   // TODO: returns true if the input is a palindrome with different letter cases
   // TODO: returns true if the input is a palindrome with spaces
 });
