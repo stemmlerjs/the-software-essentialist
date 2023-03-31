@@ -20,5 +20,10 @@ describe('palindrome checker', () => {
     expect(palindromeChecker('tact')).toBe(false);
   });
   // TODO: returns true if the input is a palindrome with different letter cases
+  it('should identify a palindrome even if the casing is off', () => {
+    expect(palindromeChecker('Mom')).toBe(true);
+    expect(palindromeChecker('Dad')).toBe(true);
+    expect(palindromeChecker('RaceCar')).toBe(true);
+  });
   // TODO: returns true if the input is a palindrome with spaces
 });
