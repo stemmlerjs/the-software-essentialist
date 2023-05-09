@@ -48,6 +48,12 @@ export class Student {
     return Result.success(new Student(props.firstName, props.lastName));
   }
 
+  public updateFirstName(
+    firstName: string
+  ): Result<Student, InvalidStudentProps> {
+    return Student.create({ firstName, lastName: this.lastName });
+  }
+
   get email() {
     return this.studentEmail;
   }

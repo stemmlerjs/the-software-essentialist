@@ -211,4 +211,23 @@ describe("Student", () => {
       );
     });
   });
+
+  describe("when student's first name is updated", () => {
+    it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "Doe";
+      const newFirstName = "Asterix";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+      const updatedStudent = student.value?.updateFirstName(newFirstName);
+
+      // Assert
+      expect(updatedStudent).toBeDefined();
+      expect(updatedStudent?.value?.firstName).toBe(newFirstName);
+      expect(updatedStudent?.value?.lastName).toBe(lastName);
+      expect(updatedStudent?.value?.email).toBe("doeas@essentialist.dev");
+    });
+  });
 });
