@@ -28,7 +28,7 @@ describe("Result", () => {
   });
 
   describe("when checking if a Result is successful", () => {
-    describe("when the Result is successful", () => {
+    describe("when the Result is created from 'success' method", () => {
       it("returns true", () => {
         // Arrange
         const result = Result.success("This is a value");
@@ -41,7 +41,7 @@ describe("Result", () => {
       });
     });
 
-    describe("when the Result is failed", () => {
+    describe("when the Result is created from 'failure' method", () => {
       it("returns false", () => {
         // Arrange
         const result = Result.failure("This is an error");
