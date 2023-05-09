@@ -1,7 +1,7 @@
 export class Student {
   private studentEmail: string;
 
-  constructor(
+  private constructor(
     public readonly firstname: string,
     public readonly lastname: string
   ) {
@@ -12,6 +12,10 @@ export class Student {
     const firstnamePrefix = firstname.trim().slice(0, 2).toLowerCase();
 
     this.studentEmail = `${lastnamePrefix}${firstnamePrefix}@essentialist.dev`;
+  }
+
+  public static create(firstname: string, lastname: string) {
+    return new Student(firstname, lastname);
   }
 
   get email() {
