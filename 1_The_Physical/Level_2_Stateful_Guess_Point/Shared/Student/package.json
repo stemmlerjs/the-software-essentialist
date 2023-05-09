@@ -17,7 +17,8 @@
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "test": "jest",
-    "test:dev": "jest --watchAll"
+    "test:dev": "jest --watchAll",
+    "cw": "commitizard -s red-green-refactor"
   },
   "husky": {
     "hooks": {
@@ -32,6 +33,7 @@
     "@types/node": "^18.6.1",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
+    "commitizard": "^0.0.1",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.6.0",
