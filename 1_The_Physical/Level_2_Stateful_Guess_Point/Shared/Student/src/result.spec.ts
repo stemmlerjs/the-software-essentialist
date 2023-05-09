@@ -27,59 +27,22 @@ describe("Result", () => {
     });
   });
 
-  describe("when checking if a Result is successful", () => {
-    describe("when the Result is created from 'success' method", () => {
-      it("returns true", () => {
-        // Arrange
-        const result = Result.success("This is a value");
+  describe.each([
+    ["success", "This is a value", true, false],
+    ["failure", "This is an error", false, true],
+  ])(
+    "when checking if a Result is %s",
+    (type, message, expectedSuccess, expectedFailure) => {
+      const result =
+        type === "success" ? Result.success(message) : Result.failure(message);
 
-        // Act
-        const isSuccess = result.isSuccess();
-
-        // Assert
-        expect(isSuccess).toBe(true);
+      it(`returns ${expectedSuccess} for isSuccess method`, () => {
+        expect(result.isSuccess()).toBe(expectedSuccess);
       });
-    });
 
-    describe("when the Result is created from 'failure' method", () => {
-      it("returns false", () => {
-        // Arrange
-        const result = Result.failure("This is an error");
-
-        // Act
-        const isSuccess = result.isSuccess();
-
-        // Assert
-        expect(isSuccess).toBe(false);
+      it(`returns ${expectedFailure} for isFailure method`, () => {
+        expect(result.isFailure()).toBe(expectedFailure);
       });
-    });
-  });
-
-  describe("when checking if a Result is failed", () => {
-    describe("when the Result is created from 'failure' method", () => {
-      it("returns true", () => {
-        // Arrange
-        const result = Result.failure("This is an error");
-
-        // Act
-        const isFailure = result.isFailure();
-
-        // Assert
-        expect(isFailure).toBe(true);
-      });
-    });
-
-    describe("when the Result is created from 'success' method", () => {
-      it("returns false", () => {
-        // Arrange
-        const result = Result.success("This is a value");
-
-        // Act
-        const isFailure = result.isFailure();
-
-        // Assert
-        expect(isFailure).toBe(false);
-      });
-    });
-  });
+    }
+  );
 });
