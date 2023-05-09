@@ -61,6 +61,20 @@ describe("Student", () => {
     });
   });
 
+  describe("when student's first name contains non-alphabetic characters", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "John1";
+      const lastName = "Doe";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError("Firstname must contain only letters");
+    });
+  });
+
   describe("when student's last name is not provided", () => {
     it("throws an error", () => {
       // Arrange
@@ -104,6 +118,20 @@ describe("Student", () => {
       expect(student).toThrowError(
         "Lastname must be at most 15 characters long"
       );
+    });
+  });
+
+  describe("when student's last name contains non-alphabetic characters", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "Doe1";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError("Lastname must contain only letters");
     });
   });
 });

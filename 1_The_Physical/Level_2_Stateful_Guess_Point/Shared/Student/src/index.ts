@@ -26,5 +26,9 @@ export class Student {
     if (name.length > max) {
       throw new Error(`${nameType} must be at most ${max} characters long`);
     }
+
+    if (!/^[a-zA-Z]+$/.test(name)) {
+      throw new Error(`${nameType} must contain only letters`);
+    }
   }
 }
