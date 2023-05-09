@@ -18,4 +18,8 @@ export class Result<T, E> {
   public isSuccess(): boolean {
     return this.value !== undefined;
   }
+
+  public isFailure(): boolean {
+    return this.error !== undefined;
+  }
 }
