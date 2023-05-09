@@ -68,5 +68,18 @@ describe("Result", () => {
         expect(isFailure).toBe(true);
       });
     });
+
+    describe("when the Result is created from 'success' method", () => {
+      it("returns false", () => {
+        // Arrange
+        const result = Result.success("This is a value");
+
+        // Act
+        const isFailure = result.isFailure();
+
+        // Assert
+        expect(isFailure).toBe(false);
+      });
+    });
   });
 });
