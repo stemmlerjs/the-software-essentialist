@@ -3,10 +3,17 @@ export interface StudentProps {
   lastName: string;
 }
 
+export interface InvalidNameProps {
+  min: string;
+  max: string;
+  letters: string;
+  required: string;
+}
+
 export interface InvalidStudentProps {
-  [key: string]: string | undefined;
-  firstName?: string;
-  lastName?: string;
+  [key: string]: InvalidNameProps;
+  firstName: InvalidNameProps;
+  lastName: InvalidNameProps;
 }
 
 export class Student {
@@ -16,11 +23,6 @@ export class Student {
     public readonly firstname: string,
     public readonly lastname: string
   ) {
-    const errors: InvalidStudentProps = {};
-
-    this.validateName(firstname, "Firstname", 2, 10, errors);
-    this.validateName(lastname, "Lastname", 2, 10, errors);
-
     const lastnamePrefix = lastname.trim().slice(0, 5).toLowerCase();
     const firstnamePrefix = firstname.trim().slice(0, 2).toLowerCase();
 
@@ -28,6 +30,20 @@ export class Student {
   }
 
   public static create(props: StudentProps): Student | InvalidStudentProps {
+    let errors: InvalidStudentProps = {
+      firstName: { min: "", max: "", letters: "", required: "" },
+      lastName: { min: "", max: "", letters: "", required: "" },
+    };
+
+    errors = this.validateName(props.firstName, "firstName", 2, 10, errors);
+    errors = this.validateName(props.lastName, "lastName", 2, 15, errors);
+
+    if (
+      Object.values(errors).some((props) => Object.values(props).some(Boolean))
+    ) {
+      return errors;
+    }
+
     return new Student(props.firstName, props.lastName);
   }
 
@@ -35,33 +51,34 @@ export class Student {
     return this.studentEmail;
   }
 
-  private validateName(
+  private static validateName(
     name: string,
-    nameType: string,
+    propName: "firstName" | "lastName",
     min: number,
     max: number,
     errors: InvalidStudentProps
   ): InvalidStudentProps {
     if (!name) {
-      errors[nameType.toLowerCase()] = `${nameType} is required`;
+      errors[propName].required = `${propName} is required`;
+      return errors;
     }
 
     name = name.trim();
 
     if (name.length < min) {
       errors[
-        nameType.toLowerCase()
-      ] = `${nameType} must be at least ${min} characters long`;
+        propName
+      ].min = `${propName} must be at least ${min} characters long`;
     }
 
     if (name.length > max) {
       errors[
-        nameType.toLowerCase()
-      ] = `${nameType} must be at most ${max} characters long`;
+        propName
+      ].max = `${propName} must be at most ${max} characters long`;
     }
 
     if (!/^[a-zA-Z]+$/.test(name)) {
-      errors[nameType.toLowerCase()] = `${nameType} must contain only letters`;
+      errors[propName].letters = `${propName} must contain only letters`;
     }
 
     return errors;
