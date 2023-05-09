@@ -54,4 +54,19 @@ describe("Result", () => {
       });
     });
   });
+
+  describe("when checking if a Result is failed", () => {
+    describe("when the Result is created from 'failure' method", () => {
+      it("returns true", () => {
+        // Arrange
+        const result = Result.failure("This is an error");
+
+        // Act
+        const isFailure = result.isFailure();
+
+        // Assert
+        expect(isFailure).toBe(true);
+      });
+    });
+  });
 });
