@@ -1,10 +1,21 @@
 export class Student {
+  private studentEmail: string;
+
   constructor(
     public readonly firstname: string,
     public readonly lastname: string
   ) {
     this.validateName(firstname, "Firstname", 2, 10);
     this.validateName(lastname, "Lastname", 2, 15);
+
+    const lastnamePrefix = lastname.trim().slice(0, 5).toLowerCase();
+    const firstnamePrefix = firstname.trim().slice(0, 2).toLowerCase();
+
+    this.studentEmail = `${lastnamePrefix}${firstnamePrefix}@essentialist.dev`;
+  }
+
+  get email() {
+    return this.studentEmail;
   }
 
   private validateName(

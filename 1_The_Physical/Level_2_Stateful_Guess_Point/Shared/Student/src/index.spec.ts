@@ -15,6 +15,19 @@ describe("Student", () => {
     expect(student.lastname).toBe(lastName);
   });
 
+  it("knows student's email is 'fekkalo@essentialist.dev'", () => {
+    // Arrange
+    const firstName = "Loik";
+    const lastName = "Fekkai";
+
+    // Act
+    const student = new Student(firstName, lastName);
+
+    // Assert
+    expect(student).toBeDefined();
+    expect(student.email).toBe("fekkalo@essentialist.dev");
+  });
+
   describe("when student's first name is not provided", () => {
     it("throws an error", () => {
       // Arrange
