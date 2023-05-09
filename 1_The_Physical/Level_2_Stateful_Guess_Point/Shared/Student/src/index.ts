@@ -6,5 +6,9 @@ export class Student {
     if (!firstname) {
       throw new Error("Firstname is required");
     }
+
+    if (!lastname) {
+      throw new Error("Lastname is required");
+    }
   }
 }

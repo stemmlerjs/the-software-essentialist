@@ -28,4 +28,18 @@ describe("Student", () => {
       expect(student).toThrowError("Firstname is required");
     });
   });
+
+  describe("when student's last name is not provided", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError("Lastname is required");
+    });
+  });
 });
