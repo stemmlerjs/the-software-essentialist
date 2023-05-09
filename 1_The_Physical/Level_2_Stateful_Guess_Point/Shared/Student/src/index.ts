@@ -1,3 +1,8 @@
+export interface StudentProps {
+  firstName: string;
+  lastName: string;
+}
+
 export class Student {
   private studentEmail: string;
 
@@ -14,8 +19,8 @@ export class Student {
     this.studentEmail = `${lastnamePrefix}${firstnamePrefix}@essentialist.dev`;
   }
 
-  public static create(firstname: string, lastname: string) {
-    return new Student(firstname, lastname);
+  public static create(props: StudentProps) {
+    return new Student(props.firstName, props.lastName);
   }
 
   get email() {

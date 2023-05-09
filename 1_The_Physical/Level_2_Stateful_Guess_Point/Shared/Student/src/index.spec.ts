@@ -7,7 +7,7 @@ describe("Student", () => {
     const lastName = "Doe";
 
     // Act
-    const student = Student.create(firstName, lastName);
+    const student = Student.create({ firstName, lastName });
 
     // Assert
     expect(student).toBeDefined();
@@ -21,7 +21,7 @@ describe("Student", () => {
     const lastName = "Fekkai";
 
     // Act
-    const student = Student.create(firstName, lastName);
+    const student = Student.create({ firstName, lastName });
 
     // Assert
     expect(student).toBeDefined();
@@ -35,7 +35,7 @@ describe("Student", () => {
       const lastName = "Doe";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError("Firstname is required");
@@ -49,7 +49,7 @@ describe("Student", () => {
       const lastName = "Doe";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError(
@@ -65,7 +65,7 @@ describe("Student", () => {
       const lastName = "Doe";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError(
@@ -81,7 +81,7 @@ describe("Student", () => {
       const lastName = "Doe";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError("Firstname must contain only letters");
@@ -95,7 +95,7 @@ describe("Student", () => {
       const lastName = "";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError("Lastname is required");
@@ -109,7 +109,7 @@ describe("Student", () => {
       const lastName = "D";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError(
@@ -125,7 +125,7 @@ describe("Student", () => {
       const lastName = "DoeDoeDoeDoeDoeDoe";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError(
@@ -141,7 +141,7 @@ describe("Student", () => {
       const lastName = "Doe1";
 
       // Act
-      const student = () => Student.create(firstName, lastName);
+      const student = () => Student.create({ firstName, lastName });
 
       // Assert
       expect(student).toThrowError("Lastname must contain only letters");
