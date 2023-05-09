@@ -40,5 +40,18 @@ describe("Result", () => {
         expect(isSuccess).toBe(true);
       });
     });
+
+    describe("when the Result is failed", () => {
+      it("returns false", () => {
+        // Arrange
+        const result = Result.failure("This is an error");
+
+        // Act
+        const isSuccess = result.isSuccess();
+
+        // Assert
+        expect(isSuccess).toBe(false);
+      });
+    });
   });
 });
