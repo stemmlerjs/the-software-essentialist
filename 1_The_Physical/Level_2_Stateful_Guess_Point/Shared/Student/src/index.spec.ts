@@ -11,8 +11,8 @@ describe("Student", () => {
 
     // Assert
     expect(student).toBeDefined();
-    expect(student.firstname).toBe(firstName);
-    expect(student.lastname).toBe(lastName);
+    expect(student.value?.firstname).toBe(firstName);
+    expect(student.value?.lastname).toBe(lastName);
   });
 
   it("knows student's email is 'fekkalo@essentialist.dev'", () => {
@@ -25,7 +25,7 @@ describe("Student", () => {
 
     // Assert
     expect(student).toBeDefined();
-    expect(student.email).toBe("fekkalo@essentialist.dev");
+    expect(student.value?.email).toBe("fekkalo@essentialist.dev");
   });
 
   describe("when student's first name is not provided", () => {
@@ -38,10 +38,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           firstName: expect.objectContaining({
             required: "firstName is required",
@@ -61,10 +61,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           firstName: expect.objectContaining({
             min: "firstName must be at least 2 characters long",
@@ -84,10 +84,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           firstName: expect.objectContaining({
             max: "firstName must be at most 10 characters long",
@@ -107,10 +107,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           firstName: expect.objectContaining({
             letters: "firstName must contain only letters",
@@ -130,10 +130,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           lastName: expect.objectContaining({
             required: "lastName is required",
@@ -153,10 +153,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           lastName: expect.objectContaining({
             min: "lastName must be at least 2 characters long",
@@ -176,10 +176,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           lastName: expect.objectContaining({
             max: "lastName must be at most 15 characters long",
@@ -199,10 +199,10 @@ describe("Student", () => {
       const result = Student.create({
         firstName,
         lastName,
-      }) as InvalidStudentProps;
+      });
 
       // Assert
-      expect(result).toEqual(
+      expect(result.error).toEqual(
         expect.objectContaining({
           lastName: expect.objectContaining({
             letters: "lastName must contain only letters",

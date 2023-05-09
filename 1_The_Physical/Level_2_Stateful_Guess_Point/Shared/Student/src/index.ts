@@ -1,3 +1,5 @@
+import { Result } from "./Result";
+
 export interface StudentProps {
   firstName: string;
   lastName: string;
@@ -29,7 +31,9 @@ export class Student {
     this.studentEmail = `${lastnamePrefix}${firstnamePrefix}@essentialist.dev`;
   }
 
-  public static create(props: StudentProps): Student | InvalidStudentProps {
+  public static create(
+    props: StudentProps
+  ): Result<Student, InvalidStudentProps> {
     let errors: InvalidStudentProps = {
       firstName: { min: "", max: "", letters: "", required: "" },
       lastName: { min: "", max: "", letters: "", required: "" },
@@ -41,10 +45,10 @@ export class Student {
     if (
       Object.values(errors).some((props) => Object.values(props).some(Boolean))
     ) {
-      return errors;
+      return Result.failure(errors);
     }
 
-    return new Student(props.firstName, props.lastName);
+    return Result.success(new Student(props.firstName, props.lastName));
   }
 
   get email() {
