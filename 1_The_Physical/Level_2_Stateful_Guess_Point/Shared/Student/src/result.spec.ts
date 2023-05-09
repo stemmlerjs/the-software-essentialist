@@ -13,4 +13,17 @@ describe("Result", () => {
       });
     }
   );
+
+  describe.each([["This is an error"]])(
+    "when creating a failed Result with error %s",
+    (error) => {
+      it("returns a Result object with the error", () => {
+        // Act
+        const result = Result.failure(error);
+
+        // Assert
+        expect(result).toEqual(expect.objectContaining({ error }));
+      });
+    }
+  );
 });
