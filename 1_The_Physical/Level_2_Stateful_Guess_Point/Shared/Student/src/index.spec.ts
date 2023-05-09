@@ -1,4 +1,4 @@
-import { Student, InvalidStudentProps } from "./index";
+import { Student } from "./index";
 
 describe("Student", () => {
   it("knows student's first name is 'John' and last name is 'Doe'", () => {
@@ -11,8 +11,8 @@ describe("Student", () => {
 
     // Assert
     expect(student).toBeDefined();
-    expect(student.value?.firstname).toBe(firstName);
-    expect(student.value?.lastname).toBe(lastName);
+    expect(student.value?.firstName).toBe(firstName);
+    expect(student.value?.lastName).toBe(lastName);
   });
 
   it("knows student's email is 'fekkalo@essentialist.dev'", () => {
