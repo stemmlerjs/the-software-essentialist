@@ -3,39 +3,28 @@ export class Student {
     public readonly firstname: string,
     public readonly lastname: string
   ) {
-    this.validateFirstname(firstname);
-    this.validateLastname(lastname);
+    this.validateName(firstname, "Firstname", 2, 10);
+    this.validateName(lastname, "Lastname", 2, 15);
   }
 
-  private validateFirstname(firstname: string) {
-    if (!firstname) {
-      throw new Error("Firstname is required");
+  private validateName(
+    name: string,
+    nameType: string,
+    min: number,
+    max: number
+  ) {
+    if (!name) {
+      throw new Error(`${nameType} is required`);
     }
 
-    firstname = firstname.trim();
+    name = name.trim();
 
-    if (firstname.length < 2) {
-      throw new Error("Firstname must be at least 2 characters long");
+    if (name.length < min) {
+      throw new Error(`${nameType} must be at least ${min} characters long`);
     }
 
-    if (firstname.length > 10) {
-      throw new Error("Firstname must be at most 10 characters long");
-    }
-  }
-
-  private validateLastname(lastname: string) {
-    if (!lastname) {
-      throw new Error("Lastname is required");
-    }
-
-    lastname = lastname.trim();
-
-    if (lastname.length < 2) {
-      throw new Error("Lastname must be at least 2 characters long");
-    }
-
-    if (lastname.length > 15) {
-      throw new Error("Lastname must be at most 15 characters long");
+    if (name.length > max) {
+      throw new Error(`${nameType} must be at most ${max} characters long`);
     }
   }
 }
