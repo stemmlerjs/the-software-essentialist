@@ -54,6 +54,12 @@ export class Student {
     return Student.create({ firstName, lastName: this.lastName });
   }
 
+  public updateLastName(
+    lastName: string
+  ): Result<Student, InvalidStudentProps> {
+    return Student.create({ firstName: this.firstName, lastName });
+  }
+
   get email() {
     return this.studentEmail;
   }
