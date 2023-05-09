@@ -8,6 +8,12 @@ export class Student {
     if (!lastname) {
       throw new Error("Lastname is required");
     }
+
+    lastname = lastname.trim();
+
+    if (lastname.length < 2) {
+      throw new Error("Lastname must be at least 2 characters long");
+    }
   }
 
   private validateFirstname(firstname: string) {

@@ -74,4 +74,20 @@ describe("Student", () => {
       expect(student).toThrowError("Lastname is required");
     });
   });
+
+  describe("when student's last name is less than 2 characters long", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "D";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError(
+        "Lastname must be at least 2 characters long"
+      );
+    });
+  });
 });
