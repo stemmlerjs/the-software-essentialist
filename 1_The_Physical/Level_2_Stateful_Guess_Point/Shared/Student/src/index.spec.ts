@@ -14,4 +14,18 @@ describe("Student", () => {
     expect(student.firstname).toBe(firstName);
     expect(student.lastname).toBe(lastName);
   });
+
+  describe("when student's first name is not provided", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "";
+      const lastName = "Doe";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError("Firstname is required");
+    });
+  });
 });
