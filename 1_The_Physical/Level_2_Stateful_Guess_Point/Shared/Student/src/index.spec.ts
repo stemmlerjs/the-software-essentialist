@@ -90,4 +90,20 @@ describe("Student", () => {
       );
     });
   });
+
+  describe("when student's last name is more than 15 characters long", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "DoeDoeDoeDoeDoeDoe";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError(
+        "Lastname must be at most 15 characters long"
+      );
+    });
+  });
 });

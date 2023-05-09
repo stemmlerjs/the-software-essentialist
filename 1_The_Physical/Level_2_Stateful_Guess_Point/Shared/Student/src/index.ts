@@ -14,6 +14,10 @@ export class Student {
     if (lastname.length < 2) {
       throw new Error("Lastname must be at least 2 characters long");
     }
+
+    if (lastname.length > 15) {
+      throw new Error("Lastname must be at most 15 characters long");
+    }
   }
 
   private validateFirstname(firstname: string) {
