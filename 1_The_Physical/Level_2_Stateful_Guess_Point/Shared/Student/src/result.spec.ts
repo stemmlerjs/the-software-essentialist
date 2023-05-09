@@ -26,4 +26,19 @@ describe("Result", () => {
       expect(result).toEqual(expect.objectContaining({ error }));
     });
   });
+
+  describe("when checking if a Result is successful", () => {
+    describe("when the Result is successful", () => {
+      it("returns true", () => {
+        // Arrange
+        const result = Result.success("This is a value");
+
+        // Act
+        const isSuccess = result.isSuccess();
+
+        // Assert
+        expect(isSuccess).toBe(true);
+      });
+    });
+  });
 });
