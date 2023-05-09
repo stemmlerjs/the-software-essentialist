@@ -14,4 +14,8 @@ export class Result<T, E> {
   public static failure<T, E>(error: E): Result<T, E> {
     return new Result<T, E>(undefined, error);
   }
+
+  public isSuccess(): boolean {
+    return this.value !== undefined;
+  }
 }
