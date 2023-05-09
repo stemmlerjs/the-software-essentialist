@@ -13,6 +13,10 @@ export class Student {
       throw new Error("Firstname must be at least 2 characters long");
     }
 
+    if (firstname.length > 10) {
+      throw new Error("Firstname must be at most 10 characters long");
+    }
+
     if (!lastname) {
       throw new Error("Lastname is required");
     }

@@ -45,6 +45,22 @@ describe("Student", () => {
     });
   });
 
+  describe("when student's first name is more than 10 characters long", () => {
+    it("throws an error", () => {
+      // Arrange
+      const firstName = "JohnJohnJohn";
+      const lastName = "Doe";
+
+      // Act
+      const student = () => new Student(firstName, lastName);
+
+      // Assert
+      expect(student).toThrowError(
+        "Firstname must be at most 10 characters long"
+      );
+    });
+  });
+
   describe("when student's last name is not provided", () => {
     it("throws an error", () => {
       // Arrange
