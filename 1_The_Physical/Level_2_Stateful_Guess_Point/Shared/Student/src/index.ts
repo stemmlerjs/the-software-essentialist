@@ -1,8 +1,14 @@
+import { FirstName, LastName } from "./domain/student/value-objects";
 import { Result } from "./shared/result";
 
-export interface StudentProps {
+export interface StudentInputProps {
   firstName: string;
   lastName: string;
+}
+
+export interface StudentProps {
+  firstName: FirstName;
+  lastName: LastName;
 }
 
 export interface InvalidNameProps {
@@ -20,77 +26,77 @@ export interface InvalidStudentProps {
 export class Student {
   private studentEmail: string;
 
-  private constructor(
-    public readonly firstName: string,
-    public readonly lastName: string
-  ) {
-    const lastNamePrefix = lastName.trim().slice(0, 5).toLowerCase();
-    const firstNamePrefix = firstName.trim().slice(0, 2).toLowerCase();
+  private constructor(private readonly props: StudentProps) {
+    const lastNamePrefix = this.props.lastName.value
+      .trim()
+      .slice(0, 5)
+      .toLowerCase();
+    const firstNamePrefix = this.props.firstName.value
+      .trim()
+      .slice(0, 2)
+      .toLowerCase();
 
     this.studentEmail = `${lastNamePrefix}${firstNamePrefix}@essentialist.dev`;
   }
 
-  static create(props: StudentProps): Result<Student, InvalidStudentProps> {
-    const errors = {
-      firstName: {},
-      lastName: {},
-    };
+  static create(
+    props: StudentInputProps
+  ): Result<Student, InvalidStudentProps> {
+    const firstNameResult = FirstName.create(props.firstName);
+    const lastNameResult = LastName.create(props.lastName);
 
-    this.validateName(props.firstName, "firstName", 2, 10, errors);
-    this.validateName(props.lastName, "lastName", 2, 15, errors);
-
-    if (
-      Object.values(errors).some((props) => Object.values(props).some(Boolean))
-    ) {
-      return Result.failure(errors);
+    if (firstNameResult.isFailure() || lastNameResult.isFailure()) {
+      return Result.failure({
+        firstName: firstNameResult.error,
+        lastName: lastNameResult.error,
+      } as InvalidStudentProps);
     }
 
-    return Result.success(new Student(props.firstName, props.lastName));
+    if (firstNameResult.isSuccess() && lastNameResult.isSuccess()) {
+      if (
+        firstNameResult.value !== undefined &&
+        lastNameResult.value !== undefined
+      ) {
+        return Result.success(
+          new Student({
+            firstName: firstNameResult.value,
+            lastName: lastNameResult.value,
+          })
+        );
+      }
+    }
+
+    return Result.failure({
+      firstName: {
+        required: "Firstname is required",
+      },
+      lastName: {
+        required: "Lastname is required",
+      },
+    } as InvalidStudentProps);
   }
 
   public updateFirstName(
     firstName: string
   ): Result<Student, InvalidStudentProps> {
-    return Student.create({ firstName, lastName: this.lastName });
+    return Student.create({ firstName, lastName: this.props.lastName.value });
   }
 
   public updateLastName(
     lastName: string
   ): Result<Student, InvalidStudentProps> {
-    return Student.create({ firstName: this.firstName, lastName });
+    return Student.create({ firstName: this.props.firstName.value, lastName });
   }
 
-  get email() {
+  public get email() {
     return this.studentEmail;
   }
 
-  private static validateName(
-    name: string,
-    propName: keyof InvalidStudentProps,
-    min: number,
-    max: number,
-    errors: InvalidStudentProps
-  ) {
-    if (!name) {
-      errors[propName].required = `${propName} is required`;
-    } else {
-      name = name.trim();
+  public get firstName() {
+    return this.props.firstName.value;
+  }
 
-      if (name.length < min) {
-        errors[
-          propName
-        ].min = `${propName} must be at least ${min} characters long`;
-      }
-
-      if (name.length > max) {
-        errors[
-          propName
-        ].max = `${propName} must be at most ${max} characters long`;
-      }
-
-      if (!/^[a-zA-Z]+$/.test(name)) {
-        errors[propName].letters = `${propName} must contain only letters`;
-      }
-    }
+  public get lastName() {
+    return this.props.lastName.value;
   }
 }
