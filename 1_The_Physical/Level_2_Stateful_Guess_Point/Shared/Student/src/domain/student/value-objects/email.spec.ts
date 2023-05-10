@@ -37,4 +37,16 @@ describe("Email", () => {
       });
     });
   });
+
+  describe("when generating a new email", () => {
+    it("returns a new email instance with 'essentialist.dev' as domain", () => {
+      const local = "fekkailoik";
+
+      const result = Email.generate({
+        local,
+      });
+
+      expect(result.value?.value).toBe(`${local}@${Email.domain}`);
+    });
+  });
 });

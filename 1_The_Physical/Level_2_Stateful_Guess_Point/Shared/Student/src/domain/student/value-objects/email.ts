@@ -5,6 +5,10 @@ interface EmailProps {
   value: string;
 }
 
+interface EmailGeneratorProps {
+  local: string;
+}
+
 export interface EmailValidationError {
   required?: string;
   domain?: string;
@@ -27,6 +31,12 @@ export class Email extends ValueObject<EmailProps> {
     }
 
     return Result.success(new Email({ value }));
+  }
+
+  public static generate({
+    local,
+  }: EmailGeneratorProps): Result<Email, EmailValidationError> {
+    return Email.create(`${local}@${Email.domain}`);
   }
 
   public static validate(value: string): EmailValidationError {
