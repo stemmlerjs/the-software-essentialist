@@ -30,5 +30,18 @@ describe("ValueObject", () => {
 
       expect(name1.equals(name2)).toBe(true);
     });
+
+    it("returns false if they are not equal", () => {
+      class Name extends ValueObject<{ firstName: string; lastName: string }> {
+        constructor(props: { firstName: string; lastName: string }) {
+          super(props);
+        }
+      }
+
+      const name1 = new Name({ firstName: "John", lastName: "Doe" });
+      const name2 = new Name({ firstName: "Jane", lastName: "Doe" });
+
+      expect(name1.equals(name2)).toBe(false);
+    });
   });
 });
