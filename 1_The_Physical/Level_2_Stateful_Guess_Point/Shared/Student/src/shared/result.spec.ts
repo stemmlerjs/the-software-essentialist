@@ -71,5 +71,29 @@ describe("Result", () => {
         );
       });
     });
+
+    describe("and at least one result is a failure", () => {
+      it("returns a Result object with the combined errors", () => {
+        // Arrange
+        const firstName = Result.success({
+          firstName: "John",
+        });
+        const lastName = Result.failure({
+          lastName: "Lastname is required",
+        });
+
+        // Act
+        const result = Result.combine(firstName, lastName);
+
+        // Assert
+        expect(result).toEqual(
+          expect.objectContaining({
+            error: {
+              lastName: "Lastname is required",
+            },
+          })
+        );
+      });
+    });
   });
 });

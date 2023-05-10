@@ -19,7 +19,19 @@ export class Result<T, E> {
     result1: Result<T1, E1>,
     result2: Result<T2, E2>
   ): Result<T1 | T2, E1 | E2> {
-    return Result.success({ ...result1.value!, ...result2.value! });
+    if (result1.isSuccess() && result2.isSuccess()) {
+      return Result.success({ ...result1.value!, ...result2.value! });
+    }
+
+    if (result1.isFailure() && result2.isFailure()) {
+      return Result.failure({ ...result1.error!, ...result2.error! });
+    }
+
+    if (result1.isFailure()) {
+      return Result.failure(result1.error!);
+    }
+
+    return Result.failure(result2.error!);
   }
 
   public isSuccess(): boolean {
