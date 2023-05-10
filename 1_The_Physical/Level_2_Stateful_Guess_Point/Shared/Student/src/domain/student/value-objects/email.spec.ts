@@ -7,5 +7,17 @@ describe("Email", () => {
 
       expect(email.value).toBe("fekkalo@essentialist.dev");
     });
+
+    describe("when email is not provided", () => {
+      it("returns an EmailValidationError object with a 'required' message", () => {
+        const email = Email.create("");
+
+        expect(email.error).toEqual(
+          expect.objectContaining({
+            required: "Email is required",
+          })
+        );
+      });
+    });
   });
 });
