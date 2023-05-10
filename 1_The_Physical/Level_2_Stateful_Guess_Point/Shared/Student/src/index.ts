@@ -43,7 +43,7 @@ export class Student {
       errors.lastName = lastNameResult.error;
     }
 
-    if (errors.firstName || errors.lastName) {
+    if (Object.keys(errors).length > 0) {
       return Result.failure(errors);
     }
 
