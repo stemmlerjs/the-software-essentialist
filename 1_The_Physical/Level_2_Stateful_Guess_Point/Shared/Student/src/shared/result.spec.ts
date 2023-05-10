@@ -121,4 +121,25 @@ describe("Result", () => {
       });
     });
   });
+
+  describe("when flatMapping a Result", () => {
+    describe("and the Result is a failure", () => {
+      it("returns a Result object with the original error", () => {
+        // Arrange
+        const result = Result.failure("This is an error");
+
+        // Act
+        const mappedResult = result.flatMap((value) =>
+          Result.success(`Mapped ${value}`)
+        );
+
+        // Assert
+        expect(mappedResult).toEqual(
+          expect.objectContaining({
+            error: "This is an error",
+          })
+        );
+      });
+    });
+  });
 });
