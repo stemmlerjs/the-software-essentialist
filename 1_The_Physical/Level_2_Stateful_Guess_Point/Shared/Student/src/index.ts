@@ -1,4 +1,9 @@
-import { FirstName, LastName } from "./domain/student/value-objects";
+import {
+  Email,
+  EmailValidationError,
+  FirstName,
+  LastName,
+} from "./domain/student/value-objects";
 import { Result } from "./shared/result";
 
 export interface StudentInputProps {
@@ -9,6 +14,7 @@ export interface StudentInputProps {
 export interface StudentProps {
   firstName: FirstName;
   lastName: LastName;
+  email: Email;
 }
 
 export interface InvalidNameProps {
@@ -21,23 +27,11 @@ export interface InvalidNameProps {
 export interface InvalidStudentProps {
   firstName: InvalidNameProps;
   lastName: InvalidNameProps;
+  email: EmailValidationError;
 }
 
 export class Student {
-  private studentEmail: string;
-
-  private constructor(private readonly props: StudentProps) {
-    const lastNamePrefix = this.props.lastName.value
-      .trim()
-      .slice(0, 5)
-      .toLowerCase();
-    const firstNamePrefix = this.props.firstName.value
-      .trim()
-      .slice(0, 2)
-      .toLowerCase();
-
-    this.studentEmail = `${lastNamePrefix}${firstNamePrefix}@essentialist.dev`;
-  }
+  private constructor(private readonly props: StudentProps) {}
 
   static create(
     props: StudentInputProps
@@ -57,12 +51,28 @@ export class Student {
         firstNameResult.value !== undefined &&
         lastNameResult.value !== undefined
       ) {
-        return Result.success(
-          new Student({
-            firstName: firstNameResult.value,
-            lastName: lastNameResult.value,
-          })
+        const email = this.generateEmail(
+          firstNameResult.value.value,
+          lastNameResult.value.value
         );
+
+        if (email.isFailure()) {
+          return Result.failure({
+            firstName: firstNameResult.error,
+            lastName: lastNameResult.error,
+            email: email.error,
+          } as InvalidStudentProps);
+        }
+
+        if (email.value !== undefined) {
+          return Result.success(
+            new Student({
+              firstName: firstNameResult.value,
+              lastName: lastNameResult.value,
+              email: email.value,
+            })
+          );
+        }
       }
     }
 
@@ -89,7 +99,7 @@ export class Student {
   }
 
   public get email() {
-    return this.studentEmail;
+    return this.props.email.value;
   }
 
   public get firstName() {
@@ -98,5 +108,15 @@ export class Student {
 
   public get lastName() {
     return this.props.lastName.value;
+  }
+
+  private static generateEmail(
+    firstName: string,
+    lastName: string
+  ): Result<Email, EmailValidationError> {
+    const firstNamePrefix = firstName.trim().slice(0, 2).toLowerCase();
+    const lastNamePrefix = lastName.trim().slice(0, 5).toLowerCase();
+
+    return Email.generate({ local: `${lastNamePrefix}${firstNamePrefix}` });
   }
 }
