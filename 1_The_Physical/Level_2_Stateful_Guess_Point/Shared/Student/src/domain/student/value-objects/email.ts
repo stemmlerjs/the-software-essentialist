@@ -6,8 +6,8 @@ interface EmailProps {
 }
 
 export interface EmailValidationError {
-  required: string;
-  domain: string;
+  required?: string;
+  domain?: string;
 }
 
 export class Email extends ValueObject<EmailProps> {
@@ -30,10 +30,17 @@ export class Email extends ValueObject<EmailProps> {
   }
 
   public static validate(value: string): EmailValidationError {
-    const error: EmailValidationError = { required: "", domain: "" };
+    const error: EmailValidationError = {};
 
     if (!value) {
       error.required = "Email is required";
+    } else {
+      value = value.toLowerCase().trim();
+
+      const domain = value.split("@")[1];
+      if (domain !== Email.domain) {
+        error.domain = `Email must be from '${Email.domain}' domain`;
+      }
     }
 
     return error;

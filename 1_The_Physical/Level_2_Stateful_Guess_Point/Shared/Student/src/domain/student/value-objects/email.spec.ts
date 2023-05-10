@@ -19,5 +19,22 @@ describe("Email", () => {
         );
       });
     });
+
+    describe("when domain email is not 'essentialist.dev'", () => {
+      it("returns an EmailValidationError object with a 'domain' message", () => {
+        // Arrange
+        const email = "toto@gmail.com";
+
+        // Act
+        const result = Email.create(email);
+
+        // Assert
+        expect(result.error).toEqual(
+          expect.objectContaining({
+            domain: "Email must be from 'essentialist.dev' domain",
+          })
+        );
+      });
+    });
   });
 });
