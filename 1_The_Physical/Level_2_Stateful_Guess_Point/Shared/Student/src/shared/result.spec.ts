@@ -45,4 +45,31 @@ describe("Result", () => {
       });
     }
   );
+
+  describe("when combining multiple results", () => {
+    describe("and all results are successful", () => {
+      it("returns a Result object with the combined values", () => {
+        // Arrange
+        const firstName = Result.success({
+          firstName: "John",
+        });
+        const lastName = Result.success({
+          lastName: "Doe",
+        });
+
+        // Act
+        const result = Result.combine(firstName, lastName);
+
+        // Assert
+        expect(result).toEqual(
+          expect.objectContaining({
+            value: {
+              firstName: "John",
+              lastName: "Doe",
+            },
+          })
+        );
+      });
+    });
+  });
 });

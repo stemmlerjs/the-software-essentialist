@@ -15,6 +15,13 @@ export class Result<T, E> {
     return new Result<T, E>(undefined, error);
   }
 
+  public static combine<T1, E1, T2, E2>(
+    result1: Result<T1, E1>,
+    result2: Result<T2, E2>
+  ): Result<T1 | T2, E1 | E2> {
+    return Result.success({ ...result1.value!, ...result2.value! });
+  }
+
   public isSuccess(): boolean {
     return this.value !== undefined;
   }
