@@ -2,7 +2,9 @@ import {
   Email,
   EmailValidationError,
   FirstName,
+  FirstNameValidationError,
   LastName,
+  LastNameValidationError,
 } from "./domain/student/value-objects";
 import { Result } from "./shared/result";
 
@@ -17,16 +19,9 @@ export interface StudentProps {
   email: Email;
 }
 
-export interface InvalidNameProps {
-  min?: string;
-  max?: string;
-  letters?: string;
-  required?: string;
-}
-
 export interface InvalidStudentProps {
-  firstName: InvalidNameProps;
-  lastName: InvalidNameProps;
+  firstName: FirstNameValidationError;
+  lastName: LastNameValidationError;
   email: EmailValidationError;
 }
 
