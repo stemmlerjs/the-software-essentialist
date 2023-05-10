@@ -8,77 +8,61 @@ import {
 } from "./domain/student/value-objects";
 import { Result } from "./shared/result";
 
-export interface StudentInputProps {
+interface StudentInputProps {
   firstName: string;
   lastName: string;
 }
 
-export interface StudentProps {
+interface StudentProps {
   firstName: FirstName;
   lastName: LastName;
   email: Email;
 }
 
-export interface InvalidStudentProps {
-  firstName: FirstNameValidationError;
-  lastName: LastNameValidationError;
-  email: EmailValidationError;
+interface InvalidStudentProps {
+  firstName?: FirstNameValidationError;
+  lastName?: LastNameValidationError;
+  email?: EmailValidationError;
 }
 
 export class Student {
   private constructor(private readonly props: StudentProps) {}
 
-  static create(
+  public static create(
     props: StudentInputProps
   ): Result<Student, InvalidStudentProps> {
+    const errors: InvalidStudentProps = {};
     const firstNameResult = FirstName.create(props.firstName);
     const lastNameResult = LastName.create(props.lastName);
 
-    if (firstNameResult.isFailure() || lastNameResult.isFailure()) {
-      return Result.failure({
-        firstName: firstNameResult.error,
-        lastName: lastNameResult.error,
-      } as InvalidStudentProps);
+    if (firstNameResult.isFailure()) {
+      errors.firstName = firstNameResult.error;
     }
 
-    if (firstNameResult.isSuccess() && lastNameResult.isSuccess()) {
-      if (
-        firstNameResult.value !== undefined &&
-        lastNameResult.value !== undefined
-      ) {
-        const email = this.generateEmail(
-          firstNameResult.value.value,
-          lastNameResult.value.value
-        );
-
-        if (email.isFailure()) {
-          return Result.failure({
-            firstName: firstNameResult.error,
-            lastName: lastNameResult.error,
-            email: email.error,
-          } as InvalidStudentProps);
-        }
-
-        if (email.value !== undefined) {
-          return Result.success(
-            new Student({
-              firstName: firstNameResult.value,
-              lastName: lastNameResult.value,
-              email: email.value,
-            })
-          );
-        }
-      }
+    if (lastNameResult.isFailure()) {
+      errors.lastName = lastNameResult.error;
     }
 
-    return Result.failure({
-      firstName: {
-        required: "Firstname is required",
-      },
-      lastName: {
-        required: "Lastname is required",
-      },
-    } as InvalidStudentProps);
+    if (errors.firstName || errors.lastName) {
+      return Result.failure(errors);
+    }
+
+    const email = this.generateEmail(
+      firstNameResult.value!.value,
+      lastNameResult.value!.value
+    );
+
+    if (email.isFailure()) {
+      return Result.failure({ email: email.error });
+    }
+
+    return Result.success(
+      new Student({
+        firstName: firstNameResult.value!,
+        lastName: lastNameResult.value!,
+        email: email.value!,
+      })
+    );
   }
 
   public updateFirstName(
