@@ -1,4 +1,4 @@
-import { Result } from "./result";
+import { Result } from "./shared/result";
 
 export interface StudentProps {
   firstName: string;
