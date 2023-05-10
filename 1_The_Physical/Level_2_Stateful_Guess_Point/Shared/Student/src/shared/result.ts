@@ -35,6 +35,10 @@ export class Result<T, E> {
   }
 
   public flatMap<RT>(fn: (value: T) => Result<RT, E>): Result<RT, E> {
+    if (this.isSuccess()) {
+      return fn(this.value!);
+    }
+
     return Result.failure(this.error!);
   }
 

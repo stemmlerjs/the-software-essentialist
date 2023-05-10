@@ -123,6 +123,25 @@ describe("Result", () => {
   });
 
   describe("when flatMapping a Result", () => {
+    describe("and the Result is successful", () => {
+      it("returns a Result object with the mapped value", () => {
+        // Arrange
+        const result = Result.success("This is a value");
+
+        // Act
+        const mappedResult = result.flatMap((value) =>
+          Result.success(`Mapped ${value}`)
+        );
+
+        // Assert
+        expect(mappedResult).toEqual(
+          expect.objectContaining({
+            value: "Mapped This is a value",
+          })
+        );
+      });
+    });
+
     describe("and the Result is a failure", () => {
       it("returns a Result object with the original error", () => {
         // Arrange
