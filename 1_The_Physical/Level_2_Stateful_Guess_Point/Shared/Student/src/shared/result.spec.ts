@@ -95,5 +95,30 @@ describe("Result", () => {
         );
       });
     });
+
+    describe("and all results are failures", () => {
+      it("returns a Result object with the combined errors", () => {
+        // Arrange
+        const firstName = Result.failure({
+          firstName: "Firstname is required",
+        });
+        const lastName = Result.failure({
+          lastName: "Lastname is required",
+        });
+
+        // Act
+        const result = Result.combine(firstName, lastName);
+
+        // Assert
+        expect(result).toEqual(
+          expect.objectContaining({
+            error: {
+              firstName: "Firstname is required",
+              lastName: "Lastname is required",
+            },
+          })
+        );
+      });
+    });
   });
 });
