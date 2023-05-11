@@ -5,7 +5,7 @@ describe("Email", () => {
     it("returns a new email instance with 'fekkalo@essentialist.dev' as value", () => {
       const email = Email.create("fekkalo@essentialist.dev");
 
-      expect(email.value).toBe("fekkalo@essentialist.dev");
+      expect(email.value?.value).toBe("fekkalo@essentialist.dev");
     });
 
     describe("when email is not provided", () => {
