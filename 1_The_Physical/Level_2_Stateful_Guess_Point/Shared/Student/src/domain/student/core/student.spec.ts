@@ -1,3 +1,4 @@
+import { FirstName, LastName } from "../value-objects";
 import { Student } from "./student";
 
 describe("Student", () => {
@@ -24,39 +25,136 @@ describe("Student", () => {
     }
   );
 
-  describe("when student's first name is updated", () => {
-    it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
+  describe("when student's first name is invalid", () => {
+    it("returns a StudentValidationError object with a 'required' message when first name is not provided", () => {
       // Arrange
-      const firstName = "John";
+      const firstName = "";
       const lastName = "Doe";
-      const newFirstName = "Asterix";
 
       // Act
       const student = Student.create({ firstName, lastName });
-      const updatedStudent = student.value?.updateFirstName(newFirstName);
 
       // Assert
-      expect(updatedStudent).toBeDefined();
-      expect(updatedStudent?.value?.firstName).toBe(newFirstName);
-      expect(updatedStudent?.value?.lastName).toBe(lastName);
-      expect(updatedStudent?.value?.email).toBe("doeas@essentialist.dev");
+      expect(student.error).toEqual(
+        expect.objectContaining({
+          firstName: {
+            required: "Firstname is required",
+          },
+        })
+      );
     });
 
-    it("should create a new first name updated event", () => {
+    it("returns a StudentValidationError object with a 'min' message when first name is less than 2 characters long", () => {
       // Arrange
-      const firstName = "John";
+      const firstName = "J";
       const lastName = "Doe";
-      const newFirstName = "Asterix";
 
       // Act
       const student = Student.create({ firstName, lastName });
-      const updatedStudent = student.value?.updateFirstName(newFirstName);
 
       // Assert
-      expect(updatedStudent).toBeDefined();
-      expect(updatedStudent?.value?.events).toBeDefined();
-      expect(updatedStudent?.value?.events.length).toBe(2);
-      expect(updatedStudent?.value?.events[1].name).toEqual("FirstNameUpdated");
+      expect(student.error).toEqual(
+        expect.objectContaining({
+          firstName: {
+            min: "Firstname must be at least 2 characters long",
+          },
+        })
+      );
+    });
+
+    it("returns a StudentValidationError object with a 'max' message when first name is more than 10 characters long", () => {
+      // Arrange
+      const firstName = "JohnJohnJohn";
+      const lastName = "Doe";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+
+      // Assert
+      expect(student.error).toEqual(
+        expect.objectContaining({
+          firstName: {
+            max: "Firstname must be at most 10 characters long",
+          },
+        })
+      );
+    });
+
+    it("returns a StudentValidationError object with a 'letters' message when first name contains non-letter characters", () => {
+      // Arrange
+      const firstName = "John1";
+      const lastName = "Doe";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+
+      // Assert
+      expect(student.error).toEqual(
+        expect.objectContaining({
+          firstName: {
+            letters: "Firstname must contain only letters",
+          },
+        })
+      );
+    });
+
+    it("returns a StudentValidationError object with 'letters' and 'max' messages", () => {
+      // Arrange
+      const firstName = "John1JohnJohn";
+      const lastName = "Doe";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+
+      // Assert
+      expect(student.error).toEqual(
+        expect.objectContaining({
+          firstName: {
+            letters: "Firstname must contain only letters",
+            max: "Firstname must be at most 10 characters long",
+          },
+        })
+      );
+    });
+  });
+
+  describe("when student's first name is updated", () => {
+    describe("with a valid first name", () => {
+      it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
+        // Arrange
+        const firstName = "John";
+        const lastName = "Doe";
+        const newFirstName = "Asterix";
+
+        // Act
+        const student = Student.create({ firstName, lastName });
+        const updatedStudent = student.value?.updateFirstName(newFirstName);
+
+        // Assert
+        expect(updatedStudent).toBeDefined();
+        expect(updatedStudent?.value?.firstName).toBe(newFirstName);
+        expect(updatedStudent?.value?.lastName).toBe(lastName);
+        expect(updatedStudent?.value?.email).toBe("doeas@essentialist.dev");
+      });
+
+      it("should create a new first name updated event", () => {
+        // Arrange
+        const firstName = "John";
+        const lastName = "Doe";
+        const newFirstName = "Asterix";
+
+        // Act
+        const student = Student.create({ firstName, lastName });
+        const updatedStudent = student.value?.updateFirstName(newFirstName);
+
+        // Assert
+        expect(updatedStudent).toBeDefined();
+        expect(updatedStudent?.value?.events).toBeDefined();
+        expect(updatedStudent?.value?.events.length).toBe(2);
+        expect(updatedStudent?.value?.events[1].name).toEqual(
+          "FirstNameUpdated"
+        );
+      });
     });
   });
 

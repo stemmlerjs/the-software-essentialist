@@ -26,7 +26,7 @@ interface StudentState {
   email: Email;
 }
 
-interface InvalidStudentProps {
+interface StudentValidationError {
   firstName?: FirstNameValidationError;
   lastName?: LastNameValidationError;
   email?: EmailValidationError;
@@ -45,7 +45,7 @@ export class Student implements AggregateRoot<StudentState> {
 
   public static create(
     props: StudentInputProps
-  ): Result<Student, InvalidStudentProps> {
+  ): Result<Student, StudentValidationError> {
     const firstNameResult = FirstName.create(props.firstName);
     const lastNameResult = LastName.create(props.lastName);
     const emailResult = Result.combine(firstNameResult, lastNameResult).flatMap(
@@ -53,7 +53,7 @@ export class Student implements AggregateRoot<StudentState> {
         Student.generateEmail(FirstName.value, LastName.value)
     );
 
-    const errors: InvalidStudentProps = {};
+    const errors: StudentValidationError = {};
     if (firstNameResult.isFailure()) {
       errors.firstName = firstNameResult.error;
     }
@@ -79,7 +79,7 @@ export class Student implements AggregateRoot<StudentState> {
 
   public updateFirstName(
     firstName: string
-  ): Result<Student, InvalidStudentProps> {
+  ): Result<Student, StudentValidationError> {
     const oldFirstName = this.state.firstName.value;
     const result = Student.create({
       firstName,
@@ -98,7 +98,7 @@ export class Student implements AggregateRoot<StudentState> {
 
   public updateLastName(
     lastName: string
-  ): Result<Student, InvalidStudentProps> {
+  ): Result<Student, StudentValidationError> {
     const oldLastName = this.state.lastName.value;
     const result = Student.create({
       firstName: this.state.firstName.value,
