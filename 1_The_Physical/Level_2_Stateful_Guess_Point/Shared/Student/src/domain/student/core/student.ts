@@ -7,13 +7,14 @@ import {
   LastNameValidationError,
 } from "../value-objects";
 import { Result } from "../../../shared/result";
+import { AggregateRoot } from "../../core/aggregate-root";
 
 interface StudentInputProps {
   firstName: string;
   lastName: string;
 }
 
-interface StudentProps {
+interface StudentState {
   firstName: FirstName;
   lastName: LastName;
   email: Email;
@@ -25,8 +26,12 @@ interface InvalidStudentProps {
   email?: EmailValidationError;
 }
 
-export class Student {
-  private constructor(private readonly props: StudentProps) {}
+export class Student implements AggregateRoot<StudentState> {
+  readonly state: StudentState;
+
+  private constructor(props: StudentState) {
+    this.state = props;
+  }
 
   public static create(
     props: StudentInputProps
@@ -65,25 +70,25 @@ export class Student {
   public updateFirstName(
     firstName: string
   ): Result<Student, InvalidStudentProps> {
-    return Student.create({ firstName, lastName: this.props.lastName.value });
+    return Student.create({ firstName, lastName: this.state.lastName.value });
   }
 
   public updateLastName(
     lastName: string
   ): Result<Student, InvalidStudentProps> {
-    return Student.create({ firstName: this.props.firstName.value, lastName });
+    return Student.create({ firstName: this.state.firstName.value, lastName });
   }
 
   public get email() {
-    return this.props.email.value;
+    return this.state.email.value;
   }
 
   public get firstName() {
-    return this.props.firstName.value;
+    return this.state.firstName.value;
   }
 
   public get lastName() {
-    return this.props.lastName.value;
+    return this.state.lastName.value;
   }
 
   private static generateEmail(

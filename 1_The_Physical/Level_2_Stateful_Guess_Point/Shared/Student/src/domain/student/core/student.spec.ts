@@ -1,4 +1,4 @@
-import { Student } from "./index";
+import { Student } from "./student";
 
 describe("Student", () => {
   it("knows student's first name is 'John' and last name is 'Doe'", () => {
