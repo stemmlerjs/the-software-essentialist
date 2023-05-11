@@ -5,8 +5,8 @@ import {
   FirstNameValidationError,
   LastName,
   LastNameValidationError,
-} from "./domain/student/value-objects";
-import { Result } from "./shared/result";
+} from "../value-objects";
+import { Result } from "../../../shared/result";
 
 interface StudentInputProps {
   firstName: string;
