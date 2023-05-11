@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import {
   Email,
   EmailValidationError,
@@ -27,9 +29,11 @@ interface InvalidStudentProps {
 }
 
 export class Student implements AggregateRoot<StudentState> {
-  readonly state: StudentState;
+  public readonly id: string;
+  public readonly state: StudentState;
 
   private constructor(props: StudentState) {
+    this.id = uuid();
     this.state = props;
   }
 

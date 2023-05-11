@@ -28,6 +28,19 @@ describe("Student", () => {
     expect(student.value?.email).toBe("fekkalo@essentialist.dev");
   });
 
+  it("id should be generated when creating new student", () => {
+    // Arrange
+    const firstName = "Loik";
+    const lastName = "Fekkai";
+
+    // Act
+    const student = Student.create({ firstName, lastName });
+
+    // Assert
+    expect(student).toBeDefined();
+    expect(student.value?.id).toBeDefined();
+  });
+
   describe("when student's first name is updated", () => {
     it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
       // Arrange
