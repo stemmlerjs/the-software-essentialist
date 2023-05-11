@@ -110,5 +110,22 @@ describe("Student", () => {
       expect(updatedStudent?.value?.lastName).toBe(newLastName);
       expect(updatedStudent?.value?.email).toBe("daltojo@essentialist.dev");
     });
+
+    it("should create a new last name updated event", () => {
+      // Arrange
+      const firstName = "Joe";
+      const lastName = "Doe";
+      const newLastName = "Dalton";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+      const updatedStudent = student.value?.updateLastName(newLastName);
+
+      // Assert
+      expect(updatedStudent).toBeDefined();
+      expect(updatedStudent?.value?.events).toBeDefined();
+      expect(updatedStudent?.value?.events.length).toBe(2);
+      expect(updatedStudent?.value?.events[1].name).toEqual("LastNameUpdated");
+    });
   });
 });
