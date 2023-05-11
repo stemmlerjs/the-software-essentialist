@@ -97,6 +97,89 @@ describe("Student", () => {
     }
   );
 
+  describe.each([
+    [
+      "",
+      "",
+      {
+        firstName: {
+          required: "Firstname is required",
+        },
+        lastName: {
+          required: "Lastname is required",
+        },
+      },
+    ],
+    [
+      "L",
+      "D",
+      {
+        firstName: {
+          min: "Firstname must be at least 2 characters long",
+        },
+        lastName: {
+          min: "Lastname must be at least 2 characters long",
+        },
+      },
+    ],
+    [
+      "JohnJohnJohn",
+      "TravoltaTravoltaTravolta",
+      {
+        firstName: {
+          max: "Firstname must be at most 10 characters long",
+        },
+        lastName: {
+          max: "Lastname must be at most 15 characters long",
+        },
+      },
+    ],
+    [
+      "John1",
+      "Doe1",
+      {
+        firstName: {
+          letters: "Firstname must contain only letters",
+        },
+        lastName: {
+          letters: "Lastname must contain only letters",
+        },
+      },
+    ],
+    [
+      "1",
+      "1",
+      {
+        firstName: {
+          letters: "Firstname must contain only letters",
+          min: "Firstname must be at least 2 characters long",
+        },
+        lastName: {
+          letters: "Lastname must contain only letters",
+          min: "Lastname must be at least 2 characters long",
+        },
+      },
+    ],
+  ])(
+    "when given first name '%s' and last name '%s'",
+    (firstName, lastName, expectedError) => {
+      it(`should return a FirstNameValidationError object with a '${JSON.stringify(
+        expectedError
+      )}' message`, () => {
+        // Act
+        const student = Student.create({ firstName, lastName });
+
+        // Assert
+        expect(student.error).toEqual(
+          expect.objectContaining({
+            firstName: expectedError.firstName,
+            lastName: expectedError.lastName,
+          })
+        );
+      });
+    }
+  );
+
   describe("when student's first name is updated", () => {
     describe("with a valid first name", () => {
       it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
