@@ -1,61 +1,28 @@
 import { Student } from "./student";
 
 describe("Student", () => {
-  it("knows student's first name is 'John' and last name is 'Doe'", () => {
-    // Arrange
-    const firstName = "John";
-    const lastName = "Doe";
+  describe.each([
+    ["John", "Doe", "doejo@essentialist.dev"],
+    ["Loik", "Fekkai", "fekkalo@essentialist.dev"],
+  ])(
+    "when given first name '%s' and last name '%s'",
+    (firstName, lastName, email) => {
+      it("should create a new student with correct properties", () => {
+        // Act
+        const student = Student.create({ firstName, lastName });
 
-    // Act
-    const student = Student.create({ firstName, lastName });
-
-    // Assert
-    expect(student).toBeDefined();
-    expect(student.value?.firstName).toBe(firstName);
-    expect(student.value?.lastName).toBe(lastName);
-  });
-
-  it("knows student's email is 'fekkalo@essentialist.dev'", () => {
-    // Arrange
-    const firstName = "Loik";
-    const lastName = "Fekkai";
-
-    // Act
-    const student = Student.create({ firstName, lastName });
-
-    // Assert
-    expect(student).toBeDefined();
-    expect(student.value?.email).toBe("fekkalo@essentialist.dev");
-  });
-
-  it("id should be generated when creating new student", () => {
-    // Arrange
-    const firstName = "Loik";
-    const lastName = "Fekkai";
-
-    // Act
-    const student = Student.create({ firstName, lastName });
-
-    // Assert
-    expect(student).toBeDefined();
-    expect(student.value?.id).toBeDefined();
-  });
-
-  // Test event creation
-  it("should create a new student created event", () => {
-    // Arrange
-    const firstName = "Loik";
-    const lastName = "Fekkai";
-
-    // Act
-    const student = Student.create({ firstName, lastName });
-
-    // Assert
-    expect(student).toBeDefined();
-    expect(student.value?.events).toBeDefined();
-    expect(student.value?.events.length).toBe(1);
-    expect(student.value?.events[0].name).toEqual("StudentCreated");
-  });
+        // Assert
+        expect(student).toBeDefined();
+        expect(student.value?.firstName).toBe(firstName);
+        expect(student.value?.lastName).toBe(lastName);
+        expect(student.value?.email).toBe(email);
+        expect(student.value?.id).toBeDefined();
+        expect(student.value?.events).toBeDefined();
+        expect(student.value?.events.length).toBe(1);
+        expect(student.value?.events[0].name).toEqual("StudentCreated");
+      });
+    }
+  );
 
   describe("when student's first name is updated", () => {
     it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
