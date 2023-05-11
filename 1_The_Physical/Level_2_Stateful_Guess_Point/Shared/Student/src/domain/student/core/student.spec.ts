@@ -1,4 +1,3 @@
-import { FirstName, LastName } from "../value-objects";
 import { Student } from "./student";
 
 describe("Student", () => {
