@@ -31,36 +31,33 @@ export class Student {
   public static create(
     props: StudentInputProps
   ): Result<Student, InvalidStudentProps> {
-    const errors: InvalidStudentProps = {};
     const firstNameResult = FirstName.create(props.firstName);
     const lastNameResult = LastName.create(props.lastName);
+    const emailResult = Result.combine(firstNameResult, lastNameResult).flatMap(
+      ([FirstName, LastName]) =>
+        Student.generateEmail(FirstName.value, LastName.value)
+    );
 
+    const errors: InvalidStudentProps = {};
     if (firstNameResult.isFailure()) {
       errors.firstName = firstNameResult.error;
     }
-
     if (lastNameResult.isFailure()) {
       errors.lastName = lastNameResult.error;
+    }
+    if (emailResult.isFailure() && !(emailResult.error instanceof Array)) {
+      errors.email = emailResult.error;
     }
 
     if (Object.keys(errors).length > 0) {
       return Result.failure(errors);
     }
 
-    const email = this.generateEmail(
-      firstNameResult.value!.value,
-      lastNameResult.value!.value
-    );
-
-    if (email.isFailure()) {
-      return Result.failure({ email: email.error });
-    }
-
     return Result.success(
       new Student({
         firstName: firstNameResult.value!,
         lastName: lastNameResult.value!,
-        email: email.value!,
+        email: emailResult.value!,
       })
     );
   }
