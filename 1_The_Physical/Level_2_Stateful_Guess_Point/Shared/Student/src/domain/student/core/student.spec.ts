@@ -25,98 +25,41 @@ describe("Student", () => {
     }
   );
 
-  describe("when student's first name is invalid", () => {
-    it("returns a StudentValidationError object with a 'required' message when first name is not provided", () => {
-      // Arrange
-      const firstName = "";
-      const lastName = "Doe";
+  describe.each([
+    ["", "Doe", { required: "Firstname is required" }],
+    ["L", "Fekkai", { min: "Firstname must be at least 2 characters long" }],
+    [
+      "JohnJohnJohn",
+      "Doe",
+      { max: "Firstname must be at most 10 characters long" },
+    ],
+    ["John1", "Doe", { letters: "Firstname must contain only letters" }],
+    [
+      "JohnJohnJohn1",
+      "Doe",
+      {
+        letters: "Firstname must contain only letters",
+        max: "Firstname must be at most 10 characters long",
+      },
+    ],
+  ])(
+    "when given first name '%s' and last name '%s'",
+    (firstName, lastName, expectedError) => {
+      it(`should return a FirstNameValidationError object with a '${JSON.stringify(
+        expectedError
+      )}' message`, () => {
+        // Act
+        const student = Student.create({ firstName, lastName });
 
-      // Act
-      const student = Student.create({ firstName, lastName });
-
-      // Assert
-      expect(student.error).toEqual(
-        expect.objectContaining({
-          firstName: {
-            required: "Firstname is required",
-          },
-        })
-      );
-    });
-
-    it("returns a StudentValidationError object with a 'min' message when first name is less than 2 characters long", () => {
-      // Arrange
-      const firstName = "J";
-      const lastName = "Doe";
-
-      // Act
-      const student = Student.create({ firstName, lastName });
-
-      // Assert
-      expect(student.error).toEqual(
-        expect.objectContaining({
-          firstName: {
-            min: "Firstname must be at least 2 characters long",
-          },
-        })
-      );
-    });
-
-    it("returns a StudentValidationError object with a 'max' message when first name is more than 10 characters long", () => {
-      // Arrange
-      const firstName = "JohnJohnJohn";
-      const lastName = "Doe";
-
-      // Act
-      const student = Student.create({ firstName, lastName });
-
-      // Assert
-      expect(student.error).toEqual(
-        expect.objectContaining({
-          firstName: {
-            max: "Firstname must be at most 10 characters long",
-          },
-        })
-      );
-    });
-
-    it("returns a StudentValidationError object with a 'letters' message when first name contains non-letter characters", () => {
-      // Arrange
-      const firstName = "John1";
-      const lastName = "Doe";
-
-      // Act
-      const student = Student.create({ firstName, lastName });
-
-      // Assert
-      expect(student.error).toEqual(
-        expect.objectContaining({
-          firstName: {
-            letters: "Firstname must contain only letters",
-          },
-        })
-      );
-    });
-
-    it("returns a StudentValidationError object with 'letters' and 'max' messages", () => {
-      // Arrange
-      const firstName = "John1JohnJohn";
-      const lastName = "Doe";
-
-      // Act
-      const student = Student.create({ firstName, lastName });
-
-      // Assert
-      expect(student.error).toEqual(
-        expect.objectContaining({
-          firstName: {
-            letters: "Firstname must contain only letters",
-            max: "Firstname must be at most 10 characters long",
-          },
-        })
-      );
-    });
-  });
+        // Assert
+        expect(student.error).toEqual(
+          expect.objectContaining({
+            firstName: expectedError,
+          })
+        );
+      });
+    }
+  );
 
   describe("when student's first name is updated", () => {
     describe("with a valid first name", () => {
