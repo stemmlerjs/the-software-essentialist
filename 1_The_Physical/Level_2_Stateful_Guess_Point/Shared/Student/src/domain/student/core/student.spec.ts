@@ -74,6 +74,23 @@ describe("Student", () => {
       expect(updatedStudent?.value?.lastName).toBe(lastName);
       expect(updatedStudent?.value?.email).toBe("doeas@essentialist.dev");
     });
+
+    it("should create a new first name updated event", () => {
+      // Arrange
+      const firstName = "John";
+      const lastName = "Doe";
+      const newFirstName = "Asterix";
+
+      // Act
+      const student = Student.create({ firstName, lastName });
+      const updatedStudent = student.value?.updateFirstName(newFirstName);
+
+      // Assert
+      expect(updatedStudent).toBeDefined();
+      expect(updatedStudent?.value?.events).toBeDefined();
+      expect(updatedStudent?.value?.events.length).toBe(2);
+      expect(updatedStudent?.value?.events[1].name).toEqual("FirstNameUpdated");
+    });
   });
 
   describe("when student's last name is updated", () => {

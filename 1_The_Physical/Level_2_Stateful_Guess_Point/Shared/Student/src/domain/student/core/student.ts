@@ -12,6 +12,7 @@ import { Result } from "../../../shared/result";
 import { AggregateRoot } from "../../core/aggregate-root";
 import { DomainEvent } from "../../core/domain-event";
 import { StudentCreated } from "../events/student-created";
+import { FirstNameUpdated } from "../events/first-name-updated";
 
 interface StudentInputProps {
   firstName: string;
@@ -78,7 +79,20 @@ export class Student implements AggregateRoot<StudentState> {
   public updateFirstName(
     firstName: string
   ): Result<Student, InvalidStudentProps> {
-    return Student.create({ firstName, lastName: this.state.lastName.value });
+    const oldFirstName = this.state.firstName.value;
+    const result = Student.create({
+      firstName,
+      lastName: this.state.lastName.value,
+    });
+
+    if (result.isSuccess()) {
+      const student = result.value!;
+      student.events.push(
+        new FirstNameUpdated(student, oldFirstName, firstName)
+      );
+    }
+
+    return result;
   }
 
   public updateLastName(
