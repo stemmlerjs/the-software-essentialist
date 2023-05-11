@@ -61,6 +61,42 @@ describe("Student", () => {
     }
   );
 
+  describe.each([
+    ["John", "", { required: "Lastname is required" }],
+    ["John", "D", { min: "Lastname must be at least 2 characters long" }],
+    [
+      "John",
+      "TravoltaTravoltaTravolta",
+      { max: "Lastname must be at most 15 characters long" },
+    ],
+    ["John", "Doe1", { letters: "Lastname must contain only letters" }],
+    [
+      "John",
+      "TravoltaTravoltaTravolta1",
+      {
+        letters: "Lastname must contain only letters",
+        max: "Lastname must be at most 15 characters long",
+      },
+    ],
+  ])(
+    "when given first name '%s' and last name '%s'",
+    (firstName, lastName, expectedError) => {
+      it(`should return a LastNameValidationError object with a '${JSON.stringify(
+        expectedError
+      )}' message`, () => {
+        // Act
+        const student = Student.create({ firstName, lastName });
+
+        // Assert
+        expect(student.error).toEqual(
+          expect.objectContaining({
+            lastName: expectedError,
+          })
+        );
+      });
+    }
+  );
+
   describe("when student's first name is updated", () => {
     describe("with a valid first name", () => {
       it("returns a new student with first name 'Asterix' instead of 'Joe', last name 'Doe' and email 'doeas@essentialist.dev'", () => {
