@@ -10,6 +10,8 @@ import {
 } from "../value-objects";
 import { Result } from "../../../shared/result";
 import { AggregateRoot } from "../../core/aggregate-root";
+import { DomainEvent } from "../../core/domain-event";
+import { StudentCreated } from "../events/student-created";
 
 interface StudentInputProps {
   firstName: string;
@@ -31,10 +33,12 @@ interface InvalidStudentProps {
 export class Student implements AggregateRoot<StudentState> {
   public readonly id: string;
   public readonly state: StudentState;
+  public readonly events: DomainEvent[] = [];
 
   private constructor(props: StudentState) {
     this.id = uuid();
     this.state = props;
+    this.events.push(new StudentCreated(this));
   }
 
   public static create(
