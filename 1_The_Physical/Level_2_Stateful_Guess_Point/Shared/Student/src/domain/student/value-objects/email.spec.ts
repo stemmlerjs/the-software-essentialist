@@ -10,9 +10,14 @@ describe("Email", () => {
 
     describe("when email is not provided", () => {
       it("returns an EmailValidationError object with a 'required' message", () => {
-        const email = Email.create("");
+        // Arrange
+        const email = "";
 
-        expect(email.error).toEqual(
+        // Act
+        const result = Email.create(email);
+
+        // Assert
+        expect(result.error).toEqual(
           expect.objectContaining({
             required: "Email is required",
           })
@@ -40,12 +45,15 @@ describe("Email", () => {
 
   describe("when generating a new email", () => {
     it("returns a new email instance with 'essentialist.dev' as domain", () => {
+      // Arrange
       const local = "fekkailoik";
 
+      // Act
       const result = Email.generate({
         local,
       });
 
+      // Assert
       expect(result.value?.value).toBe(`${local}@${Email.domain}`);
     });
   });
