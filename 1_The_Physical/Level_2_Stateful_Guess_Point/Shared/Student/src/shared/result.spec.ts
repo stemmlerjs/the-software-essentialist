@@ -61,13 +61,15 @@ describe("Result", () => {
         const result = Result.combine(firstName, lastName);
 
         // Assert
-        expect(result).toEqual(
-          expect.objectContaining({
-            value: {
+        expect(result.value).toEqual(
+          expect.arrayContaining([
+            {
               firstName: "John",
+            },
+            {
               lastName: "Doe",
             },
-          })
+          ])
         );
       });
     });
@@ -86,12 +88,12 @@ describe("Result", () => {
         const result = Result.combine(firstName, lastName);
 
         // Assert
-        expect(result).toEqual(
-          expect.objectContaining({
-            error: {
+        expect(result.error).toEqual(
+          expect.arrayContaining([
+            {
               lastName: "Lastname is required",
             },
-          })
+          ])
         );
       });
     });
@@ -110,13 +112,15 @@ describe("Result", () => {
         const result = Result.combine(firstName, lastName);
 
         // Assert
-        expect(result).toEqual(
-          expect.objectContaining({
-            error: {
+        expect(result.error).toEqual(
+          expect.arrayContaining([
+            {
               firstName: "Firstname is required",
+            },
+            {
               lastName: "Lastname is required",
             },
-          })
+          ])
         );
       });
     });
