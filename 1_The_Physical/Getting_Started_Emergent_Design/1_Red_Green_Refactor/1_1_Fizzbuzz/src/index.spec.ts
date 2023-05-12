@@ -1,4 +1,6 @@
 
+import { fizzBuzz } from './fizzbuzz'
+
 /**
  * 🔘 I have committed on every single transition from red to green to refactor
 🔘 I have tests that validate the following statements 
