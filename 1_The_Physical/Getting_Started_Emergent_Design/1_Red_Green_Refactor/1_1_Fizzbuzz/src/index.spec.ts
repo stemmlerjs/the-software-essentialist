@@ -20,7 +20,7 @@ any non-number (you decide, throw an Error or handle some other way)
 
 describe("fizzbuzz", () => {
 
-  it.each([3, 6, 9])(
+  it.each([3, 6, 9, 42])(
     'returns "Fizz" for multiples of 3',
     (value: number) => {
       expect(fizzBuzz(value)).toBe("Fizz");
