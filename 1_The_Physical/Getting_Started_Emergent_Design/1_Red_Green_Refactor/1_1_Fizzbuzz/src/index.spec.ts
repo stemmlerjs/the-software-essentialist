@@ -1,5 +1,4 @@
-
-import { fizzBuzz } from './fizzbuzz'
+import { fizzBuzz } from "./fizzbuzz";
 
 /**
  * 
@@ -19,27 +18,20 @@ any non-number (you decide, throw an Error or handle some other way)
 🔘 There is no duplication in my test code or my production code
  */
 
-
 describe("fizzbuzz", () => {
 
-  it ('return "Fizz" for 6', () => {
-    expect(fizzBuzz(6)).toBe('Fizz')
-  })
+  it.each([3, 6, 9])(
+    'returns "Fizz" for multiples of 3',
+    (value: number) => {
+      expect(fizzBuzz(value)).toBe("Fizz");
+    }
+  );
 
-  it ('returns "Fizz" for 3', () => {
-    expect(fizzBuzz(3)).toBe('Fizz')
-  })
+  it('returns "Buzz" for 5', () => {
+    expect(fizzBuzz(5)).toBe("Buzz");
+  });
 
-  it ('returns "Fizz" for 9', () => {
-    expect(fizzBuzz(9)).toBe('Fizz')
-  })
-
-  it ('returns "Buzz" for 5', () => {
-    expect(fizzBuzz(5)).toBe('Buzz')
-  })
-
-  it ('returns "FizzBuzz" for 15', () => {
-    expect(fizzBuzz(15)).toBe('FizzBuzz')
-  })
-
+  it('returns "FizzBuzz" for 15', () => {
+    expect(fizzBuzz(15)).toBe("FizzBuzz");
+  });
 });
