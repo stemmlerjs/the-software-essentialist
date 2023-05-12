@@ -22,8 +22,16 @@ any non-number (you decide, throw an Error or handle some other way)
 
 describe("fizzbuzz", () => {
 
+  it ('return "Fizz" for 6', () => {
+    expect(fizzBuzz(6)).toBe('Fizz')
+  })
+
   it ('returns "Fizz" for 3', () => {
     expect(fizzBuzz(3)).toBe('Fizz')
+  })
+
+  it ('returns "Fizz" for 9', () => {
+    expect(fizzBuzz(9)).toBe('Fizz')
   })
 
   it ('returns "Buzz" for 5', () => {
@@ -32,10 +40,6 @@ describe("fizzbuzz", () => {
 
   it ('returns "FizzBuzz" for 15', () => {
     expect(fizzBuzz(15)).toBe('FizzBuzz')
-  })
-
-  it ('returns "Fizz" for 9', () => {
-    expect(fizzBuzz(9)).toBe('Fizz')
   })
 
 });
