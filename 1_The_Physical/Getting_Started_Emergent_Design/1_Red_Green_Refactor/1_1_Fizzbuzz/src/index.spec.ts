@@ -8,7 +8,7 @@ import { fizzBuzz } from "./fizzbuzz";
 5 returns "Buzz
 15 returns "FizzBuzz"
 9 returns "Fizz"
-43 returns "43"
+43 returns "43" // multiple of neither
 42 returns "Fizz"
 45 returns "FizzBuzz"
 102 (you decide, throw an Error or handle some other way)
@@ -34,4 +34,9 @@ describe("fizzbuzz", () => {
   it('returns "FizzBuzz" for 15', () => {
     expect(fizzBuzz(15)).toBe("FizzBuzz");
   });
+
+  it ('returns "43" for 43', () => {
+    expect(fizzBuzz(43)).toBe("43");
+  })
+
 });
