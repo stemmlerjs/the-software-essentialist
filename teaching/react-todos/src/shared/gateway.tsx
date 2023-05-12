@@ -1,3 +1,4 @@
-export class Gateway {
+
+export interface Gateway {
   
 }

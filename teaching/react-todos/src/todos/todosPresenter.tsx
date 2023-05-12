@@ -1,11 +1,21 @@
-import { Gateway } from "../shared/gateway";
+import { GlobalCache } from "../shared/globalCache";
+import { TodoDTO } from "./todoDTO";
+import { TodoViewModel } from "./todoViewModel";
+
 
 export class TodosPresenter {
-  constructor (gateway: Gateway) {
+
+  constructor (private cache: GlobalCache) {
 
   }
 
   getAllTodos () {
-    return [{ text: 'lets do something', id: 1 }]
+    return this.cache.props.todos.map((todoDTO) => this.mapToViewModel(todoDTO))
   }
+
+  mapToViewModel (todoDTO: TodoDTO): TodoViewModel {
+    return new TodoViewModel(todoDTO);
+  }
+
+  
 }
