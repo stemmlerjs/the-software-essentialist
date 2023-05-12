@@ -1,4 +1,4 @@
 
 export function fizzBuzz (num: number) {
-  return 'Fizz'
+  return num === 3 ? 'Fizz' : 'Buzz'
 }
