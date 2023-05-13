@@ -1,6 +1,6 @@
 # The Software Essentialist (Course Projects Repo)
 
-> The official course repo for [The Software Essentialist](https://essentialist.dev/the-software-essentialist) course students.
+> The official course repo for [The Software Essentialist](https://essentialist.dev/) course students.
 
 ## What is this
 
