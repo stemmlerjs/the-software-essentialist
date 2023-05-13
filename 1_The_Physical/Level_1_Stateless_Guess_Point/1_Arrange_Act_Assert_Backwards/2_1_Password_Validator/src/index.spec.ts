@@ -15,6 +15,22 @@ describe('password validator', () => {
         expect(output.errors).toStrictEqual(errors);
     });
   })
+
+  it('knows that "Khalil8" contains at least one digit', () => {
+    let output = PasswordValidator.validate('Khalil8');
+    expect(output.result).toBeTruthy();
+    expect(output.errors).toHaveLength(0);
+  });
+  
+  it ('knows that "khalil" does not contain at least one digit', () => {
+    let output = PasswordValidator.validate('khalil');
+    expect(output.result).toBeFalsy();
+    expect(output.errors).toHaveLength(1);
+    expect(output.errors).toStrictEqual(['NoDigitIncluded']);
+  });
+
+  // it ('knows that "maxwellTheBe" does not contain at least one digit', () => {});
+
 })
 
 
