@@ -13,7 +13,15 @@ describe('password validator', () => {
     expect(output.result).toBeFalsy();
     expect(output.errors).toHaveLength(1);
     expect(output.errors[0]).toEqual('InvalidLength')
-  })
+  });
+
+  it ('knows that "thePhysical1234567" is NOT between 5 and 15 characters long', () => {
+    let output = PasswordValidator.validate('thePhysical1234567');
+    expect(output.result).toBeFalsy();
+    expect(output.errors).toHaveLength(1);
+    expect(output.errors[0]).toEqual('InvalidLength')
+  });
+  
 })
 
 
