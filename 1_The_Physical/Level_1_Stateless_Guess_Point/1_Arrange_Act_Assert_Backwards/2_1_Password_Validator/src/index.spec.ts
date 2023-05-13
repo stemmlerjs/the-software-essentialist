@@ -29,7 +29,12 @@ describe('password validator', () => {
     expect(output.errors).toStrictEqual(['NoDigitIncluded']);
   });
 
-  // it ('knows that "maxwellTheBe" does not contain at least one digit', () => {});
+  it ('knows that "maxwellTheBe" does not contain at least one digit', () => {
+    let output = PasswordValidator.validate('maxwellTheBe');
+    expect(output.result).toBeFalsy();
+    expect(output.errors).toHaveLength(1);
+    expect(output.errors).toStrictEqual(['NoDigitIncluded']);
+  });
 
 })
 
