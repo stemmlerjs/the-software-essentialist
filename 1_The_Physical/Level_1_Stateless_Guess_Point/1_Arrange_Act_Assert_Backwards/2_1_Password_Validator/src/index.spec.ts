@@ -16,26 +16,33 @@ describe('password validator', () => {
     });
   })
 
-  it('knows that "Khalil8" contains at least one digit', () => {
-    let output = PasswordValidator.validate('Khalil8');
-    expect(output.result).toBeTruthy();
-    expect(output.errors).toHaveLength(0);
-  });
-  
-  it ('knows that "khalil" does not contain at least one digit', () => {
-    let output = PasswordValidator.validate('khalil');
-    expect(output.result).toBeFalsy();
-    expect(output.errors).toHaveLength(1);
-    expect(output.errors).toStrictEqual(['NoDigitIncluded']);
-  });
+  describe('checks for at least one digit', () => {
+    it.each([
+      ['Khalil8', true, []],
+      ['khalil', false, ['NoDigitIncluded']],
+      ['maxwellTheBe', false, ['NoDigitIncluded']]
+    ])('knows that "%s" should return %s', 
+      (input: string, result: boolean, errors: string[]) => {
+        let output = PasswordValidator.validate(input);
+        expect(output.result).toBe(result)
+        expect(output.errors).toHaveLength(errors.length);
+        expect(output.errors).toStrictEqual(errors);
+    });
+  })
 
-  it ('knows that "maxwellTheBe" does not contain at least one digit', () => {
-    let output = PasswordValidator.validate('maxwellTheBe');
-    expect(output.result).toBeFalsy();
-    expect(output.errors).toHaveLength(1);
-    expect(output.errors).toStrictEqual(['NoDigitIncluded']);
-  });
-
+  describe('can detect multiple errors', () => {
+    it.each([
+      ['k', false, ['NoDigitIncluded', 'InvalidLength']],
+      ['k8', false, ['InvalidLength']],
+      ['kjsdkjdjkhfjhgfkjhkjhsd', false, ['InvalidLength', 'NoDigitIncluded']]
+    ])('knows that "%s" should return %s', 
+      (input: string, result: boolean, errors: string[]) => {
+        let output = PasswordValidator.validate(input);
+        expect(output.result).toBe(result)
+        expect(output.errors).toHaveLength(errors.length);
+        output.errors.forEach((productionCodeError) => expect(errors).toContain(productionCodeError))
+    });
+  })
 })
 
 
