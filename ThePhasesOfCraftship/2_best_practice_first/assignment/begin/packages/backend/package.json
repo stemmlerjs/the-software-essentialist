@@ -1,0 +1,39 @@
+{
+  "name": "@dddforum/backend",
+  "version": "1.0.0",
+  "description": "The backend for dddforum.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"**/src/**/*.ts\"",
+    "clean": "rimraf ./dist",
+    "build": "tsc -b tsconfig.json",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:reset": "rimraf ./dev.db && npm run migrate && npm run generate",
+    "start:dev": "npm run migrate && npm run generate && npx nodemon",
+    "start": "npm run build && node build/index.js",
+    "test": "jest",
+    "test:dev": "jest --watchAll",
+    "test:e2e": "jest -c jest.config.e2e.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.17",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "@dddforum/shared": "file:../shared",
+    "@prisma/client": "^4.16.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "pg": "^8.11.0",
+    "prisma": "^4.16.0"
+  }
+}
