@@ -56,4 +56,8 @@ describe("fizzbuzz", () => {
     it("throws an error for 348", () => {
         expect(() => { fizzbuzz(348) }).toThrow("Input must be no more than 100");
     });
+
+    it("throws an error when no number is passed in", () => {
+        expect(fizzbuzz).toThrow("Input must be provided");
+    });
 });
