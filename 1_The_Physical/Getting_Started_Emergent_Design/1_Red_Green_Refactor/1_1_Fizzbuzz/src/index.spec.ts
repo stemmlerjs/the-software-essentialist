@@ -9,5 +9,10 @@ describe("fizzbuzz", () => {
     it("returns 1 as a string", () => {
         const result = fizzbuzz(1);
         expect(result).toEqual("1");
-    })
+    });
+
+    it("returns 3 as Fizz", () => {
+        const result = fizzbuzz(3);
+        expect(result).toEqual("Fizz");
+    });
 });
