@@ -42,6 +42,6 @@ describe("fizzbuzz", () => {
     });
 
     it("throws an error for 0", () => {
-        expect(fizzbuzz(0)).toThrow("Input must be greater than 0");
+        expect(() => { fizzbuzz(0) }).toThrow("Input must be greater than 0");
     });
 });
