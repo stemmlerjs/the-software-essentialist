@@ -15,4 +15,9 @@ describe("fizzbuzz", () => {
         const result = fizzbuzz(3);
         expect(result).toEqual("Fizz");
     });
+
+    it("returns 5 as Buzz", () => {
+        const result = fizzbuzz(5);
+        expect(result).toEqual("Buzz");
+    });
 });
