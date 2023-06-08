@@ -48,4 +48,8 @@ describe("fizzbuzz", () => {
     it("throws an error for -5", () => {
         expect(() => { fizzbuzz(-5) }).toThrow("Input must be greater than 0");
     });
+
+    it("throws an error for 102", () => {
+        expect(() => { fizzbuzz(102) }).toThrow("Input must be no more than 100");
+    });
 });
