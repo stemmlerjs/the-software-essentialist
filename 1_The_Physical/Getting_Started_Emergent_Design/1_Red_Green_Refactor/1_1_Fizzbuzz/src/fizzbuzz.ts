@@ -1,5 +1,5 @@
 export function fizzbuzz(value: number): string {
-    if (value === 0) throw new Error("Input must be greater than 0");
+    if (value < 1) throw new Error("Input must be greater than 0");
 
     if (value%15 === 0) return "FizzBuzz";
 
