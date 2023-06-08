@@ -1,7 +1,7 @@
 export function fizzbuzz(value: number): string {
     if (value === undefined) throw new Error("Input must be provided");
 
-    if (value < 1) throw new Error("Input must be greater than 0");
+    if (value < 1) throw new Error("Input must be no less than 1");
 
     if (value > 100) throw new Error("Input must be no more than 100");
 
