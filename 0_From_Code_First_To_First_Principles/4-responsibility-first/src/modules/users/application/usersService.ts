@@ -9,18 +9,18 @@ export class UsersService implements UserAPI {
     
     const maybeUser = await this.usersRepo.findByEmail(input.email);
 
-    if (maybeUser.isFound()) {
-      return new AlreadyCreatedError()
-    }
+    // if (maybeUser.isFound()) {
+    //   return new AlreadyCreatedError()
+    // }
 
-    let userOrError = User.create(input);
+    // let userOrError = User.create(input);
 
-    if (userOrError.hasErrors()) {
-      return userOrError.getError()
-    }
+    // if (userOrError.hasErrors()) {
+    //   return userOrError.getError()
+    // }
 
-    let user = userOrError.getValue();
+    // let user = userOrError.getValue();
 
-    this.usersRepo.saveAndPublishEvents(user);
+    // this.usersRepo.saveAndPublishEvents(user);
   }
 }

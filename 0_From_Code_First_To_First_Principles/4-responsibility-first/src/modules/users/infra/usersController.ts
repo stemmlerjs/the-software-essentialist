@@ -13,16 +13,16 @@ export class UsersController {
     try {
       let response = await this.application.users.createUser(createUserInput)
       
-      if (response.isSuccess()) {
-        return res.status(201).json({ message: 'Successfully created' });
-      }
+      // if (response.isSuccess()) {
+      //   return res.status(201).json({ message: 'Successfully created' });
+      // }
 
-      switch (response.getError()) {
-        case 'AlreadyCreatedError':
-        case 'ValidationError':
-        case 'Error'
+      // switch (response.getError()) {
+      //   case 'AlreadyCreatedError':
+      //   case 'ValidationError':
+      //   case 'Error'
 
-      }
+      // }
 
     } catch (error) {
       res.status(500).json({ error: 'Failed to create user' });
