@@ -2,7 +2,7 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import path from 'path';
-import { RESTfulAPITestDriver } from '../../shared/testDrivers/restfulAPITestDriver';
+import { RESTfulAPITestDriver } from '../../../src/shared/infra/api/restfulAPITestDriver';
 import { CompositionRoot } from '../../../src/modules/compositionRoot';
 
 const feature = loadFeature(path.join(__dirname, './userRegistrationAndPostInteraction.feature'));
@@ -18,12 +18,16 @@ defineFeature(feature, test => {
     let memberId = '1232133123213213'
     
     beforeAll(async () => {
-      // await driver.stop();
-      // await driver.start();
+      await driver.stop();
+      await driver.start();
     })
     
-    given('there is at least one existing member', () => {
-
+    given('there is at least one existing member', async () => {
+      let { usersRepo } = compositionRoot.getRepos();
+      
+      UsersRepo.Builder()
+        .withExistingMembers()
+        .build()
     });
 
     when('I register as a member', async () => {

@@ -62,6 +62,14 @@ export class CompositionRoot {
   public getWebAPI (): ExpressRESTAPI {
     return this.webAPI;
   }
+
+  public getRepos (): Repos {
+    return this.repos;
+  }
+
+  public getE2EWebTestDriver () {
+    
+  }
 }
 
 // Application
