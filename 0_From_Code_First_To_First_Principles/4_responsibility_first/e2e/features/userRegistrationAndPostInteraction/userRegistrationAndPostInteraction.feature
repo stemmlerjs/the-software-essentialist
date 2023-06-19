@@ -10,5 +10,6 @@ Feature: User Registration and Post Interaction
     And I submit my first post
     Then my post should be initially upvoted by me
     And another member leaves a comment on my post
+    And another member upvotes my post
     Then I should receive a FirstUpvoteAchievement email
     And I should receive a notification email about the comment on my post

@@ -3,6 +3,7 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import path from 'path';
 import { CompositionRoot } from '../../../src/modules/compositionRoot';
+import { UserBuilder } from '../../../src/modules/users/application/test/userBuilder'
 
 const feature = loadFeature(path.join(__dirname, './userRegistrationAndPostInteraction.feature'));
 
@@ -13,14 +14,23 @@ defineFeature(feature, test => {
     let driver = compositionRoot.getE2EWebTestDriver();
 
     let memberId = '1232133123213213';
+    let existingUserInput = {}
     
     beforeAll(async () => {
+      await driver.reset();
       await driver.start();
     });
     
     given('there is at least one existing member', async () => {
       // Use the driver to create an existing member
-      await driver.createExistingMember();
+      let existingUser = UserBuilder
+        .builder()
+        .asRole('member')
+        .build()
+
+      await driver.builder()
+        .withExistingUsers(existingUser)
+        .build() //setup
     });
 
     when('I register as a member', async () => {
@@ -43,6 +53,10 @@ defineFeature(feature, test => {
     and('another member leaves a comment on my post', async () => {
       // Use the driver to simulate another member leaving a comment
       await driver.leaveCommentOnPost();
+    });
+
+    and('another member upvotes my post', async () => {
+      await driver.upvotePost(); // use the existing memberId
     });
 
     then('I should receive a FirstUpvoteAchievement email', async () => {

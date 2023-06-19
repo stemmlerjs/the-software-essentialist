@@ -8,7 +8,8 @@ import { ForumService } from "./forum/application/forumService";
 import { UsersService } from "./users/application/usersService";
 import { UsersController } from "./users/infra/usersController";
 import { PrismaUserRepo, UserRepo } from "./users/infra/usersRepo";
-import { E2EWebTestDriver } from "../shared/testing/E2EWebTestDriver";
+import { MembersRepo, PrismaMembersRepo } from "./forum/infra/membersRepo";
+import { E2EWebTestDriver } from "../shared/testing/e2EWebTestDriver";
 
 interface Services {
   users: UsersService;
@@ -16,8 +17,9 @@ interface Services {
   forum: ForumService;
 }
 
-interface Repos {
+export interface Repos {
   usersRepo: UserRepo;
+  membersRepo: MembersRepo;
 }
 
 export class CompositionRoot {
@@ -37,12 +39,14 @@ export class CompositionRoot {
 
   private createE2eWebTestDriver () {
     let webAPI = this.getWebAPI();
-    return new E2EWebTestDriver(webAPI);
+    let repos = this.repos;
+    return new E2EWebTestDriver(webAPI, repos);
   }
 
   private createRepos () {
     let usersRepo = new PrismaUserRepo();
-    return { usersRepo } 
+    let membersRepo = new PrismaMembersRepo();
+    return { usersRepo, membersRepo } 
   }
 
   private createServices () {

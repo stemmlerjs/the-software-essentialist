@@ -1,4 +1,6 @@
-# 🧰 Feature Template
+# Responsibility-First
+
+> This is the responsibility-first approach
 
 ### Features
 
