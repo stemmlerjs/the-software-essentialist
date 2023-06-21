@@ -8,6 +8,10 @@ export abstract class AggregateRoot {
     this.domainEvents = [];
   }
 
+  addDomainEvent (event: DomainEvent) {
+    this.domainEvents.push(event);
+  }
+
   getEvents () {
     return this.domainEvents;
   }

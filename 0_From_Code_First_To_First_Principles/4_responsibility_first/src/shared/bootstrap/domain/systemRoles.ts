@@ -1,5 +1,5 @@
-import { Guard } from "../../../utils/guard";
-import { Result } from "../../../utils/result";
+import { Guard } from "../../utils/guard";
+import { Result } from "../../utils/result";
 
 export type SystemRole = 'app' | 'relay' | 'worker' 
 

@@ -4,7 +4,6 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import path from 'path';
 import { CompositionRoot } from '../../../src/shared/bootstrap/service/compositionRoot/compositionRoot';
 import { UserBuilder } from '../../../src/shared/testing/builders/userBuilder'
-import { TestWebApplicationDriver } from '../../../src/shared/bootstrap/service/applicationDriver/testWebApplicationDriver';
 
 const feature = loadFeature(path.join(__dirname, './userRegistrationAndPostInteraction.feature'));
 
@@ -12,14 +11,10 @@ defineFeature(feature, test => {
   test('User registers an account, submits first post, and receives upvotes and comments', ({ given, when, and, then }) => {
     
     let compositionRoot = new CompositionRoot('test');
-    let driver = compositionRoot.getApplicationDriver() as TestWebApplicationDriver;
-
-    let memberId = '1232133123213213';
-    let existingUserInput = {}
+    let app = compositionRoot.getApplication();
     
     beforeAll(async () => {
-      await driver.reset();
-      await driver.start();
+     
     });
     
     given('there is at least one existing member', async () => {
@@ -29,17 +24,26 @@ defineFeature(feature, test => {
         .asRole('member')
         .build()
 
-      await driver.builder()
+      let userRepoSpy = UserRepoBuilder
         .withExistingUsers([existingUserProps])
-        .build() //setup
+        .build() 
+        
     });
 
     when('I register as a member', async () => {
       // Use the driver to register as a member
-      await driver.registerAsMember();
+      await app.users.createUser({ 
+        email: 'billgates@gmail.com', 
+        role: 'member', 
+        firstName: 'Bill',
+        lastName: "Gates",
+        username: 'billgates233'
+      })
     });
 
     and('I submit my first post', async () => {
+      app.forum.submitPost() // ..... incredible.
+
       // Use the driver to submit the first post
       await driver.submitPost();
     });
@@ -61,6 +65,7 @@ defineFeature(feature, test => {
     });
 
     then('I should receive a FirstUpvoteAchievement email', async () => {
+      expect(emailService.)
       // Use the driver to check for the FirstUpvoteAchievement email
       let achievementEmail = await driver.checkFirstUpvoteAchievementEmail();
       expect(achievementEmail).toBeDefined();

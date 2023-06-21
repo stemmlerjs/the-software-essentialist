@@ -1,6 +1,7 @@
 
-import { CompositionRoot } from "../../../modules/compositionRoot"
+
 import request from 'supertest'
+import { CompositionRoot } from '../../bootstrap/service/compositionRoot/compositionRoot';
 
 describe('expressRestAPI', () => {
 

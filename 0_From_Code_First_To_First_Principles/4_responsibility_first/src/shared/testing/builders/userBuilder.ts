@@ -1,4 +1,5 @@
-import { User } from "../../domain/user";
+import { User } from "../../../modules/users/domain/user";
+import { UserRoleType } from "../../../modules/users/domain/userRole";
 
 export class UserBuilder {
 
@@ -6,7 +7,7 @@ export class UserBuilder {
     return new User()
   }
 
-  asRole (role: Role) {
+  asRole (role: UserRoleType) {
     return this;
   }
 

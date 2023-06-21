@@ -4,7 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { UsersController } from '../../../modules/users/infra/usersController';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import { killProcessOnPort } from '../process/killOnPort';
+import { killProcessOnPort } from '../../bootstrap/service/processService/killOnPort';
 
 type Controllers = {
   usersController: UsersController;

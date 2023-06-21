@@ -1,6 +1,6 @@
 
 
-import { Repository } from "../../../shared/infra/database/repository";
+import { Repository } from "../../../shared/infra/database/ports/repository";
 import { Maybe } from "../../../shared/utils/maybe";
 import { User } from "../domain/user";
 
