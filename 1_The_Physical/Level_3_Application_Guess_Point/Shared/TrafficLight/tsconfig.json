@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6"],
+    "allowJs": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "types": ["node", "jest"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.spec.ts"]
+}
