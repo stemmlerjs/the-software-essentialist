@@ -2,9 +2,9 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import path from 'path';
-import { CompositionRoot } from '../../../src/shared/bootstrap/service/compositionRoot/compositionRoot';
-import { UserBuilder } from '../../../src/shared/testing/builders/userBuilder'
-import { TestWebApplicationDriver } from '../../../src/shared/bootstrap/service/applicationDriver/testWebApplicationDriver';
+import { CompositionRoot } from '../../../../src/shared/bootstrap/service/compositionRoot/compositionRoot';
+import { UserBuilder } from '../../../../src/shared/testing/builders/userBuilder'
+import { TestWebApplicationDriver } from '../../../../src/shared/bootstrap/service/applicationDriver/testWebApplicationDriver';
 
 const feature = loadFeature(path.join(__dirname, './userRegistrationAndPostInteraction.feature'));
 
