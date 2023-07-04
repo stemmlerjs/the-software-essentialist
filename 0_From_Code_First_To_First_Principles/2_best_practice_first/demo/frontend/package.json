@@ -19,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "e2e": "jest -c jest.config.e2e.js",
+    "test:dev": "react-scripts test",
+    "test:e2e": "jest -c jest.config.e2e.js",
+    "test:e2e:dev": "jest -c jest.config.e2e.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
