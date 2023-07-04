@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "test:dev": "react-scripts test",
     "test:e2e": "jest -c jest.config.e2e.js",
-    "test:e2e:dev": "jest -c jest.config.e2e.js",
+    "test:e2e:dev": "jest -c jest.config.e2e.js --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
