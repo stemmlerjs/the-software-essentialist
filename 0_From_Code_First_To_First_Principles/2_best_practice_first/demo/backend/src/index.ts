@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { createUser, editUser, getUserByEmail } from './controllers/userController';
+import { Server } from 'http';
 const cors = require('cors');
 
 const createNewUserController = async (req: Request, res: Response) => {
@@ -35,47 +36,49 @@ type WebServerConfig = {
 }
 
 export class WebServer {
-  private instance: express.Express;
+  private express: express.Express;
+  private server: Server | undefined;
 
   constructor (private config: WebServerConfig) {
-    this.instance = this.createInstance();
-    this.configureInstance();
+    this.express = this.createExpress();
+    this.configureExpress();
     this.setupRoutes();
   }
 
-  private createInstance () {
+  private createExpress () {
     return express();
   }
 
-  private configureInstance () {
-    this.instance.use(cors());
-    this.instance.use(express.json());
+  private configureExpress () {
+    this.express.use(cors());
+    this.express.use(express.json());
   }
 
   private setupRoutes () {
     // Get a user by email
-    this.instance.get('/users', (req, res) => getUserByEmailController(req, res));
+    this.express.get('/users', (req, res) => getUserByEmailController(req, res));
 
     // Edit a user
-    this.instance.post('/users/edit/:userId', (req, res) => editUserByIdController(req, res));
+    this.express.post('/users/edit/:userId', (req, res) => editUserByIdController(req, res));
 
     // Create a new user
-    this.instance.post('/users/new', (req, res) => createNewUserController(req, res));
+    this.express.post('/users/new', (req, res) => createNewUserController(req, res));
   }
 
-  getExpressApp () {
-    return;
+  getServer () {
+    if (!this.server) throw new Error('Server not yet started');
+    return this.server;
   }
 
   async start (): Promise<void> {
-    this.instance.listen(this.config.port, () => {
+    this.server = this.express.listen(this.config.port, () => {
       console.log(`Server is running on port ${this.config.port}`);
     });
   }
 
   async stop (): Promise<void> {
-
+    this.server?.close(() => {
+      console.log('server closed')
+    })
   }
 }
-
-new WebServer({ port: 3000 }).start();
