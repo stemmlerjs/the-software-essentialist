@@ -13,7 +13,7 @@ export class UserBuilder {
       email: '',
       firstName: '',
       lastName: '',
-      userName: ''
+      username: ''
     }
   }
 
@@ -26,7 +26,7 @@ export class UserBuilder {
     return this;
   }
   withUsername(value: string) {
-    this.props.userName = value;
+    this.props.username = value;
     return this;
   }
   withRandomEmail() {
