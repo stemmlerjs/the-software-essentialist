@@ -1,31 +1,26 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path'
-import { RegistrationPage } from '../../shared/pages/registrationPage/registrationPage';
-import { FrontPage } from '../../shared/pages/frontPage/frontPage';
-import { PuppeteerPageDriver } from '../../shared/puppeteerPageDriver';
+import { UserBuilder } from '../../../../shared/users/builders/userBuilder'
 import { CreateUserInput } from '../../../../shared/users/dtos/createUserInput';
-import { UserBuilder } from '../../../../shared/users/builders/userBuilder';
+import { RESTfulAPIDriver } from '../../restfulAPIDriver';
 
 const feature = loadFeature(path.join(__dirname, '../../../../shared/users/e2e/registration.feature'));
 
 defineFeature(feature, test => {
   test('Successful registration', ({ given, when, then, and }) => {
-    let puppeteerPageDriver: PuppeteerPageDriver;
-    let registrationPage: RegistrationPage;
-    let frontPage: FrontPage;
+
     let createUserInput: CreateUserInput;
+    let restfulAPIDriver: RESTfulAPIDriver;
+    let response: any;
 
     beforeAll(async() => {
-      puppeteerPageDriver = await PuppeteerPageDriver.create();
-      registrationPage = new RegistrationPage(puppeteerPageDriver);
-      frontPage = new FrontPage(puppeteerPageDriver)
+      restfulAPIDriver = new RESTfulAPIDriver('http://localhost:3000');
     })
 
     afterAll(async () => {
-      await puppeteerPageDriver.browser.close();
-    })
 
+    })
 
     given('I am a new user', async () => {
       createUserInput = new UserBuilder()
@@ -34,17 +29,18 @@ defineFeature(feature, test => {
         .withUsername('stemmlerjs')
         .withRandomEmail()
         .build();
-
-      await registrationPage.open();
     });
 
     when('I register with valid account details', async () => {
-      await registrationPage.registerWithAccountDetails(createUserInput);
+      response = await restfulAPIDriver.sendRequest('/users/new', createUserInput);
     });
 
     then('I should be granted access to my account', async () => {
-      expect(await registrationPage.isSuccessToastVisible()).toBeTruthy();
-      expect(await frontPage.isOnPage()).toBeTruthy();
+      expect(response.data.id).toBeDefined();
+      expect(response.data.email).toEqual(createUserInput.email);
+      expect(response.data.firstName).toEqual(createUserInput.email);
+      expect(response.data.lastName).toEqual(createUserInput.email);
+      expect(response.data.userName).toEqual(createUserInput.userName);
     });
 
     and('I should receive an email with login instructions', () => {

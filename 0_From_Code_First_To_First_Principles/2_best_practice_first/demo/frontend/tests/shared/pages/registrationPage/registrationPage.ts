@@ -1,13 +1,7 @@
 
 import { PuppeteerPageDriver } from "../../puppeteerPageDriver";
 import { PageComponents } from "../../pageComponents";
-
-export type RegistrationInput = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-}
+import { CreateUserInput } from "../../../../../shared/users/dtos/createUserInput";
 
 export class RegistrationPage {
   private baseUrl: string;
@@ -29,7 +23,7 @@ export class RegistrationPage {
     this.components.load();
   }
 
-  async registerWithAccountDetails (input: RegistrationInput) {
+  async registerWithAccountDetails (input: CreateUserInput) {
     await this.components.load();
     await this.components.get('email').type(input.email)
     await this.components.get('firstName').type(input.firstName);

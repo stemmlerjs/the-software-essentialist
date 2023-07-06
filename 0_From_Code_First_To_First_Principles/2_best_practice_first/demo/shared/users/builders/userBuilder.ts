@@ -1,12 +1,12 @@
-import { RegistrationInput } from "../pages/registrationPage/registrationPage";
 
+import { CreateUserInput } from "../dtos/createUserInput";
 
 function generateRandomInteger(min: number, max: number) {
   return Math.floor(min + Math.random()*(max - min + 1))
 }
 
 export class UserBuilder {
-  private props: RegistrationInput;
+  private props: CreateUserInput;
 
   constructor () {
     this.props = {
