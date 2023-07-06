@@ -1,6 +1,6 @@
 
-import { FrontPage } from "./pages/frontPage";
-import { RegistrationPage } from "./pages/registrationPage";
+import { FrontPage } from "./pages/frontPage/frontPage";
+import { RegistrationPage } from "./pages/registrationPage/registrationPage";
 import { PuppeteerPageDriver } from "./puppeteerPageDriver";
 
 type PageType = "FrontPage" | "RegistrationPage";

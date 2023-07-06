@@ -2,8 +2,8 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path'
 import { PageObject } from '../../shared/pageObject';
-import { RegistrationInput, RegistrationPage } from '../../shared/pages/registrationPage';
-import { FrontPage } from '../../shared/pages/frontPage';
+import { RegistrationInput, RegistrationPage } from '../../shared/pages/registrationPage/registrationPage';
+import { FrontPage } from '../../shared/pages/frontPage/frontPage';
 import { PuppeteerPageDriver } from '../../shared/puppeteerPageDriver';
 
 const feature = loadFeature(path.join(__dirname, '../../../../shared/acceptance/users/registration.feature'));
@@ -15,18 +15,17 @@ defineFeature(feature, test => {
     let frontPage: FrontPage;
 
     beforeAll(async() => {
-
-      puppeteerPageDriver = await PuppeteerPageDriver.create({ headless: true });
+      puppeteerPageDriver = await PuppeteerPageDriver.create({ headless: false, devtools: true });
       registrationPage = new RegistrationPage(puppeteerPageDriver);
       frontPage = new FrontPage(puppeteerPageDriver)
     })
 
-    given('I am a new user', () => {
-      registrationPage.open();
+    given('I am a new user', async () => {
+      await registrationPage.open();
     });
 
-    when('I register with valid account details', (inputList: RegistrationInput[]) => {
-      registrationPage.registerWithAccountDetails(inputList[0]);
+    when('I register with valid account details', async (inputList: RegistrationInput[]) => {
+      await registrationPage.registerWithAccountDetails(inputList[0]);
     });
 
     then('I should be granted access to my account', () => {

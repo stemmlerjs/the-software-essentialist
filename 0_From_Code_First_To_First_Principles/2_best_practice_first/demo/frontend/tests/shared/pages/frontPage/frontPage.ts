@@ -1,6 +1,6 @@
 
-import { PageObject } from "../pageObject";
-import { PuppeteerPageDriver } from "../puppeteerPageDriver";
+
+import { PuppeteerPageDriver } from "../../puppeteerPageDriver";
 
 export class FrontPage {
 
@@ -8,7 +8,7 @@ export class FrontPage {
 
   constructor (private driver: PuppeteerPageDriver) {
     this.driver = driver;
-    this.baseUrl = 'http://localhost:3000/'
+    this.baseUrl = 'http://localhost:3001/'
   }
 
   async open () {
