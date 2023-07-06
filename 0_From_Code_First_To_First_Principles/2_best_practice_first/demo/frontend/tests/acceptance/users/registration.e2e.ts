@@ -16,13 +16,13 @@ defineFeature(feature, test => {
     let registerUserProps: RegistrationInput;
 
     beforeAll(async() => {
-      puppeteerPageDriver = await PuppeteerPageDriver.create({ headless: false, devtools: true });
+      puppeteerPageDriver = await PuppeteerPageDriver.create();
       registrationPage = new RegistrationPage(puppeteerPageDriver);
       frontPage = new FrontPage(puppeteerPageDriver)
     })
 
     afterAll(async () => {
-      // await puppeteerPageDriver.browser.close();
+      await puppeteerPageDriver.browser.close();
     })
 
 
@@ -33,7 +33,7 @@ defineFeature(feature, test => {
         .withUsername('stemmlerjs')
         .withRandomEmail()
         .build();
-        
+
       await registrationPage.open();
     });
 
@@ -41,10 +41,9 @@ defineFeature(feature, test => {
       await registrationPage.registerWithAccountDetails(registerUserProps);
     });
 
-    then('I should be granted access to my account', () => {
-      expect(registrationPage.isToastVisible()).toBeTruthy();
-      expect(registrationPage.isToastSuccessful()).toBeTruthy();
-      expect(frontPage.isOnPage()).toBeTruthy();
+    then('I should be granted access to my account', async () => {
+      expect(await registrationPage.isSuccessToastVisible()).toBeTruthy();
+      expect(await frontPage.isOnPage()).toBeTruthy();
     });
 
     and('I should receive an email with login instructions', () => {

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import axios from 'axios'
+import axios from "axios";
 import { RegistrationForm } from "../../models/registrationForm";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export interface RegistrationFormProps {
   email: string;
@@ -10,6 +12,7 @@ export interface RegistrationFormProps {
 }
 
 const RegistrationPageComponent = () => {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState<RegistrationFormProps>({
     email: "",
     firstName: "",
@@ -26,7 +29,9 @@ const RegistrationPageComponent = () => {
 
   async function submitForm(registrationFormProps: RegistrationFormProps) {
     // Validate the form
-    let registrationFormOrError = RegistrationForm.create(registrationFormProps);
+    let registrationFormOrError = RegistrationForm.create(
+      registrationFormProps
+    );
 
     if (registrationFormOrError instanceof Error) {
       // If the form is invalid, then we have to throw a failure toast
@@ -35,27 +40,41 @@ const RegistrationPageComponent = () => {
 
     // Make the request
     try {
-      let response = await axios({
-        method: 'POST',
-        url: 'http://localhost:3000/users/new',
-        data: registrationFormOrError.toCreateUserDTO()
+      await axios({
+        method: "POST",
+        url: "http://localhost:3000/users/new",
+        data: registrationFormOrError.toCreateUserDTO(),
       });
 
-      // If it goes through successfully, then 
-        // show a success toast
-        // after 2 seconds, redirect to the main page
+      toast.success("Created! Good stuff.", {
+        toastId: "success-toast",
+      });
 
-      console.log(response)
-
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (err) {
-      // If it fails, then show a failure toast
+      toast.error("Ahh, something went wrong", {
+        toastId: "error-toast",
+      });
       console.log(err);
     }
-      
   }
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <h1>Registration Page</h1>
       <input
         onChange={(e) => onFormStateChanged(e.target.value, "email")}
@@ -81,7 +100,10 @@ const RegistrationPageComponent = () => {
         className="username registration"
         type="text"
       />
-      <button onClick={() => submitForm(formState)} className="submit registration">
+      <button
+        onClick={() => submitForm(formState)}
+        className="submit registration"
+      >
         Submit
       </button>
     </div>

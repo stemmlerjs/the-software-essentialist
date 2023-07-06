@@ -15,7 +15,12 @@ export class FrontPage {
     await this.driver.page.goto(this.baseUrl);
   }
 
-  public isOnPage(): boolean {
-    return this.driver.page.url() === this.baseUrl;
+  public async isOnPage(): Promise<boolean> {
+    let result = await this.driver.browser.waitForTarget(
+      target => target.url() === this.baseUrl
+    );
+
+    if (result) return true;
+    return false;
   }
 }

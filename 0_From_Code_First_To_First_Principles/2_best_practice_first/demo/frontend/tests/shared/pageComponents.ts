@@ -2,12 +2,14 @@
 import { ElementHandle } from "puppeteer";
 import { PuppeteerPageDriver } from "./puppeteerPageDriver";
 
+type ElementType = 'input' | 'button' | 'div'
+
 interface PageComponentsConfig {
-  [key: string]: { selector: string, type: 'input' | 'button' }
+  [key: string]: { selector: string, type: ElementType }
 }
 
 interface LoadedPageComponents {
-  [key: string]: { selector: string, type: 'input' | 'button', element: ElementHandle<Element> }
+  [key: string]: { selector: string, type: ElementType, element: ElementHandle<Element> }
   
 }
 

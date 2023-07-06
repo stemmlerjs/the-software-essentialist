@@ -42,11 +42,9 @@ export class RegistrationPage {
     
   }
 
-  isToastVisible (): boolean {
-    return false;
-  }
-
-  isToastSuccessful (): boolean {
+  async isSuccessToastVisible (): Promise<boolean> {
+    let element = await this.driver.page.waitForSelector(`#success-toast`)
+    if (element) return true;
     return false;
   }
 
