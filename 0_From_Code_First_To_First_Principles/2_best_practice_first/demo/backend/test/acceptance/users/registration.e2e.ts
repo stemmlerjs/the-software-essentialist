@@ -21,7 +21,6 @@ defineFeature(feature, (test) => {
       await server.start();
 
       restfulAPIDriver = new RESTfulAPIDriver(
-        "http://localhost:3000",
         server.getHttp()
       );
     });
@@ -40,12 +39,11 @@ defineFeature(feature, (test) => {
     });
 
     then("I should be granted access to my account", async () => {
-      console.log(response.data);
-      expect(response.data.id).toBeDefined();
-      expect(response.data.email).toEqual(createUserInput.email);
-      expect(response.data.firstName).toEqual(createUserInput.email);
-      expect(response.data.lastName).toEqual(createUserInput.email);
-      expect(response.data.username).toEqual(createUserInput.username);
+      expect(response.body.id).toBeDefined();
+      expect(response.body.email).toEqual(createUserInput.email);
+      expect(response.body.firstName).toEqual(createUserInput.firstName);
+      expect(response.body.lastName).toEqual(createUserInput.lastName);
+      expect(response.body.username).toEqual(createUserInput.username);
     });
 
     and("I should receive an email with login instructions", () => {

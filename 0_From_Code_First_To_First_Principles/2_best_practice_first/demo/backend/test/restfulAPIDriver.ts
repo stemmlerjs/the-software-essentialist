@@ -1,8 +1,8 @@
-const request = require("supertest");
+import request from 'supertest'
 import { Server } from "http";
 
 export class RESTfulAPIDriver {
-  constructor(private baseUrl: string, private http: Server) {}
+  constructor(private http: Server) {}
 
   post(url: string, data: any) {
     return request(this.http)
