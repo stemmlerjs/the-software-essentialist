@@ -1,12 +1,13 @@
+const request = require("supertest");
+import { Server } from "http";
 
 export class RESTfulAPIDriver {
-  private baseUrl: string;
+  constructor(private baseUrl: string, private http: Server) {}
 
-  constructor (baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-
-  async sendRequest (url: string, data: any) {
-    
+  post(url: string, data: any) {
+    return request(this.http)
+      .post(url)
+      .send(data)
+      .set("Accept", "application/json")
   }
 }
