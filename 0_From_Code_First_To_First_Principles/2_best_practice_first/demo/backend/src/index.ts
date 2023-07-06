@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import { createUser, editUser, getUserByEmail } from './controllers/userController';
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Create a new user
