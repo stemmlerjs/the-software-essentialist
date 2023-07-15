@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 import * as bcrypt from "bcrypt";
+export const UNIQUE_EMAIL_CONSTRAINT = 'unique_email_constraint';
+export const UNIQUE_USERNAME_CONSTRAINT = 'unique_username_constraint';
 
 @Entity({
     name: "users"
 })
-
 export class User {
 
     constructor() {
@@ -15,11 +16,11 @@ export class User {
     id: number
 
     @Column()
-    @Unique(["email"])
+    @Unique(UNIQUE_EMAIL_CONSTRAINT, ['email'])
     email: string
 
     @Column()
-    @Unique(["username"])
+    @Unique(UNIQUE_USERNAME_CONSTRAINT, ['username'])
     username: string
 
     @Column()

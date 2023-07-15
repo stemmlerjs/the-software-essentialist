@@ -3,6 +3,9 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/user"
 import { UserService } from "../service/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { validate } from "class-validator";
+import { ResponseDto } from "../dto/response.dto";
+import { ValidationError } from "../error/http-errors";
 
 export class UserController {
 
@@ -14,16 +17,37 @@ export class UserController {
 
     async create(request: Request, response: Response, next: NextFunction) {
 
-        const { email, username, firstName, lastName } = request.body;
+        try {
+            const { email, username, firstName, lastName } = request.body;
 
-        const createUserDto: CreateUserDto = {
-            email,
-            username,
-            firstName,
-            lastName
+            const createUserDto: CreateUserDto = {
+                email,
+                username,
+                firstName,
+                lastName
+            }
+
+            if(await validate(createUserDto)){
+                throw new ValidationError()
+            }
+
+            const serviceResponse = this.userService.create(createUserDto);
+
+            const res : ResponseDto = {
+                error: undefined,
+                data: serviceResponse,
+                success: true
+            }
+
+            return res;
+        } catch (error) {
+            const res : ResponseDto = {
+                error: error.message,
+                data: undefined,
+                success: false
+            } 
+            response.status(error.code).json(res)
         }
-
-        return this.userService.create(createUserDto);
     }
 
     // async edit(request: Request, response: Response, next: NextFunction) {

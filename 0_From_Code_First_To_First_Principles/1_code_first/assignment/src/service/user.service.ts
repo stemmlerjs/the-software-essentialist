@@ -1,7 +1,8 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { User } from "../entity/user";
+import { UNIQUE_EMAIL_CONSTRAINT, UNIQUE_USERNAME_CONSTRAINT, User } from "../entity/user";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { ConflictError } from "../error/http-errors";
 
 export class UserService{
     userRepository: Repository<User>;
@@ -12,10 +13,15 @@ export class UserService{
     async create(dto: CreateUserDto){
         try{
             const user: User = this.userRepository.create(dto);
-            return this.userRepository.save(user)
+            return await this.userRepository.save(user)
         }
         catch(error){
-            throw error;
+            if(error?.constraint === UNIQUE_EMAIL_CONSTRAINT){
+                throw new ConflictError("EmailAlreadyInUse")
+            }
+            if(error?.constraint === UNIQUE_USERNAME_CONSTRAINT){
+                throw new ConflictError("UsernameAlreadyTaken")
+            }
         }
     }
 }
