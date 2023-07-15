@@ -1,7 +1,7 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
-import { User } from "../entity/User"
-import { UserService } from "../service/UserService";
+import { User } from "../entity/user"
+import { UserService } from "../service/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
 
 export class UserController {
