@@ -2,22 +2,17 @@ import { UserController } from "./controller/UserController"
 
 export const Routes = [{
     method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all"
-}, {
-    method: "get",
     route: "/users/:id",
     controller: UserController,
-    action: "one"
+    action: "get"
 }, {
     method: "post",
-    route: "/users",
+    route: "/users/new",
     controller: UserController,
-    action: "save"
+    action: "create"
 }, {
-    method: "delete",
-    route: "/users/:id",
+    method: "patch",
+    route: "/users/edit/:userId",
     controller: UserController,
-    action: "remove"
+    action: "edit"
 }]

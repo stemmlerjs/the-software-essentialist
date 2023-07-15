@@ -1,11 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm"
 import * as bcrypt from "bcrypt";
 
-@Entity(
-    {
-        name: "users"
-    }
-)
+@Entity({
+    name: "users"
+})
+
 export class User {
 
     constructor() {
