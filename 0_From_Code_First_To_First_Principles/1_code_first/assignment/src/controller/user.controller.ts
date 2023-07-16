@@ -64,16 +64,29 @@ export class UserController {
     //     return this.userRepository.save(user)
     // }
 
-    // async get(request: Request, response: Response, next: NextFunction) {
-    //     const id = parseInt(request.params.id)
+    async get(request: Request, response: Response, next: NextFunction) {
+        try {
+            const email = request.query.email as string;
+            if(!email) {
+                throw new ValidationError()
+            }
 
-    //     const user = await this.userRepository.findOne({
-    //         where: { id }
-    //     })
+            const serviceResponse = await this.userService.findOne(email)
 
-    //     if (!user) {
-    //         return "unregistered user"
-    //     }
-    //     return user
-    // }
+            const res: ResponseDto = {
+                error: undefined,
+                data: serviceResponse,
+                success: true,
+            }
+
+            return response.status(200).json(res)
+        } catch (error) {
+            const res: ResponseDto = {
+                error: error.message,
+                data: undefined,
+                success: false,
+            }
+            response.status(error.code).json(res)
+        }
+    }
 }

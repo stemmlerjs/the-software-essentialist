@@ -5,9 +5,9 @@ import { EditUserDto } from './dto/edit-user.dto'
 export const Routes = [
     {
         method: 'get',
-        route: '/users/:id',
+        route: '/users',
         controller: UserController,
-        dto: null,
+        dto: undefined,
         action: 'get',
     },
     {

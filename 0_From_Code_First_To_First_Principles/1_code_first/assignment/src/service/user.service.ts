@@ -36,4 +36,16 @@ export class UserService {
             }
         }
     }
+
+    async findOne(email:string){
+        const user = await this.userRepository.findOne({where:{email}})
+        const response: CreateUserResponse = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        }
+        return response;
+    }
 }
