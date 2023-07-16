@@ -5,8 +5,9 @@ import { UserService } from '../service/user.service'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { validate } from 'class-validator'
 import { ResponseDto } from '../dto/response.dto'
-import { ValidationError } from '../error/http-errors'
+import { NotFoundError, ValidationError } from '../error/http-errors'
 import e = require('express')
+import { UpdateUserDto } from '../dto/update-user.dto'
 
 export class UserController {
     private userService: UserService
@@ -45,29 +46,49 @@ export class UserController {
         }
     }
 
-    // async edit(request: Request, response: Response, next: NextFunction) {
-    //     const id = parseInt(request.params.id)
+    async edit(request: Request, response: Response, next: NextFunction) {
+        try {
+            const userId = parseInt(request.params.userId)
 
-    //     const { firstName, lastName, age } = request.body;
+            if (!userId) {
+                throw new NotFoundError('UserNotFound')
+            }
 
-    //     const user = await this.userRepository.findOne({
-    //         where: { id }
-    //     })
+            const { email, username, firstName, lastName } = request.body
 
-    //     if (!user) {
-    //         return "unregistered user"
-    //     }
+            const updateUserDto: UpdateUserDto = {
+                email,
+                username,
+                firstName,
+                lastName,
+            }
 
-    //     user.firstName = firstName
-    //     user.lastName = lastName
+            const serviceResponse = await this.userService.update(
+                userId,
+                updateUserDto
+            )
 
-    //     return this.userRepository.save(user)
-    // }
+            const res: ResponseDto = {
+                error: undefined,
+                data: serviceResponse,
+                success: true,
+            }
+
+            return response.status(200).json(res)
+        } catch (error) {
+            const res: ResponseDto = {
+                error: error.message,
+                data: undefined,
+                success: false,
+            }
+            response.status(error.code).json(res)
+        }
+    }
 
     async get(request: Request, response: Response, next: NextFunction) {
         try {
-            const email = request.query.email as string;
-            if(!email) {
+            const email = request.query.email as string
+            if (!email) {
                 throw new ValidationError()
             }
 

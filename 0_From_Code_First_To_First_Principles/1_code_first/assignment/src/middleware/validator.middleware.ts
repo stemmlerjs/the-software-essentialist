@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { sanitize, Trim } from 'class-sanitizer'
 import { ResponseDto } from '../dto/response.dto'
+import c = require('config')
 
 export default function dtoValidationMiddleware(
     type: any,

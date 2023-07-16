@@ -1,6 +1,6 @@
 import { UserController } from './controller/user.controller'
 import { CreateUserDto } from './dto/create-user.dto'
-import { EditUserDto } from './dto/edit-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 export const Routes = [
     {
@@ -21,7 +21,7 @@ export const Routes = [
         method: 'patch',
         route: '/users/edit/:userId',
         controller: UserController,
-        dto: EditUserDto,
+        dto: UpdateUserDto,
         action: 'edit',
     },
 ]
