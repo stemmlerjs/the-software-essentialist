@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { UserService } from '../service/user.service'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { ResponseDto } from '../dto/response.dto'
-import { NotFoundError, ValidationError } from '../error/http-errors'
+import { NotFoundError, ValidationRequestError } from '../error/http-errors'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { HttpCodes } from '../enum/http-codes'
 
@@ -13,7 +13,7 @@ export class UserController {
         this.userService = new UserService()
     }
 
-    async create(request: Request, response: Response, next: NextFunction) {
+    async create(request: Request) {
         const { email, username, firstName, lastName } = request.body
 
         const createUserDto: CreateUserDto = {
@@ -26,17 +26,17 @@ export class UserController {
         const serviceResponse = await this.userService.create(createUserDto)
 
         const res: ResponseDto = {
-            response:{
+            response: {
                 error: undefined,
                 data: serviceResponse,
                 success: true,
             },
-            code:HttpCodes.CREATED
+            code: HttpCodes.CREATED,
         }
-        return res;
+        return res
     }
 
-    async edit(request: Request, response: Response, next: NextFunction) {
+    async edit(request: Request) {
         const userId = parseInt(request.params.userId)
 
         if (!userId) {
@@ -58,32 +58,32 @@ export class UserController {
         )
 
         const res: ResponseDto = {
-            response:{
+            response: {
                 error: undefined,
                 data: serviceResponse,
                 success: true,
             },
-            code:HttpCodes.OK
+            code: HttpCodes.OK,
         }
-        return res;
+        return res
     }
 
     async get(request: Request) {
         const email = request.query.email as string
         if (!email) {
-            throw new ValidationError()
+            throw new ValidationRequestError()
         }
 
         const serviceResponse = await this.userService.findOne(email)
 
         const res: ResponseDto = {
-            response:{
+            response: {
                 error: undefined,
                 data: serviceResponse,
                 success: true,
             },
-            code:HttpCodes.OK
+            code: HttpCodes.OK,
         }
-        return res;
+        return res
     }
 }

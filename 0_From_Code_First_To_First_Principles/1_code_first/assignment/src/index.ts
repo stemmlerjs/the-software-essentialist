@@ -22,7 +22,6 @@ AppDataSource.initialize()
                         const result = await new (route.controller as any)()[
                             route.action
                         ](req, res, next)
-                        console.log(result)
                         return res.status(result.code).json(result.response)
                     } catch (error) {
                         const response: ResponsePayload = {

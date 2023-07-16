@@ -1,6 +1,6 @@
 import { HttpCodes } from '../enum/http-codes'
 
-export class ValidationError {
+export class ValidationRequestError {
     message: string
     code: HttpCodes
     constructor() {
