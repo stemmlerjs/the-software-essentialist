@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import { AppDataSource } from './data-source'
 import { Routes } from './routes'
 import dtoValidationMiddleware from './middleware/validator.middleware'
+import { ResponseDto, ResponsePayload } from './dto/response.dto'
 
 AppDataSource.initialize()
     .then(async () => {
@@ -16,18 +17,20 @@ AppDataSource.initialize()
             ;(app as any)[route.method](
                 route.route,
                 dtoValidationMiddleware(route.dto),
-                (req: Request, res: Response, next: Function) => {
-                    const result = new (route.controller as any)()[
-                        route.action
-                    ](req, res, next)
-                    if (result instanceof Promise) {
-                        result.then((result) =>
-                            result !== null && result !== undefined
-                                ? res.send(result)
-                                : undefined
-                        )
-                    } else if (result !== null && result !== undefined) {
-                        res.json(result)
+                async (req: Request, res: Response, next: Function) => {
+                    try {
+                        const result = await new (route.controller as any)()[
+                            route.action
+                        ](req, res, next)
+                        console.log(result)
+                        return res.status(result.code).json(result.response)
+                    } catch (error) {
+                        const response: ResponsePayload = {
+                            error: error.message,
+                            data: undefined,
+                            success: false,
+                        }
+                        res.status(error.code).json(response)
                     }
                 }
             )

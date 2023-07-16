@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express'
 import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
-import { sanitize, Trim } from 'class-sanitizer'
-import { ResponseDto } from '../dto/response.dto'
+import { sanitize } from 'class-sanitizer'
+import { ResponsePayload } from '../dto/response.dto'
 import c = require('config')
 
 export default function dtoValidationMiddleware(
@@ -15,7 +15,7 @@ export default function dtoValidationMiddleware(
         validate(dtoObj, { skipMissingProperties }).then(
             (errors: ValidationError[]) => {
                 if (errors.length > 0) {
-                    const response: ResponseDto = {
+                    const response: ResponsePayload = {
                         error: 'ValidationError',
                         data: undefined,
                         success: false,

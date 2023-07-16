@@ -24,4 +24,11 @@ export const Routes = [
         dto: UpdateUserDto,
         action: 'edit',
     },
+    {
+        method: 'patch',
+        route: '/users/edit/',
+        controller: UserController,
+        dto: UpdateUserDto,
+        action: 'edit',
+    },
 ]
