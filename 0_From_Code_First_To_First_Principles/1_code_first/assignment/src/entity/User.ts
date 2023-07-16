@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm'
-import * as bcrypt from 'bcrypt'
 export const UNIQUE_EMAIL_CONSTRAINT = 'unique_email_constraint'
 export const UNIQUE_USERNAME_CONSTRAINT = 'unique_username_constraint'
 
@@ -31,6 +30,7 @@ export class User {
     @Column()
     password: string
 
+    // Just a simple password generator (not secure)
     private generatePassword(): string {
         const length = 10 // Define the desired length of the password
         const chars =
@@ -40,6 +40,7 @@ export class User {
             const randomIndex = Math.floor(Math.random() * chars.length)
             password += chars[randomIndex]
         }
-        return bcrypt.hashSync(password, 10)
+
+        return password
     }
 }
