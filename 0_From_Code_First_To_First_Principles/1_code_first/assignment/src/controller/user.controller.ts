@@ -6,6 +6,7 @@ import { CreateUserDto } from '../dto/create-user.dto'
 import { validate } from 'class-validator'
 import { ResponseDto } from '../dto/response.dto'
 import { ValidationError } from '../error/http-errors'
+import e = require('express')
 
 export class UserController {
     private userService: UserService
@@ -25,11 +26,7 @@ export class UserController {
                 lastName,
             }
 
-            if (await validate(createUserDto)) {
-                throw new ValidationError()
-            }
-
-            const serviceResponse = this.userService.create(createUserDto)
+            const serviceResponse = await this.userService.create(createUserDto)
 
             const res: ResponseDto = {
                 error: undefined,
@@ -37,7 +34,7 @@ export class UserController {
                 success: true,
             }
 
-            return res
+            return response.status(201).json(res)
         } catch (error) {
             const res: ResponseDto = {
                 error: error.message,

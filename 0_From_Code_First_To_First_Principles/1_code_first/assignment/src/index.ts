@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser'
 import { Request, Response } from 'express'
 import { AppDataSource } from './data-source'
 import { Routes } from './routes'
-import { User } from './entity/user'
+import dtoValidationMiddleware from './middleware/validator.middleware'
 
 AppDataSource.initialize()
     .then(async () => {
@@ -15,6 +15,7 @@ AppDataSource.initialize()
         Routes.forEach((route) => {
             ;(app as any)[route.method](
                 route.route,
+                dtoValidationMiddleware(route.dto),
                 (req: Request, res: Response, next: Function) => {
                     const result = new (route.controller as any)()[
                         route.action
