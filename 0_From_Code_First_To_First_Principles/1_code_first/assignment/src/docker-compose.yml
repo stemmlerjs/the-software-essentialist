@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  # PostgreSQL database service
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: essential
+    ports:
+      - "5432:5432" # Map the container's port 5432 to the host's port 5432
