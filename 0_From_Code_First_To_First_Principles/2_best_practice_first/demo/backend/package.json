@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start:dev": "npx nodemon",
-    "start": "npm run build && node build/index.js",
+    "migrate": "npx prisma db push --schema ./src/infra/persistence/prisma/schema.prisma",
+    "start": "npm install && npm run build && npm run migrate && node build/index.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
