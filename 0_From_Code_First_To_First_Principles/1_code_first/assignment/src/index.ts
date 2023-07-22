@@ -1,17 +1,19 @@
+import { UserController } from "./controller/user.controller";
+
+const prisma = require("./conf/prismaClient");
 const express = require("express");
 const app = express();
 
-// Define a basic route
-app.get("/", (req:, res) => {
-  res.send("Hello, world!");
-});
+app.use(express.json());
 
-// Another route
-app.get("/about", (req, res) => {
-  res.send("About page");
-});
+app.post("/user/edit/:userId", UserController.editUser);
 
-const port = 3000; // Choose any available port number
+app.post("/users/new", UserController.createUser);
+
+app.get("/user", UserController.getUser);
+
+const port = 3000;
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

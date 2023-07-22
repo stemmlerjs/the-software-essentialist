@@ -1,6 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://localhost:5432/essential"
+  url      = "postgresql://essential:essential@localhost:5432/essential"
 }
 
 model User {
