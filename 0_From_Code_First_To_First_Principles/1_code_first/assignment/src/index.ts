@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/user/edit/:userId", UserController.editUser);
+app.post("/users/edit/:userId", UserController.editUser);
 
 app.post("/users/new", UserController.createUser);
 
