@@ -21,10 +21,7 @@ export class UserController {
     req: Request<{}, {}, ICreateUserRequest>,
     res: Response<ICreateUserResponse>
   ) {
-    const email = req.body?.email;
-    const lastName = req.body?.lastName;
-    const firstName = req.body?.firstName;
-    const username = req.body?.username;
+    const { email, lastName, firstName, username } = req.body;
 
     if (!email || !lastName || !firstName || !username) {
       return res.status(HttpStatusCode.BAD_REQUEST).send(validationError());
@@ -82,11 +79,8 @@ export class UserController {
     req: Request<{ userId: string }, {}, IEditUserRequest>,
     res: Response<IEditUserResponse>
   ) {
-    const userId = req.params?.userId;
-    const email = req.body?.email;
-    const lastName = req.body?.lastName;
-    const firstName = req.body?.firstName;
-    const username = req.body?.username;
+    const { userId } = req.params;
+    const { email, lastName, firstName, username } = req.body;
 
     if (!email || !lastName || !firstName || !username || !userId) {
       return res.status(HttpStatusCode.BAD_REQUEST).send(validationError());
@@ -163,7 +157,7 @@ export class UserController {
     req: Request<{}, {}, {}, IGetUserRequestQuery>,
     res: Response<IGetUserResponse>
   ) {
-    const email = req.query?.email;
+    const { email } = req.query;
 
     if (!email) {
       return res.status(HttpStatusCode.BAD_REQUEST).send(validationError());
