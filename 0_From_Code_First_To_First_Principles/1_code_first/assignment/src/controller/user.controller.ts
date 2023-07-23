@@ -11,6 +11,8 @@ import emailAlreadyInUseException from "../exceptions/emailAlreadyInUseException
 import { IEditUserRequest } from "./EditUser/IEditUserRequest";
 import { IEditUserResponse } from "./EditUser/IEditUserResponse";
 import { userNotFoundException } from "../exceptions/userNotFoundException";
+import { IGetUserRequestQuery } from "./GetUser/IGetUserRequest";
+import { IGetUserResponse } from "./GetUser/IGetUserResponse";
 
 export class UserController {
   constructor() {}
@@ -157,7 +159,36 @@ export class UserController {
     });
   }
 
-  static async getUser(req: Request, res: Response) {
-    res.send("update user");
+  static async getUser(
+    req: Request<{}, {}, {}, IGetUserRequestQuery>,
+    res: Response<IGetUserResponse>
+  ) {
+    const email = req.query?.email;
+
+    if (!email) {
+      return res.status(HttpStatusCode.BAD_REQUEST).send(validationError());
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return res.status(HttpStatusCode.NOT_FOUND).send(userNotFoundException());
+    }
+
+    res.status(HttpStatusCode.OK).send({
+      data: {
+        id: user.id,
+        email: user.email,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        username: user.username,
+      },
+      success: true,
+      error: undefined,
+    });
   }
 }
