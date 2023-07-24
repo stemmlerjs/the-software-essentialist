@@ -11,10 +11,10 @@ export class IEditUserRequest {
   firstName: string;
   lastName: string;
 
-  constructor(IEditUserRequest: IEditUserRequest) {
-    this.email = IEditUserRequest.email;
-    this.username = IEditUserRequest.username;
-    this.firstName = IEditUserRequest.firstName;
-    this.lastName = IEditUserRequest.lastName;
+  constructor(user: IEditUserRequest) {
+    this.email = user.email;
+    this.username = user.username;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
   }
 }

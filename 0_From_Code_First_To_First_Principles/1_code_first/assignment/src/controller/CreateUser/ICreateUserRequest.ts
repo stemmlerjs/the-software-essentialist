@@ -11,10 +11,10 @@ export class CreateUserRequest {
   firstName: string;
   lastName: string;
 
-  constructor(ICreateUserRequest: ICreateUserRequest) {
-    this.email = ICreateUserRequest.email;
-    this.username = ICreateUserRequest.username;
-    this.firstName = ICreateUserRequest.firstName;
-    this.lastName = ICreateUserRequest.lastName;
+  constructor(user: ICreateUserRequest) {
+    this.email = user.email;
+    this.username = user.username;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
   }
 }
