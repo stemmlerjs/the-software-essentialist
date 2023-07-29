@@ -1,0 +1,23 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - app_state:/app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes:
+  postgres_data:
+  app_state:
