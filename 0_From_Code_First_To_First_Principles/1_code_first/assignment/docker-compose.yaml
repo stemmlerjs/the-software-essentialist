@@ -4,20 +4,20 @@ services:
     build: .
     ports:
       - "3000:3000"
-    volumes:
-      - app_state:/app
     depends_on:
       - db
+    command: sh -c "npm install && npx prisma migrate dev && npm start"
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/postgres
   db:
-    image: postgres:15-alpine
+    image: postgres:14.8-alpine
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
 volumes:
   postgres_data:
-  app_state:
