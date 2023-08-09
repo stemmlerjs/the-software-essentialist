@@ -15,6 +15,7 @@ export class UserController {
 	static async editUser(req: Request, res: Response, next: NextFunction) {
 		const userService = new UserService();
 		const userId = parseInt(req.params.userId, 10);
+		
 		try {
 			const user = await userService.editUser(userId, req.body);
 			res.json(user);
