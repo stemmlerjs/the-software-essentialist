@@ -1,44 +1,35 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { UserService } from "./userService";
 
 export class UserController {
-	static async newUser(req: Request, res: Response) {
-		let { name, email, password } = req.body;
+	static async createUser(req: Request, res: Response) {
+		const userService = new UserService();
 		try {
-			let user = await prisma.user.create({
-				data: { name, email, password },
-			});
+			const user = await userService.createUser(req.body);
 			res.json(user);
 		} catch (err) {
 			console.error(err);
-			res.status(500).json({ error: "Error creating user" });
+			res.status(500).json({ error: err });
 		}
 	}
 
 	static async editUser(req: Request, res: Response) {
-		let { userId } = req.params;
-		let { name, email, password } = req.body;
+		const userService = new UserService();
+		const userId = parseInt(req.params.userId, 10);
 		try {
-			let user = await prisma.user.update({
-				where: { id: Number(userId) },
-				data: { name, email, password },
-			});
+			const user = await userService.editUser(userId, req.body);
 			res.json(user);
 		} catch (err) {
 			console.error(err);
-			res.status(500).json({ error: "Error updating user" });
+			res.status(500).json({ error: err });
 		}
 	}
 
 	static async getUserByEmail(req: Request, res: Response) {
-		let { email } = req.query;
-
+    const userService = new UserService();
+    const email = req.query.email as string;
 		try {
-			let user = await prisma.user.findUnique({
-				where: { email: String(email) },
-			});
+			const user = await userService.getUserByEmail(email);
 
 			if (user) {
 				res.json(user);
@@ -47,7 +38,7 @@ export class UserController {
 			}
 		} catch (err) {
 			console.error(err);
-			res.status(500).json({ error: "Error getting user" });
+			res.status(500).json({ error: err });
 		}
 	}
 }

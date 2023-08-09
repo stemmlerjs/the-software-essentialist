@@ -5,7 +5,7 @@ import { UserController } from "./user/userController";
 const app = express();
 app.use(bodyParser.json());
 
-app.post("/users/new", UserController.newUser);
+app.post("/users/new", UserController.createUser);
 app.post("/users/edit/:userId", UserController.editUser);
 app.get("/users", UserController.getUserByEmail);
 
