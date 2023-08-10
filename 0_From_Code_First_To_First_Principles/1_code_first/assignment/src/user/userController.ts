@@ -4,6 +4,7 @@ import { UserService } from "./userService";
 export class UserController {
 	static async createUser(req: Request, res: Response, next: NextFunction) {
 		const userService = new UserService();
+
 		try {
 			const user = await userService.createUser(req.body);
 			res.json(user);
@@ -27,14 +28,10 @@ export class UserController {
 	static async getUserByEmail(req: Request, res: Response, next: NextFunction) {
     const userService = new UserService();
     const email = req.query.email as string;
+
 		try {
 			const user = await userService.getUserByEmail(email);
-
-			if (user) {
-				res.json(user);
-			} else {
-				res.status(404).json({ error: "User not found" });
-			}
+			res.json(user);
 		} catch (err) {
       next(err);
 		}
