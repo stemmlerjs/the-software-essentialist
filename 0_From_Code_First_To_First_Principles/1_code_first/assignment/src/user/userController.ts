@@ -2,35 +2,33 @@ import { Request, Response, NextFunction } from "express";
 import { UserService } from "./userService";
 
 export class UserController {
-	static async createUser(req: Request, res: Response, next: NextFunction) {
-		const userService = new UserService();
+  private userService = new UserService();
 
+	createUser = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const user = await userService.createUser(req.body);
+			const user = await this.userService.createUser(req.body);
 			res.json(user);
 		} catch (err) {
       next(err);
 		}
 	}
 
-	static async editUser(req: Request, res: Response, next: NextFunction) {
-		const userService = new UserService();
+	editUser = async (req: Request, res: Response, next: NextFunction) => {
 		const userId = parseInt(req.params.userId, 10);
 		
 		try {
-			const user = await userService.editUser(userId, req.body);
+			const user = await this.userService.editUser(userId, req.body);
 			res.json(user);
 		} catch (err) {
       next(err);
 		}
 	}
 
-	static async getUserByEmail(req: Request, res: Response, next: NextFunction) {
-    const userService = new UserService();
+	getUserByEmail = async (req: Request, res: Response, next: NextFunction) => {
     const email = req.query.email as string;
 
 		try {
-			const user = await userService.getUserByEmail(email);
+			const user = await this.userService.getUserByEmail(email);
 			res.json(user);
 		} catch (err) {
       next(err);
