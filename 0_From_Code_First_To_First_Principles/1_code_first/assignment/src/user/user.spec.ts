@@ -1,45 +1,14 @@
 import { UserService } from "./userService";
+import { DBMock, savedUser } from "./user.mock";
 
-let savedUser = {
-  id: 1,
-  email: "saved@email",
-  name: "Test User",
-  password: "password"
-};
-
-let mockData = [ savedUser ];
 
 jest.mock('@prisma/client', () => ({
-  PrismaClient: jest.fn().mockImplementation(() => ({
-    user: {
-      create: jest.fn().mockImplementation(({ data }) => {
-        mockData.push(data);
-        return Promise.resolve(data);
-      } ),
-      findUnique: jest.fn().mockImplementation((query) => {
-        if (query.where.id === mockData[0].id) {
-          return Promise.resolve(mockData[0]);
-        }
-        if (query.where.email === mockData[0].email) {
-          return Promise.resolve(mockData[0]);
-        }
-        return undefined
-      } ),
-      update: jest.fn().mockImplementation((query) => {
-        if (query.where.id === mockData[0].id) {
-          mockData[0] = query.data;
-          return Promise.resolve(mockData[0]);
-        }
-        return undefined
-      } ),  
-    },
-  })),
+  PrismaClient: jest.fn().mockImplementation(() => (DBMock)),
 }));
 
 
 describe('UserService', () => {
   let userService: UserService = new UserService();
-
 
   it('should return an existing user by email', async () => {
     const user = await userService.getUserByEmail(savedUser.email);
