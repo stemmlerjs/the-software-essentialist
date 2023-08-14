@@ -1,60 +1,71 @@
 import { UserService } from "./userService";
-import { PrismaClient } from "@prisma/client";
+
+let savedUser = {
+  id: 1,
+  email: "saved@email",
+  name: "Test User",
+  password: "password"
+};
+
+let mockData = [ savedUser ];
+
+jest.mock('@prisma/client', () => ({
+  PrismaClient: jest.fn().mockImplementation(() => ({
+    user: {
+      create: jest.fn().mockImplementation(({ data }) => {
+        mockData.push(data);
+        return Promise.resolve(data);
+      } ),
+      findUnique: jest.fn().mockImplementation((query) => {
+        if (query.where.id === mockData[0].id) {
+          return Promise.resolve(mockData[0]);
+        }
+        if (query.where.email === mockData[0].email) {
+          return Promise.resolve(mockData[0]);
+        }
+        return undefined
+      } ),
+      update: jest.fn().mockImplementation((query) => {
+        if (query.where.id === mockData[0].id) {
+          mockData[0] = query.data;
+          return Promise.resolve(mockData[0]);
+        }
+        return undefined
+      } ),  
+    },
+  })),
+}));
+
 
 describe('UserService', () => {
-  let userService: UserService;
-  let prisma: PrismaClient;
+  let userService: UserService = new UserService();
 
-  // Setup for each test
-  beforeEach(() => {
-    userService = new UserService();
-    prisma = new PrismaClient();
+
+  it('should return an existing user by email', async () => {
+    const user = await userService.getUserByEmail(savedUser.email);
+
+    expect(user).toBeDefined();
+    expect(user.email).toBe(savedUser.email);
   });
 
-  // Test for createUser
   it('should create a user with valid input', async () => {
-    // Mock Prisma's user.create method
-    prisma.user.create = jest.fn().mockResolvedValue({
-      id: 1,
-      email: 'test@example.com',
-      name: 'Test User',
-      password: 'password'
-    });
-
     const user = await userService.createUser({
-      email: 'test@example.com',
+      email: 'new@email',
       name: 'Test User',
       password: 'password'
     });
 
     expect(user).toBeDefined();
-    expect(user.email).toBe('test@example.com');
+    expect(user.email).toBe('new@email');
   });
 
-  // Test for editUser
   it('should edit a user with valid ID', async () => {
-    // Mock Prisma's user.findUnique and user.update methods
-    prisma.user.findUnique = jest.fn().mockResolvedValue({
-      id: 1,
-      email: 'test@example.com',
-      name: 'Test User',
-      password: 'password'
-    });
-
-    prisma.user.update = jest.fn().mockResolvedValue({
-      id: 1,
-      email: 'new@example.com',
-      name: 'New User',
-      password: 'password'
-    });
-
-    const user = await userService.editUser(1, {
-      email: 'new@example.com',
+    const user = await userService.editUser(savedUser.id, {
+      email: 'updated@email',
     });
 
     expect(user).toBeDefined();
-    expect(user.email).toBe('new@example.com');
+    expect(user.email).toBe('updated@email');
   });
 
-  // Additional tests for other methods can be added here
 });
