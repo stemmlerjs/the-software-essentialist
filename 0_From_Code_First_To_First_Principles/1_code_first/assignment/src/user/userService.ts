@@ -34,7 +34,7 @@ export class UserService {
     }
 
     const existingUserEmail = await this.prisma.user.findUnique({ where: { email: user.email } });
-    if (existingUserEmail) {
+    if (existingUserEmail && existingUserEmail.id !== id) {
       throw new EmailAlreadyExistsError();
     }
 

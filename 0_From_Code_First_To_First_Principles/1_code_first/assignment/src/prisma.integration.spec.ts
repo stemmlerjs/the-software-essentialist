@@ -26,13 +26,16 @@ describe('UserService and Prisma integration', () => {
     expect(user.id).toBe(firstUserID);
   });
 
-  it('should edit an existing user', async () => {
-    const updatedEmail = "updated@email";
+  it('should allow to keep an edited user email', async () => {
+    const updatedName = 'update name';
+    
+    const udatedUser = {...userMock, name: updatedName};
 
-    const user = await userService.editUser(firstUserID, { email: updatedEmail });
+    const user = await userService.editUser(firstUserID, udatedUser);
 
     expect(user).toBeDefined();
-    expect(user.email).toBe(updatedEmail);
+    expect(user.name).toBe(updatedName);
+    expect(user.email).toBe(userMock.email);
   });
 
 });
