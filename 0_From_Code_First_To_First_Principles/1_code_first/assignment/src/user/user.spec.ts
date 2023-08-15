@@ -1,5 +1,5 @@
 import { UserService } from "./userService";
-import { DBMock, savedUser } from "./user.mock";
+import { DBMock, savedUser } from "./userMock";
 
 
 jest.mock('@prisma/client', () => ({
