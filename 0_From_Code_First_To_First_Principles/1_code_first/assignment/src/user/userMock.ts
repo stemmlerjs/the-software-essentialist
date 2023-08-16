@@ -2,7 +2,9 @@
 export const savedUser = {
   id: 1,
   email: "saved@email",
-  name: "Test User",
+  username: 'savedUser',
+  firstName: 'user',
+  lastName: 'saved',
   password: "password"
 };
 

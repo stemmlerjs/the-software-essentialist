@@ -7,8 +7,12 @@ export class UserService {
   private prisma = new PrismaClient();
 
   async createUser(user: CreateUserRequest) {
-    if (!user.email || !user.email.includes("@") || !user.name) {
-      throw new InvalidUserInputError("Invalid email or name");
+    if (!user.email || !user.username || !user.firstName || !user.lastName || !user.password) {
+      throw new InvalidUserInputError();
+    }
+
+    if (!user.email.includes("@")) {
+      throw new InvalidUserInputError("Invalid email format");
     }
     
     const existingUser = await this.prisma.user.findUnique({ where: { email: user.email } });

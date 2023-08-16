@@ -3,7 +3,9 @@ import { UserService } from "./user/userService";
 
 const userMock = {
   email: 'newUser@email',
-  name: 'Test User',
+  username: 'newUser',
+  firstName: 'user',
+  lastName: 'new',
   password: 'password'
 };
 
@@ -29,12 +31,12 @@ describe('UserService and Prisma integration', () => {
   it('should allow to keep an edited user email', async () => {
     const updatedName = 'update name';
     
-    const udatedUser = {...userMock, name: updatedName};
+    const udatedUser = {...userMock, username: updatedName};
 
     const user = await userService.editUser(firstUserID, udatedUser);
 
     expect(user).toBeDefined();
-    expect(user.name).toBe(updatedName);
+    expect(user.username).toBe(updatedName);
     expect(user.email).toBe(userMock.email);
   });
 

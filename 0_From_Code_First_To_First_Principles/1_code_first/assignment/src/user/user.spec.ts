@@ -20,7 +20,9 @@ describe('UserService', () => {
   it('should create a user with valid input', async () => {
     const user = await userService.createUser({
       email: 'new@email',
-      name: 'Test User',
+      username: 'newUser',
+      firstName: 'user',
+      lastName: 'new',
       password: 'password'
     });
 
