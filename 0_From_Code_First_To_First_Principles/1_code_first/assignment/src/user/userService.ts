@@ -2,19 +2,15 @@
 import { PrismaClient } from "@prisma/client";
 import { CreateUserRequest, EditUserRequest } from "./userInputModels";
 import { UserAlreadyExistsError, UserIdNotFoundError, EmailNotFoundError, InvalidUserInputError } from "./userRequestErrors";
+import { getHashedPassword } from "../utils";
 
 export class UserService {
   private prisma = new PrismaClient();
 
   async createUser(user: CreateUserRequest) {
-    if (!user.email || !user.username || !user.firstName || !user.lastName || !user.password) {
+    if (!user.email || !user.username || !user.firstName || !user.lastName) {
       throw new InvalidUserInputError();
     }
-
-    if (!user.email.includes("@")) {
-      throw new InvalidUserInputError("Invalid email format");
-    }
-    
     const existingUserName = await this.prisma.user.findUnique({ where: { username: user.username } });
     if (existingUserName) {
       throw new UserAlreadyExistsError("User name already exists");
@@ -25,6 +21,12 @@ export class UserService {
       throw new UserAlreadyExistsError("Email already exists");
     }
     
+    if (!user.email.includes("@")) {
+      throw new InvalidUserInputError("Invalid email format");
+    }
+
+    user.password = await getHashedPassword(user.password);
+        
     return await this.prisma.user.create({ data: user });
   }
 
@@ -47,6 +49,10 @@ export class UserService {
       if (existingUserEmail && existingUserEmail.id !== id) {
         throw new UserAlreadyExistsError("Email already exists");
       }
+    }
+
+    if (user.password) {
+      user.password = await getHashedPassword(user.password);
     }
 
     return await this.prisma.user.update({ where: { id }, data: user });
