@@ -1,0 +1,93 @@
+{
+  "info": {
+      "_postman_id": "user-api-requests",
+      "name": "User API Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+      {
+          "name": "Create New User",
+          "request": {
+              "method": "POST",
+              "header": [],
+              "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"sample@email.com\",\n    \"username\": \"sampleUser\",\n    \"firstName\": \"Sample\",\n    \"lastName\": \"User\",\n    \"password\": \"password123\"\n}",
+                  "options": {
+                      "raw": {
+                          "language": "json"
+                      }
+                  }
+              },
+              "url": {
+                  "raw": "localhost:3000/users/new",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                      "users",
+                      "new"
+                  ]
+              }
+          }
+      },
+      {
+          "name": "Edit User",
+          "request": {
+              "method": "POST",
+              "header": [],
+              "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"edited@email.com\",\n    \"username\": \"editedUser\",\n    \"firstName\": \"Edited\",\n    \"lastName\": \"User\",\n    \"password\": \"newpassword123\"\n}",
+                  "options": {
+                      "raw": {
+                          "language": "json"
+                      }
+                  }
+              },
+              "url": {
+                  "raw": "localhost:3000/users/edit/:userId",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                      "users",
+                      "edit",
+                      ":userId"
+                  ],
+                  "variable": [
+                      {
+                          "key": "userId",
+                          "value": "USER_ID_HERE"
+                      }
+                  ]
+              }
+          }
+      },
+      {
+          "name": "Get User by Email",
+          "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                  "raw": "localhost:3000/users?email=sample@email.com",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                      "users"
+                  ],
+                  "query": [
+                      {
+                          "key": "email",
+                          "value": "sample@email.com"
+                      }
+                  ]
+              }
+          }
+      }
+  ]
+}
