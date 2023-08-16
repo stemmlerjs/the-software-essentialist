@@ -11,3 +11,10 @@ export class BadRequestError extends Error {
     this.name = "BadRequestError";
   }
 }
+
+export class FieldAlreadyExistError extends Error {
+  constructor(message: string = "Field Already Exist") {
+    super(message);
+    this.name = "FieldAlreadyExistError";
+  }
+}

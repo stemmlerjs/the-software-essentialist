@@ -1,6 +1,6 @@
-import { NotFoundError, BadRequestError } from "../errorHandlers";
+import { NotFoundError, BadRequestError, FieldAlreadyExistError } from "../errorHandlers";
 
-export class EmailAlreadyExistsError extends BadRequestError {
+export class EmailAlreadyExistsError extends FieldAlreadyExistError {
   constructor(message: string = "Email already exists") {
     super(message);
     this.name = "EmailAlreadyExistsError";

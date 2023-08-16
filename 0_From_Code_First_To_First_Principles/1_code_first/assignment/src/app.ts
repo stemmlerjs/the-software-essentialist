@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import routes from "./routes";
-import { BadRequestError, NotFoundError } from "./errorHandlers";
+import { BadRequestError, NotFoundError, FieldAlreadyExistError } from "./errorHandlers";
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,6 +16,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
   if (err instanceof NotFoundError) {
     return res.status(404).json({ message: err.message });
+  }
+
+  if (err instanceof FieldAlreadyExistError) {
+    return res.status(409).json({ message: err.message });
   }
   
   res.status(500).json({ error: err });
