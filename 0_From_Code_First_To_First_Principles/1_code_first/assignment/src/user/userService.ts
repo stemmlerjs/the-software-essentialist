@@ -1,7 +1,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { CreateUserRequest, EditUserRequest } from "./userInputModels";
-import { EmailAlreadyExistsError, UserIdNotFoundError, EmailNotFoundError, InvalidUserInputError } from "./userRequestErrors";
+import { UserAlreadyExistsError, UserIdNotFoundError, EmailNotFoundError, InvalidUserInputError } from "./userRequestErrors";
 
 export class UserService {
   private prisma = new PrismaClient();
@@ -15,9 +15,14 @@ export class UserService {
       throw new InvalidUserInputError("Invalid email format");
     }
     
-    const existingUser = await this.prisma.user.findUnique({ where: { email: user.email } });
-    if (existingUser) {
-      throw new EmailAlreadyExistsError();
+    const existingUserName = await this.prisma.user.findUnique({ where: { username: user.username } });
+    if (existingUserName) {
+      throw new UserAlreadyExistsError("User name already exists");
+    }
+    
+    const existingUserEmail = await this.prisma.user.findUnique({ where: { email: user.email } });
+    if (existingUserEmail) {
+      throw new UserAlreadyExistsError("Email already exists");
     }
     
     return await this.prisma.user.create({ data: user });
@@ -28,18 +33,20 @@ export class UserService {
       throw new InvalidUserInputError("ID is not a number");
     }
 
-    if (user.email && !user.email.includes("@")) {
-      throw new InvalidUserInputError("Invalid email format");
-    }
-
     const existingUserId = await this.prisma.user.findUnique({ where: { id } });
     if (!existingUserId) {
       throw new UserIdNotFoundError();
     }
 
-    const existingUserEmail = await this.prisma.user.findUnique({ where: { email: user.email } });
-    if (existingUserEmail && existingUserEmail.id !== id) {
-      throw new EmailAlreadyExistsError();
+    if (user.email) {
+      if (!user.email.includes("@")) {
+        throw new InvalidUserInputError("Invalid email format");
+      }
+      
+      const existingUserEmail = await this.prisma.user.findUnique({ where: { email: user.email } });
+      if (existingUserEmail && existingUserEmail.id !== id) {
+        throw new UserAlreadyExistsError("Email already exists");
+      }
     }
 
     return await this.prisma.user.update({ where: { id }, data: user });
