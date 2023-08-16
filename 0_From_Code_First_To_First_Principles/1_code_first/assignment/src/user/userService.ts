@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { CreateUserRequest, EditUserRequest } from "./userInputModels";
 import { UserAlreadyExistsError, UserIdNotFoundError, EmailNotFoundError, InvalidUserInputError } from "./userRequestErrors";
@@ -25,7 +24,7 @@ export class UserService {
       throw new InvalidUserInputError("Invalid email format");
     }
 
-    user.password = await getHashedPassword(user.password);
+    user.password = getHashedPassword(user.password);
         
     return await this.prisma.user.create({ data: user });
   }
@@ -52,7 +51,7 @@ export class UserService {
     }
 
     if (user.password) {
-      user.password = await getHashedPassword(user.password);
+      user.password = getHashedPassword(user.password);
     }
 
     return await this.prisma.user.update({ where: { id }, data: user });
