@@ -1,3 +1,9 @@
 # Code-First
 
-> This is where you'll write your code-first implementation of the User Story from DDDForum. You can [see the assignment page for more details](https://www.essentialist.dev/products/the-software-essentialist/categories/2153149734/posts/2168948146).
+- Run the app with docker:
+> docker-compose build && docker-compose up
+
+- For an existing image after the migration was added, run the following commands:
+> docker-compose down && docker-compose build && docker-compose run web npx prisma migrate dev --name update-user && docker-compose up
+
+- To test the app manually, copy `postmanconfig.json` from the root directory and import into postman.com workspace
