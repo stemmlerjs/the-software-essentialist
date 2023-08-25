@@ -49,8 +49,7 @@ class UserController {
             if(userModel) {
                 await this.jsonToModel(req.body, userModel);
 
-                const user = await userModel.save()
-                console.log(`User After Update:  ${JSON.stringify(user)}`)
+                const user = await userModel.save();
 
                 res.status(statusCode.SUCCESS).json({error: 'undefined', data: this.modelToJson(user), success: true});                
             } else {
