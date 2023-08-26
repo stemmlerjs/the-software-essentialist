@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import 'dotenv/config';
 import * as mongoose from 'mongoose';
 import { UserController } from './controllers';
+import {errorMiddleware} from './middlewares';
 
 const {MONGO_USER, MONGO_PASSWORD, MONGO_SERVER, MONGO_DB, PORT} = process.env;
 
@@ -11,7 +12,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use(new UserController().router);
+app.use(new UserController('/users').router);
+
+app.use(errorMiddleware)
 
 app.listen(PORT, () => {
     console.log(`app listening to the port ${PORT}`);

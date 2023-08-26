@@ -1,62 +1,60 @@
-import {Router, Request, Response} from 'express';
+import {Router, Request, Response, NextFunction} from 'express';
 import {User} from '../models';
 import {statusCode, errorMessage} from '../constants'
 import { IUser } from '../interfaces/IUser';
 import bcryptJs from 'bcryptjs';
 
-const PATH = '/users';
-
 class UserController {
+    private path;
     public router = Router();
 
-    constructor() {
-        this.initializeRoutes();
+    constructor(path: String) {
+        this.path = path;
+        this.initializeRoutes(this.path);        
     }    
 
-    private initializeRoutes = () => {
-        this.router.post(`${PATH}/new`, this.createNewUser)
-        this.router.post(`${PATH}/edit/:userId`, this.editUser)
-        this.router.get(`${PATH}`, this.getUsers)
+    private initializeRoutes = (path: String) => {
+        this.router.post(`${path}/new`, this.createNewUser)
+        this.router.post(`${path}/edit/:userId`, this.editUser)
+        this.router.get(`${path}`, this.getUsers)
     }    
 
-    private createNewUser = async (req : Request, res : Response) => {
-        const {email, username, firstName, lastName, password} = req.body;       
+    private createNewUser = async (req : Request, res : Response, next: NextFunction) => {
+        const {email, username, firstName, lastName, password} = req.body;
 
-        try {            
-            const userModel = new User({
-                email,
-                username,
-                firstName,
-                lastName,
-                password
+        const userModel = new User({
+            email,
+            username,
+            firstName,
+            lastName,
+            password
+        })
+
+        userModel
+            .save()
+            .then(user => {
+                res.status(statusCode.CREATED).json({error: 'undefined', data: this.modelToJson(user), success: true});
             })
-    
-            const user = await userModel.save();
-
-            res.status(statusCode.CREATED).json({error: 'undefined', data: this.modelToJson(user), success: true});                   
-
-        } catch(e: any) {
-            this.errorHandler(e, res);
-        }
+            .catch(err => next(err));
     }    
 
-    private editUser = async (req : Request, res : Response) => {
+    private editUser = async (req : Request, res : Response, next: NextFunction) => {
         const {userId} = req.params;
+        
+        let userModel = await User.findOne({userId});
 
-        try {
-            let userModel = await User.findOne({userId});
-
-            if(userModel) {
-                await this.jsonToModel(req.body, userModel);
-
-                const user = await userModel.save();
-
-                res.status(statusCode.SUCCESS).json({error: 'undefined', data: this.modelToJson(user), success: true});                
-            } else {
-                res.status(statusCode.USER_NOT_FOUND).json({ error: errorMessage.USER_NOT_FOUND, data: 'undefined', success: false });
-            }
-        } catch(e) {
-            this.errorHandler(e, res);
+        if(userModel) {
+            await this.jsonToModel(req.body, userModel);
+            
+            userModel
+                .save()
+                .then(user => {
+                    res.status(statusCode.SUCCESS).json({error: 'undefined', data: this.modelToJson(user), success: true});
+                })
+                .catch(err => next(err))
+        } else {
+            console.log('USER NOT FOUND')
+            next('UserNotFound')
         }
     }
 
