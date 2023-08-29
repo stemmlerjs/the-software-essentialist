@@ -6,32 +6,22 @@ describe("fizzbuzz", () => {
     expect(typeof fizzBuzz(5)).toBe("string");
   });
 
-  it("should return 'Fizz' when input is 3", () => {
-    expect(fizzBuzz(3)).toBe("Fizz");
+  it ("returns multiples of three as 'Fizz'", () => {
+    [3, 6, 9, 12].map((multiple) => fizzBuzz(multiple))
+      .forEach((m) => expect(m).toEqual("Fizz"))
   });
  
   test("should return 'Buzz' when input is 5", () => {
     expect(fizzBuzz(5)).toBe("Buzz");
   });
 
-  test("should return 'FizzBuzz' when input is 15", () => {
-    expect(fizzBuzz(15)).toBe("FizzBuzz");
-  });
-
-  test("should return 'Fizz' when input is 9", () => {
-    expect(fizzBuzz(9)).toBe("Fizz");
+  it ("returns multiples of three and five as 'FizzBuzz'", () => {
+    [15, 45].map((multiple) => fizzBuzz(multiple))
+      .forEach((m) => expect(m).toEqual("FizzBuzz"))
   });
 
   test("should return '43' when input is 43", () => {
     expect(fizzBuzz(43)).toBe("43");
-  });
-
-  test("should return 'Fizz' when input is 42", () => {
-    expect(fizzBuzz(42)).toBe("Fizz");
-  });
-
-  test("should return 'FizzBuzz' when input is 45", () => {
-    expect(fizzBuzz(45)).toBe("FizzBuzz");
   });
 
   test("should throw an error when input is 102", () => {
