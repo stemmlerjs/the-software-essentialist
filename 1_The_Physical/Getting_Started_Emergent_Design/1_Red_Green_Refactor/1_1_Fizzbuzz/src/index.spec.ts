@@ -38,4 +38,8 @@ describe("fizzbuzz", () => {
     expect(() => fizzBuzz(102)).toThrow("Input must be a number between 1 and 100.");
   });
 
+  test("should throw an error when input is -12", () => {
+    expect(() => fizzBuzz(-12)).toThrow("Input must be a number between 1 and 100.");
+  });
+
 });
