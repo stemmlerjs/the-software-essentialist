@@ -1,6 +1,7 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {User} from '../models';
-import {statusCode, errorMessage} from '../constants'
+import { statusCode, errorMessage } from '../constants';
+import {EmailAlreadyInUse, UserNameAlreadyExists, UserNotFoundError, ValidationError} from '../errors';
 import { IUser } from '../interfaces/IUser';
 import bcryptJs from 'bcryptjs';
 
@@ -35,7 +36,26 @@ class UserController {
             .then(user => {
                 res.status(statusCode.CREATED).json({error: 'undefined', data: this.modelToJson(user), success: true});
             })
-            .catch(err => next(err));
+            .catch(err => {
+                let username, email;
+
+                if(err.keyValue) {
+                    username = err.keyValue['username'];
+                    email = err.keyValue['email'];
+                }
+
+                if(username) {
+                    next(new UserNameAlreadyExists())
+                }
+
+                if(email) {
+                    next(new EmailAlreadyInUse())
+                } else {
+                    
+                }
+
+                next(new ValidationError());
+            });
     }    
 
     private editUser = async (req : Request, res : Response, next: NextFunction) => {
@@ -51,10 +71,28 @@ class UserController {
                 .then(user => {
                     res.status(statusCode.SUCCESS).json({error: 'undefined', data: this.modelToJson(user), success: true});
                 })
-                .catch(err => next(err))
+                .catch(err => {
+                    let username, email;
+
+                if(err.keyValue) {
+                    username = err.keyValue['username'];
+                    email = err.keyValue['email'];
+                }
+
+                if(username) {
+                    next(new UserNameAlreadyExists())
+                }
+
+                if(email) {
+                    next(new EmailAlreadyInUse())
+                } else {
+                    
+                }
+
+                next(new ValidationError());
+                })
         } else {
-            console.log('USER NOT FOUND')
-            next('UserNotFound')
+            next(new UserNotFoundError())
         }
     }
 
@@ -102,16 +140,6 @@ class UserController {
         firstName: user.firstName, 
         lastName: user.lastName
     })
-
-    private errorHandler(e: any, res: Response) {
-        if(e.keyValue && e.keyValue['username']) {
-            res.status(statusCode.USER_NAME_ALREADY_TAKEN).json({ error: errorMessage.USERNAME_ALREADY_TAKEN, data: 'undefined', success: false });
-        } else if(e.keyValue && e.keyValue['email']) {
-            res.status(statusCode.EMAIL_ALREADY_IN_USE).json({ error: errorMessage.EMAIL_ALREADY_IN_USE, data: 'undefined', success: false });
-        } else {
-            res.status(statusCode.VALIDATION_ERROR).json({ error: errorMessage.VALIDATION_ERROR, data: 'undefined', success: false });
-        }
-    }
 }
 
 export default UserController;

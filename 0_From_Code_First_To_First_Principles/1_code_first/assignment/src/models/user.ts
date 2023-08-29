@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import Counter from './counter';
+import Counter from './Counter';
 import {IUser} from '../interfaces/IUser';
 import bcryptJs from 'bcryptjs';
 
