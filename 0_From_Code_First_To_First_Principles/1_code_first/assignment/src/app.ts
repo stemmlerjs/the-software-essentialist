@@ -7,8 +7,6 @@ import {errorMiddleware} from './middlewares';
 const {MONGO_USER, MONGO_PASSWORD, MONGO_SERVER, MONGO_DB, PORT} = process.env;
 
 mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_SERVER}/${MONGO_DB}?retryWrites=true&w=majority`);
-// const mongoDbConnection = mongoose.connection;
-// mongoDbConnection.once('open', () => {console.log('connected')});
 
 const app = express();
 

@@ -86,11 +86,9 @@ class UserController {
                 if(email) {
                     next(new EmailAlreadyInUse())
                 } else {
-                    
+                    next(new ValidationError());    
                 }
-
-                next(new ValidationError());
-                })
+           })
         } else {
             next(new UserNotFoundError())
         }
