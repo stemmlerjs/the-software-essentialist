@@ -6,8 +6,12 @@ describe("fizzbuzz", () => {
     expect(typeof fizzBuzz(5)).toBe("string");
   });
 
-  it("should return Fizz when input is 3", () => {
+  it("should return 'Fizz' when input is 3", () => {
     expect(fizzBuzz(3)).toBe("Fizz");
   });
  
+  test("should return 'Buzz' when input is 5", () => {
+    expect(fizzBuzz(5)).toBe("Buzz");
+  });
+
 });
