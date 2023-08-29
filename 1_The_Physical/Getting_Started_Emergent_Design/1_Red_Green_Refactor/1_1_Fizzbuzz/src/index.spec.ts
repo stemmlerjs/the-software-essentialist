@@ -34,4 +34,8 @@ describe("fizzbuzz", () => {
     expect(fizzBuzz(45)).toBe("FizzBuzz");
   });
 
+  test("should throw an error when input is 102", () => {
+    expect(() => fizzBuzz(102)).toThrow("Input must be a number between 1 and 100.");
+  });
+
 });
