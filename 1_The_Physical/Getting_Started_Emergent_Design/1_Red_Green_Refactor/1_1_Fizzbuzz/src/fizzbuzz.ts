@@ -1,5 +1,5 @@
 export const fizzBuzz = (n: number): string => {
-  if (n > 100) {
+  if (n < 1 || n > 100) {
     throw new Error("Input must be a number between 1 and 100.");
   }
 
