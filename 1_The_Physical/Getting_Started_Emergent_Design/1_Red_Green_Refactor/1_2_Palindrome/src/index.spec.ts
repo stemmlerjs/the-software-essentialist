@@ -31,5 +31,9 @@ describe('palindrome checker', () => {
   it('returns false for "bill"', () => {
     expect(palindromeChecker('bill')).toBe(false);
   });
+
+  it('returns true for "Was It A Rat I Saw"', () => {
+    expect(palindromeChecker('Was It A Rat I Saw')).toBe(true);
+  });
   
 });
