@@ -24,8 +24,12 @@ describe('palindrome checker', () => {
     expect(palindromeChecker('MoM')).toBe(true);
   });
 
-  it('returns true for "Momx"', () => {
+  it('returns false for "Momx"', () => {
     expect(palindromeChecker('Momx')).toBe(false);
+  });
+
+  it('returns false for "bill"', () => {
+    expect(palindromeChecker('bill')).toBe(false);
   });
   
 });
