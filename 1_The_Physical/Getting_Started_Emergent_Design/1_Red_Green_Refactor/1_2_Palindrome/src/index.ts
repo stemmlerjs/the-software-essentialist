@@ -1,4 +1,4 @@
 
-export const palindromeChecker = (str: string): void => {
-  
+export const palindromeChecker = (str: string): boolean => {
+  return true;
 }
