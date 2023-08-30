@@ -12,28 +12,30 @@ describe('palindrome checker', () => {
   // "Never Odd or Even1" returns false 
   // "1Never Odd or Even1" returns true
 
-  it('returns true for "mom"', () => {
-    expect(palindromeChecker('mom')).toBe(true);
+  describe('returns true for palindrom str', () => {
+    it.each(['mom', 'MoM'])('knows that %s is a palindrome', (str: string) => {
+      expect(palindromeChecker(str)).toBe(true);
+    });
   });
 
-  it('returns true for "Mom"', () => {
-    expect(palindromeChecker('Mom')).toBe(true);
+  describe('approves palindroms with different letter cases', () => {
+    it.each(['Mom', 'Noon', 'xMomx'])('knows that %s is a palindrome', (str: string) => {
+      expect(palindromeChecker(str)).toBe(true);
+    });
   });
 
-  it('returns true for "MoM"', () => {
-    expect(palindromeChecker('MoM')).toBe(true);
+  describe('returns false for non palindromes', () => {
+    it.each(['Momx', 'bill', 'Never Odd or Even1'])
+    ('knows that %s is not a palindrome', (str: string) => {
+      expect(palindromeChecker(str)).toBe(false);
+    });
   });
 
-  it('returns false for "Momx"', () => {
-    expect(palindromeChecker('Momx')).toBe(false);
-  });
-
-  it('returns false for "bill"', () => {
-    expect(palindromeChecker('bill')).toBe(false);
-  });
-
-  it('returns true for "Was It A Rat I Saw"', () => {
-    expect(palindromeChecker('Was It A Rat I Saw')).toBe(true);
+  describe('ignores string spaces', () => {
+    it.each(['Was It A Rat I Saw', 'Never Odd or Even', '1Never Odd or Even1'])
+    ('knows that %s is a palindrome', (str: string) => {
+      expect(palindromeChecker(str)).toBe(true);
+    });
   });
   
 });
