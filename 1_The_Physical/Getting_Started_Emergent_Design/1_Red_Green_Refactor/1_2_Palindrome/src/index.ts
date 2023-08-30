@@ -1,5 +1,5 @@
 
 export const palindromeChecker = (str: string): boolean => {
-  const loweredStr = str.toLocaleLowerCase();
-  return loweredStr === loweredStr.split('').reverse().join('');
+  const strippedLowStr = str.toLocaleLowerCase().replace(/\s/g, '');
+  return strippedLowStr === strippedLowStr.split('').reverse().join('');
 }
