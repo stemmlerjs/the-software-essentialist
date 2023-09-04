@@ -48,7 +48,7 @@ Here are some examples:
 To set up the project, run the following command:
 
 ```bash
-npm run install
+npm install
 ```
 
 ## To run the tests in development mode
