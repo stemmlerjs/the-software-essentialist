@@ -27,7 +27,7 @@ describe("fizzbuzz", () => {
         expect(fizzbuzz(15)).toBe('FizzBuzz');
     });
 
-    it('returns "Fizz" for 9', () => {
+    it.each([3, 9])('returns "Fizz" for %#', () => {
         expect(fizzbuzz(9)).toBe('Fizz');
     });
 });
