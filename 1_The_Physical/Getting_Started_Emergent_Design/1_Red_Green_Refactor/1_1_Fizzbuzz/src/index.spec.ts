@@ -43,4 +43,8 @@ describe("fizzbuzz", () => {
     it.each([101, 102])('throws an error for too big number %s', (num) => {
         expect(() => fizzbuzz(num)).toThrowError('Too big');
     });
+
+    it.each([1, 2, 4, 43])('outputs non-fizz, buzz, or fizzbuzz number %s as string', (num) => {
+        expect(fizzbuzz(num)).toBe(`${num}`);
+    });
 });
