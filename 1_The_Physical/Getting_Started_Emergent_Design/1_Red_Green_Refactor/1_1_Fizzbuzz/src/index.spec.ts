@@ -20,6 +20,10 @@ import { fizzbuzz } from './fizzbuzz';
 * */
 
 describe("fizzbuzz", () => {
+    it.each([1, 100])('accepts the edge number %s', (num) => {
+        expect(fizzbuzz(num)).toBeTruthy();
+    });
+
     it.each([3, 6, 9])('returns "Fizz" for %s', (num) => {
         expect(fizzbuzz(num)).toBe('Fizz');
     });
