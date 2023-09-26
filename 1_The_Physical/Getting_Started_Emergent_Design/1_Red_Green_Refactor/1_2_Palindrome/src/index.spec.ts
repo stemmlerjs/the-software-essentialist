@@ -13,35 +13,21 @@
 import { isPalindrome } from "./index";
 
 describe('palindrome checker', () => {
-    it('treats "mom" to be a palindrome', () => {
-        expect(isPalindrome("mom")).toBe(true);
+    it.each([
+        'mom',
+        'Mom',
+        'xMomx',
+        'Was It A Rat I Saw',
+        'Never Odd or Even',
+        '1Never Odd or Even1',
+    ])('treats "%s" to be a palindrome', (input) => {
+        expect(isPalindrome(input)).toBe(true);
     });
 
-    it('treats "Mom" to be a palindrome', () => {
-        expect(isPalindrome("Mom")).toBe(true);
-    });
-
-    it('treats "Momx" not to be a palindrome', () => {
-        expect(isPalindrome("Momx")).toBe(false);
-    });
-
-    it('treats "xMomx" to be a palindrome', () => {
-        expect(isPalindrome("xMomx")).toBe(true);
-    });
-
-    it('treats "Was It A Rat I Saw" to be a palindrome', () => {
-        expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
-    });
-
-    it('treats "Never Odd or Even" to be a palindrome', () => {
-        expect(isPalindrome("Never Odd or Even")).toBe(true);
-    });
-
-    it('treats "Never Odd or Even1" not to be a palindrome', () => {
-        expect(isPalindrome("Never Odd or Even1")).toBe(false);
-    });
-
-    it('treats "1Never Odd or Even1" to be a palindrome', () => {
-        expect(isPalindrome("1Never Odd or Even1")).toBe(true);
+    it.each([
+        'Momx',
+        'Never Odd or Even1',
+    ])('treats "%s" not to be a palindrome', (input) => {
+        expect(isPalindrome(input)).toBe(false);
     });
 });
