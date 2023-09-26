@@ -1,1 +1,1 @@
-export const isPalindrome = (str: string) => str
+export const isPalindrome = (str: string) => str === 'mom';
