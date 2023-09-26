@@ -1,1 +1,1 @@
-export const isPalindrome = (str: string) => str === 'mom';
+export const isPalindrome = (str: string) => str.toLowerCase() === 'mom';
