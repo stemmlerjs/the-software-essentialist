@@ -1,0 +1,1 @@
+export const isPalindrome = (str: string) => str
