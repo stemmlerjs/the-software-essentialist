@@ -22,4 +22,7 @@ describe('palindrome checker', () => {
     it('treats "Momx" not to be a palindrome', () => {
         expect(isPalindrome("Momx")).toBe(false);
     })
+    it('treats "xMomx" to be a palindrome', () => {
+        expect(isPalindrome("xMomx")).toBe(true);
+    })
 })
