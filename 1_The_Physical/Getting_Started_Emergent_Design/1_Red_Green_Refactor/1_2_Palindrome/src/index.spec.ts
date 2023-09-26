@@ -32,4 +32,16 @@ describe('palindrome checker', () => {
     it('treats "Was It A Rat I Saw" to be a palindrome', () => {
         expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
     });
+
+    it('treats "Never Odd or Even" to be a palindrome', () => {
+        expect(isPalindrome("Never Odd or Even")).toBe(true);
+    });
+
+    it('treats "Never Odd or Even1" not to be a palindrome', () => {
+        expect(isPalindrome("Never Odd or Even1")).toBe(false);
+    });
+
+    it('treats "1Never Odd or Even1" to be a palindrome', () => {
+        expect(isPalindrome("1Never Odd or Even1")).toBe(true);
+    });
 });
