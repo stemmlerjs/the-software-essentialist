@@ -15,14 +15,21 @@ import { isPalindrome } from "./index";
 describe('palindrome checker', () => {
     it('treats "mom" to be a palindrome', () => {
         expect(isPalindrome("mom")).toBe(true);
-    })
+    });
+
     it('treats "Mom" to be a palindrome', () => {
         expect(isPalindrome("Mom")).toBe(true);
-    })
+    });
+
     it('treats "Momx" not to be a palindrome', () => {
         expect(isPalindrome("Momx")).toBe(false);
-    })
+    });
+
     it('treats "xMomx" to be a palindrome', () => {
         expect(isPalindrome("xMomx")).toBe(true);
-    })
-})
+    });
+
+    it('treats "Was It A Rat I Saw" to be a palindrome', () => {
+        expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
+    });
+});

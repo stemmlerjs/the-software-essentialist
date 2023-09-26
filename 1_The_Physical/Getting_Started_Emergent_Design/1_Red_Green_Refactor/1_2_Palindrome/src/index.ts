@@ -1,1 +1,4 @@
-export const isPalindrome = (str: string) => str.toLowerCase() === 'mom' || str.toLowerCase() === 'xmomx';
+export const isPalindrome = (str: string) => {
+    const lowerNoSpacedStr = str.toLowerCase().split(' ').join('');
+    return lowerNoSpacedStr === lowerNoSpacedStr.split('').reverse().join('')
+};
