@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start:dev": "npx nodemon",
-    "start": "npm run build && node build/index.js",
+    "start": "yarn build && node build/index.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
@@ -21,7 +21,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run test && npm run prettier-format && npm run lint"
+      "pre-commit": "yarn test && yarn prettier-format && yarn lint"
     }
   },
   "keywords": [],
@@ -48,6 +48,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "jest-cucumber": "^3.0.1"
   }
 }
