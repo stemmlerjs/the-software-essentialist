@@ -11,4 +11,5 @@ To set up this assignment, do the following:
 1. Make your own DDDForum repo
 2. Publish it to GitHub
 3. Use your code from the previous Code-First assignment as your starting point
-4. Head back to [the assignment page](https://www.essentialist.dev/products/the-software-essentialist/categories/2153382759/posts/2168948141) to learn how to complete the assignment and grade yourself.
+4. Create a new branch called assignment/e2e-backend. This is where you'll do your work.
+5. Head back to [the assignment page](https://www.essentialist.dev/products/the-software-essentialist/categories/2153382759/posts/2168948141) to learn how to complete the assignment and grade yourself.
