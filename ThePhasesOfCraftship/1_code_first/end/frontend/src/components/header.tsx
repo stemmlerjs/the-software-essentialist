@@ -1,23 +1,40 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import logo from '../assets/dddforumlogo.png'
+import { Link, useLocation, useRoutes } from "react-router-dom";
 
 const Logo = () => (
-  <div>
-    <img src="https://em-content.zobj.net/source/twitter/376/brick_1f9f1.png"></img>
+  <div id="app-logo">
+    <img src={logo}></img>
   </div>
 );
 const TitleAndSubmission = () => (
-  <div>
+  <div id="title-container">
     <h1>Domain-Driven Designers</h1>
     <h3>Where awesome domain driven designers are made</h3>
     <Link to={"/submit"}>submit</Link>
   </div>
 );
 
-const Join = () => (
-  <div>
+const HeaderActionButton = () => (
+  <div id="header-action-button">
     <Link to="/join">Join</Link>
   </div>
 );
 
-export const Header = ({ children }: any) => <header className="flex">{children}</header>;
+const shouldShowActionButton = (pathName: string) => {
+  return pathName !== '/join';
+}
+
+export const Header = ({ }) => {
+  const location = useLocation();
+  
+  
+  return (
+    <header id="header" className="flex align-center">
+      <Logo/>
+      <TitleAndSubmission/>
+      {shouldShowActionButton(location.pathname) ? <HeaderActionButton/> : ''}
+    </header>
+  );
+  
+}
