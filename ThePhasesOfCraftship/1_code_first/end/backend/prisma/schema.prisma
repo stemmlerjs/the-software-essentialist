@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -11,9 +12,62 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  firstName  String
-  lastName   String
-  username   String
+  id        Int    @id @default(autoincrement())
+  email     String @unique
+  firstName String
+  lastName  String
+  username  String
+
+  // Define a one-to-one relationship with Member
+  member    Member?
+}
+
+model Member {
+  id    Int    @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
+  posts Post[]
+  votes  Vote[]
+}
+
+enum PostType {
+  TEXT
+  LINK
+}
+
+model Post {
+  id             Int       @id @default(autoincrement())
+  memberPostedBy Member    @relation(fields: [memberId], references: [id])
+  memberId       Int // Foreign key to the Member table
+  postType       PostType
+  content        String
+  comments       Comment[]
+  dateCreated    DateTime  @default(now())
+  votes          Vote[]
+}
+
+model Comment {
+  id     Int  @id @default(autoincrement())
+
+  // Foreign key relation to the Post table
+  postId Int // Foreign key to the Post table
+  post   Post @relation(fields: [postId], references: [id])
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+model Vote {
+  id            Int  @id @default(autoincrement())
+
+  postId        Int // Foreign key to the Post table
+  postBelongsTo Post @relation(fields: [postId], references: [id])
+
+  memberId        Int // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  voteType VoteType
 }
