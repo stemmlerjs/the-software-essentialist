@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { createUser, editUser, getUserByEmail } from './controllers/userController';
+import { getRecentPosts } from './controllers/postsController';
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,24 @@ app.get('/users', async (req: Request, res: Response) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch user.' });
+  }
+});
+
+// Get a user by email
+app.get('/posts', async (req: Request, res: Response) => {
+  try {
+    const { sort } = req.query;
+    let posts;
+
+    if (sort === 'recent') {
+      posts = await getRecentPosts()
+    } else {
+      return res.status(500).json({ error: 'include ?sort= query'})
+    }
+
+    return res.json({ posts });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching posts' });
   }
 });
 

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "generate": "prisma generate",
-    "start:dev": "npm run generate && npx nodemon",
+    "migrate": "prisma migrate dev",
+    "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start": "npm run build && node build/index.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "run-script-os",
