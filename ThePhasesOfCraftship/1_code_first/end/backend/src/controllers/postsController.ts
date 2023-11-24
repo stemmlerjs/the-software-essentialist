@@ -1,43 +1,25 @@
 
 import { prisma } from '../database';
 
-export async function getPopularPosts() {
+export async function getRecentPosts () {
   try {
-    const postIdsWithHighestVoteCount = await prisma.vote.groupBy({
-      by: ['postId'],
-      _count: {
-        postId: true,
+
+    /**
+     * How to get popular posts?
+     * Code-First Way: just compute on the fly (super expensive, make it work)
+     */
+
+    const postsWithVotes = await prisma.post.findMany({
+      include: {
+        votes: true, // Include associated votes for each post
       },
       orderBy: {
-        _count: {
-          postId: 'desc',
-        },
-      },
-      take: 10, // Adjust this value to get the top N postIds with the highest vote count
-    });
-
-    const topPostIds = postIdsWithHighestVoteCount.map((entry) => entry.postId);
-
-    const popularPosts = await prisma.post.findMany({
-      where: {
-        id: {
-          in: topPostIds,
-        },
+        dateCreated: 'desc', // Sorts by dateCreated in descending order
       },
     });
-
-    return popularPosts;
+  
+    return postsWithVotes;
   } catch (err) {
     console.log(err);
   }
-}
-
-export async function editUser(userId: number, userData: any) {
-  const user = await prisma.user.update({ where: { id: userId }, data: userData });
-  return user;
-}
-
-export async function getUserByEmail(email: string) {
-  const user = await prisma.user.findUnique({ where: { email } });
-  return user;
 }
