@@ -9,6 +9,7 @@ const initialUsers: User[] = [
     firstName: "Bob",
     lastName: "Vance",
     username: "bobvance",
+    password: '123'
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ const initialUsers: User[] = [
     firstName: "Tony",
     lastName: "Soprano",
     username: "tonysoprano",
+    password: '123'
   },
   {
     id: 3,
@@ -23,6 +25,7 @@ const initialUsers: User[] = [
     firstName: "Bill",
     lastName: "Burr",
     username: "billburr",
+    password: '123'
   },
 ];
 

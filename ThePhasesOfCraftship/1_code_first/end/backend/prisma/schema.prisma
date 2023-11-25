@@ -17,6 +17,7 @@ model User {
   firstName String
   lastName  String
   username  String
+  password  String
 
   // Define a one-to-one relationship with Member
   member    Member?
