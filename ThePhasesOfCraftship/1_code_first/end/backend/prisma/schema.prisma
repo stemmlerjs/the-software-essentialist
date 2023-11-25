@@ -29,6 +29,7 @@ model Member {
   userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
   posts Post[]
   votes  Vote[]
+  comments  Comment[]
 }
 
 model Post {
@@ -48,6 +49,14 @@ model Comment {
   // Foreign key relation to the Post table
   postId Int // Foreign key to the Post table
   post   Post @relation(fields: [postId], references: [id])
+  text String
+
+  memberId        Int // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id]) 
+
+  parentCommentId    Int?
+  parentComment Comment? @relation("Replies", fields: [parentCommentId], references: [id])
+  replyComments Comment[] @relation("Replies")
 }
 
 model Vote {
