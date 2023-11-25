@@ -4,7 +4,8 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
-    "username" TEXT NOT NULL
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL
 );
 
 -- CreateTable
