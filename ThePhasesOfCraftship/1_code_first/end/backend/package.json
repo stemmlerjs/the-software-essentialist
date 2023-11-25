@@ -7,6 +7,8 @@
     "build": "rimraf ./build && tsc",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:reset": "rimraf ./dev.db && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start": "npm run build && node build/index.js",
     "lint": "eslint . --ext .ts",
@@ -25,6 +27,9 @@
     "hooks": {
       "pre-commit": "npm run test && npm run prettier-format && npm run lint"
     }
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
