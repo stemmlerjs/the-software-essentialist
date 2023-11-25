@@ -3,14 +3,25 @@ import React from 'react'
 
 import { Link } from "react-router-dom";
 import arrow from "../assets/arrow.svg";
+import moment from 'moment';
+
+
+type Vote = { id: number, postId: number, voteType: 'Upvote' | 'Downvote' };
+type Comment = {};
 
 type Post = {
   title: string;
   dateCreated: string;
-  memberPostedBy: string;
-  totalNumComments: number;
-  voteCount: number;
+  memberPostedBy: any;
+  comments: Comment[];
+  votes: Vote[]
 };
+
+function computeVoteCount(votes: Vote[]) {
+  let count = 0;
+  votes.forEach((v) => v.voteType === 'Upvote' ? count++ : count--);
+  return count;
+}
 
 export const PostsList = ({ posts }: { posts: Post[] }) => (
   <div className="posts-list">
@@ -20,7 +31,7 @@ export const PostsList = ({ posts }: { posts: Post[] }) => (
           <div className="post-item-upvote">
             <img src={arrow} />
           </div>
-          <div>{post.voteCount}</div>
+          <div>{computeVoteCount(post.votes)}</div>
           <div className="post-item-downvote">
             <img src={arrow} />
           </div>
@@ -28,13 +39,13 @@ export const PostsList = ({ posts }: { posts: Post[] }) => (
         <div className="post-item-content">
           <div className="post-item-title">{post.title}</div>
           <div className="post-item-details">
-          <div>{post.dateCreated}</div>
-          <Link to={`/member/${post.memberPostedBy}`}>
-            by {post.memberPostedBy}
+          <div>{moment(post.dateCreated).fromNow()}</div>
+          <Link to={`/member/${post.memberPostedBy.user.username}`}>
+            by {post.memberPostedBy.user.username}
           </Link>
           <div>
-            {post.totalNumComments}{" "}
-            {post.totalNumComments !== 1 ? `comments` : "comment"}
+            {post.comments.length}{" "}
+            {post.comments.length !== 1 ? `comments` : "comment"}
           </div>
           </div>
         </div>

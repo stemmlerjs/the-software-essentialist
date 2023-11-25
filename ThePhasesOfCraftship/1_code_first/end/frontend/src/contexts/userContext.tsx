@@ -2,9 +2,8 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 // Define the shape of your user data
-interface UserData {
-  name: string;
-  email: string;
+export interface UserData {
+  username: string;
   // ... other relevant user data
 }
 
