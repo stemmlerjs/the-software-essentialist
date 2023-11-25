@@ -1,8 +1,9 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import { PostsList } from "../components/postsList";
 import { PostsViewSwitcher } from "../components/postsViewSwitcher";
+import { api } from "../api";
 
 const createRelativeDateString = (daysAgo: number) => {
   let baseDate = new Date();
@@ -10,33 +11,26 @@ const createRelativeDateString = (daysAgo: number) => {
 };
 
 export const MainPage = () => {
+  const [posts, setPosts] = useState([]);
+  const loadPosts = async () => {
+    try {
+      let response = await api.posts.getPosts();
+      setPosts(response.data.posts)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    loadPosts();
+  }, [])
+
+
   return (
     <Layout>
       <PostsViewSwitcher />
       <PostsList
-        posts={[
-          {
-            title: "Domain Services vs. application services",
-            dateCreated: createRelativeDateString(2),
-            memberPostedBy: "stemmlerjs",
-            totalNumComments: 3,
-            voteCount: 5,
-          },
-          {
-            title: "Domain Services vs. application services",
-            dateCreated: createRelativeDateString(2),
-            memberPostedBy: "stemmlerjs",
-            totalNumComments: 3,
-            voteCount: 5,
-          },
-          {
-            title: "Domain Services vs. application services",
-            dateCreated: createRelativeDateString(2),
-            memberPostedBy: "stemmlerjs",
-            totalNumComments: 3,
-            voteCount: 5,
-          },
-        ]}
+        posts={posts}
       />
     </Layout>
   );
