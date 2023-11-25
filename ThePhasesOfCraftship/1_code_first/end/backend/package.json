@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.16.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "jest-cucumber": "^3.0.1",
     "pg": "^8.11.0",

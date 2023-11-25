@@ -35,6 +35,7 @@ const initialMemberUserIds = [
 const initialPosts: Post[] = [
   {
     id: 1,
+    title: 'First post!',
     content: "This is bob vances first post",
     postType: "Text",
     dateCreated: new Date(),
@@ -42,6 +43,7 @@ const initialPosts: Post[] = [
   },
   {
     id: 2,
+    title: 'Second post!',
     content: "This is bobs second post",
     postType: "Text",
     dateCreated: new Date(),
@@ -49,6 +51,7 @@ const initialPosts: Post[] = [
   },
   {
     id: 3,
+    title: 'another post',
     content: "This is tonys first post",
     postType: "Text",
     dateCreated: new Date(),
@@ -56,6 +59,7 @@ const initialPosts: Post[] = [
   },
   {
     id: 4,
+    title: 'Links',
     content: "This is a link post",
     postType: "https://khalilstemmler.com",
     dateCreated: new Date(),
