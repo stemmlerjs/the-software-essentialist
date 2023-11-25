@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import { createUser, editUser, getUserByEmail } from './controllers/userController';
 import { getRecentPosts } from './controllers/postsController';
-
+const cors = require('cors')
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 // Create a new user
 app.post('/users/new', async (req: Request, res: Response) => {

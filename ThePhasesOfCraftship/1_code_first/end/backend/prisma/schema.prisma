@@ -37,6 +37,7 @@ model Post {
   memberPostedBy Member    @relation(fields: [memberId], references: [id])
   memberId       Int // Foreign key to the Member table
   postType       String // 'Text' or 'Link'
+  title          String
   content        String
   comments       Comment[]
   dateCreated    DateTime  @default(now())
