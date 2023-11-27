@@ -2,7 +2,7 @@
 import express, { Request, Response } from 'express';
 import { createUser, editUser, getUserByEmail } from './controllers/userController';
 import { getRecentPosts } from './controllers/postsController';
-const cors = require('cors')
+import cors from 'cors'
 const app = express();
 app.use(express.json());
 app.use(cors())
