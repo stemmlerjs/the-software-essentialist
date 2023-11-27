@@ -4,7 +4,9 @@
   "description": "The backend for dddforum.",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "lint": "eslint \"**/src/**/*.ts\"",
+    "clean": "rimraf ./dist",
+    "build": "tsc -b tsconfig.json",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
@@ -22,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.17",
     "nodemon": "^2.0.19"
   },
