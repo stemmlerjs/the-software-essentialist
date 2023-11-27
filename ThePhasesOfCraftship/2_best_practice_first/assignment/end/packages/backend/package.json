@@ -12,7 +12,8 @@
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start": "npm run build && node build/index.js",
     "test": "jest",
-    "test:dev": "jest --watchAll"
+    "test:dev": "jest --watchAll",
+    "test:e2e": "jest -c jest.config.e2e.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

@@ -9,7 +9,8 @@
     "strict": true,
     "esModuleInterop": true,
     "types": ["node", "jest"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts"]
