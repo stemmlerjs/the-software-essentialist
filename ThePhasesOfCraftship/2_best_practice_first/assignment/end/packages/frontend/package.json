@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start:dev": "vite",
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",

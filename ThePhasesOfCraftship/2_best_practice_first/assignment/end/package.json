@@ -11,7 +11,9 @@
     "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "start:dev:back": "npm run start:dev --workspace=@dddforum/backend",
+    "start:dev:front": "npm run start:dev --workspace=@dddforum/frontend"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
