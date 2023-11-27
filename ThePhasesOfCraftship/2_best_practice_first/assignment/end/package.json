@@ -6,7 +6,9 @@
     "packages/*"
   ],
   "scripts": {
-    "test:e2e:all": "jest -c jest.config.e2e.ts"
+    "test:e2e:all": "jest -c jest.config.e2e.ts",
+    "test:e2e:front": "npm run test:e2e --workspace=@dddforum/frontend",
+    "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
