@@ -2,29 +2,72 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
+import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder';
+import { CreateUserCommand } from '@dddforum/shared/src/api/users';
+import { PuppeteerPageDriver } from '../support/driver/puppeteerPageDriver';
+import { Pages } from '../support/pages/pages';
+import { App, createAppObject } from '../support/pages/app';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
 defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
-    given('I am a new user', () => {
+    let app: App
+    let pages: Pages;
+    let puppeteerPageDriver: PuppeteerPageDriver;
+    let createUserInput: CreateUserCommand;
 
+    beforeAll(async () => {
+      puppeteerPageDriver = await PuppeteerPageDriver.create({ 
+        headless: false,
+        slowMo: 50,
+      });
+      app = createAppObject(puppeteerPageDriver);
+      pages = app.pages;
     });
 
-    when('I register with valid account details', () => {
-
+    afterAll(async () => {
+      await puppeteerPageDriver.browser.close();
+    });
+  
+    // Need to put timeout here.
+    jest.setTimeout(60000);
+    
+    given('I am a new user', async () => {
+      createUserInput = new UserBuilder()
+        .withFirstName('Khalil')
+        .withLastName('Stemmler')
+        .withUsername('stemmlerjs')
+        .withRandomEmail()
+        .withRandomPassword()
+        .build();
+    
+      await pages.registration.open();
     });
 
-    and('I have accepted marketing emails', () => {
-
+    when('I register with valid account details', async () => {
+      await pages.registration.enterAccountDetails(createUserInput);
     });
 
-    then('I should be granted access to my account', () => {
+    and('I have accepted marketing emails', async () => {
+      await pages.registration.acceptMarketingEmails();
+      await pages.registration.submitRegistrationForm();
+    });
 
+    then('I should be granted access to my account', async () => {
+      expect(await app.toast.showedSuccessToast()).toBeTruthy();
+      await puppeteerPageDriver.page.waitForTimeout(4000);
+      expect(await app.header.getUsernameFromMenuButton()).toContain(createUserInput.username);
     });
 
     and('I should expect to receive marketing emails', () => {
-
+      // How can we test this? what do we want to place under test?
+      // Well, what's the tool they'll use? mailchimp?
+      // And do we want to expect that mailchimp is going to get called to add
+      // a new contact to a list? Yes, we do. But we're not going to worry 
+      // about this yet because we need to learn how to validate this without
+      // filling up a production Mailchimp account with test data. We will hook
+      // up how to handle this in Pattern-First.
     });
   });
 });
