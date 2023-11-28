@@ -19,7 +19,7 @@ export class PageElements {
     private driver: PuppeteerPageDriver
   ) {}
 
-  async get(nameKey: string) {
+  async get(nameKey: string, timeout?: number) {
     const component = this.config[nameKey];
     let element;
 
@@ -28,10 +28,10 @@ export class PageElements {
     }
 
     try {
-      element = await this.driver.page.waitForSelector(component.selector);
+      element = await this.driver.page.waitForSelector(component.selector, { timeout });
     } catch (err) {
       console.log("Element not found");
-      throw new Error("not found!");
+      throw new Error(`Element ${nameKey} not found!`);
     }
 
     if (!element) {

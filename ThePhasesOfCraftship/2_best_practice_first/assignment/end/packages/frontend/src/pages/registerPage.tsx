@@ -36,7 +36,9 @@ export const RegisterPage = () => {
     // If the form is invalid
     if (!validationResult.success) {
       // Show an error toast (for invalid input)
-      return toast.error(validationResult.errorMessage);
+      return toast.error(validationResult.errorMessage, {
+        toastId: `failure-toast`
+      });
     }
 
     // If the form is valid
@@ -50,7 +52,9 @@ export const RegisterPage = () => {
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
-      toast('Success! Redirecting home.')
+      toast('Success! Redirecting home.', {
+        toastId: `success-toast`
+      })
       // In 3 seconds, redirect to the main page
       setTimeout(() => { navigate('/') }, 3000)
     } catch (err) {
@@ -58,7 +62,9 @@ export const RegisterPage = () => {
       // Stop the spinner
       spinner.deactivate();
       // Show the toast (for unknown error)
-      return toast.error('Some backend error occurred');
+      return toast.error('Some backend error occurred', {
+        toastId: `failure-toast`
+      });
     }
 
   };
