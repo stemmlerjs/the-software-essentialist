@@ -20,7 +20,7 @@ const HeaderActionButton = ({ user }: { user: UserData | null }) => (
   <div id="header-action-button">
     {user ? (
       <div>
-        <div>{user.username}</div>
+        <div className="header username">{user.username}</div>
         <u>
           <div>logout</div>
         </u>

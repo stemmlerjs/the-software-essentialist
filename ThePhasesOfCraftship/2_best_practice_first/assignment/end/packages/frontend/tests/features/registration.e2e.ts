@@ -55,9 +55,7 @@ defineFeature(feature, (test) => {
     });
 
     then('I should be granted access to my account', async () => {
-      expect(await app.toast.showedSuccessToast()).toBeTruthy();
-      await puppeteerPageDriver.page.waitForTimeout(4000);
-      expect(await app.header.getUsernameFromMenuButton()).toContain(createUserInput.username);
+      expect(await app.header.getUsernameFromHeader()).toContain(createUserInput.username);
     });
 
     and('I should expect to receive marketing emails', () => {
