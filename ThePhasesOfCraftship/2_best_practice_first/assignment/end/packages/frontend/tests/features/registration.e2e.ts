@@ -15,7 +15,7 @@ defineFeature(feature, (test) => {
     let app: App
     let pages: Pages;
     let puppeteerPageDriver: PuppeteerPageDriver;
-    let createUserInput: CreateUserCommand;
+    let createUserCommand: CreateUserCommand;
 
     beforeAll(async () => {
       puppeteerPageDriver = await PuppeteerPageDriver.create({ 
@@ -34,7 +34,7 @@ defineFeature(feature, (test) => {
     jest.setTimeout(60000);
     
     given('I am a new user', async () => {
-      createUserInput = new UserBuilder()
+      createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
         .withUsername('stemmlerjs')
@@ -46,7 +46,7 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details', async () => {
-      await pages.registration.enterAccountDetails(createUserInput);
+      await pages.registration.enterAccountDetails(createUserCommand);
     });
 
     and('I have accepted marketing emails', async () => {
@@ -55,7 +55,7 @@ defineFeature(feature, (test) => {
     });
 
     then('I should be granted access to my account', async () => {
-      expect(await app.header.getUsernameFromHeader()).toContain(createUserInput.username);
+      expect(await app.header.getUsernameFromHeader()).toContain(createUserCommand.username);
     });
 
     and('I should expect to receive marketing emails', () => {

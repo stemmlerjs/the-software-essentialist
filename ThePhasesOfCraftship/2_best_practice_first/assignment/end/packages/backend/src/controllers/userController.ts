@@ -1,4 +1,4 @@
-import { prisma } from "../database";
+import { prisma } from "../shared/database/prisma";
 
 export async function createUser(userData: any) {
   try {

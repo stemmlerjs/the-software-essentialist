@@ -7,10 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
+
 // Create a new user
 app.post('/users/new', async (req: Request, res: Response) => {
   try {
-    console.log()
+    // we need to strictly type this.
     const user = await createUser(req.body);
     res.status(201).json(user);
   } catch (error) {
@@ -43,13 +44,12 @@ app.get('/users', async (req: Request, res: Response) => {
 app.get('/posts', async (req: Request, res: Response) => {
   try {
     const { sort } = req.query;
-    let posts;
-
-    if (sort === 'recent') {
-      posts = await getRecentPosts()
-    } else {
+  
+    if (sort !== 'recent') {
       return res.status(500).json({ error: 'include ?sort= query'})
-    }
+    } 
+
+    const posts = await getRecentPosts();
 
     return res.json({ posts });
   } catch (error) {
@@ -57,7 +57,9 @@ app.get('/posts', async (req: Request, res: Response) => {
   }
 });
 
-const port = 3000;
+
+// In production, render uses port 10000
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

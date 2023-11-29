@@ -1,5 +1,5 @@
 
-import { CreateUserCommand } from "@dddforum/shared/src/api/users";
+import { CreateUserCommand } from "@dddforum/shared/src/api";
 import { PageElements } from "../components/component";
 import { PuppeteerPageDriver } from "../driver/puppeteerPageDriver";
 import { PageObject } from "./pageObject";

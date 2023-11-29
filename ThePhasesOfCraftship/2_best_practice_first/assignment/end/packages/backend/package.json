@@ -6,16 +6,18 @@
   "scripts": {
     "lint": "eslint \"**/src/**/*.ts\"",
     "clean": "rimraf ./dist",
-    "build": "tsc -b tsconfig.json",
-    "generate": "prisma generate",
-    "migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed",
+    "build": "tsc -b tsconfig.json && npm run generate",
+    "generate": "ts-node prepareEnv.ts prisma generate",
+    "migrate": "ts-node prepareEnv.ts prisma migrate dev",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed",
     "db:reset": "rimraf ./dev.db && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
-    "start": "npm run build && node build/index.js",
+    "start": "npm run migrate && npm run db:seed && node build/index.js",
     "test": "jest",
     "test:dev": "jest --watchAll",
-    "test:e2e": "jest -c jest.config.e2e.ts"
+    "test:e2e": "jest -c jest.config.e2e.ts",
+    "test:e2e:dev": "jest -c jest.config.e2e.ts --watch",
+    "start:db:dev": "docker-compose up -d"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -26,10 +28,13 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.17",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0",
     "nodemon": "^2.0.19"
   },
   "dependencies": {
     "@dddforum/shared": "file:../shared",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@prisma/client": "^4.16.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
