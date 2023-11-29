@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import { PostsList } from "../components/postsList";
 import { PostsViewSwitcher } from "../components/postsViewSwitcher";
-import { api } from "../api";
+import { api } from "../App";
 
 export const MainPage = () => {
   const [posts, setPosts] = useState([]);

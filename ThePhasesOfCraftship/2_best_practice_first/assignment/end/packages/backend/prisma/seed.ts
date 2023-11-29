@@ -1,6 +1,6 @@
 
 import { User, Post, Vote, Comment } from "@prisma/client";
-import { prisma } from "../src/database";
+import { prisma } from "../src/shared/database/prisma";
 
 const initialUsers: User[] = [
   {
@@ -91,36 +91,46 @@ const initialPostComments: Comment[] = [
 
 async function seed() {
 
-  for (const user of initialUsers) {
-    const newUser = await prisma.user.create({
-      data: user
-    });
+  let totalPostsCount = await prisma.post.count();
+  if (totalPostsCount !== 0) {
+    console.log('Already seeded.')
+    return;
+  }
 
-    await prisma.member.create({
-      data: {
-        user: {
-          connect: { id: newUser.id },
+  try {
+    for (const user of initialUsers) {
+      const newUser = await prisma.user.create({
+        data: user
+      });
+  
+      await prisma.member.create({
+        data: {
+          user: {
+            connect: { id: newUser.id },
+          },
         },
-      },
-    });
-  }
-
-  for (const post of initialPosts) {
-    await prisma.post.create({
-      data: post,
-    });
-  }
-
-  for (const vote of initialPostVotes) {
-    await prisma.vote.create({
-      data: vote,
-    });
-  }
-
-  for (const comment of initialPostComments) {
-    await prisma.comment.create({
-      data: comment,
-    });
+      });
+    }
+  
+    for (const post of initialPosts) {
+      await prisma.post.create({
+        data: post,
+      });
+    }
+  
+    for (const vote of initialPostVotes) {
+      await prisma.vote.create({
+        data: vote,
+      });
+    }
+  
+    for (const comment of initialPostComments) {
+      await prisma.comment.create({
+        data: comment,
+      });
+    }
+  } catch (err) {
+    console.log(err)
   }
 }
 

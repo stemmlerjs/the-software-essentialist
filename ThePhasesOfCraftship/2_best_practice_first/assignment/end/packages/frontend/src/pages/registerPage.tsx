@@ -2,14 +2,14 @@
 import { Layout } from "../components/layout";
 import {
   RegistrationForm,
-  RegistrationInput,
 } from "../components/registrationForm";
 import { ToastContainer, toast } from 'react-toastify';
-import { api } from "../api";
 import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useSpinner } from "../contexts/spinnerContext";
 import { OverlaySpinner } from "../components/overlaySpinner";
+import { CreateUserCommand } from "@dddforum/shared/src/api/users";
+import { api } from "../App";
 
 
 type ValidationResult = {
@@ -17,7 +17,7 @@ type ValidationResult = {
   errorMessage?: string;
 }
 
-function validateForm (input: RegistrationInput): ValidationResult {
+function validateForm (input: CreateUserCommand): ValidationResult {
   if (input.email.indexOf('@') === -1) return { success: false, errorMessage: "Email invalid" };
   if (input.username.length < 2) return { success: false, errorMessage: "Username invalid" };
   if (input.password.length < 2) return { success: false, errorMessage: 'Password invalid' }
@@ -29,7 +29,7 @@ export const RegisterPage = () => {
   const navigate = useNavigate()
   const spinner = useSpinner();
 
-  const handleSubmitRegistrationForm = async (input: RegistrationInput) => {
+  const handleSubmitRegistrationForm = async (input: CreateUserCommand) => {
     // Validate the form
     const validationResult = validateForm(input);
 
@@ -46,7 +46,7 @@ export const RegisterPage = () => {
     spinner.activate();
     try {
       // Make API call
-      const response = await api.register(input);
+      const response = await api.users.register(input);
       // Save the user details to the cache
       setUser(response.data);
       // Stop the loading spinner
@@ -74,7 +74,7 @@ export const RegisterPage = () => {
       <ToastContainer/>
       <div>Create Account</div>
       <RegistrationForm
-        onSubmit={(input: RegistrationInput) =>
+        onSubmit={(input: CreateUserCommand) =>
           handleSubmitRegistrationForm(input)
         }
       />

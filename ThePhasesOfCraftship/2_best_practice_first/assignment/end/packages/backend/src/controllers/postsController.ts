@@ -1,5 +1,5 @@
 
-import { prisma } from '../database';
+import { prisma } from '../shared/database/prisma';
 
 export async function getRecentPosts () {
   try {

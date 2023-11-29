@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-export type RegistrationInput = {
-  email: string;
-  password: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-};
+import { CreateUserCommand } from '@dddforum/shared/src/api/users'
 
 interface RegistrationFormProps {
-  onSubmit: (formDetails: RegistrationInput) => void;
+  onSubmit: (formDetails: CreateUserCommand) => void;
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
