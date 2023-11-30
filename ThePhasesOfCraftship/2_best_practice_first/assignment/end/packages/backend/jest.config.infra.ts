@@ -5,8 +5,8 @@ import { pathsToModuleNameMapper } from 'ts-jest';
 import { compilerOptions } from '../../tsconfig.json';
 
 export default async (): Promise<JestConfigWithTsJest> => ({
-  displayName: 'Backend (E2E)',
-  testMatch: ['**/@(src|tests)/**/*.@(e2e).*'],
+  displayName: 'Backend (Infra)',
+  testMatch: ['**/@(src|tests)/**/*.@(infra).*'],
   transform: {
     '^.+\\.(t|j)sx?$': ['ts-jest', {}],
   },

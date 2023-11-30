@@ -12,12 +12,15 @@
     "db:seed": "ts-node prepareEnv.ts prisma db seed",
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema prisma/schema.prisma && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
+    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run migrate && npm run db:seed && node build/index.js",
     "test": "jest",
     "test:dev": "jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts",
     "test:e2e:dev": "jest -c jest.config.e2e.ts --watch",
-    "start:db:dev": "docker-compose up -d"
+    "start:db:dev": "docker-compose up -d",
+    "test:infra": "jest -c jest.config.infra.ts",
+    "test:infra:dev": "jest -c jest.config.infra.ts --watch"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

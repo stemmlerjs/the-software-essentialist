@@ -5,6 +5,7 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder';
 import { createAPI } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
+import { startServer, stopServer } from '@dddforum/backend/src/bootstrap';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
@@ -17,6 +18,14 @@ defineFeature(feature, (test) => {
     let createUserCommand: CreateUserCommand;
     let createUserResponse: any;
 
+    beforeAll(async () => {
+      await startServer();
+    })
+
+    afterAll(async () => {
+      await stopServer();
+    })
+
   
     given('I am a new user', async () => {
       createUserCommand = new UserBuilder()
@@ -27,12 +36,12 @@ defineFeature(feature, (test) => {
         .build();
     });
 
-    when('I register with valid account details', async () => {
-      createUserResponse = await api.users.register(createUserCommand)
+    and('I would like to receive marketing emails', () => {
+
     });
 
-    and('I have accepted marketing emails', async () => {
-      // We'll have to include this in the payload.
+    when('I register with valid account details', async () => {
+      createUserResponse = await api.users.register(createUserCommand)
     });
 
     then('I should be granted access to my account', async () => {
