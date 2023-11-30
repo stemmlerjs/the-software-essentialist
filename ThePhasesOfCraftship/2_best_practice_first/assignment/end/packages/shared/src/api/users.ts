@@ -6,7 +6,6 @@ export type CreateUserCommand = {
   firstName: string;
   lastName: string;
   username: string;
-  password: string;
 };
 
 export type GetUserByEmaiInput = {

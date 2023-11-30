@@ -22,9 +22,8 @@ defineFeature(feature, (test) => {
       createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
-        .withUsername('stemmlerjs')
+        .withRandomUsername()
         .withRandomEmail()
-        .withRandomPassword()
         .build();
     });
 
@@ -38,17 +37,20 @@ defineFeature(feature, (test) => {
 
     then('I should be granted access to my account', async () => {
       // Expect a successful response
-      expect(createUserResponse.body.success).toBeTruthy();
-      expect(createUserResponse.body.error).toBeFalsy();
-      expect(createUserResponse.body.data.id).toBeDefined();
-      expect(createUserResponse.body.data.email).toEqual(createUserCommand.email);
-      expect(createUserResponse.body.data.firstName).toEqual(createUserCommand.firstName);
-      expect(createUserResponse.body.data.lastName).toEqual(createUserCommand.lastName);
-      expect(createUserResponse.body.data.username).toEqual(createUserCommand.username);
+      const { data, success } = createUserResponse.data
+      const responseData = data;
+
+      expect(success).toBeTruthy();
+      expect(responseData.error).toBeFalsy();
+      expect(responseData.id).toBeDefined();
+      expect(responseData.email).toEqual(createUserCommand.email);
+      expect(responseData.firstName).toEqual(createUserCommand.firstName);
+      expect(responseData.lastName).toEqual(createUserCommand.lastName);
+      expect(responseData.username).toEqual(createUserCommand.username);
 
       // And the user exists
       const getUserResponse = await api.users.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.user.email);
+      expect(createUserCommand.email).toEqual(getUserResponse.data.data.email);
     });
 
     and('I should expect to receive marketing emails', () => {
