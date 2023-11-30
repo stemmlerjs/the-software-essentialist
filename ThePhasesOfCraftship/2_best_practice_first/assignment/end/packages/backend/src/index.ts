@@ -1,8 +1,8 @@
 
 import express, { Request, Response } from 'express';
-import { createUser, editUser, getUserByEmail } from './controllers/userController';
-import { getRecentPosts } from './controllers/postsController';
+import { getRecentPosts } from './posts';
 import cors from 'cors'
+import { createUser, editUser, getUserByEmail } from './users';
 const app = express();
 app.use(express.json());
 app.use(cors())
