@@ -15,7 +15,6 @@ export class RegistrationPage extends PageObject {
       username: { selector: '.registration.username', type: 'input' }, 
       firstname: { selector: ".registration.first-name", type: 'input' },
       lastname: { selector: ".registration.last-name", type: 'input' },
-      password: { selector: ".registration.password", type: 'input' },
       marketingCheckbox: { selector: '.registration.marketing-emails', type: 'checkbox' },
       submit: { selector: '.registration.submit-button', type: 'button' },
     }, driver)
@@ -26,7 +25,6 @@ export class RegistrationPage extends PageObject {
     await this.elements.get('username').then((e) => e.type(command.username))
     await this.elements.get('firstname').then((e) => e.type(command.firstName))
     await this.elements.get('lastname').then((e) => e.type(command.lastName))
-    await this.elements.get('password').then((e) => e.type(command.password));
   }
 
   async acceptMarketingEmails () {

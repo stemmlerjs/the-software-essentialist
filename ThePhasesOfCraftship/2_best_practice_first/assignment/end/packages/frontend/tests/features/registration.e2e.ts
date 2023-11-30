@@ -37,9 +37,8 @@ defineFeature(feature, (test) => {
       createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
-        .withUsername('stemmlerjs')
+        .withRandomUsername()
         .withRandomEmail()
-        .withRandomPassword()
         .build();
     
       await pages.registration.open();
