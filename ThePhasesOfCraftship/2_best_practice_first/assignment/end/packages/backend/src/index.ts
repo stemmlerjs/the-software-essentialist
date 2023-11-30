@@ -2,6 +2,7 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
 import { User } from '@prisma/client';
+import { sendMail } from './mail';
 const cors = require('cors')
 const app = express();
 app.use(express.json());
@@ -65,6 +66,13 @@ app.post('/users/new', async (req: Request, res: Response) => {
     }
 
     const user = await prisma.user.create({ data: { ...userData, password: generateRandomPassword(10) } });
+    await sendMail({ 
+      to: user.email, 
+      subject: 'Your login details to DDDForum', 
+      text: `Welcome to DDDForum. You can login with the following details </br>
+      email: ${user.email}
+      password: ${user.password}`
+    });
     
     return res.status(201).json({ error: undefined, data: parseUserForResponse(user), success: true });
   } catch (error) {
