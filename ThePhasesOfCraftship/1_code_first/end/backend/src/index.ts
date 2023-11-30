@@ -107,7 +107,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
 
     const userData = req.body;
     const user = await prisma.user.update({ where: { id }, data: userData });
-    return res.status(200).json({ error: undefined, data: parseUserForResponse(user), succes: true });
+    return res.status(200).json({ error: undefined, data: parseUserForResponse(user), success: true });
   } catch (error) {
     return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
   }
