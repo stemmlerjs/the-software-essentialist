@@ -5,17 +5,13 @@ import { PostsList } from "../components/postsList";
 import { PostsViewSwitcher } from "../components/postsViewSwitcher";
 import { api } from "../api";
 
-const createRelativeDateString = (daysAgo: number) => {
-  let baseDate = new Date();
-  return "2 days ago";
-};
-
 export const MainPage = () => {
   const [posts, setPosts] = useState([]);
   const loadPosts = async () => {
     try {
       let response = await api.posts.getPosts();
-      setPosts(response.data.posts)
+
+      setPosts(response.data.data.posts)
     } catch (err) {
       console.log(err);
     }
