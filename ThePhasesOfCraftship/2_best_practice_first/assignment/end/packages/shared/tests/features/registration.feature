@@ -7,8 +7,9 @@ Feature: Registration
 	# Success scenario
 	Scenario: Successful registration with marketing emails accepted
 		Given I am a new user
+		And I would like to receive marketing emails
     When I register with valid account details
-		And I have accepted marketing emails
+		
     Then I should be granted access to my account
     And I should expect to receive marketing emails
 

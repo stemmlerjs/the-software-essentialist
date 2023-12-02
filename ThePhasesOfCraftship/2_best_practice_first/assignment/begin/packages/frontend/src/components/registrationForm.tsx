@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 export type RegistrationInput = {
   email: string;
-  password: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -15,14 +14,13 @@ interface RegistrationFormProps {
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
   const [email, setEmail] = useState('email');
-  const [password, setPassword] = useState('password');
   const [username, setUsername] = useState('username');
   const [firstName, setFirstName] = useState('firstName');
   const [lastName, setLastName] = useState('lastName');
 
   const handleSubmit = () => {
     props.onSubmit({
-      email, password, username, firstName, lastName
+      email, username, firstName, lastName
     })
   }
 
@@ -51,12 +49,6 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
         type="text"
         placeholder="last name"
         onChange={(e) => setLastName(e.target.value)}
-      ></input>
-      <input
-        className="registration-input password"
-        type="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
       ></input>
       <div>
         <div className="to-login">
