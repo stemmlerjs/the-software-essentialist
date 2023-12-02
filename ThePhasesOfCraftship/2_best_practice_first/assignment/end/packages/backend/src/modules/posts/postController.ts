@@ -1,9 +1,13 @@
 
 import express from 'express';
-import { prisma } from '../../shared/database/prisma';
 import { Errors } from '../../shared/errors/errors';
+import { PrismaClient } from '@prisma/client';
 
 export class PostsController {
+
+  constructor (private prisma: PrismaClient) {
+  }
+
   async getPosts (req: express.Request, res: express.Response) {
     try {
       const { sort } = req.query;
@@ -12,7 +16,7 @@ export class PostsController {
         return res.status(400).json({ error: Errors.ClientError, data: undefined, success: false })
       } 
   
-      let postsWithVotes = await prisma.post.findMany({
+      let postsWithVotes = await this.prisma.post.findMany({
         include: {
           votes: true, // Include associated votes for each post
           memberPostedBy: {
@@ -32,4 +36,5 @@ export class PostsController {
       return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
   }
+
 }

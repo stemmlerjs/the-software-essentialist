@@ -1,6 +1,9 @@
 
 import { User, Post, Vote, Comment } from "@prisma/client";
-import { prisma } from "../prisma";
+import { CompositionRoot } from "../../composition/compositionRoot";
+const composition = new CompositionRoot();
+
+const prisma = composition.getPrisma();
 
 const initialUsers: User[] = [
   {
