@@ -1,6 +1,6 @@
 
 import { User, Post, Vote, Comment } from "@prisma/client";
-import { prisma } from "../src/database";
+import { prisma } from "../prisma";
 
 const initialUsers: User[] = [
   {
@@ -27,12 +27,6 @@ const initialUsers: User[] = [
     username: "billburr",
     password: '123'
   },
-];
-
-const initialMemberUserIds = [
-  { memberId: 1, userId: 1 },
-  { memberId: 2, userId: 2 },
-  { memberId: 3, userId: 3 },
 ];
 
 const initialPosts: Post[] = [

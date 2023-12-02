@@ -5,27 +5,27 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder';
 import { createAPI } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
-import { startServer, stopServer } from '@dddforum/backend/src/bootstrap';
+import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
 defineFeature(feature, (test) => {
 
   let api = createAPI('http://localhost:3000');
+  let createUserCommand: CreateUserCommand;
+  let createUserResponse: any;
+  let composition = new CompositionRoot();
+  let server = composition.getWebServer();
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
-    let createUserCommand: CreateUserCommand;
-    let createUserResponse: any;
-
     beforeAll(async () => {
-      await startServer();
+      await server.start();
     })
 
     afterAll(async () => {
-      await stopServer();
-    })
-
+      await server.stop();
+    });
   
     given('I am a new user', async () => {
       createUserCommand = new UserBuilder()
