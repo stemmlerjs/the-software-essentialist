@@ -1,8 +1,9 @@
 
-import { Server } from "./server";
+import { CompositionRoot } from "../composition/compositionRoot";
 
 describe('server', () => {
-  const server = new Server();
+  const compositionRoot = new CompositionRoot();
+  const server = compositionRoot.getWebServer();
 
   it('can start', async () => {
     await server.start();
