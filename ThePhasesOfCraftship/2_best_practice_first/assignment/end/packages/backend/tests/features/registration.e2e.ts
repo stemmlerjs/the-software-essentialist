@@ -24,7 +24,7 @@ defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
     beforeAll(async () => {
-      composition = new CompositionRoot('test');
+      composition = CompositionRoot.createCompositionRoot('test');
       emailService = composition.getEmailService();
       server = composition.getWebServer();
       await server.start();

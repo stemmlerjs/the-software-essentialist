@@ -14,8 +14,16 @@ export class CompositionRoot {
   private prisma: PrismaClient;
   private emailService: EmailService;
   private context: Environment;
+  private static instance: CompositionRoot | null = null;
 
-  constructor (context: Environment) {
+  public static createCompositionRoot (context: Environment) {
+    if (!CompositionRoot.instance) {
+      CompositionRoot.instance = new this(context);
+    }
+    return CompositionRoot.instance;
+  }
+
+  private constructor (context: Environment) {
     this.context = context;
     this.emailService = this.createEmailService();
     this.prisma = this.createPrisma();
