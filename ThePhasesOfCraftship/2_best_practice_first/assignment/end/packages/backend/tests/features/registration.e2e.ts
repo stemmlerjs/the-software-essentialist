@@ -6,24 +6,9 @@ import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder
 import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-
-import * as emailService from '../../../backend/src/modules/email/mail';
-
-jest.mock('../../../backend/src/modules/email/mail');
-
-//@ts-ignore
-emailService.sendMail.mockImplementation(({
-  to,
-  subject,
-  text
-}: {
-  to: string;
-  subject: string;
-  text: string;
-}) => {
-  // Mock logic for sending email
-  console.log(`Mock email sent to ${to}: ${subject} - ${text}`);
-});
+import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
+import { EmailService } from '@dddforum/backend/src/modules/email/emailService';
+import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
@@ -32,13 +17,16 @@ defineFeature(feature, (test) => {
   let apiClient = createAPIClient('http://localhost:3000');
   let createUserCommand: CreateUserCommand;
   let createUserResponse: any;
-  let composition = new CompositionRoot();
-  let server = composition.getWebServer();
-
+  let composition: CompositionRoot;
+  let server: WebServer;
+  let emailService: EmailService;
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
     beforeAll(async () => {
+      composition = new CompositionRoot('test');
+      emailService = composition.getEmailService();
+      server = composition.getWebServer();
       await server.start();
     })
 
@@ -81,7 +69,7 @@ defineFeature(feature, (test) => {
       expect(createUserCommand.email).toEqual(getUserResponse.data.data.email);
 
       // Verify that an email has been sent (Communication Verification)
-      expect(emailService.sendMail).toHaveBeenCalled();
+      expect((emailService as EmailServiceSpy).getTimesMethodCalled('sendMail')).toEqual(1);
     });
 
     and('I should expect to receive marketing emails', () => {

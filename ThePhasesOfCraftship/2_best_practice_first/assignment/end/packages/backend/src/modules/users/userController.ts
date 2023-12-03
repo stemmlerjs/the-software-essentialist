@@ -2,7 +2,7 @@
 import { PrismaClient, User } from '@prisma/client';
 import express from 'express';
 import { Errors } from '../../shared/errors/errors';
-import { sendMail } from '../email/mail';
+import { EmailService } from '../email/emailService';
 
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
   for (let key of keysToCheckFor) {
@@ -30,9 +30,10 @@ function parseUserForResponse (user: User) {
 }
 
 export class UserController {
-  constructor (private prisma: PrismaClient) {
+  constructor (private prisma: PrismaClient, private emailService: EmailService) {
     
   }
+
   async createUser (req: express.Request, res: express.Response) {
     try {
       const keyIsMissing = isMissingKeys(req.body, 
@@ -65,7 +66,7 @@ export class UserController {
         }
       });
       
-      await sendMail({ 
+      await this.emailService.sendMail({ 
         to: user.email, 
         subject: 'Your login details to DDDForum', 
         text: `Welcome to DDDForum. You can login with the following details </br>
