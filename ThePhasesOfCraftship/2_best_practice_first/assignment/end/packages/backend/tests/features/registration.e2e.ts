@@ -7,9 +7,7 @@ import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
 import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
-import { EmailService } from '@dddforum/backend/src/modules/email/emailService';
 import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
-import { MarketingService } from '@dddforum/backend/src/modules/marketing/marketingService';
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
@@ -22,24 +20,29 @@ defineFeature(feature, (test) => {
   let addEmailToListResponse: any;
   let composition: CompositionRoot;
   let server: WebServer;
-  let emailService: EmailService;
-  let marketingService: MarketingService;
+  let emailServiceSpy: EmailServiceSpy;
+  let marketingServiceSpy: MarketingServiceSpy;
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
     beforeAll(async () => {
       composition = CompositionRoot.createCompositionRoot('test');
-      emailService = composition.getEmailService();
-      marketingService = composition.getMarketingService();
+      emailServiceSpy = composition.getEmailService() as EmailServiceSpy;
+      marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
       server = composition.getWebServer();
       await server.start();
+    })
+
+    afterEach(() => {
+      emailServiceSpy.reset();
+      marketingServiceSpy.reset();
     })
 
     afterAll(async () => {
       await server.stop();
     });
   
-    given('I am a new user who wants to recieve marketing emails', async () => {
+    given('I am a new user', async () => {
       createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
@@ -48,7 +51,7 @@ defineFeature(feature, (test) => {
         .build();
     });
 
-    when('I register with valid account details', async () => {
+    when('I register with valid account details accepting marketing emails', async () => {
       createUserResponse = await apiClient.users.register(createUserCommand);
       addEmailToListResponse = await apiClient.marketing.addEmailToList(createUserCommand.email);
     });
@@ -71,7 +74,7 @@ defineFeature(feature, (test) => {
       expect(createUserCommand.email).toEqual(getUserResponse.data.data.email);
 
       // Verify that an email has been sent (Communication Verification)
-      expect((emailService as EmailServiceSpy).getTimesMethodCalled('sendMail')).toEqual(1);
+      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
     });
 
     and('I should expect to receive marketing emails', () => {
@@ -84,7 +87,50 @@ defineFeature(feature, (test) => {
       const { success } = addEmailToListResponse.data
 
       expect(success).toBeTruthy();
-      expect((marketingService as MarketingServiceSpy).getTimesMethodCalled('addEmailToList')).toEqual(1);
+      expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(1);
+    });
+  });
+
+  test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
+    given('I am a new user', () => {
+      createUserCommand = new UserBuilder()
+        .withFirstName('Khalil')
+        .withLastName('Stemmler')
+        .withRandomUsername()
+        .withRandomEmail()
+        .build();
+    });
+
+    when('I register with valid account details declining marketing emails', async () => {
+      createUserResponse = await apiClient.users.register(createUserCommand);
+    });
+
+    then('I should be granted access to my account', async () => {
+      const { data, success } = createUserResponse.data
+      const responseData = data;
+
+      // Expect a successful response (Result Verification)
+      expect(success).toBeTruthy();
+      expect(responseData.error).toBeFalsy();
+      expect(responseData.id).toBeDefined();
+      expect(responseData.email).toEqual(createUserCommand.email);
+      expect(responseData.firstName).toEqual(createUserCommand.firstName);
+      expect(responseData.lastName).toEqual(createUserCommand.lastName);
+      expect(responseData.username).toEqual(createUserCommand.username);
+
+      // And the user exists (State Verification)
+      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
+      expect(createUserCommand.email).toEqual(getUserResponse.data.data.email);
+
+      // Verify that an email has been sent (Communication Verification)
+      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
+    });
+
+    and('I should not expect to receive marketing emails', () => {
+      const { success } = addEmailToListResponse.data
+
+      expect(success).toBeTruthy();
+      expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(0);
     });
   });
 });

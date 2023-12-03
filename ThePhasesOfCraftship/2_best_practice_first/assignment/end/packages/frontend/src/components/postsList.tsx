@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import arrow from "../assets/arrow.svg";
+import arrow from "../shared/assets/arrow.svg";
 import moment from 'moment';
 
 

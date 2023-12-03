@@ -2,7 +2,7 @@
 import { CompositionRoot } from "../composition/compositionRoot";
 
 describe('server', () => {
-  const compositionRoot = new CompositionRoot();
+  const compositionRoot = CompositionRoot.createCompositionRoot('test')
   const server = compositionRoot.getWebServer();
 
   it('can start', async () => {
