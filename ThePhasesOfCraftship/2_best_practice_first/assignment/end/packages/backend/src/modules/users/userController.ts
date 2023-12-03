@@ -2,6 +2,7 @@
 import { PrismaClient, User } from '@prisma/client';
 import express from 'express';
 import { Errors } from '../../shared/errors/errors';
+import { sendMail } from '../email/mail';
 
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
   for (let key of keysToCheckFor) {
@@ -64,13 +65,13 @@ export class UserController {
         }
       });
       
-      // await sendMail({ 
-      //   to: user.email, 
-      //   subject: 'Your login details to DDDForum', 
-      //   text: `Welcome to DDDForum. You can login with the following details </br>
-      //   email: ${user.email}
-      //   password: ${user.password}`
-      // });
+      await sendMail({ 
+        to: user.email, 
+        subject: 'Your login details to DDDForum', 
+        text: `Welcome to DDDForum. You can login with the following details </br>
+        email: ${user.email}
+        password: ${user.password}`
+      });
       
       return res.status(201).json({ error: undefined, data: parseUserForResponse(user), success: true });
     } catch (error) {
