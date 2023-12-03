@@ -33,7 +33,7 @@ defineFeature(feature, (test) => {
     // Need to put timeout here.
     jest.setTimeout(60000);
     
-    given('I am a new user', async () => {
+    given('I am a new user who wants to recieve marketing emails', async () => {
       createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
@@ -42,14 +42,11 @@ defineFeature(feature, (test) => {
         .build();
     
       await pages.registration.open();
+      await pages.registration.acceptMarketingEmails();
     });
 
     when('I register with valid account details', async () => {
       await pages.registration.enterAccountDetails(createUserCommand);
-    });
-
-    and('I have accepted marketing emails', async () => {
-      await pages.registration.acceptMarketingEmails();
       await pages.registration.submitRegistrationForm();
     });
 
@@ -58,13 +55,7 @@ defineFeature(feature, (test) => {
     });
 
     and('I should expect to receive marketing emails', () => {
-      // How can we test this? what do we want to place under test?
-      // Well, what's the tool they'll use? mailchimp?
-      // And do we want to expect that mailchimp is going to get called to add
-      // a new contact to a list? Yes, we do. But we're not going to worry 
-      // about this yet because we need to learn how to validate this without
-      // filling up a production Mailchimp account with test data. We will hook
-      // up how to handle this in Pattern-First.
+      // @See backend
     });
   });
 });

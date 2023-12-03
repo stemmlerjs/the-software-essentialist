@@ -4,10 +4,12 @@ import cors from 'cors'
 import { Server } from 'http';
 import { PostsController } from '../../modules/posts/postController';
 import { UserController } from '../../modules/users/userController';
+import { MarketingController } from '../../modules/marketing/marketingController';
 
 interface Controllers {
   userController: UserController;
   postController: PostsController;
+  marketingController: MarketingController
 }
 
 interface WebServerConfig {
@@ -35,7 +37,7 @@ export class WebServer {
   }
 
   private setupRoutes (controllers: Controllers) {
-    const { userController, postController } = controllers;
+    const { userController, postController, marketingController } = controllers;
     // Create a new user
     this.express.post('/users/new', (req, res) => userController.createUser(req, res));
 
@@ -47,6 +49,9 @@ export class WebServer {
 
     // Get posts
     this.express.get('/posts', (req, res) => postController.getPosts(req, res));
+
+    // Add person to list
+    this.express.post('/marketing/new', (req, res) => marketingController.addToList(req, res))
   }
 
   async start(): Promise<void> {
