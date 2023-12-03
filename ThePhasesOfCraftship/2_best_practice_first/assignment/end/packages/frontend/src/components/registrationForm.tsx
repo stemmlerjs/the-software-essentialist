@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CreateUserCommand } from '@dddforum/shared/src/api/users'
 
 interface RegistrationFormProps {
-  onSubmit: (formDetails: CreateUserCommand) => void;
+  onSubmit: (formDetails: CreateUserCommand, allowMarketingEmails: boolean) => void;
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
@@ -23,7 +23,7 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
       username,
       firstName,
       lastName,
-    });
+    }, allowMarketingEmails);
   };
 
   return (

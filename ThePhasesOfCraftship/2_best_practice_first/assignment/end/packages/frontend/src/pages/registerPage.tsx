@@ -28,7 +28,7 @@ export const RegisterPage = () => {
   const navigate = useNavigate()
   const spinner = useSpinner();
 
-  const handleSubmitRegistrationForm = async (input: CreateUserCommand) => {
+  const handleSubmitRegistrationForm = async (input: CreateUserCommand, addToList: boolean) => {
     // Validate the form
     const validationResult = validateForm(input);
 
@@ -46,6 +46,11 @@ export const RegisterPage = () => {
     try {
       // Make API call
       const response = await api.users.register(input);
+      
+      if (addToList) {
+        await api.marketing.addEmailToList(input.email);
+      }
+
       // Save the user details to the cache
       setUser(response.data.data);
       // Stop the loading spinner
@@ -73,8 +78,8 @@ export const RegisterPage = () => {
       <ToastContainer/>
       <div>Create Account</div>
       <RegistrationForm
-        onSubmit={(input: CreateUserCommand) =>
-          handleSubmitRegistrationForm(input)
+        onSubmit={(input: CreateUserCommand, allowMarketingEmails: boolean) =>
+          handleSubmitRegistrationForm(input, allowMarketingEmails)
         }
       />
       <OverlaySpinner isActive={spinner.spinner?.isActive}/>
