@@ -31,4 +31,8 @@ export abstract class Spy<T> {
     const calls = this.calls.filter((call) => call.methodName === methodName);
     return calls.length;
   }
+
+  reset () {
+    this.calls = [];
+  }
 }

@@ -33,7 +33,7 @@ defineFeature(feature, (test) => {
     // Need to put timeout here.
     jest.setTimeout(60000);
     
-    given('I am a new user who wants to recieve marketing emails', async () => {
+    given('I am a new user', async () => {
       createUserCommand = new UserBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
@@ -45,7 +45,7 @@ defineFeature(feature, (test) => {
       await pages.registration.acceptMarketingEmails();
     });
 
-    when('I register with valid account details', async () => {
+    when('I register with valid account details accepting marketing emails', async () => {
       await pages.registration.enterAccountDetails(createUserCommand);
       await pages.registration.submitRegistrationForm();
     });
@@ -56,6 +56,24 @@ defineFeature(feature, (test) => {
 
     and('I should expect to receive marketing emails', () => {
       // @See backend
+    });
+  });
+
+  test('Successful registration without marketing emails accepted', ({ given, when, and, then }) => {
+    given('I am a new user', () => {
+
+    });
+
+    when('I register with valid account details declining marketing emails', () => {
+
+    });
+
+    then('I should be granted access to my account', () => {
+
+    });
+
+    and('I should not expect to receive marketing emails', () => {
+
     });
   });
 });
