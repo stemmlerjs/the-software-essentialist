@@ -3,19 +3,38 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder';
-import { createAPI } from '@dddforum/shared/src/api';
+import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
+
+import * as emailService from '../../../backend/src/modules/email/mail';
+
+jest.mock('../../../backend/src/modules/email/mail');
+
+//@ts-ignore
+emailService.sendMail.mockImplementation(({
+  to,
+  subject,
+  text
+}: {
+  to: string;
+  subject: string;
+  text: string;
+}) => {
+  // Mock logic for sending email
+  console.log(`Mock email sent to ${to}: ${subject} - ${text}`);
+});
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
 defineFeature(feature, (test) => {
 
-  let api = createAPI('http://localhost:3000');
+  let apiClient = createAPIClient('http://localhost:3000');
   let createUserCommand: CreateUserCommand;
   let createUserResponse: any;
   let composition = new CompositionRoot();
   let server = composition.getWebServer();
+
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
@@ -41,14 +60,14 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details', async () => {
-      createUserResponse = await api.users.register(createUserCommand)
+      createUserResponse = await apiClient.users.register(createUserCommand);
     });
 
     then('I should be granted access to my account', async () => {
-      // Expect a successful response
       const { data, success } = createUserResponse.data
       const responseData = data;
 
+      // Expect a successful response (Result Verification)
       expect(success).toBeTruthy();
       expect(responseData.error).toBeFalsy();
       expect(responseData.id).toBeDefined();
@@ -57,9 +76,12 @@ defineFeature(feature, (test) => {
       expect(responseData.lastName).toEqual(createUserCommand.lastName);
       expect(responseData.username).toEqual(createUserCommand.username);
 
-      // And the user exists
-      const getUserResponse = await api.users.getUserByEmail({ email: createUserCommand.email });
+      // And the user exists (State Verification)
+      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
       expect(createUserCommand.email).toEqual(getUserResponse.data.data.email);
+
+      // Verify that an email has been sent (Communication Verification)
+      expect(emailService.sendMail).toHaveBeenCalled();
     });
 
     and('I should expect to receive marketing emails', () => {
