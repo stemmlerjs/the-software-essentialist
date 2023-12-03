@@ -1,6 +1,6 @@
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
-import { createAPI } from '@dddforum/shared/src/api'
+import { createAPIClient } from '@dddforum/shared/src/api'
 
 import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
@@ -10,7 +10,7 @@ import { UserProvider } from "./contexts/userContext";
 import { SpinnerProvider } from "./contexts/spinnerContext";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-export const api = createAPI(apiUrl);
+export const api = createAPIClient(apiUrl);
 
 function App() {
   return (
