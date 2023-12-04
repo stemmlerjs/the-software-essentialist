@@ -52,7 +52,7 @@ export const RegisterPage = () => {
       }
 
       // Save the user details to the cache
-      setUser(response.data.data);
+      setUser(response.data);
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast

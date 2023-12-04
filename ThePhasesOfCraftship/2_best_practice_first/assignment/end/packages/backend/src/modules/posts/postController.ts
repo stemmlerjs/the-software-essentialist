@@ -1,39 +1,33 @@
 
 import express from 'express';
 import { Errors } from '../../shared/errors/errors';
-import { PrismaClient } from '@prisma/client';
+import { PostService } from './postService';
+import { GetPostsQuery, GetPostsQueryOptions } from '@dddforum/shared/src/api/posts';
 
 export class PostsController {
 
-  constructor (private prisma: PrismaClient) {
+  constructor (private postService: PostService) {
   }
 
   async getPosts (req: express.Request, res: express.Response) {
-    try {
-      const { sort } = req.query;
+    const { sort } = req.query;
       
-      if (sort !== 'recent') {
-        return res.status(400).json({ error: Errors.ClientError, data: undefined, success: false })
-      } 
-  
-      let postsWithVotes = await this.prisma.post.findMany({
-        include: {
-          votes: true, // Include associated votes for each post
-          memberPostedBy: {
-            include: {
-              user: true
-            }
-          },
-          comments: true
-        },
-        orderBy: {
-          dateCreated: 'desc', // Sorts by dateCreated in descending order
-        },
-      });
-  
-      return res.json({ error: undefined, data: { posts: postsWithVotes }, success: true });
-    } catch (error) {
-      return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+    let query: GetPostsQuery = {
+      sort: sort as GetPostsQueryOptions
+    }
+
+    const result = await this.postService.getPosts(query);
+
+    if (result.success) {
+      return res.status(200).json(result);
+    } else {
+      switch(result.error) {
+        case Errors.ClientError:
+          return res.status(400).json(result)
+        case Errors.ServerError:
+        default:
+          return res.status(500).json(result);
+      }
     }
   }
 

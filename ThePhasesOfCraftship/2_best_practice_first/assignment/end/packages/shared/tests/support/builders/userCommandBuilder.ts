@@ -1,7 +1,8 @@
 import { CreateUserCommand } from "@dddforum/shared/src/api/users";
 import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
+import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
-export class UserBuilder {
+export class UserCommandBuilder {
   private props: CreateUserCommand;
 
   constructor() {
@@ -11,6 +12,14 @@ export class UserBuilder {
       lastName: '',
       username: '',
     };
+  }
+
+  public withAllRandomDetails () {
+    this.withFirstName(TextUtil.createRandomText(10));
+    this.withLastName(TextUtil.createRandomText(10));
+    this.withRandomEmail();
+    this.withRandomUsername();
+    return this;
   }
 
   public withFirstName(value: string) {
@@ -28,6 +37,11 @@ export class UserBuilder {
   withRandomEmail() {
     const randomSequence = NumberUtil.generateRandomInteger(1000, 100000);
     this.props.email = `testEmail-${randomSequence}@gmail.com`;
+    return this;
+  }
+
+  withEmail (email: string) {
+    this.props.email = email;
     return this;
   }
 
