@@ -2,7 +2,7 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { UserBuilder } from '@dddforum/shared/tests/support/builders/userBuilder';
+import { UserBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { PuppeteerPageDriver } from '../support/driver/puppeteerPageDriver';
 import { Pages } from '../support/pages/pages';

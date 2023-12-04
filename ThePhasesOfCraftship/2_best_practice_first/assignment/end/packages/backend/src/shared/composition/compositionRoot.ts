@@ -7,19 +7,23 @@ import { MarketingController } from "../../modules/marketing/marketingController
 import { MarketingService } from "../../modules/marketing/marketingService";
 import { MarketingServiceSpy } from "../../modules/marketing/marketingServiceSpy";
 import { PostsController } from "../../modules/posts/postController";
+import { PostService } from "../../modules/posts/postService";
 import { UserController } from "../../modules/users/userController";
+import { UserService } from "../../modules/users/usersService";
 import { Environment } from "../config";
+import { DBConnection } from "../database/database";
 import { WebServer } from "../http/webServer";
-import { PrismaClient } from '@prisma/client';
 
 export class CompositionRoot {
 
   private webServer: WebServer;
-  private prisma: PrismaClient;
+  private dbConnection: DBConnection;
   private emailService: EmailService;
   private marketingService: MarketingService;
   private context: Environment;
   private static instance: CompositionRoot | null = null;
+  private userService: UserService;
+  private postService: PostService;
 
   public static createCompositionRoot (context: Environment) {
     if (!CompositionRoot.instance) {
@@ -30,14 +34,26 @@ export class CompositionRoot {
 
   private constructor (context: Environment) {
     this.context = context;
+    this.dbConnection = this.createDBConnection();
     this.marketingService = this.createMarketingService();
     this.emailService = this.createEmailService();
-    this.prisma = this.createPrisma();
+    this.userService = this.createUserService();
+    this.postService = this.createPostService();
     this.webServer = this.createWebServer();
   }
 
   public getContext () {
     return this.context;
+  }
+
+  public getUserService () {
+    return this.userService;
+  }
+
+  private createUserService () {
+    const dbConnection = this.getDBConnection();
+    const emailService = this.getEmailService();
+    return new UserService(dbConnection, emailService);
   }
 
   private createEmailService () {
@@ -64,12 +80,22 @@ export class CompositionRoot {
     return new MarketingServiceSpy();
   }
 
+  private getPostService () {
+    return this.postService
+  }
+
+  private createPostService () {
+    let dbConnection = this.getDBConnection();
+    return new PostService(dbConnection);
+  }
+
   private createControllers () {
-    const prisma = this.getPrisma();
-    const emailService = this.getEmailService();
     const marketingService = this.getMarketingService();
-    const userController = new UserController(prisma, emailService);
-    const postController = new PostsController(prisma);
+    const postService = this.getPostService()
+    const userService = this.getUserService();
+
+    const userController = new UserController(userService);
+    const postController = new PostsController(postService);
     const marketingController = new MarketingController(marketingService)
 
     return {
@@ -79,12 +105,17 @@ export class CompositionRoot {
     }
   }
 
-  private createPrisma () {
-    return new PrismaClient()
+  private createDBConnection () {
+    const dbConnection = new DBConnection();
+    if (!this.dbConnection) {
+      this.dbConnection = dbConnection;
+    }
+    return dbConnection;
   }
 
-  getPrisma () {
-    return this.prisma;
+  getDBConnection () {
+    if (!this.dbConnection) this.createDBConnection();
+    return this.dbConnection;
   }
 
   createWebServer () {

@@ -4,6 +4,7 @@ import { Server } from "http";
 import { PostsController } from "../../modules/posts/postController";
 import { UserController } from "../../modules/users/userController";
 import { MarketingController } from "../../modules/marketing/marketingController";
+import { ProcessService } from "../processes/processService";
 
 interface Controllers {
   userController: UserController;
@@ -62,12 +63,14 @@ export class WebServer {
 
   async start(): Promise<void> {
     return new Promise((resolve, _reject) => {
-      this.instance = this.express.listen(this.config.port, () => {
-        console.log(`Server is running on port ${this.config.port}`);
-        this.state = "started";
-        resolve();
+      ProcessService.killProcessOnPort(this.config.port, () => {
+        console.log("Starting the server");
+        this.instance = this.express.listen(this.config.port, () => {
+          console.log(`Server is running on port ${this.config.port}`);
+          this.state = "started";
+          resolve();
+        });
       });
-      // ProcessService.killProcessOnPort(this.config.port, () => {});
     });
   }
 
@@ -76,6 +79,7 @@ export class WebServer {
       if (!this.instance) return reject("Server not started");
       this.instance.close((err) => {
         if (err) return reject("Error stopping the server");
+        this.state = 'stopped';
         return resolve("Server stopped");
       });
     });
