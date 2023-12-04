@@ -2,13 +2,13 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { UserBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
+import { UserCommandBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { PuppeteerPageDriver } from '../support/driver/puppeteerPageDriver';
 import { Pages } from '../support/pages/pages';
 import { App, createAppObject } from '../support/pages/app';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@frontend' });
 
 defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
@@ -34,7 +34,7 @@ defineFeature(feature, (test) => {
     jest.setTimeout(60000);
     
     given('I am a new user', async () => {
-      createUserCommand = new UserBuilder()
+      createUserCommand = new UserCommandBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
         .withRandomUsername()
@@ -56,24 +56,6 @@ defineFeature(feature, (test) => {
 
     and('I should expect to receive marketing emails', () => {
       // @See backend
-    });
-  });
-
-  test('Successful registration without marketing emails accepted', ({ given, when, and, then }) => {
-    given('I am a new user', () => {
-
-    });
-
-    when('I register with valid account details declining marketing emails', () => {
-
-    });
-
-    then('I should be granted access to my account', () => {
-
-    });
-
-    and('I should not expect to receive marketing emails', () => {
-
     });
   });
 });

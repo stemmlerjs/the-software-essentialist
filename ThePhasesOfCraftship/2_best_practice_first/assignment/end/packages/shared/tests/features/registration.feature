@@ -4,7 +4,7 @@ Feature: Registration
   So that I can vote on posts, ask questions, & earn points for discounts 
 	on merch & tickets
 
-	# Success scenario
+	# Success scenarios
 	@backend @frontend
 	Scenario: Successful registration with marketing emails accepted
 		Given I am a new user
@@ -12,7 +12,7 @@ Feature: Registration
     Then I should be granted access to my account
     And I should expect to receive marketing emails
 
-	@backend @frontend
+	@backend
 	Scenario: Successful registration without marketing emails accepted
 		Given I am a new user
     When I register with valid account details declining marketing emails
@@ -20,7 +20,7 @@ Feature: Registration
     And I should not expect to receive marketing emails
 	
 	# Failure scenarios
-	@backend @frontend
+	@backend
 	Scenario: Invalid or missing registration details
 		Given I am a new user
 		When I register with invalid account details
