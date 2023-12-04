@@ -11,6 +11,7 @@ import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServic
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 import { DBConnection } from '@dddforum/backend/src/shared/database/database';
+import { Errors } from '@dddforum/backend/src/shared/errors/errors';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
@@ -25,6 +26,9 @@ defineFeature(feature, (test) => {
   let emailServiceSpy: EmailServiceSpy;
   let marketingServiceSpy: MarketingServiceSpy;
   let dbConnection: DBConnection;
+  let commands: CreateUserCommand[] = [];
+  let createUserResponses: APIResponse[] = [];
+  let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot('test');
@@ -32,6 +36,8 @@ defineFeature(feature, (test) => {
     marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
     server = composition.getWebServer();
     dbConnection = composition.getDBConnection();
+    databaseFixture = new DatabaseFixture(composition);
+
     await server.start();
     await dbConnection.connect();
   })
@@ -39,6 +45,8 @@ defineFeature(feature, (test) => {
   afterEach(() => {
     emailServiceSpy.reset();
     marketingServiceSpy.reset();
+    commands = [];
+    createUserResponses = []
   })
 
   afterAll(async () => {
@@ -161,7 +169,7 @@ defineFeature(feature, (test) => {
       // And the user does not exist (State Verification)
       const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
       expect(getUserResponse.error).toBeDefined();
-      expect(getUserResponse.error).toEqual('UserNotFound')
+      expect(getUserResponse.error).toEqual(Errors.UserNotFound)
 
     });
 
@@ -171,12 +179,7 @@ defineFeature(feature, (test) => {
   });
 
   test('Account already created w/ email', ({ given, when, then, and }) => {
-    let commands: CreateUserCommand[] = [];
-    let createUserResponses: APIResponse[] = [];
-
-    given('a user already created an account with email', async (table) => {
-      let databaseFixture = new DatabaseFixture(composition);
-
+    given('a set of users already created accounts', async (table) => {
       table.forEach((item: any) => {
         commands.push(new UserCommandBuilder()
           .withFirstName(item.firstName)
@@ -191,44 +194,66 @@ defineFeature(feature, (test) => {
       emailServiceSpy.reset();
     });
 
-    when('I register with valid account details', async () => {
+    when('new users attempt to register with those emails', async () => {
       for (let command of commands) {
         let response = await apiClient.users.register(command);
         createUserResponses.push(response);
       }
     });
 
-    then('I should see an error notifying me this account already exists', async () => {
+    then('they should see an error notifying them that the account already exists', async () => {
       for (let response of createUserResponses) {
         const { success, error } = response;
 
         // Expect a failure response (Result Verification)
         expect(success).toBeFalsy();
         expect(error).toBeDefined();
-        expect(error).toEqual('EmailAlreadyInUse');
+        expect(error).toEqual(Errors.EmailAlreadyInUse);
       }
     });
 
-    and('I should not have been sent access to account details', () => {
+    and('they should not have been sent access to account details', () => {
       expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 
   test('Username already taken', ({ given, when, then, and }) => {
-    given(/^a user already created an account with the 'user(\d+)' username$/, (arg0) => {
 
+    given('a set of users have already created their accounts with valid details', async (table) => {
+      table.forEach((item: any) => {
+        commands.push(new UserCommandBuilder()
+          .withFirstName(item.firstName)
+          .withLastName(item.lastName)
+          .withUsername(item.username)
+          .withRandomEmail()
+          .build()
+        )
+      });
+
+      await databaseFixture.setupWithExistingUsers(commands);
+      emailServiceSpy.reset();
     });
 
-    when('I register with valid account details', () => {
-
+    when('new users attempt to register with already taken usernames', async (table) => {
+      for (let item of table) {
+        let response = await apiClient.users.register(item);
+        createUserResponses.push(response);
+      }
     });
 
-    then('I should see an error notifying me this account already exists', () => {
+    then('they see an error notifying them that the username has already been taken', () => {
+      for (let response of createUserResponses) {
+        const { success, error } = response;
 
+        // Expect a failure response (Result Verification)
+        expect(success).toBeFalsy();
+        expect(error).toBeDefined();
+        expect(error).toEqual(Errors.UsernameAlreadyTaken);
+      }
     });
 
-    and('I should not have been sent access to account details', () => {
-
+    and('they should not have been sent access to account details', () => {
+      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 });

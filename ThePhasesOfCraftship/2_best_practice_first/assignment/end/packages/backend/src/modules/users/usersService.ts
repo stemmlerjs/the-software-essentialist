@@ -58,6 +58,7 @@ export class UserService {
   
       const userData = input;
       const existingUserByEmail = await dbConnection.user.findFirst({ where: { email: input.email }});
+
       if (existingUserByEmail) {
         return { error: Errors.EmailAlreadyInUse, data: undefined, success: false };
       }
