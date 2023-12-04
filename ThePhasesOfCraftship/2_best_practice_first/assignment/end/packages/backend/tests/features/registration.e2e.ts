@@ -3,7 +3,7 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserCommandBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
-import { createAPIClient } from '@dddforum/shared/src/api';
+import { APIResponse, createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
 import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
@@ -163,39 +163,54 @@ defineFeature(feature, (test) => {
       expect(getUserResponse.error).toBeDefined();
       expect(getUserResponse.error).toEqual('UserNotFound')
 
-      // Verify that an email has not been sent (Communication Verification)
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
 
     and('I should not have been sent access to account details', () => {
-      expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(0)
+      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 
   test('Account already created w/ email', ({ given, when, then, and }) => {
-    given(/^a user already created an account @ 'john(\d+)@example.com'$/, (email: string) => {
-      // Create the account w/ an email
-      new DatabaseFixture(composition)
-        .setupWithExistingUser(
-          new UserCommandBuilder()
-          .withFirstName('Khalil')
-          .withLastName('Stemmler')
+    let commands: CreateUserCommand[] = [];
+    let createUserResponses: APIResponse[] = [];
+
+    given('a user already created an account with email', async (table) => {
+      let databaseFixture = new DatabaseFixture(composition);
+
+      table.forEach((item: any) => {
+        commands.push(new UserCommandBuilder()
+          .withFirstName(item.firstName)
+          .withLastName(item.lastName)
+          .withEmail(item.email)
           .withRandomUsername()
-          .withEmail(email)
           .build()
-        );
-      });
+        )
+      })
 
-    when('I register with valid account details', () => {
-
+      await databaseFixture.setupWithExistingUsers(commands);
+      emailServiceSpy.reset();
     });
 
-    then('I should see an error notifying me this account already exists', () => {
+    when('I register with valid account details', async () => {
+      for (let command of commands) {
+        let response = await apiClient.users.register(command);
+        createUserResponses.push(response);
+      }
+    });
 
+    then('I should see an error notifying me this account already exists', async () => {
+      for (let response of createUserResponses) {
+        const { success, error } = response;
+
+        // Expect a failure response (Result Verification)
+        expect(success).toBeFalsy();
+        expect(error).toBeDefined();
+        expect(error).toEqual('EmailAlreadyInUse');
+      }
     });
 
     and('I should not have been sent access to account details', () => {
-
+      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 
