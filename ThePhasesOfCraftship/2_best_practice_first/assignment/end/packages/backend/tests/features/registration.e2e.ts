@@ -13,7 +13,7 @@ import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databas
 import { DBConnection } from '@dddforum/backend/src/shared/database/database';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
 defineFeature(feature, (test) => {
 
