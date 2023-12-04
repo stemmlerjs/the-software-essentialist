@@ -30,6 +30,12 @@ export class UserCommandBuilder {
     this.props.lastName = value;
     return this;
   }
+
+  withUsername (value: string) {
+    this.props.username = value;
+    return this;
+  }
+
   withRandomUsername() {
     this.props.username = `username-${NumberUtil.generateRandomInteger(1000, 100000)}`;
     return this;

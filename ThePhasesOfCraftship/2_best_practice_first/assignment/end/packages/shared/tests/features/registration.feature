@@ -29,14 +29,26 @@ Feature: Registration
 
 	@backend
 	Scenario: Account already created w/ email
-		Given a user already created an account @ 'john123@example.com'
-		When I register with valid account details
-		Then I should see an error notifying me this account already exists
-		And I should not have been sent access to account details
+		Given a set of users already created accounts
+			| firstName    | lastName    | email                 | 
+			| John     		 | Doe    		 | john@example.com      |
+			| Alice    		 | Smith   		 | alice@example.com     | 
+			| David    		 | Brown   		 | david@example.com     | 
+		When new users attempt to register with those emails
+		Then they should see an error notifying them that the account already exists
+		And they should not have been sent access to account details    
 
 	@backend
 	Scenario: Username already taken
-		Given a user already created an account with the 'user123' username
-		When I register with valid account details
-		Then I should see an error notifying me this account already exists
-		And I should not have been sent access to account details
+		Given a set of users have already created their accounts with valid details
+			| firstName    | lastName    | username         | email               |
+			| John     		 | Doe    		 | thechosenone     | john1@example.com    |
+			| Alice    		 | Smith   		 | chillblinton     | alice2@example.com   | 
+			| David    		 | Brown   		 | greenday         | david3@example.com   |
+		When new users attempt to register with already taken usernames
+			| firstName    | lastName    | username         | email                 |
+			| Bill     		 | Bob    		 | thechosenone     | billy@billbob.com     |
+			| Max    		   | Samson   	 | chillblinton     | maxsamson@example.com | 
+			| Will    		 | Steff   		 | greenday         | willsteff@example.com |
+		Then they see an error notifying them that the username has already been taken
+		And they should not have been sent access to account details
