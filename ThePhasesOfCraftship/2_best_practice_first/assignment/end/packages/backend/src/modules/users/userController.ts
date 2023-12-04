@@ -4,8 +4,6 @@ import { Errors } from '../../shared/errors/errors';
 import { UserService } from './usersService';
 import { CreateUserCommand, EditUserCommand, GetUserByEmailQuery } from '@dddforum/shared/src/api/users'
 
-
-
 export class UserController {
   constructor (private userService: UserService) {
     
