@@ -11,7 +11,18 @@ This is the course repo which houses all of the assignment start/end checkpoints
 - Install Node v16 or higher on your machine
 - Git clone or fork this repo
 
-## After completing an assignment or exercise (how to improve)
+## How to Get Setup & Complete Your Assignments & Exercises?
+
+> Check out the lessons in the "Exercises & Assignment Setup: How to Complete The Phases of Craftship Homework" module.
+
+- [How to Complete the Phases of Craftship Homework (Assignments, Exercises)](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2173627153)
+- [How to Setup & Complete Assignments](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2173627178)
+- [How to Set Up & Complete Exercises](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2173627213)
+- [5 Ways to Use Feedback to Improve In This Course](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2173627228)
+- [How & Why to Provide Helpful Feedback on Assignments & Exercises](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2167822793)
+- [How to Manage Your Completed Assignment PRs](https://www.essentialist.dev/products/the-software-essentialist/categories/2154342374/posts/2167964547)
+  
+## Relevant instructions for what to do after completing an assignment/exercise
 
 ### 1. Watch the demonstration modules
 
