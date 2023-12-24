@@ -1,5 +1,5 @@
 import { CompositionRoot } from "../composition/compositionRoot";
-import { UserCommandBuilder } from "@dddforum/shared/tests/support/builders/userCommandBuilder";
+import { UserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 
 describe("database", () => {
   const compositionRoot = CompositionRoot.createCompositionRoot("test");

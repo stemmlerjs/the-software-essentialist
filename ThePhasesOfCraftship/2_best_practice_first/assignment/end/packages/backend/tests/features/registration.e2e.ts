@@ -2,7 +2,7 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { UserCommandBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
+import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
 import { APIResponse, createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
@@ -56,7 +56,7 @@ defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
   
     given('I am a new user', async () => {
-      createUserCommand = new UserCommandBuilder()
+      createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
         .withRandomUsername()
@@ -105,7 +105,7 @@ defineFeature(feature, (test) => {
 
   test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
     given('I am a new user', () => {
-      createUserCommand = new UserCommandBuilder()
+      createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
         .withRandomUsername()
@@ -147,7 +147,7 @@ defineFeature(feature, (test) => {
 
   test('Invalid or missing registration details', ({ given, when, then, and }) => {
     given('I am a new user', () => {
-      createUserCommand = new UserCommandBuilder()
+      createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
         .withLastName('')
         .withRandomUsername()
@@ -181,7 +181,7 @@ defineFeature(feature, (test) => {
   test('Account already created w/ email', ({ given, when, then, and }) => {
     given('a set of users already created accounts', async (table) => {
       table.forEach((item: any) => {
-        commands.push(new UserCommandBuilder()
+        commands.push(new CreateUserCommandBuilder()
           .withFirstName(item.firstName)
           .withLastName(item.lastName)
           .withEmail(item.email)
@@ -221,7 +221,7 @@ defineFeature(feature, (test) => {
 
     given('a set of users have already created their accounts with valid details', async (table) => {
       table.forEach((item: any) => {
-        commands.push(new UserCommandBuilder()
+        commands.push(new CreateUserCommandBuilder()
           .withFirstName(item.firstName)
           .withLastName(item.lastName)
           .withUsername(item.username)
