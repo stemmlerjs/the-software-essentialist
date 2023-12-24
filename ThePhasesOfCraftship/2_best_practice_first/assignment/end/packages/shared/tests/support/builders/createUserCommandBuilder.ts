@@ -1,8 +1,9 @@
+
 import { CreateUserCommand } from "@dddforum/shared/src/api/users";
 import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
-export class UserCommandBuilder {
+export class CreateUserCommandBuilder {
   private props: CreateUserCommand;
 
   constructor() {

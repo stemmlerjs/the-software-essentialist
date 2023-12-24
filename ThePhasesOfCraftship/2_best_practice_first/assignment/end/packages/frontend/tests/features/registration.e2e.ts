@@ -2,7 +2,7 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { UserCommandBuilder } from '@dddforum/shared/tests/support/builders/userCommandBuilder';
+import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { PuppeteerPageDriver } from '../support/driver/puppeteerPageDriver';
 import { Pages } from '../support/pages/pages';
@@ -34,7 +34,7 @@ defineFeature(feature, (test) => {
     jest.setTimeout(60000);
     
     given('I am a new user', async () => {
-      createUserCommand = new UserCommandBuilder()
+      createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
         .withRandomUsername()
