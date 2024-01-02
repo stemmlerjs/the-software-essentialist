@@ -24,4 +24,8 @@ describe("fizzbuzz", () => {
   it('43 returns "43"', () => {
     expect(fizzBuzz(43)).toEqual("43");
   });
+
+  it('42 returns "Fizz"', () => {
+    expect(fizzBuzz(42)).toEqual("Fizz");
+  });
 });
