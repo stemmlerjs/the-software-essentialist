@@ -36,4 +36,8 @@ describe("fizzbuzz", () => {
   it("102 throws an Error", () => {
     expect(() => fizzBuzz(102)).toThrowError("Number must not be above 100");
   });
+
+  it("-12 throws an Error", () => {
+    expect(() => fizzBuzz(-12)).toThrowError("Number must not be less than 1");
+  });
 });
