@@ -1,3 +1,3 @@
 export function fizzBuzz(number: number) {
-  return "";
+  return "Fizz";
 }
