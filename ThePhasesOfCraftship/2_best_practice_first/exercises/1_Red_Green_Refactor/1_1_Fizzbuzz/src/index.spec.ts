@@ -28,4 +28,8 @@ describe("fizzbuzz", () => {
   it('42 returns "Fizz"', () => {
     expect(fizzBuzz(42)).toEqual("Fizz");
   });
+
+  it('45 returns "FizzBuzz"', () => {
+    expect(fizzBuzz(45)).toEqual("FizzBuzz");
+  });
 });
