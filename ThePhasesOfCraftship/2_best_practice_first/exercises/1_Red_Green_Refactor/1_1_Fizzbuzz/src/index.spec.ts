@@ -5,7 +5,7 @@ describe("fizzbuzz", () => {
     expect(typeof fizzBuzz(5)).toBe("string");
   });
 
-  it.each([3, 6, 9])('returns "Fizz" for multiples of 3', (value: number) => {
+  it.each([3, 9, 42])('returns "Fizz" for multiples of 3', (value: number) => {
     expect(fizzBuzz(value)).toEqual("Fizz");
   });
 
@@ -19,10 +19,6 @@ describe("fizzbuzz", () => {
 
   it('43 returns "43"', () => {
     expect(fizzBuzz(43)).toEqual("43");
-  });
-
-  it('42 returns "Fizz"', () => {
-    expect(fizzBuzz(42)).toEqual("Fizz");
   });
 
   it('45 returns "FizzBuzz"', () => {
