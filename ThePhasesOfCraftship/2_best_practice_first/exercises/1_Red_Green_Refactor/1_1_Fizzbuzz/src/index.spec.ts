@@ -5,8 +5,8 @@ describe("fizzbuzz", () => {
     expect(typeof fizzBuzz(5)).toBe("string");
   });
 
-  it('3 returns "Fizz"', () => {
-    expect(fizzBuzz(3)).toEqual("Fizz");
+  it.each([3, 6, 9])('returns "Fizz" for multiples of 3', (value: number) => {
+    expect(fizzBuzz(value)).toEqual("Fizz");
   });
 
   it('5 returns "Buzz"', () => {
@@ -15,10 +15,6 @@ describe("fizzbuzz", () => {
 
   it('15 returns "FizzBuzz"', () => {
     expect(fizzBuzz(15)).toEqual("FizzBuzz");
-  });
-
-  it('9 returns "Fizz"', () => {
-    expect(fizzBuzz(9)).toEqual("Fizz");
   });
 
   it('43 returns "43"', () => {
@@ -39,5 +35,9 @@ describe("fizzbuzz", () => {
 
   it("-12 throws an Error", () => {
     expect(() => fizzBuzz(-12)).toThrowError("Number must not be less than 1");
+  });
+
+  it('"43" throws an Error', () => {
+    expect(() => fizzBuzz("43" as any)).toThrowError("Input must  be a number");
   });
 });
