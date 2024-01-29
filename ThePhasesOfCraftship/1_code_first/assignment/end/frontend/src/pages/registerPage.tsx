@@ -65,7 +65,6 @@ export const RegisterPage = () => {
   return (
     <Layout>
       <ToastContainer/>
-      <div>Create Account</div>
       <RegistrationForm
         onSubmit={(input: RegistrationInput) =>
           handleSubmitRegistrationForm(input)
