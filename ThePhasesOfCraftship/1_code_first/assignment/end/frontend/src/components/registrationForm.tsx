@@ -25,7 +25,8 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
   }
 
   return (
-    <div>
+    <div className="registration-form">
+      <div>Create Account</div>
       <input
         className="registration email"
         type="email"
