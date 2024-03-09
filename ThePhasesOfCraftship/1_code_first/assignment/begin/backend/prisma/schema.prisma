@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  username  String  @unique
+  firstName String
+  lastName  String
+  password  String
+  Member    Member?
+
+  @@map("users")
+}
+
+model Member {
+  id Int @id @default(autoincrement())
+
+  user     User      @relation(fields: [userId], references: [id])
+  userId   Int       @unique
+  comments Comment[]
+  votes    Vote[]
+  posts    Post[]
+}
+
+model Post {
+  id             Int       @id @default(autoincrement())
+  memberPostedBy Member    @relation(fields: [memberId], references: [id])
+  memberId       Int
+  postType       String
+  title          String
+  content        String
+  comments       Comment[]
+  dateCreated    DateTime  @default(now())
+  votes          Vote[]
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+
+  postId Int
+  post   Post   @relation(fields: [postId], references: [id])
+  text   String
+
+  memberId       Int
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  parentCommentId Int?
+  parentComment   Comment?  @relation("Replies", fields: [parentCommentId], references: [id])
+  replyComments   Comment[] @relation("Replies")
+}
+
+model Vote {
+  id Int @id @default(autoincrement())
+
+  postId        Int
+  postBelongsTo Post @relation(fields: [postId], references: [id])
+
+  memberId       Int
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  voteType String
+}

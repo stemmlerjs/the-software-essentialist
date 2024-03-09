@@ -1,24 +1,24 @@
-import express, { Request, Response } from "express";
-import cors from "cors";
-import { db } from "./db";
-import { User } from "@prisma/client";
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import { prisma } from './prisma';
+import { User } from '@prisma/client';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 enum Errors {
-  UsernameAlreadyTaken = "UserNameAlreadyTaken",
-  EmailAlreadyInUse = "EmailAlreadyInUse",
-  ValidationError = "ValidationError",
-  ServerError = "ServerError",
-  ClientError = "ClientError",
-  UserNotFound = "UserNotFound",
+  UsernameAlreadyTaken = 'UserNameAlreadyTaken',
+  EmailAlreadyInUse = 'EmailAlreadyInUse',
+  ValidationError = 'ValidationError',
+  ServerError = 'ServerError',
+  ClientError = 'ClientError',
+  UserNotFound = 'UserNotFound',
 }
 
 function generateRandomPassword(length: number): string {
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
   const passwordArray: string[] = [];
 
   for (let i = 0; i < length; i++) {
@@ -26,7 +26,7 @@ function generateRandomPassword(length: number): string {
     passwordArray.push(charset[randomIndex]);
   }
 
-  return passwordArray.join("");
+  return passwordArray.join('');
 }
 
 function parseUserForResponse(user: User) {
@@ -37,14 +37,55 @@ function parseUserForResponse(user: User) {
 
 function validateUser(data: any): data is User {
   return (
-    "email" in data &&
-    "username" in data &&
-    "firstName" in data &&
-    "lastName" in data
+    'email' in data &&
+    'username' in data &&
+    'firstName' in data &&
+    'lastName' in data
   );
 }
 
-app.post("/users/new", async (req: Request, res: Response) => {
+app.get('/posts', async (req: Request, res: Response) => {
+  try {
+    const { sort } = req.query;
+
+    if (sort !== 'recent') {
+      return res.status(400).json({
+        error: Errors.ClientError,
+        data: undefined,
+        success: false,
+      });
+    }
+
+    const postsWithVotes = await prisma.post.findMany({
+      include: {
+        votes: true,
+        memberPostedBy: {
+          include: {
+            user: true,
+          },
+        },
+        comments: true,
+      },
+      orderBy: {
+        dateCreated: 'desc',
+      },
+    });
+
+    return res.status(200).json({
+      error: undefined,
+      data: { posts: postsWithVotes },
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: Errors.ServerError,
+      data: undefined,
+      success: false,
+    });
+  }
+});
+
+app.post('/users/new', async (req: Request, res: Response) => {
   try {
     const userData = req.body;
 
@@ -58,11 +99,11 @@ app.post("/users/new", async (req: Request, res: Response) => {
       });
     }
 
-    const optinalUserByUsername = await db.user.findFirst({
+    const optionalUserByUsername = await prisma.user.findFirst({
       where: { username: req.body.username },
     });
 
-    if (optinalUserByUsername) {
+    if (optionalUserByUsername) {
       return res.status(409).json({
         error: Errors.UsernameAlreadyTaken,
         data: undefined,
@@ -70,7 +111,7 @@ app.post("/users/new", async (req: Request, res: Response) => {
       });
     }
 
-    const optionalUserByEmail = await db.user.findFirst({
+    const optionalUserByEmail = await prisma.user.findFirst({
       where: { email: req.body.email },
     });
 
@@ -82,7 +123,7 @@ app.post("/users/new", async (req: Request, res: Response) => {
       });
     }
 
-    const user = await db.user.create({
+    const user = await prisma.user.create({
       data: { ...userData, password: generateRandomPassword(10) },
     });
 
@@ -100,7 +141,7 @@ app.post("/users/new", async (req: Request, res: Response) => {
   }
 });
 
-app.put("/users/edit/:userId", async (req: Request, res: Response) => {
+app.put('/users/edit/:userId', async (req: Request, res: Response) => {
   try {
     const userData = req.body;
 
@@ -116,7 +157,7 @@ app.put("/users/edit/:userId", async (req: Request, res: Response) => {
 
     const userId = parseInt(req.params.userId);
 
-    const optionalUserById = await db.user.findFirst({
+    const optionalUserById = await prisma.user.findFirst({
       where: { id: userId },
     });
 
@@ -128,7 +169,7 @@ app.put("/users/edit/:userId", async (req: Request, res: Response) => {
       });
     }
 
-    const optionalUserByUsername = await db.user.findFirst({
+    const optionalUserByUsername = await prisma.user.findFirst({
       where: { username: req.body.username },
     });
 
@@ -140,7 +181,7 @@ app.put("/users/edit/:userId", async (req: Request, res: Response) => {
       });
     }
 
-    const optionalUserByEmail = await db.user.findFirst({
+    const optionalUserByEmail = await prisma.user.findFirst({
       where: { email: req.body.email },
     });
 
@@ -152,7 +193,7 @@ app.put("/users/edit/:userId", async (req: Request, res: Response) => {
       });
     }
 
-    const user = await db.user.update({
+    const user = await prisma.user.update({
       data: userData,
       where: {
         id: userId,
@@ -173,9 +214,9 @@ app.put("/users/edit/:userId", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/users", async (req: Request, res: Response) => {
+app.get('/users', async (req: Request, res: Response) => {
   try {
-    const optionalUserByEmail = await db.user.findFirst({
+    const optionalUserByEmail = await prisma.user.findFirst({
       where: { email: req.query.email!.toString() },
     });
 
