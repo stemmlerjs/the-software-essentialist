@@ -68,6 +68,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
 
     res.status(201).json(responseDTO);
   } catch (err) {
+    console.error(err);
     const responseDTO = new ResponseDTO(ErrorMessage.ServerError, null);
     res.status(500).json(responseDTO);
   }
@@ -144,6 +145,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
 
     res.status(201).json(responseDTO);
   } catch (err) {
+    console.error(err);
     const responseDTO = new ResponseDTO(ErrorMessage.ServerError, null);
     res.status(500).json(responseDTO);
   }
@@ -180,6 +182,7 @@ app.get('/users', async (req: Request, res: Response) => {
 
     res.status(201).json(responseDTO);
   } catch (err) {
+    console.error(err);
     const responseDTO = new ResponseDTO(ErrorMessage.ServerError, null);
     res.status(500).json(responseDTO);
   }
