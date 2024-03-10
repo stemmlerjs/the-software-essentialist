@@ -10,7 +10,7 @@
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "test": "jest",
-    "test:dev": "jest --watchAll"
+    "test:watch": "jest --watch"
   },
   "husky": {
     "hooks": {
