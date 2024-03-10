@@ -5,7 +5,7 @@ import bricks from '../assets/bricks.png';
 const Header = () => (
   <header
     className={
-      'tw-container tw-mx-auto tw-p-4 tw-flex tw-justify-center tw-items-center tw-gap-8'
+      'tw-container tw-mx-auto tw-p-4 tw-pt-6 tw-flex tw-justify-center tw-items-center tw-gap-8'
     }
   >
     <img src={bricks} alt={'Red bricks'} className={'tw-h-16'} />
