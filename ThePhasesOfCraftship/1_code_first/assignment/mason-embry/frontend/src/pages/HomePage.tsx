@@ -37,7 +37,7 @@ const posts: Post[] = [
 
 const HomePage = () => {
   return (
-    <div className={'tw-container tw-mx-auto tw-p-4 tw-pt-8'}>
+    <div className={'tw-container tw-mx-auto tw-p-4 tw-max-w-screen-md'}>
       <PostsViewSwitcher />
 
       <div className={'tw-mt-4'}>
