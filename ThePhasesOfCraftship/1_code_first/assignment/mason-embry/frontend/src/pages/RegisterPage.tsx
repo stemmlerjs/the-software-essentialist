@@ -3,14 +3,16 @@ import { toast } from 'react-toastify';
 
 import { RegisterDTO, RegisterForm } from '../components/RegisterForm.tsx';
 import { api } from '../iDontKnowWhereToPutThis/api.ts';
+import { useUser } from '../iDontKnowWhereToPutThis/UserContext.tsx';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleSubmit = async (registerDTO: RegisterDTO) => {
     // Frontend validation is handled by the RegisterForm component
 
-    await toast.promise(
+    const user = await toast.promise(
       api.createUser(registerDTO),
       {
         pending: 'Registering user 🤞',
@@ -25,6 +27,7 @@ const RegisterPage = () => {
     // Wait long enough for user to see success message, then redirect
     setTimeout(() => {
       toast.dismiss();
+      setUser(user);
       navigate('/');
     }, 2000);
   };
