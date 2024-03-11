@@ -22,6 +22,7 @@ const RegisterPage = () => {
       },
     );
 
+    // Wait long enough for user to see success message, then redirect
     setTimeout(() => {
       toast.dismiss();
       navigate('/');

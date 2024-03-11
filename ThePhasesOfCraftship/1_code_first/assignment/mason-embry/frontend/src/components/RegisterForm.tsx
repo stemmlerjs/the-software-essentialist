@@ -4,8 +4,8 @@ import { FormEvent } from 'react';
 export interface RegisterDTO {
   email: string;
   username: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
 }
 
 const RegisterForm = ({
@@ -67,7 +67,7 @@ const RegisterForm = ({
         </Form.Control>
       </Form.Field>
 
-      <Form.Field className="tw-grid tw-mt-2" name="firstname">
+      <Form.Field className="tw-grid tw-mt-2" name="firstName">
         <div>
           <Form.Label>First name</Form.Label>
           <Form.Message
@@ -85,7 +85,7 @@ const RegisterForm = ({
         </Form.Control>
       </Form.Field>
 
-      <Form.Field className="tw-grid tw-mt-2" name="lastname">
+      <Form.Field className="tw-grid tw-mt-2" name="lastName">
         <div>
           <Form.Label>Last name</Form.Label>
           <Form.Message
