@@ -24,4 +24,16 @@ describe('palindrome checker', () => {
     //then
     expect(result).toBeTruthy();
   });
+
+  it('should be able to verify that "bill" is a invalid palindrome', () => {
+    //given
+    const palindromeChecker = new PalindromeChecker();
+    const word = 'bill';
+
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeFalsy();
+  });
 });
