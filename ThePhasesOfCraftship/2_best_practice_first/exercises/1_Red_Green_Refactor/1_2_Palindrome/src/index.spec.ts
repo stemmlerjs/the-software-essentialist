@@ -16,7 +16,7 @@ describe('palindrome checker', () => {
     }
   );
 
-  it.each(['Mom', 'DAD', 'WoW'])(
+  it.each(['Mom', 'DAD', 'WoW', 'MoM', 'xMomx'])(
     'should be able to verify that the word "%s" with is a valid palindrome even if casing is off',
     (word) => {
       const result = palindromeChecker.isAPalindrome(word);
