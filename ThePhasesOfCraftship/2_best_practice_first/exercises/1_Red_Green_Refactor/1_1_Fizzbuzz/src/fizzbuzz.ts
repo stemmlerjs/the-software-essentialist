@@ -6,7 +6,7 @@ export class FizzBuzz {
     let result = '';
 
     for (let i = MIN; i <= number; i++) {
-      if (i % 3 === 0) {
+      if (this.isMultipleOf3(i)) {
         result += 'Fizz';
         continue;
       }
@@ -20,5 +20,9 @@ export class FizzBuzz {
     }
 
     return result;
+  }
+
+  private isMultipleOf3(number: number) {
+    return number % 3 === 0;
   }
 }
