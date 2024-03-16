@@ -44,4 +44,15 @@ describe('fizzbuzz', () => {
     //then
     expect(result).toBe('12');
   });
+
+  it('should be able to output "12Fizz" on number 3', () => {
+    //given
+    const number = 3;
+
+    //when
+    const result = fizzbuzz.execute(number);
+
+    //then
+    expect(result).toBe('12Fizz');
+  });
 });
