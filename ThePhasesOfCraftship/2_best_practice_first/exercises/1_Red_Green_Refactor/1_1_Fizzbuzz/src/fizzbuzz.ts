@@ -1,7 +1,8 @@
 export class FizzBuzz {
   execute(number: number): string {
     const MIN = 1;
-    if (number < MIN || number > 100) throw new Error();
+    const MAX = 100;
+    if (number < MIN || number > MAX) throw new Error();
 
     let result = '';
 
