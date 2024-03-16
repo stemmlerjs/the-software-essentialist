@@ -23,6 +23,14 @@ describe('fizzbuzz', () => {
     expect(() => fizzbuzz.execute(number)).toThrow();
   });
 
+  it('should not be able to execute on 101', () => {
+    //given
+    const number = 101;
+
+    // when / then
+    expect(() => fizzbuzz.execute(number)).toThrow();
+  });
+
   it('should be able to output "1" on number 1', () => {
     //given
     const number = 1;
