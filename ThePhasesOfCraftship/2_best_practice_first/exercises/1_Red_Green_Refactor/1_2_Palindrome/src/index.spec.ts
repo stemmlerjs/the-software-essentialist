@@ -34,7 +34,7 @@ describe('palindrome checker', () => {
     }
   );
 
-  it.each(['Was It A Rat I Saw'])(
+  it.each(['Was It A Rat I Saw', 'Never Odd or Even', '1Never Odd or Even1'])(
     'should be able to verify that the phrase "%s" is an valid palindrome',
     (phrase) => {
       const result = palindromeChecker.isAPalindrome(phrase);
