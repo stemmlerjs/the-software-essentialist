@@ -29,38 +29,14 @@ describe('palindrome checker', () => {
     expect(result).toBeTruthy();
   });
 
-  it('should be able to verify that "bill" is an invalid palindrome', () => {
-    //given
-    const word = 'bill';
+  it.each(['bill', 'library', 'book'])(
+    'should be able to verify that the word "%s" is an invalid palindrome',
+    (word) => {
+      const result = palindromeChecker.isAPalindrome(word);
 
-    //when
-    const result = palindromeChecker.isAPalindrome(word);
-
-    //then
-    expect(result).toBeFalsy();
-  });
-
-  it('should be able to verify that "library" is an invalid palindrome', () => {
-    //given
-    const word = 'library';
-
-    //when
-    const result = palindromeChecker.isAPalindrome(word);
-
-    //then
-    expect(result).toBeFalsy();
-  });
-
-  it('should be able to verify that "book" is an invalid palindrome', () => {
-    //given
-    const word = 'book';
-
-    //when
-    const result = palindromeChecker.isAPalindrome(word);
-
-    //then
-    expect(result).toBeFalsy();
-  });
+      expect(result).toBeFalsy();
+    }
+  );
 
   it('should be able to verify that "Mom" is a valid palindrome', () => {
     //given
