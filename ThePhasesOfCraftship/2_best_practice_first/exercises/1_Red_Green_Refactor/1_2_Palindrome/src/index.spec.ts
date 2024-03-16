@@ -39,4 +39,15 @@ describe('palindrome checker', () => {
     //then
     expect(result).toBeFalsy();
   });
+
+  it('should be able to verify that "library" is a invalid palindrome', () => {
+    //given
+    const word = 'library';
+
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeFalsy();
+  });
 });
