@@ -11,6 +11,11 @@ export class FizzBuzz {
         continue;
       }
 
+      if (i % 5 === 0) {
+        result += 'Buzz';
+        continue;
+      }
+
       result += i;
     }
 
