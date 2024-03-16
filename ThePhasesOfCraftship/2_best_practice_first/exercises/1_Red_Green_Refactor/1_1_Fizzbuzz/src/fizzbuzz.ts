@@ -11,7 +11,7 @@ export class FizzBuzz {
         continue;
       }
 
-      if (i % 5 === 0) {
+      if (this.isMultipleOf5(i)) {
         result += 'Buzz';
         continue;
       }
@@ -24,5 +24,9 @@ export class FizzBuzz {
 
   private isMultipleOf3(number: number) {
     return number % 3 === 0;
+  }
+
+  private isMultipleOf5(number: number) {
+    return number % 5 === 0;
   }
 }
