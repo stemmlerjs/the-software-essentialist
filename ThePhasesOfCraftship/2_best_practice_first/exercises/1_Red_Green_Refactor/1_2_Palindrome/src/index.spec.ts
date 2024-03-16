@@ -33,4 +33,13 @@ describe('palindrome checker', () => {
       expect(result).toBeFalsy();
     }
   );
+
+  it.each(['Was It A Rat I Saw'])(
+    'should be able to verify that the phrase "%s" is an valid palindrome',
+    (phrase) => {
+      const result = palindromeChecker.isAPalindrome(phrase);
+
+      expect(result).toBeTruthy();
+    }
+  );
 });
