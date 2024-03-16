@@ -50,4 +50,15 @@ describe('palindrome checker', () => {
     //then
     expect(result).toBeFalsy();
   });
+
+  it('should be able to verify that "book" is an invalid palindrome', () => {
+    //given
+    const word = 'book';
+
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeFalsy();
+  });
 });
