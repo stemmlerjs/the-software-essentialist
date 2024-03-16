@@ -29,7 +29,7 @@ describe('palindrome checker', () => {
     expect(result).toBeTruthy();
   });
 
-  it('should be able to verify that "bill" is a invalid palindrome', () => {
+  it('should be able to verify that "bill" is an invalid palindrome', () => {
     //given
     const word = 'bill';
 
@@ -40,7 +40,7 @@ describe('palindrome checker', () => {
     expect(result).toBeFalsy();
   });
 
-  it('should be able to verify that "library" is a invalid palindrome', () => {
+  it('should be able to verify that "library" is an invalid palindrome', () => {
     //given
     const word = 'library';
 

@@ -16,6 +16,7 @@ Valid:
 Invalid:
 "bill" is not a palindrome
 "library" is not a palindrome
+"book" is not a palindrome
 
 Case Insensitive:
 "Mom" is a palindrome
