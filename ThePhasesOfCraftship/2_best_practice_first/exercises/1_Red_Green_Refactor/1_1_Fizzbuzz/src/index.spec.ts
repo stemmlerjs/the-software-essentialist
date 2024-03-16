@@ -77,4 +77,17 @@ describe('fizzbuzz', () => {
     //then
     expect(result).toBe('12Fizz4BuzzFizz78FizzBuzz11Fizz1314FizzBuzz');
   });
+
+  it('should be able to output "12Fizz4BuzzFizz78FizzBuzz11Fizz1314FizzBuzz1617Fizz19BuzzFizz2223FizzBuzz26Fizz2829FizzBuzz" on number 30', () => {
+    //given
+    const number = 30;
+
+    //when
+    const result = fizzbuzz.execute(number);
+
+    //then
+    expect(result).toBe(
+      '12Fizz4BuzzFizz78FizzBuzz11Fizz1314FizzBuzz1617Fizz19BuzzFizz2223FizzBuzz26Fizz2829FizzBuzz'
+    );
+  });
 });
