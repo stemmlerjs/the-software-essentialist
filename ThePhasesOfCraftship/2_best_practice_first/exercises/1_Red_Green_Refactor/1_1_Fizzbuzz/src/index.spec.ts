@@ -33,4 +33,15 @@ describe('fizzbuzz', () => {
     //then
     expect(result).toBe('1');
   });
+
+  it('should be able to output "12" on number 2', () => {
+    //given
+    const number = 2;
+
+    //when
+    const result = fizzbuzz.execute(number);
+
+    //then
+    expect(result).toBe('12');
+  });
 });
