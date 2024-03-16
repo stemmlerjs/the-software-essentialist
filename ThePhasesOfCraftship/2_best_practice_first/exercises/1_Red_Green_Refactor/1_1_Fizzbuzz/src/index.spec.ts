@@ -18,4 +18,16 @@ describe('fizzbuzz', () => {
     // when / then
     expect(() => fizzbuzz.execute(number)).toThrow();
   });
+
+  it('should be able to output "1" on 1 input', () => {
+    //given
+    const fizzbuzz = new FizzBuzz();
+    const number = 1;
+
+    //when
+    const result = fizzbuzz.execute(number);
+
+    //then
+    expect(result).toBe('1');
+  });
 });
