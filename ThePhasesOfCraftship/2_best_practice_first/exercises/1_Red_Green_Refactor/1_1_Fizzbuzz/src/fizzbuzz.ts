@@ -1,10 +1,11 @@
 export class FizzBuzz {
   execute(number: number): string {
-    if (number < 1) throw new Error();
+    const MIN = 1;
+    if (number < MIN) throw new Error();
 
     let result = '';
 
-    for (let i = 1; i <= number; i++) {
+    for (let i = MIN; i <= number; i++) {
       if (i % 3 === 0) {
         result += 'Fizz';
         continue;
