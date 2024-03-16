@@ -61,4 +61,15 @@ describe('palindrome checker', () => {
     //then
     expect(result).toBeFalsy();
   });
+
+  it('should be able to verify that "Mom" is a valid palindrome', () => {
+    //given
+    const word = 'Mom';
+
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeTruthy();
+  });
 });
