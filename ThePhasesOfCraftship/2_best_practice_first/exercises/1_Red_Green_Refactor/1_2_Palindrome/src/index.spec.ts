@@ -1,9 +1,14 @@
 import { PalindromeChecker } from './index';
 
 describe('palindrome checker', () => {
+  let palindromeChecker: PalindromeChecker;
+
+  beforeEach(() => {
+    palindromeChecker = new PalindromeChecker();
+  });
+
   it('should be able to verify that "mom" is a valid palindrome', () => {
     //given
-    const palindromeChecker = new PalindromeChecker();
     const word = 'mom';
 
     //when
@@ -15,7 +20,6 @@ describe('palindrome checker', () => {
 
   it('should be able to verify that "wow" is a valid palindrome', () => {
     //given
-    const palindromeChecker = new PalindromeChecker();
     const word = 'wow';
 
     //when
@@ -27,7 +31,6 @@ describe('palindrome checker', () => {
 
   it('should be able to verify that "bill" is a invalid palindrome', () => {
     //given
-    const palindromeChecker = new PalindromeChecker();
     const word = 'bill';
 
     //when
