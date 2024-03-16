@@ -6,6 +6,11 @@ export class FizzBuzz {
     let result = '';
 
     for (let i = MIN; i <= number; i++) {
+      if (this.isMultipleOf3(i) && this.isMultipleOf5(i)) {
+        result += 'FizzBuzz';
+        continue;
+      }
+
       if (this.isMultipleOf3(i)) {
         result += 'Fizz';
         continue;
