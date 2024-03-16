@@ -42,4 +42,10 @@ describe('palindrome checker', () => {
       expect(result).toBeTruthy();
     }
   );
+
+  it('should be able to verify that the phrase "Never Odd or Even1" is an invalid palindrome', () => {
+    const phrase = 'Never Odd or Even1';
+    const result = palindromeChecker.isAPalindrome(phrase);
+    expect(result).toBeFalsy();
+  });
 });
