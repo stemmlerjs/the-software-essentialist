@@ -9,4 +9,13 @@ describe('fizzbuzz', () => {
     // when / then
     expect(() => fizzbuzz.execute(number)).toThrow();
   });
+
+  it('should not be able to execute on 0', () => {
+    //given
+    const fizzbuzz = new FizzBuzz();
+    const number = 0;
+
+    // when / then
+    expect(() => fizzbuzz.execute(number)).toThrow();
+  });
 });
