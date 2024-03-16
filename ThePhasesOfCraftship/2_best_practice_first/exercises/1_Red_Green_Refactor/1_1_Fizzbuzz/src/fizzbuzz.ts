@@ -8,20 +8,13 @@ export class FizzBuzz {
     for (let i = MIN; i <= number; i++) {
       if (this.isMultipleOf3(i) && this.isMultipleOf5(i)) {
         result += 'FizzBuzz';
-        continue;
-      }
-
-      if (this.isMultipleOf3(i)) {
+      } else if (this.isMultipleOf3(i)) {
         result += 'Fizz';
-        continue;
-      }
-
-      if (this.isMultipleOf5(i)) {
+      } else if (this.isMultipleOf5(i)) {
         result += 'Buzz';
-        continue;
+      } else {
+        result += i;
       }
-
-      result += i;
     }
 
     return result;
