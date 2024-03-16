@@ -23,7 +23,7 @@ describe('fizzbuzz', () => {
     expect(() => fizzbuzz.execute(number)).toThrow();
   });
 
-  it('should be able to output "1" on 1 input', () => {
+  it('should be able to output "1" on number 1', () => {
     //given
     const number = 1;
 
