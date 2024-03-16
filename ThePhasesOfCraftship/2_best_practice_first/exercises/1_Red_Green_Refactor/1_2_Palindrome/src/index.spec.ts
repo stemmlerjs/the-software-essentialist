@@ -1,4 +1,15 @@
+import { PalindromeChecker } from './index';
 
 describe('palindrome checker', () => {
+  it('should be able to verify that "mom" is a valid palindrome', () => {
+    //given
+    const palindromeChecker = new PalindromeChecker();
+    const word = 'mom';
 
-})
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeTruthy();
+  });
+});
