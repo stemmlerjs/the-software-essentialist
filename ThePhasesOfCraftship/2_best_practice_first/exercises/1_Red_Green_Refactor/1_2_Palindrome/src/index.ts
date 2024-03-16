@@ -10,8 +10,8 @@ export class PalindromeChecker {
   isAPalindrome(str: string): boolean {
     const reversed = reverseString(str);
 
-    if (stripSpaces(str.toLowerCase()) !== stripSpaces(reversed.toLowerCase()))
-      return false;
-    return true;
+    return (
+      stripSpaces(str.toLowerCase()) === stripSpaces(reversed.toLowerCase())
+    );
   }
 }
