@@ -1,8 +1,7 @@
 export class PalindromeChecker {
   isAPalindrome(str: string): boolean {
-    if (str === 'book') return false;
-    if (str === 'library') return false;
-    if (str === 'bill') return false;
+    const reversed = str.split('').reverse().join('');
+    if (str !== reversed) return false;
     return true;
   }
 }
