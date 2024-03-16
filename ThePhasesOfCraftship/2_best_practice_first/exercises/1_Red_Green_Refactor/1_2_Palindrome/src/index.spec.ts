@@ -12,4 +12,16 @@ describe('palindrome checker', () => {
     //then
     expect(result).toBeTruthy();
   });
+
+  it('should be able to verify that "wow" is a valid palindrome', () => {
+    //given
+    const palindromeChecker = new PalindromeChecker();
+    const word = 'wow';
+
+    //when
+    const result = palindromeChecker.isAPalindrome(word);
+
+    //then
+    expect(result).toBeTruthy();
+  });
 });
