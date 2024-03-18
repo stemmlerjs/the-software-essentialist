@@ -70,7 +70,7 @@ describe('password validator', () => {
       }
     );
 
-    it.each(['password', 'HasNoDigits', 'HasZeroDigits'])(
+    it.each(['password', 'HasNoDigits', 'HasZeroDigits', 'maxwellTheBe'])(
       'knows that "%s" doesn\'t have at least one digit',
       (password) => {
         const { result, errors } = sut.validatePassword(password);
@@ -104,7 +104,7 @@ describe('password validator', () => {
       }
     );
 
-    it.each(['u', 'lower', 'nouppercase'])(
+    it.each(['u', 'lower', 'nouppercase', 'maxwell1_c'])(
       'knows that "%s" doesn\'t have at least one upper case letter',
       (password) => {
         const { result, errors } = sut.validatePassword(password);
