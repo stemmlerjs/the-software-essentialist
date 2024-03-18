@@ -15,19 +15,18 @@ describe('stats calculator', () => {
 
   describe('all numbers are integers', () => {
     test.each([
+      [[99999999999999999], true],
       [[1, 2, 3], true],
       [[0], true],
       [[1.5, 2.9, 3.456], false],
       [[1, NaN], false],
       [[Infinity, 1], false],
       [[-Infinity, Infinity], false],
-    ])(
-      'knows that %s the numbers being valid is %s',
-      (numbers, areIntegers) => {
-        areIntegers
-          ? expect(() => StatsCalculator.calculate(numbers)).not.toThrowError()
-          : expect(() => StatsCalculator.calculate(numbers)).toThrowError();
-      }
-    );
+      [[BigInt(99999999999999999)], true],
+    ])('knows that %s being valid is %s', (numbers, areIntegers) => {
+      areIntegers
+        ? expect(() => StatsCalculator.calculate(numbers)).not.toThrowError()
+        : expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+    });
   });
 });
