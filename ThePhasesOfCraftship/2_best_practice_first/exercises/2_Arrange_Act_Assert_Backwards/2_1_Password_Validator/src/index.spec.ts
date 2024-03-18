@@ -44,7 +44,7 @@ describe('password validator', () => {
     expect(result.result).toBeTruthy();
   });
 
-  it('Knows that a password without at least one digit is invalid', () => {
+  it('knows that a password without at least one digit is invalid', () => {
     // Arrange
     const password = 'password';
 
