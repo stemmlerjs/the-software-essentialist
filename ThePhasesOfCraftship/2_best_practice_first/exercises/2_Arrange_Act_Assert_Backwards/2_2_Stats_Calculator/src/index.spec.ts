@@ -13,6 +13,18 @@ describe('stats calculator', () => {
     });
   });
 
+  describe('maximum value', () => {
+    test.each([
+      [[2, 4, 21, -8, 53, 40], 53],
+      [[0, 1, 2], 2],
+      [[5], 5],
+    ])('knows that %s is expected to be %i', (integers, maximum) => {
+      const result = StatsCalculator.calculate(integers);
+
+      expect(result.maximum).toBe(maximum);
+    });
+  });
+
   describe('all numbers are integers', () => {
     test.each([
       [[99999999999999999], true],
