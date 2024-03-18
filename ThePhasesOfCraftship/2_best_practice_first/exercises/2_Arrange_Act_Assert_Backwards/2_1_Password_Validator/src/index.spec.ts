@@ -20,7 +20,25 @@ describe('password validator', () => {
     );
 
     it.each(['mom', 'test', 'pt'])(
-      'knows that "%s" has invalid length',
+      'knows that "%s" is less than the required length',
+      (password) => {
+        const { result, errors } = sut.validatePassword(password);
+
+        expect(result).toBeFalsy();
+        expect(errors).toBeDefined();
+
+        expect(
+          errors?.find((err) => err.type === 'IncorrectPasswordLength')
+        ).toBeDefined();
+
+        expect(
+          errors?.find((err) => err.type === 'IncorrectPasswordLength')?.message
+        ).toContain('5 and 15');
+      }
+    );
+
+    it.each(['thePhysical1234567', '1234567891234567', 'qwertyqwertyqwerty'])(
+      'knows that "%s" is more than the required length',
       (password) => {
         const { result, errors } = sut.validatePassword(password);
 
