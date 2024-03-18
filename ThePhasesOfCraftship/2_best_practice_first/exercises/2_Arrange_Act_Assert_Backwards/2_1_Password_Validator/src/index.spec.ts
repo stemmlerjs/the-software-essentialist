@@ -43,7 +43,7 @@ describe('password validator', () => {
       }
     );
 
-    it.each(['password', 'HasNoDigits', 'HasZeroDigits'])(
+    it.each(['Password', 'HasNoDigits', 'HasZeroDigits'])(
       'knows that "%s" doesn\'t have at least one digit',
       (password) => {
         const { result, errors } = sut.validatePassword(password);
@@ -80,6 +80,32 @@ describe('password validator', () => {
           'PasswordMustHaveAtLeastOneUpperCaseLetter'
         );
         expect(errors![0].message).toContain('at least 1 upper case letter');
+      }
+    );
+  });
+
+  describe('multiple validation errors', () => {
+    it.each([
+      {
+        password: 'mom',
+        expected: 3,
+      },
+      {
+        password: 'Mom',
+        expected: 2,
+      },
+      {
+        password: 'Mom1',
+        expected: 1,
+      },
+    ])(
+      'knows that "$password" has $expected error(s)',
+      ({ password, expected }) => {
+        const { result, errors } = sut.validatePassword(password);
+
+        expect(result).toBeFalsy();
+        expect(errors).toBeDefined();
+        expect(errors!.length).toBe(expected);
       }
     );
   });
