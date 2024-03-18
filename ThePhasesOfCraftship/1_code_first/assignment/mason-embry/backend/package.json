@@ -12,6 +12,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "prisma": {
+    "seed": "ts-node src/database/seed.ts"
+  },
   "keywords": [],
   "author": "mason@embrycode.com",
   "license": "ISC",

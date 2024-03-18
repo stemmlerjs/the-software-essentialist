@@ -1,13 +1,11 @@
-import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 
+import { db } from './database/db';
 import {
   ErrorMessage,
   ResponseDTO,
 } from './iDontKnowWhereToPutThis/responseDTO';
-
-const prisma = new PrismaClient();
 
 const app = express();
 
@@ -29,7 +27,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return;
     }
 
-    const userWithExistingUsername = await prisma.user.findUnique({
+    const userWithExistingUsername = await db.user.findUnique({
       where: {
         username: req.body.username,
       },
@@ -44,7 +42,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return;
     }
 
-    const userWithExistingEmail = await prisma.user.findUnique({
+    const userWithExistingEmail = await db.user.findUnique({
       where: {
         email: req.body.email,
       },
@@ -56,7 +54,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return;
     }
 
-    const newUser = await prisma.user.create({ data: req.body });
+    const newUser = await db.user.create({ data: req.body });
 
     const responseDTO = new ResponseDTO(null, {
       id: newUser.id,
@@ -91,7 +89,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return;
     }
 
-    const usersAlreadyUsingThisUsername = await prisma.user.findFirst({
+    const usersAlreadyUsingThisUsername = await db.user.findFirst({
       where: {
         username: req.body.username,
         NOT: {
@@ -109,7 +107,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return;
     }
 
-    const usersAlreadyUsingThisEmail = await prisma.user.findFirst({
+    const usersAlreadyUsingThisEmail = await db.user.findFirst({
       where: {
         email: req.body.email,
         NOT: {
@@ -124,7 +122,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await prisma.user.update({
+    const user = await db.user.update({
       where: { id: userId },
       data: req.body,
     });
@@ -164,7 +162,7 @@ app.get('/users', async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await db.user.findUnique({ where: { email } });
 
     if (!user) {
       const responseDTO = new ResponseDTO(ErrorMessage.UserNotFound, null);
