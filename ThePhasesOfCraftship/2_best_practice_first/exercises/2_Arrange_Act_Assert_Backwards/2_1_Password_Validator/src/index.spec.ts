@@ -28,4 +28,16 @@ describe('password validator', () => {
     expect(errors![0].type).toBe('IncorrectPasswordLength');
     expect(errors![0].message).toContain('5 and 15');
   });
+
+  it('knows that a password with at least one digit is valid', () => {
+    // Arrange
+    const password = 'password1';
+    const sut = new PasswordValidator();
+
+    // Act
+    const result = sut.validatePassword(password);
+
+    // Assert
+    expect(result.result).toBeTruthy();
+  });
 });
