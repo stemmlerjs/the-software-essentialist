@@ -16,4 +16,12 @@ describe('stats calculator', () => {
 
     expect(result.minimum).toBe(0);
   });
+
+  it('knows that the numbers [5] have a minimum value of 5', () => {
+    const integers = [5];
+
+    const result = StatsCalculator.calculate(integers);
+
+    expect(result.minimum).toBe(5);
+  });
 });
