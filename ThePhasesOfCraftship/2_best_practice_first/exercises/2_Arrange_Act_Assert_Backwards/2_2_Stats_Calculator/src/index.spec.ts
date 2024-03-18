@@ -13,21 +13,21 @@ describe('stats calculator', () => {
     });
   });
 
-  it('knows that the numbers [1.5, 2.9, 3.456] are not integers', () => {
-    const numbers = [1.5, 2.9, 3.456];
-
-    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
-  });
-
-  it('knows that the numbers [1, NaN] are not integers', () => {
-    const numbers = [NaN, 1];
-
-    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
-  });
-
-  it('knows that the numbers [1, Infinity] are not integers', () => {
-    const numbers = [Infinity, 1];
-
-    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+  describe('all numbers are integers', () => {
+    test.each([
+      [[1, 2, 3], true],
+      [[0], true],
+      [[1.5, 2.9, 3.456], false],
+      [[1, NaN], false],
+      [[Infinity, 1], false],
+      [[-Infinity, Infinity], false],
+    ])(
+      'knows that %s the numbers being valid is %s',
+      (numbers, areIntegers) => {
+        areIntegers
+          ? expect(() => StatsCalculator.calculate(numbers)).not.toThrowError()
+          : expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+      }
+    );
   });
 });
