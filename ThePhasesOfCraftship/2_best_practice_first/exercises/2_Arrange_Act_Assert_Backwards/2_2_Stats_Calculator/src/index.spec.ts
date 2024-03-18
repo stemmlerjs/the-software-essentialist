@@ -13,8 +13,14 @@ describe('stats calculator', () => {
     });
   });
 
-  it('knows that the numbers are integers', () => {
+  it('knows that the numbers [1.5, 2.9, 3.456] are not integers', () => {
     const numbers = [1.5, 2.9, 3.456];
+
+    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+  });
+
+  it('knows that the numbers [1, NaN] are not integers', () => {
+    const numbers = [NaN, 1];
 
     expect(() => StatsCalculator.calculate(numbers)).toThrowError();
   });
