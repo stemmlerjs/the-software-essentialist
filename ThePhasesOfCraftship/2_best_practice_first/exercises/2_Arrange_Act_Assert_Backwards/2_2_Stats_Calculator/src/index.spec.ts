@@ -12,4 +12,10 @@ describe('stats calculator', () => {
       expect(result.minimum).toBe(minimum);
     });
   });
+
+  it('knows that the numbers are integers', () => {
+    const numbers = [1.5, 2.9, 3.456];
+
+    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+  });
 });

@@ -1,5 +1,8 @@
 export class StatsCalculator {
   static calculate(numbers: number[]) {
+    if (numbers.some((number) => !Number.isInteger(number)))
+      throw new Error('All numbers must be integers');
+
     let minimum = numbers[0];
 
     for (let i = 1; i < numbers.length; i++) {
