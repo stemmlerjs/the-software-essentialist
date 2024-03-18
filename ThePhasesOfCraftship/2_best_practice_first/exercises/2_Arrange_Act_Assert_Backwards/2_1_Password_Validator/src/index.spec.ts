@@ -19,13 +19,13 @@ describe('password validator', () => {
     const sut = new PasswordValidator();
 
     // Act
-    const result = sut.validatePassword(password);
+    const { result, errors } = sut.validatePassword(password);
 
     // Assert
-    expect(result.result).toBeFalsy();
-    expect(result.errors).toBeDefined();
-    expect(result.errors!.length).toBe(1);
-    expect(result.errors![0].type).toBe('IncorrectPasswordLength');
-    expect(result.errors![0].message).toContain('5 and 15');
+    expect(result).toBeFalsy();
+    expect(errors).toBeDefined();
+    expect(errors!.length).toBe(1);
+    expect(errors![0].type).toBe('IncorrectPasswordLength');
+    expect(errors![0].message).toContain('5 and 15');
   });
 });
