@@ -9,15 +9,18 @@ export class StatsCalculator {
 
     let minimum = numbers[0];
     let maximum = numbers[0];
+    let count = 1;
 
     for (let i = 1; i < numbers.length; i++) {
       if (numbers[i] < minimum) minimum = numbers[i];
       if (numbers[i] > maximum) maximum = numbers[i];
+      count++;
     }
 
     return {
       minimum,
       maximum,
+      count,
     };
   }
 }

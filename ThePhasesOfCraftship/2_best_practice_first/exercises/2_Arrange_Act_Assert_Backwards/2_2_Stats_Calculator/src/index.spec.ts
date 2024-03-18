@@ -25,6 +25,18 @@ describe('stats calculator', () => {
     });
   });
 
+  describe('number of elements', () => {
+    test.each([
+      [[2, 4, 21, -8, 53, 40], 6],
+      [[0, 1, 2], 3],
+      [[5], 1],
+    ])('knows that %s is expected to be %i', (integers, count) => {
+      const result = StatsCalculator.calculate(integers);
+
+      expect(result.count).toBe(count);
+    });
+  });
+
   describe('all numbers are integers', () => {
     test.each([
       [[99999999999999999], true],
