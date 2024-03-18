@@ -9,7 +9,7 @@ describe('password validator', () => {
 
   it('knows that a password that has between 5 and 15 characters long is valid', () => {
     // Arrange
-    const password = 'password';
+    const password = 'password1';
 
     // Act
     const result = sut.validatePassword(password);
@@ -20,7 +20,7 @@ describe('password validator', () => {
 
   it('knows that a password that is outside 5 and 15 characters long is invalid', () => {
     // Arrange
-    const password = 'mom';
+    const password = 'mom1';
 
     // Act
     const { result, errors } = sut.validatePassword(password);
@@ -42,5 +42,20 @@ describe('password validator', () => {
 
     // Assert
     expect(result.result).toBeTruthy();
+  });
+
+  it('Knows that a password without at least one digit is invalid', () => {
+    // Arrange
+    const password = 'password';
+
+    // Act
+    const { result, errors } = sut.validatePassword(password);
+
+    // Assert
+    expect(result).toBeFalsy();
+    expect(errors!).toBeDefined();
+    expect(errors!.length).toBe(1);
+    expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneDigit');
+    expect(errors![0].message).toContain('at least 1 digit');
   });
 });

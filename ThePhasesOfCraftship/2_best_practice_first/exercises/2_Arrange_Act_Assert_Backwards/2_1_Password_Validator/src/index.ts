@@ -12,6 +12,18 @@ export class PasswordValidator {
       };
     }
 
+    if (!/\d/.test(password)) {
+      return {
+        result: false,
+        errors: [
+          {
+            type: 'PasswordMustHaveAtLeastOneDigit',
+            message: 'The password must have at least 1 digit',
+          },
+        ],
+      };
+    }
+
     return {
       result: true,
     };
