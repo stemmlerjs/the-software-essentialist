@@ -60,4 +60,16 @@ describe('password validator', () => {
     expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneDigit');
     expect(errors![0].message).toContain('at least 1 digit');
   });
+
+  it('knows that a password with at least one upper case letter is valid', () => {
+    // Arrange
+    const password = 'Password1';
+
+    // Act
+    const result = sut.validatePassword(password);
+
+    // Assert
+    expect(result.result).toBeTruthy();
+    expect(result.errors).not.toBeDefined();
+  });
 });
