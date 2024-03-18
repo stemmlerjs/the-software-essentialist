@@ -24,4 +24,10 @@ describe('stats calculator', () => {
 
     expect(() => StatsCalculator.calculate(numbers)).toThrowError();
   });
+
+  it('knows that the numbers [1, Infinity] are not integers', () => {
+    const numbers = [Infinity, 1];
+
+    expect(() => StatsCalculator.calculate(numbers)).toThrowError();
+  });
 });
