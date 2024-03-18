@@ -9,16 +9,19 @@ export class StatsCalculator {
 
     let minimum = numbers[0];
     let maximum = numbers[0];
+    let total = BigInt(numbers[0]);
 
     for (let i = 1; i < numbers.length; i++) {
       if (numbers[i] < minimum) minimum = numbers[i];
       if (numbers[i] > maximum) maximum = numbers[i];
+      total += BigInt(numbers[i]);
     }
 
     return {
       minimum,
       maximum,
       count: numbers.length,
+      average: Number(total) / numbers.length,
     };
   }
 }
