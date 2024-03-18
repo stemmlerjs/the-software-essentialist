@@ -1,39 +1,18 @@
 import { StatsCalculator } from './index';
 
 describe('stats calculator', () => {
-  describe('minimum value', () => {
+  describe('statistics', () => {
     test.each([
-      [[2, 4, 21, -8, 53, 40], -8],
-      [[0, 1, 2], 0],
-      [[5], 5],
-    ])('knows that %s is expected to be %i', (integers, minimum) => {
+      [
+        [2, 4, 21, -8, 53, 40],
+        { minimum: -8, maximum: 53, count: 6, average: 18.666666666667 },
+      ],
+      [[0, 1, 2], { minimum: 0, maximum: 2, count: 3, average: 1.5 }],
+      [[5], { minimum: 5, maximum: 5, count: 1, average: 5 }],
+    ])('knows that %s returns \n%o', (integers, stats) => {
       const result = StatsCalculator.calculate(integers);
 
-      expect(result.minimum).toBe(minimum);
-    });
-  });
-
-  describe('maximum value', () => {
-    test.each([
-      [[2, 4, 21, -8, 53, 40], 53],
-      [[0, 1, 2], 2],
-      [[5], 5],
-    ])('knows that %s is expected to be %i', (integers, maximum) => {
-      const result = StatsCalculator.calculate(integers);
-
-      expect(result.maximum).toBe(maximum);
-    });
-  });
-
-  describe('number of elements', () => {
-    test.each([
-      [[2, 4, 21, -8, 53, 40], 6],
-      [[0, 1, 2], 3],
-      [[5], 1],
-    ])('knows that %s is expected to be %i', (integers, count) => {
-      const result = StatsCalculator.calculate(integers);
-
-      expect(result.count).toBe(count);
+      expect(result).toEqual(stats);
     });
   });
 
