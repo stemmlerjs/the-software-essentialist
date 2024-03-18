@@ -16,6 +16,7 @@ describe('password validator', () => {
 
     // Assert
     expect(result.result).toBeTruthy();
+    expect(result.errors).not.toBeDefined();
   });
 
   it('knows that a password that is outside 5 and 15 characters long is invalid', () => {
@@ -42,6 +43,7 @@ describe('password validator', () => {
 
     // Assert
     expect(result.result).toBeTruthy();
+    expect(result.errors).not.toBeDefined();
   });
 
   it('knows that a password without at least one digit is invalid', () => {
