@@ -7,84 +7,80 @@ describe('password validator', () => {
     sut = new PasswordValidator();
   });
 
-  it('knows that a password that has between 5 and 15 characters long is valid', () => {
-    // Arrange
-    const password = 'Password1';
+  describe('password length must be between 5 and 15 characters long', () => {
+    it.each(['Password1', 'Test1', 'Length7'])(
+      'knows that "%s" has valid length',
+      (password) => {
+        const result = sut.validatePassword(password);
 
-    // Act
-    const result = sut.validatePassword(password);
+        expect(result.result).toBeTruthy();
+        expect(result.errors).not.toBeDefined();
+      }
+    );
 
-    // Assert
-    expect(result.result).toBeTruthy();
-    expect(result.errors).not.toBeDefined();
+    it.each(['Mom1', 'T123', 'PT1'])(
+      'knows that "%s" has invalid length',
+      (password) => {
+        const { result, errors } = sut.validatePassword(password);
+
+        expect(result).toBeFalsy();
+        expect(errors).toBeDefined();
+        expect(errors!.length).toBe(1);
+        expect(errors![0].type).toBe('IncorrectPasswordLength');
+        expect(errors![0].message).toContain('5 and 15');
+      }
+    );
   });
 
-  it('knows that a password that is outside 5 and 15 characters long is invalid', () => {
-    // Arrange
-    const password = 'mom1';
+  describe('password must have at least one digit', () => {
+    it.each(['Password1', 'Has1Digit', 'Has2Digits'])(
+      'knows that "%s" has at least one digit',
+      (password) => {
+        const result = sut.validatePassword(password);
 
-    // Act
-    const { result, errors } = sut.validatePassword(password);
+        expect(result.result).toBeTruthy();
+        expect(result.errors).not.toBeDefined();
+      }
+    );
 
-    // Assert
-    expect(result).toBeFalsy();
-    expect(errors).toBeDefined();
-    expect(errors!.length).toBe(1);
-    expect(errors![0].type).toBe('IncorrectPasswordLength');
-    expect(errors![0].message).toContain('5 and 15');
+    it.each(['password', 'HasNoDigits', 'HasZeroDigits'])(
+      'knows that "%s" doesn\'t have at least one digit',
+      (password) => {
+        const { result, errors } = sut.validatePassword(password);
+
+        expect(result).toBeFalsy();
+        expect(errors!).toBeDefined();
+        expect(errors!.length).toBe(1);
+        expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneDigit');
+        expect(errors![0].message).toContain('at least 1 digit');
+      }
+    );
   });
 
-  it('knows that a password with at least one digit is valid', () => {
-    // Arrange
-    const password = 'Password1';
+  describe('password must have at least one upper case letter', () => {
+    it.each(['Password1', 'Has1UpperCase', 'Has2UpperCase'])(
+      'knows that "%s" has at least one upper case letter',
+      (password) => {
+        const result = sut.validatePassword(password);
 
-    // Act
-    const result = sut.validatePassword(password);
+        expect(result.result).toBeTruthy();
+        expect(result.errors).not.toBeDefined();
+      }
+    );
 
-    // Assert
-    expect(result.result).toBeTruthy();
-    expect(result.errors).not.toBeDefined();
-  });
+    it.each(['password2', 'nouppercase1', 'has0uppercase'])(
+      'knows that "%s" doesn\'t have at least one upper case letter',
+      (password) => {
+        const { result, errors } = sut.validatePassword(password);
 
-  it('knows that a password without at least one digit is invalid', () => {
-    // Arrange
-    const password = 'password';
-
-    // Act
-    const { result, errors } = sut.validatePassword(password);
-
-    // Assert
-    expect(result).toBeFalsy();
-    expect(errors!).toBeDefined();
-    expect(errors!.length).toBe(1);
-    expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneDigit');
-    expect(errors![0].message).toContain('at least 1 digit');
-  });
-
-  it('knows that a password with at least one upper case letter is valid', () => {
-    // Arrange
-    const password = 'Password1';
-
-    // Act
-    const result = sut.validatePassword(password);
-
-    // Assert
-    expect(result.result).toBeTruthy();
-    expect(result.errors).not.toBeDefined();
-  });
-
-  it('knows that a password without at least one upper case letter is invalid', () => {
-    // Arrange
-    const password = 'password1';
-
-    // Act
-    const { result, errors } = sut.validatePassword(password);
-
-    // Assert
-    expect(result).toBeFalsy();
-    expect(errors!).toBeDefined();
-    expect(errors!.length).toBe(1);
-    expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneUpperCaseLetter');
-    expect(errors![0].message).toContain('at least 1 upper case letter');
+        expect(result).toBeFalsy();
+        expect(errors!).toBeDefined();
+        expect(errors!.length).toBe(1);
+        expect(errors![0].type).toBe(
+          'PasswordMustHaveAtLeastOneUpperCaseLetter'
+        );
+        expect(errors![0].message).toContain('at least 1 upper case letter');
+      }
+    );
   });
 });
