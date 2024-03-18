@@ -9,7 +9,7 @@ describe('password validator', () => {
 
   it('knows that a password that has between 5 and 15 characters long is valid', () => {
     // Arrange
-    const password = 'password1';
+    const password = 'Password1';
 
     // Act
     const result = sut.validatePassword(password);
@@ -36,7 +36,7 @@ describe('password validator', () => {
 
   it('knows that a password with at least one digit is valid', () => {
     // Arrange
-    const password = 'password1';
+    const password = 'Password1';
 
     // Act
     const result = sut.validatePassword(password);
@@ -71,5 +71,20 @@ describe('password validator', () => {
     // Assert
     expect(result.result).toBeTruthy();
     expect(result.errors).not.toBeDefined();
+  });
+
+  it('knows that a password without at least one upper case letter is invalid', () => {
+    // Arrange
+    const password = 'password1';
+
+    // Act
+    const { result, errors } = sut.validatePassword(password);
+
+    // Assert
+    expect(result).toBeFalsy();
+    expect(errors!).toBeDefined();
+    expect(errors!.length).toBe(1);
+    expect(errors![0].type).toBe('PasswordMustHaveAtLeastOneUpperCaseLetter');
+    expect(errors![0].message).toContain('at least 1 upper case letter');
   });
 });
