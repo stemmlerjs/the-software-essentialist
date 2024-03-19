@@ -1,7 +1,7 @@
 import { MilitaryTimeRangeValidator } from './index';
 
 describe('military time range validator', () => {
-  describe('range has a "-" separator', () => {
+  describe('range has 1 "-" separator', () => {
     it.each([
       ['03:03-23:59', true],
       ['00:00 - 23:59', true],
