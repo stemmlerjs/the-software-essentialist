@@ -3,9 +3,9 @@ export class MilitaryTimeRangeValidator {
     const timestamps = range.split('-');
     if (timestamps.length !== 2) return false;
 
-    if (timestamps[0].includes('.')) return false;
-    if (timestamps[1].includes('.')) return false;
-    if (timestamps[1].includes(',')) return false;
+    for (const timestamp of timestamps) {
+      if (!timestamp.includes(':')) return false;
+    }
 
     return true;
   }
