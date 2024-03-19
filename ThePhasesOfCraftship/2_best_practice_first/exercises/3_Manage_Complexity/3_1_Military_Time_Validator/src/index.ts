@@ -13,7 +13,7 @@ export class MilitaryTimeRangeValidator {
 
       const minutes = parseInt(sides[1]);
 
-      if (minutes < 0 || minutes > 59) return false;
+      if (minutes > 59) return false;
     }
 
     return true;
