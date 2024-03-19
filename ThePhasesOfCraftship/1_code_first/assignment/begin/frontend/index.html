@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
+    <title>DDD Forum</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="App.css" />
+  </head>
+  <body>
+    <div id="root">
+      <header id="header" class="flex align-center">
+        <div id="app-logo">
+          <img src="assets/dddforumlogo.png" />
+        </div>
+        <div id="title-container">
+          <h1>Domain-Driven Designers</h1>
+          <h3>Where awesome domain driven designers are made</h3>
+          <a href="/submit">submit</a>
+        </div>
+        <div id="header-action-button">
+          <a href="/register.html">Join</a>
+        </div>
+      </header>
+      <div class="content-container">
+        <div class="posts-view-switcher flex">
+          <div class="active">Popular</div>
+          <div class="active">New</div>
+        </div>
+
+        <div class="posts-list">
+          <div class="post-item">
+            <div class="post-item-votes">
+              <div class="post-item-upvote">
+                <img src="assets/arrow.svg" />
+              </div>
+              <div>5</div>
+              <div class="post-item-downvote">
+                <img src="assets/arrow.svg" />
+              </div>
+            </div>
+            <div class="post-item-content">
+              <div class="post-item-title">First Post</div>
+              <div class="post-item-details">
+                <div>2 days ago</div>
+                <a href="/member/username"> by username </a>
+                <div>comments</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="post-item">
+            <div class="post-item-votes">
+              <div class="post-item-upvote">
+                <img src="assets/arrow.svg" />
+              </div>
+              <div>2</div>
+              <div class="post-item-downvote">
+                <img src="assets/arrow.svg" />
+              </div>
+            </div>
+            <div class="post-item-content">
+              <div class="post-item-title">Second Post!</div>
+              <div class="post-item-details">
+                <div>1 month ago</div>
+                <a href="/member/username"> by username </a>
+                <div>3 comments</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="post-item">
+            <div class="post-item-votes">
+              <div class="post-item-upvote">
+                <img src="assets/arrow.svg" />
+              </div>
+              <div>7</div>
+              <div class="post-item-downvote">
+                <img src="assets/arrow.svg" />
+              </div>
+            </div>
+            <div class="post-item-content">
+              <div class="post-item-title">Why DDD?</div>
+              <div class="post-item-details">
+                <div>10 days ago</div>
+                <a href="/member/username"> by username </a>
+                <div>3 comments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
