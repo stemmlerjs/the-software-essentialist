@@ -11,8 +11,10 @@ export class MilitaryTimeRangeValidator {
         if (!/^\d{2}$/.test(side)) return false;
       }
 
+      const hours = parseInt(sides[0]);
       const minutes = parseInt(sides[1]);
 
+      if (hours > 23) return false;
       if (minutes > 59) return false;
     }
 

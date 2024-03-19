@@ -76,4 +76,19 @@ describe('military time range validator', () => {
       expect(result).toBe(expected);
     });
   });
+
+  describe('hours are within range', () => {
+    it.each([
+      ['23:00 - 00:00', true],
+      ['23:59 - 00:59', true],
+      ['24:00 - 00:00', false],
+      ['25:00 - 00:00', false],
+      ['-00:00 - 00:00', false],
+      ['00:00 - -05:00', false],
+    ])('knows that "%s" is %s', (range, expected) => {
+      const result = MilitaryTimeRangeValidator.validate(range);
+
+      expect(result).toBe(expected);
+    });
+  });
 });
