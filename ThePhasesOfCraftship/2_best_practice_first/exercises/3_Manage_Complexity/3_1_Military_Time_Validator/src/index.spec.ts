@@ -19,12 +19,15 @@ describe('military time range validator', () => {
     });
   });
 
-  it.each(['03.03 - 23:59', '03:03 - 23.59', '03:03 - 23,59'])(
-    'knows that the time "%s" has an invalid timestamp separator',
-    (range) => {
-      const result = MilitaryTimeRangeValidator.validate(range);
+  it.each([
+    '03.03 - 23:59',
+    '03:03 - 23.59',
+    '03:03 - 23,59',
+    '05<06 - 07|10',
+    '06>19 - 08>08',
+  ])('knows that the time "%s" has an invalid timestamp separator', (range) => {
+    const result = MilitaryTimeRangeValidator.validate(range);
 
-      expect(result).toBe(false);
-    }
-  );
+    expect(result).toBe(false);
+  });
 });
