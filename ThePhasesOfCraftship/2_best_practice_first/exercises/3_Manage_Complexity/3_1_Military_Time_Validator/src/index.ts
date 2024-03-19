@@ -7,13 +7,13 @@ export class MilitaryTimeRangeValidator {
       const sides = timestamp.trim().split(':');
       if (sides.length !== 2) return false;
 
-      const minutes = parseInt(sides[1]);
-
-      if (minutes < 0 || minutes > 59) return false;
-
       for (const side of sides) {
         if (!/^\d{2}$/.test(side)) return false;
       }
+
+      const minutes = parseInt(sides[1]);
+
+      if (minutes < 0 || minutes > 59) return false;
     }
 
     return true;
