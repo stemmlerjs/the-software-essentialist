@@ -3,6 +3,8 @@ import { MilitaryTimeRangeValidator } from './index';
 describe('military time range validator', () => {
   describe('range has 1 "-" separator', () => {
     it.each([
+      ['03:03   -   23:59', true],
+      ['  03:03-23:59  ', true],
       ['03:03-23:59', true],
       ['00:00 - 23:59', true],
       ['04:52 - 21:39', true],
