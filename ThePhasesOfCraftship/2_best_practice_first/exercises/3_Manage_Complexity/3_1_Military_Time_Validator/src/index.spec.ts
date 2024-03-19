@@ -12,6 +12,8 @@ describe('military time range validator', () => {
       ['10:50 20:36', false],
       ['10:50 -- 20:36', false],
       ['10:50 - - 20:36', false],
+      ['10:50 % 20:36', false],
+      ['10:50 $ 20:36', false],
     ])('knows that "%s" is %s', (range, expected) => {
       const result = MilitaryTimeRangeValidator.validate(range);
 
