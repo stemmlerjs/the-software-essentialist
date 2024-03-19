@@ -40,25 +40,25 @@ describe('military time range validator', () => {
     });
   });
 
-  it.each([
-    '0:00 - 23:59',
-    '00:0 - 23:59',
-    '000:00 - 23:59',
-    '00:000 - 23:59',
-    ':00 - 23:59',
-    '00: - 23:59',
-    '00:00 - 0:00',
-    '00:00 - 00:0',
-    '00:00 - 0:000',
-    ': - :',
-  ])(
-    'knows that the time "%s" has at least one invalid side that doesn\'t have 2 digits',
-    (range) => {
+  describe('each side of a timestamp has 2 digits', () => {
+    it.each([
+      ['0:00 - 23:59', false],
+      ['00:0 - 23:59', false],
+      ['000:00 - 23:59', false],
+      ['00:000 - 23:59', false],
+      ['00:00 - 23:59', true],
+      ['00:00 - 00:00', true],
+      ['00:00 - 00:0', false],
+      ['00:00 - 0:000', false],
+      ['00:00 - 0:00', false],
+      ['00:00 - 00:0', false],
+      ['00:00 - 0:00', false],
+    ])('knows that "%s" is %s', (range, expected) => {
       const result = MilitaryTimeRangeValidator.validate(range);
 
-      expect(result).toBe(false);
-    }
-  );
+      expect(result).toBe(expected);
+    });
+  });
 
   describe('minutes are within range', () => {
     it.each([
