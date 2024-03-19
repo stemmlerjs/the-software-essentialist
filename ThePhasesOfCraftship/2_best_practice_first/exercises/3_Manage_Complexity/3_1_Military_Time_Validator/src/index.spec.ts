@@ -60,19 +60,20 @@ describe('military time range validator', () => {
     }
   );
 
-  it('knows that the time "00:00 - 00:59" has minutes that are between the valid minutes range', () => {
-    const range = '00:00 - 00:59';
+  describe('minutes are within range', () => {
+    it.each([
+      ['00:59 - 00:59', true],
+      ['00:00 - 00:59', true],
+      ['00:00 - 00:60', false],
+      ['00:60 - 00:00', false],
+      ['00:64 - 00:00', false],
+      ['00:00 - 00:64', false],
+      ['00:-0 - 00:00', false],
+      ['00:00 - 00:-00', false],
+    ])('knows that "%s" is %s', (range, expected) => {
+      const result = MilitaryTimeRangeValidator.validate(range);
 
-    const result = MilitaryTimeRangeValidator.validate(range);
-
-    expect(result).toBe(true);
-  });
-
-  it('knows that the time "00:00 - 00:60" has minutes that are outside the valid minutes range', () => {
-    const range = '00:00 - 00:60';
-
-    const result = MilitaryTimeRangeValidator.validate(range);
-
-    expect(result).toBe(false);
+      expect(result).toBe(expected);
+    });
   });
 });
