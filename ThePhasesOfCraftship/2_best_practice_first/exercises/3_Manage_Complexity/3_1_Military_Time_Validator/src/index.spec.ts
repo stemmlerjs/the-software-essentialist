@@ -18,4 +18,12 @@ describe('military time range validator', () => {
       expect(result).toBe(expected);
     });
   });
+
+  it('knows that the time "03.03 - 23:59" has an invalid timestamp separator', () => {
+    const range = '03.03 - 23:59';
+
+    const result = MilitaryTimeRangeValidator.validate(range);
+
+    expect(result).toBe(false);
+  });
 });

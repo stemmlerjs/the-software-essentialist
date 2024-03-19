@@ -1,6 +1,10 @@
 export class MilitaryTimeRangeValidator {
   static validate(range: string): boolean {
-    if (range.split('-').length !== 2) return false;
+    const timestamps = range.split('-');
+    if (timestamps.length !== 2) return false;
+
+    if (timestamps[0].includes('.')) return false;
+
     return true;
   }
 }
