@@ -67,4 +67,12 @@ describe('military time range validator', () => {
 
     expect(result).toBe(true);
   });
+
+  it('knows that the time "00:00 - 00:60" has minutes that are outside the valid minutes range', () => {
+    const range = '00:00 - 00:60';
+
+    const result = MilitaryTimeRangeValidator.validate(range);
+
+    expect(result).toBe(false);
+  });
 });
