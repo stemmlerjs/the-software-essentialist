@@ -10,7 +10,7 @@ describe('military time range validator', () => {
   });
 
   it.each(['00:00 23:59', '00:56 21:59', '10:50 20:36'])(
-    'knows that "00:00 23:59" is a invalid time range',
+    'knows that "00:00 23:59" is an invalid time range',
     (range) => {
       const result = MilitaryTimeRangeValidator.validate(range);
 
