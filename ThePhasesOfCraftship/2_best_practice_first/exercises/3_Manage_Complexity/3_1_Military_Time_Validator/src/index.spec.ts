@@ -41,4 +41,12 @@ describe('military time range validator', () => {
 
     expect(result).toBe(true);
   });
+
+  it('knows that the time "0:00 - 23:59" has at least one invalid side that doesn\'t have 2 digits', () => {
+    const range = '0:00 - 23:59';
+
+    const result = MilitaryTimeRangeValidator.validate(range);
+
+    expect(result).toBe(false);
+  });
 });

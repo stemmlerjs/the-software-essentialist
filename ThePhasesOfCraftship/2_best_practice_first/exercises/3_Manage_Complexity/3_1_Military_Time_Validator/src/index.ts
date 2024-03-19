@@ -5,6 +5,11 @@ export class MilitaryTimeRangeValidator {
 
     for (const timestamp of timestamps) {
       if (!timestamp.includes(':')) return false;
+      const sides = timestamp.trim().split(':');
+
+      for (const side of sides) {
+        if (!/^\d{2}$/.test(side)) return false;
+      }
     }
 
     return true;
