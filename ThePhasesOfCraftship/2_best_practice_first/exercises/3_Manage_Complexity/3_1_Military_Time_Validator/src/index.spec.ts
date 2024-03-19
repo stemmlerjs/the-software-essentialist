@@ -25,11 +25,14 @@ describe('military time range validator', () => {
     '03:03 - 23,59',
     '05<06 - 07|10',
     '06>19 - 08>08',
-  ])('knows that the time "%s" has an invalid timestamp separator', (range) => {
-    const result = MilitaryTimeRangeValidator.validate(range);
+  ])(
+    'knows that the time "%s" has at least 1 invalid timestamp separator',
+    (range) => {
+      const result = MilitaryTimeRangeValidator.validate(range);
 
-    expect(result).toBe(false);
-  });
+      expect(result).toBe(false);
+    }
+  );
 
   it('knows that the time "00:00 - 23:59" timestamps have valid separators', () => {
     const range = '00:00 - 23:59';
