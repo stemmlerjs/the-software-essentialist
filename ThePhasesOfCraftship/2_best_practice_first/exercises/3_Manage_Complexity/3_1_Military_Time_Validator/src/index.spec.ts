@@ -8,4 +8,12 @@ describe('military time range validator', () => {
 
     expect(result).toBe(true);
   });
+
+  it('knows that "00:00 23:59" is a invalid time range', () => {
+    const range = '00:00 23:59';
+
+    const result = MilitaryTimeRangeValidator.validate(range);
+
+    expect(result).toBe(false);
+  });
 });
