@@ -4,8 +4,8 @@ export class MilitaryTimeRangeValidator {
     if (timestamps.length !== 2) return false;
 
     for (const timestamp of timestamps) {
-      if (!timestamp.includes(':')) return false;
       const sides = timestamp.trim().split(':');
+      if (sides.length !== 2) return false;
 
       for (const side of sides) {
         if (!/^\d{2}$/.test(side)) return false;

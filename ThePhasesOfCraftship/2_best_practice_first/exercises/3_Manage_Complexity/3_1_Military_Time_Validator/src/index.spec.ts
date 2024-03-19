@@ -21,27 +21,21 @@ describe('military time range validator', () => {
     });
   });
 
-  it.each([
-    '03.03 - 23:59',
-    '03:03 - 23.59',
-    '03:03 - 23,59',
-    '05<06 - 07|10',
-    '06>19 - 08>08',
-  ])(
-    'knows that the time "%s" has at least 1 invalid timestamp separator',
-    (range) => {
+  describe('timestamp has 1 ":" separator', () => {
+    it.each([
+      ['00:00 - 23:59', true],
+      ['03.03 - 23:59', false],
+      ['03:03 - 23.59', false],
+      ['03:03 - 23,59', false],
+      ['05<06 - 07|10', false],
+      ['06>19 - 08>08', false],
+      ['06::17 - 03::06', false],
+      ['06:07:03 - 07:21:23', false],
+    ])('knows that "%s" is %s', (range, expected) => {
       const result = MilitaryTimeRangeValidator.validate(range);
 
-      expect(result).toBe(false);
-    }
-  );
-
-  it('knows that the time "00:00 - 23:59" timestamps have valid separators', () => {
-    const range = '00:00 - 23:59';
-
-    const result = MilitaryTimeRangeValidator.validate(range);
-
-    expect(result).toBe(true);
+      expect(result).toBe(expected);
+    });
   });
 
   it.each([
