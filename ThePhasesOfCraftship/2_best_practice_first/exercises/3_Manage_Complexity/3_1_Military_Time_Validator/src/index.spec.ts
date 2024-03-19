@@ -42,6 +42,7 @@ describe('military time range validator', () => {
 
   describe('each side of a timestamp has 2 digits', () => {
     it.each([
+      ['00:00 - 23:59', true],
       ['0:00 - 23:59', false],
       ['00:0 - 23:59', false],
       ['000:00 - 23:59', false],
