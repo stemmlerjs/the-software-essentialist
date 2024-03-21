@@ -15,6 +15,8 @@ export const convertPostToPostViewModel = (post: Post): PostViewModel => {
     numComments: post.comments.length,
     time: dayjs(post.dateCreated).fromNow(),
     title: post.title,
-    voteCount: post.votes.length,
+    voteCount: post.votes.reduce((acc, curr) => {
+      return curr.voteType === 'Upvote' ? acc + 1 : acc - 1;
+    }, 0),
   };
 };

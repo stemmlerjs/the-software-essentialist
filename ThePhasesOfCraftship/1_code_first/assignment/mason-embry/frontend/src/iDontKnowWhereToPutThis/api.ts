@@ -19,7 +19,7 @@ interface Vote {
   id: number;
   postId: number;
   memberId: number;
-  voteType: string;
+  voteType: 'Upvote' | 'Downvote';
 }
 
 interface Member {
