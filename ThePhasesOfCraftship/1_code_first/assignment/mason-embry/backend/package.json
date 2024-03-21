@@ -1,0 +1,49 @@
+{
+  "name": "typescript-starter",
+  "version": "1.0.0",
+  "description": "A basic typescript app starter for 2023.",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "start:dev": "npx nodemon",
+    "start": "npm run build && node build/index.js",
+    "lint": "eslint --fix .",
+    "format": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "prisma": {
+    "seed": "ts-node src/database/seed.ts"
+  },
+  "keywords": [],
+  "author": "mason@embrycode.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^28.1.8",
+    "@types/node": "^18.6.1",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "jest": "^28.1.3",
+    "nodemon": "^2.0.19",
+    "onchange": "^7.1.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "jest-cucumber": "^3.0.1",
+    "prisma": "^5.10.2"
+  }
+}
