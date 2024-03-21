@@ -186,6 +186,39 @@ app.get('/users', async (req: Request, res: Response) => {
   }
 });
 
+// Get posts "/posts?sort=recent"
+app.get('/posts', async (req: Request, res: Response) => {
+  try {
+    const { sort } = req.query;
+
+    if (sort !== 'recent') {
+      res.status(400).json(new ResponseDTO(ErrorMessage.ClientError, null));
+      return;
+    }
+
+    const postsWithVotes = await db.post.findMany({
+      include: {
+        votes: true,
+        memberPostedBy: {
+          include: {
+            user: true,
+          },
+        },
+        comments: true,
+      },
+      orderBy: {
+        dateCreated: 'desc',
+      },
+    });
+
+    res.json(new ResponseDTO(null, { posts: postsWithVotes }));
+    return;
+  } catch (error) {
+    res.status(500).json(new ResponseDTO(ErrorMessage.ServerError, null));
+    return;
+  }
+});
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

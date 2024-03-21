@@ -4,6 +4,7 @@ export enum ErrorMessage {
   ValidationError = 'ValidationError',
   ServerError = 'ServerError',
   UserNotFound = 'UserNotFound',
+  ClientError = 'ClientError',
 }
 
 export class ResponseDTO<T> {
