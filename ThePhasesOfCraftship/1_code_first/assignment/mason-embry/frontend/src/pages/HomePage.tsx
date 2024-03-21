@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { PostsSummaryList } from '../components/PostsSummaryList.tsx';
-import { PostViewModel } from '../components/PostSummary.tsx';
 import { PostsViewSwitcher } from '../components/PostsViewSwitcher.tsx';
 import { api, Post } from '../iDontKnowWhereToPutThis/api.ts';
+import { convertPostToPostViewModel } from '../iDontKnowWhereToPutThis/convertPostToPostViewModel.ts';
 
 const HomePage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -31,16 +31,3 @@ const HomePage = () => {
 export { HomePage };
 
 // PRIVATE FUNCTIONS
-
-const convertPostToPostViewModel = (post: Post): PostViewModel => {
-  return {
-    author: `${post.memberPostedBy.user.firstName} ${post.memberPostedBy.user.lastName}`,
-    authorLink: `/members/${post.memberPostedBy.id}`,
-    id: post.id.toString(),
-    link: `/posts/${post.id}`,
-    numComments: post.comments.length,
-    time: post.dateCreated,
-    title: post.title,
-    voteCount: post.votes.length,
-  };
-};
