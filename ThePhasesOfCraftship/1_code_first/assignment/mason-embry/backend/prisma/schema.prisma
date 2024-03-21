@@ -20,7 +20,7 @@ model User {
   firstName String
   lastName  String
   username  String @unique
-  password  String
+  password  String @default(uuid()) // Generates a random UUID as password
 
   // Define a one-to-one relationship with Member
   member Member?

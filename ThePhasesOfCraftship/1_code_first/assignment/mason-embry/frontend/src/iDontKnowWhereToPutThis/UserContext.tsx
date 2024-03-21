@@ -3,9 +3,10 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 export interface User {
   id: number;
   email: string;
-  username: string;
   firstName: string;
   lastName: string;
+  username: string;
+  password: string;
 }
 
 const UserContext = createContext<{
@@ -16,6 +17,7 @@ const UserContext = createContext<{
   setUser: () => null,
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUser = () => {
   return useContext(UserContext);
 };

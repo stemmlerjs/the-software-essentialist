@@ -211,7 +211,7 @@ app.get('/posts', async (req: Request, res: Response) => {
       },
     });
 
-    res.json(new ResponseDTO(null, { posts: postsWithVotes }));
+    res.json(new ResponseDTO(null, postsWithVotes));
     return;
   } catch (error) {
     res.status(500).json(new ResponseDTO(ErrorMessage.ServerError, null));

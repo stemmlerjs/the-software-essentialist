@@ -1,6 +1,6 @@
-import { Post, PostSummary } from './PostSummary.tsx';
+import { PostSummary, PostViewModel } from './PostSummary.tsx';
 
-export function PostsSummaryList({ posts }: { posts: Post[] }) {
+export function PostsSummaryList({ posts }: { posts: PostViewModel[] }) {
   return (
     <ul>
       {posts.map((post) => (

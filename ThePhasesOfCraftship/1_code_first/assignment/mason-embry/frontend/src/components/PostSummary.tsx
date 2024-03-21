@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { VoteCount } from './VoteCount.tsx';
 
-export interface Post {
+export interface PostViewModel {
   id: string;
   title: string;
   link: string;
@@ -13,7 +13,7 @@ export interface Post {
   voteCount: number;
 }
 
-export function PostSummary({ post }: { post: Post }) {
+export function PostSummary({ post }: { post: PostViewModel }) {
   return (
     <div className={'tw-flex tw-items-center tw-gap-6'}>
       <VoteCount voteCount={post.voteCount} />
