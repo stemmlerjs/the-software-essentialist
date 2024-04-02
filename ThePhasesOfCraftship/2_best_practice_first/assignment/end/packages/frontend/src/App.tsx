@@ -8,9 +8,9 @@ import { MainPage } from "./pages/mainPage";
 import { RegisterPage } from "./pages/registerPage";
 import { UserProvider } from "./contexts/userContext";
 import { SpinnerProvider } from "./contexts/spinnerContext";
+import { appConfig } from "./config";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-export const api = createAPIClient(apiUrl);
+export const api = createAPIClient(appConfig.apiURL);
 
 function App() {
   return (
