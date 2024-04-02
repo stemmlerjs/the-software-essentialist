@@ -11,7 +11,6 @@ import { OverlaySpinner } from "../components/overlaySpinner";
 import { CreateUserCommand } from "@dddforum/shared/src/api/users";
 import { api } from "../App";
 
-
 type ValidationResult = {
   success: boolean;
   errorMessage?: string;

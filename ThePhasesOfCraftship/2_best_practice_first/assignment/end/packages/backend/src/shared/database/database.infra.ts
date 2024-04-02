@@ -1,5 +1,5 @@
 import { CompositionRoot } from "../composition/compositionRoot";
-import { UserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
+import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 
 describe("database", () => {
   const compositionRoot = CompositionRoot.createCompositionRoot("test");
@@ -11,7 +11,7 @@ describe("database", () => {
 
   it("can write", async () => {
     const connection = db.getConnection();
-    const createCommand = new UserCommandBuilder().withAllRandomDetails().build();
+    const createCommand = new CreateUserCommandBuilder().withAllRandomDetails().build();
     const data = await connection.user.create({
       data: {
         ...createCommand,
