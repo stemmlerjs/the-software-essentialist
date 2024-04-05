@@ -45,7 +45,8 @@ export const RegisterPage = () => {
       // Make API call
       const response = await api.register(input);
       // Save the user details to the cache
-      setUser(response.data);
+      setUser(response.data.data);
+      console.log('setting data', response.data.data)
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
