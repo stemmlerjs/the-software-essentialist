@@ -38,6 +38,7 @@ const shouldShowActionButton = (pathName: string) => {
 export const Header = ({}) => {
   const { user } = useUser();
   const location = useLocation();
+  console.log(user);
 
   return (
     <header id="header" className="flex align-center">
