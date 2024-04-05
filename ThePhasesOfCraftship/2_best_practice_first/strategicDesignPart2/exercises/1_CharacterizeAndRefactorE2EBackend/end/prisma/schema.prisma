@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Student {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  email             String
+  classes           Class[]
+  StudentAssignment StudentAssignment[]
+}
+
+model Class {
+  id          Int          @id @default(autoincrement())
+  name        String
+  assignments Assignment[]
+  students    Student[]
+}
+
+model Assignment {
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  classId            Int
+  class              Class               @relation(fields: [classId], references: [id])
+  studentAssignments StudentAssignment[]
+}
+
+model StudentAssignment {
+  id           Int                           @id @default(autoincrement())
+  studentId    Int
+  assignmentId Int
+  student      Student                       @relation(fields: [studentId], references: [id])
+  assignment   Assignment                    @relation(fields: [assignmentId], references: [id])
+  submissions  StudentAssignmentSubmission[]
+}
+
+model StudentAssignmentSubmission {
+  id                               Int                                @id @default(autoincrement())
+  studentAssignment                StudentAssignment                  @relation(fields: [studentAssignmentId], references: [id])
+  studentAssignmentId              Int
+  submission                       String
+  StudentAssignmentSubmissionGrade StudentAssignmentSubmissionGrade[]
+}
+
+model StudentAssignmentSubmissionGrade {
+  id                     Int                         @id @default(autoincrement())
+  assigmentSubmission    StudentAssignmentSubmission @relation(fields: [assignmentSubmissionId], references: [id])
+  assignmentSubmissionId Int
+  grade                  Float
+}
