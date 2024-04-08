@@ -1,7 +1,7 @@
 # Begin
 
 
-This is where you'll write your best-practice-first implementation of the refactoring to 4 tiers exercise to the High School Domain. You can [see the assignment page for more details]().
+This is where you'll write your best-practice-first implementation of the refactoring to 4 tiers exercise to the High School Domain. You can [see the assignment page for more details](https://www.essentialist.dev/products/the-software-essentialist/categories/2155097981/posts/2176565064).
 
 ## Getting Started
 
