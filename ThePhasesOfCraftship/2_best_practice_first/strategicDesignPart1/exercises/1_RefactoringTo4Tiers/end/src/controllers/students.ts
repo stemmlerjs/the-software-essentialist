@@ -1,10 +1,9 @@
 import express from 'express';
 
 import { prisma } from '../database';
-import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils';
+import { isUUID, parseForResponse } from '../shared/utils';
 import Errors from '../shared/constants';
 import { CreateStudentDTO, StudentID } from '../dtos/students';
-import { InvalidRequestBodyError } from '../shared/exceptions';
 import student from '../services/students';
 import { errorHandler } from '../shared/errors';
 
@@ -49,33 +48,11 @@ router.get('/:id', async (req, res, next) => {
 // GET all student submitted assignments
 router.get('/:id/assignments', async (req, res, next) => {
     try {
-        const { id } = req.params;
-        if(!isUUID(id)) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
+        const dto = StudentID.fromRequest(req.params);
 
-        // check if student exists
-        const student = await prisma.student.findUnique({
-            where: {
-                id
-            }
-        });
+        const data = await student.getAssignments(dto);
 
-        if (!student) {
-            return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
-        }
-
-        const studentAssignments = await prisma.studentAssignment.findMany({
-            where: {
-                studentId: id,
-                status: 'submitted'
-            },
-            include: {
-                assignment: true
-            },
-        });
-    
-        res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
+        res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
         next(error)
     }
@@ -83,40 +60,15 @@ router.get('/:id/assignments', async (req, res, next) => {
 
 
 // GET all student grades
-router.get('/:id/grades', async (req, res) => {
+router.get('/:id/grades', async (req, res, next) => {
     try {
-        const { id } = req.params;
-        if(!isUUID(id)) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
+        const dto = StudentID.fromRequest(req.params);
 
-        // check if student exists
-        const student = await prisma.student.findUnique({
-            where: {
-                id
-            }
-        });
-
-        if (!student) {
-            return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
-        }
-
-        const studentAssignments = await prisma.studentAssignment.findMany({
-            where: {
-                studentId: id,
-                status: 'submitted',
-                grade: {
-                    not: null
-                }
-            },
-            include: {
-                assignment: true
-            },
-        });
+        const studentAssignments = await student.getGrades(dto);
     
         res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
     } catch (error) {
-        res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+        next(error)
     }
 })
 
