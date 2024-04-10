@@ -3,25 +3,22 @@ import express from 'express';
 import { prisma } from '../database';
 import { isMissingKeys, isUUID, parseForResponse } from '../utils/api_utils';
 import Errors from '../utils/errors';
+import { CreateStudentDTO } from '../dtos/students';
+import { InvalidRequestBodyError } from '../utils/exceptions';
+import student from '../services/students';
 
 const router = express.Router();
 
 // POST student created
 router.post('/', async (req, res) => {
     try {
-        if (isMissingKeys(req.body, ['name'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-
-        const { name } = req.body;
-        const student = await prisma.student.create({
-            data: {
-                name
-            }
-
-        });
-        res.status(201).json({ error: undefined, data: parseForResponse(student), success: true });
+        const dto = CreateStudentDTO.fromRequest(req.body);
+        const data = await student.createStudent(dto);
+        res.status(201).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
+        if (error instanceof InvalidRequestBodyError) {
+            res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
+        }
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
 });
