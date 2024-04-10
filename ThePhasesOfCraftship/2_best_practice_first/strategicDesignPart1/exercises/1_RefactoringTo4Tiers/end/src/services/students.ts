@@ -3,6 +3,7 @@ import Student from "../models/student";
 import { StudentNotFoundException } from "../shared/exceptions";
 
 class StudentsService {
+  
   static createStudent = async (dto: CreateStudentDTO) => {
     const name = dto.name;
 
