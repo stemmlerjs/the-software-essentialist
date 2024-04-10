@@ -4,6 +4,10 @@ import { InvalidRequestBodyException } from "../shared/exceptions";
 class CreateStudentDTO {
   constructor(public name: string) {}
 
+  /**
+   * Factory method
+   */
+
   static fromRequest(body: unknown) {
     const requiredKeys = ["name"];
     const isRequestInvalid = !body || typeof body !== "object" || isMissingKeys(body, requiredKeys);
@@ -21,7 +25,11 @@ class CreateStudentDTO {
 class StudentID {
   constructor(public id: string) {}
 
-  static fromRequest(params: unknown) {
+  /**
+   * Factory method
+   */
+
+  static fromRequestParams(params: unknown) {
     const areParamsInvalid = !params || typeof params !== "object" || "id" in params === false;
 
     if (areParamsInvalid) {

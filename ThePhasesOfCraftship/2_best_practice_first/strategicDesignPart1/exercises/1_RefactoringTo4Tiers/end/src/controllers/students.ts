@@ -36,7 +36,7 @@ router.get("/", async (req, res, next) => {
 // GET a student by id
 router.get("/:id", async (req, res, next) => {
   try {
-    const dto = StudentID.fromRequest(req.params);
+    const dto = StudentID.fromRequestParams(req.params);
     const data = await StudentService.getStudent(dto);
 
     if (!data) {
@@ -59,7 +59,7 @@ router.get("/:id", async (req, res, next) => {
 // GET all student submitted assignments
 router.get("/:id/assignments", async (req, res, next) => {
   try {
-    const dto = StudentID.fromRequest(req.params);
+    const dto = StudentID.fromRequestParams(req.params);
 
     const data = await StudentService.getAssignments(dto);
 
@@ -76,7 +76,7 @@ router.get("/:id/assignments", async (req, res, next) => {
 // GET all student grades
 router.get("/:id/grades", async (req, res, next) => {
   try {
-    const dto = StudentID.fromRequest(req.params);
+    const dto = StudentID.fromRequestParams(req.params);
 
     const data = await StudentService.getGrades(dto);
 
