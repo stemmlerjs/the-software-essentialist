@@ -1,6 +1,6 @@
 import express from 'express';
 import { AssignmentsRouter, ClassesRouter, StudentsRouter } from './controllers';
-import { enableGracefulShutdown } from './utils/server';
+import { enableGracefulShutdown } from './shared/server';
 
 
 const app = express();
