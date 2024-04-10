@@ -3,7 +3,7 @@ import express from 'express';
 import { prisma } from '../database';
 import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils';
 import Errors from '../shared/constants';
-import { CreateStudentDTO, GetStudentDTO } from '../dtos/students';
+import { CreateStudentDTO, StudentID } from '../dtos/students';
 import { InvalidRequestBodyError } from '../shared/exceptions';
 import student from '../services/students';
 import { errorHandler } from '../shared/errors';
@@ -34,7 +34,7 @@ router.get('/', async (req, res, next) => {
 // GET a student by id
 router.get('/:id', async (req, res, next) => {
     try {
-        const dto = GetStudentDTO.fromRequest(req.params);
+        const dto = StudentID.fromRequest(req.params);
         const data = await student.getStudent(dto);
     
         if (!data) {
@@ -47,7 +47,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // GET all student submitted assignments
-router.get('/:id/assignments', async (req, res) => {
+router.get('/:id/assignments', async (req, res, next) => {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -77,7 +77,7 @@ router.get('/:id/assignments', async (req, res) => {
     
         res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
     } catch (error) {
-        res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+        next(error)
     }
 });
 
