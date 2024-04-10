@@ -10,6 +10,12 @@ class StudentsService {
 
         return student;
     }
+
+    static getAllStudents = async () => {
+        const students = await Student.getAll()
+
+        return students;
+    }
 }
 
 export default StudentsService;

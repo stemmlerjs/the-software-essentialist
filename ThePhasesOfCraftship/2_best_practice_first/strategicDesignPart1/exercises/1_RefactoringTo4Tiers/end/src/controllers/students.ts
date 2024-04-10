@@ -26,17 +26,8 @@ router.post('/', async (req, res) => {
 // GET all students
 router.get('/', async (req, res) => {
     try {
-        const students = await prisma.student.findMany({
-            include: {
-                classes: true,
-                assignments: true,
-                reportCards: true
-            }, 
-            orderBy: {
-                name: 'asc'
-            }
-        });
-        res.status(200).json({ error: undefined, data: parseForResponse(students), success: true });
+        const data = await student.getAllStudents();
+        res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }

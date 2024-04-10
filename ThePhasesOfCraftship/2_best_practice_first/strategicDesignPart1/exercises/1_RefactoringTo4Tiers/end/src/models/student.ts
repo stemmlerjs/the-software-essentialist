@@ -17,6 +17,21 @@ class Student {
 
         return Student.fromDatabase(data);
     }
+
+    static async getAll(): Promise<Student[]> {
+        const data = await prisma.student.findMany({
+            include: {
+                classes: true,
+                assignments: true,
+                reportCards: true
+            }, 
+            orderBy: {
+                name: 'asc'
+            }
+        });
+
+        return data.map(Student.fromDatabase);
+    }
 }
 
 export default Student;
