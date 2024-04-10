@@ -16,7 +16,7 @@ class CreateStudentDTO {
     }
 }
 
-class GetStudentDTO {
+class StudentID {
     constructor(public id: string) {}
 
     static fromRequest(params: unknown) {
@@ -30,12 +30,12 @@ class GetStudentDTO {
             throw new InvalidRequestBodyError(['id'])
         }
 
-        return new GetStudentDTO(id);
+        return new StudentID(id);
     }
 }
 
 
 export {
     CreateStudentDTO,
-    GetStudentDTO
+    StudentID
 };
