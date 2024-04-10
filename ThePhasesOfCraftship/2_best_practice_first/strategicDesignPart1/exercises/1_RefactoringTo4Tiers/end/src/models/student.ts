@@ -2,11 +2,6 @@ import { prisma } from '../database';
 
 class Student {
 
-    constructor(private name: string) {}
-
-    private static fromDatabase = (data: any) => {
-        return new Student(data.name);
-    }
 
     static async save(name: string): Promise<Student> {
         const data = await prisma.student.create({
@@ -15,7 +10,7 @@ class Student {
             }
         });
 
-        return Student.fromDatabase(data);
+        return data;
     }
 
     static async getAll(): Promise<Student[]> {
@@ -30,7 +25,23 @@ class Student {
             }
         });
 
-        return data.map(Student.fromDatabase);
+
+        return data;
+    }
+
+    static async getById(id: string): Promise<Student | null> {
+        const data = await prisma.student.findUnique({
+            where: {
+                id
+            },
+            include: {
+                classes: true,
+                assignments: true,
+                reportCards: true
+            }
+        });
+
+        return data;
     }
 }
 

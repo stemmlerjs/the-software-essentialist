@@ -3,7 +3,7 @@ import express from 'express';
 import { prisma } from '../database';
 import { isMissingKeys, isUUID, parseForResponse } from '../utils/api_utils';
 import Errors from '../utils/errors';
-import { CreateStudentDTO } from '../dtos/students';
+import { CreateStudentDTO, GetStudentDTO } from '../dtos/students';
 import { InvalidRequestBodyError } from '../utils/exceptions';
 import student from '../services/students';
 
@@ -27,37 +27,27 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const data = await student.getAllStudents();
-        res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
+        res.status(200).json({ error: undefined, data: data, success: true });
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
 });
 
-
 // GET a student by id
 router.get('/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        if(!isUUID(id)) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-        const student = await prisma.student.findUnique({
-            where: {
-                id
-            },
-            include: {
-                classes: true,
-                assignments: true,
-                reportCards: true
-            }
-        });
+        const dto = GetStudentDTO.fromRequest(req.params);
+        const data = await student.getStudent(dto);
     
-        if (!student) {
+        if (!data) {
             return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
         }
-    
-        res.status(200).json({ error: undefined, data: parseForResponse(student), success: true });
+        res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
+        if (error instanceof InvalidRequestBodyError) {
+            res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
+        }
+        
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
 });
