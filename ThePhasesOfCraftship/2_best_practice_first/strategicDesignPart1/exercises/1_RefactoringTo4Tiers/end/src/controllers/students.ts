@@ -64,9 +64,9 @@ router.get('/:id/grades', async (req, res, next) => {
     try {
         const dto = StudentID.fromRequest(req.params);
 
-        const studentAssignments = await student.getGrades(dto);
+        const data = await student.getGrades(dto);
     
-        res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
+        res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
         next(error)
     }
