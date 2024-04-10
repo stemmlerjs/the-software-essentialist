@@ -1,13 +1,13 @@
 import express from 'express';
 
-import { prisma } from '../database';
-import { isUUID, parseForResponse } from '../shared/utils';
+import {  parseForResponse } from '../shared/utils';
 import Errors from '../shared/constants';
 import { CreateStudentDTO, StudentID } from '../dtos/students';
 import student from '../services/students';
 import { errorHandler } from '../shared/errors';
 
 const router = express.Router();
+
 
 // POST student created
 router.post('/', async (req, res, next) => {
