@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { InvalidRequestBodyError } from "./exceptions";
+import { InvalidRequestBodyException, StudentNotFoundException } from "./exceptions";
 import Errors from "./constants";
 
 
 function errorHandler(error: Error, req: Request, res: Response, next: NextFunction) {
-    if (error instanceof InvalidRequestBodyError) {
+    if (error instanceof InvalidRequestBodyException) {
         return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
+    }
+
+    if (error instanceof StudentNotFoundException) {
+        return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
     }
 
     return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });

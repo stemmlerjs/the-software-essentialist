@@ -43,6 +43,37 @@ class Student {
 
         return data;
     }
+
+    static async getAssignments(id: string) {
+        const data = await prisma.studentAssignment.findMany({
+            where: {
+                studentId: id,
+                status: 'submitted'
+            },
+            include: {
+                assignment: true
+            },
+        });
+
+        return data;
+    }
+
+    static async getGrades(id: string) {
+        const data = await prisma.studentAssignment.findMany({
+            where: {
+                studentId: id,
+                status: 'submitted',
+                grade: {
+                    not: null
+                }
+            },
+            include: {
+                assignment: true
+            },
+        });
+
+        return data;
+    }
 }
 
 export default Student;
