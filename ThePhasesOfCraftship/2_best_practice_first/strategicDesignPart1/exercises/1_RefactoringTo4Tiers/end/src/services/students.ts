@@ -1,4 +1,4 @@
-import { CreateStudentDTO } from "../dtos/students";
+import { CreateStudentDTO, GetStudentDTO } from "../dtos/students";
 import Student from "../models/student";
 
 
@@ -15,6 +15,13 @@ class StudentsService {
         const students = await Student.getAll()
 
         return students;
+    }
+
+    static getStudent = async (dto: GetStudentDTO) => {
+        const { id } = dto
+        const student = await Student.getById(id)
+
+        return student;
     }
 }
 

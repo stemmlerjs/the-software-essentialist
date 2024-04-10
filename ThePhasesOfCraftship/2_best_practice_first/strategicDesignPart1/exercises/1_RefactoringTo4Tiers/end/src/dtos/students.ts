@@ -1,4 +1,4 @@
-import { isMissingKeys } from "../utils/api_utils";
+import { isMissingKeys, isUUID } from "../utils/api_utils";
 import { InvalidRequestBodyError } from "../utils/exceptions";
 
 class CreateStudentDTO {
@@ -16,6 +16,26 @@ class CreateStudentDTO {
     }
 }
 
+class GetStudentDTO {
+    constructor(public id: string) {}
+
+    static fromRequest(params: unknown) {
+        if ( !params || typeof params !== 'object' || 'id' in params === false) {
+            throw new InvalidRequestBodyError(['id'])
+        }
+
+        const { id } = params as { id: string };
+
+        if(!isUUID(id)) {
+            throw new InvalidRequestBodyError(['id'])
+        }
+
+        return new GetStudentDTO(id);
+    }
+}
+
+
 export {
-    CreateStudentDTO
+    CreateStudentDTO,
+    GetStudentDTO
 };
