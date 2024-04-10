@@ -10,7 +10,8 @@ class CreateStudentDTO {
 
   static fromRequest(body: unknown) {
     const requiredKeys = ["name"];
-    const isRequestInvalid = !body || typeof body !== "object" || isMissingKeys(body, requiredKeys);
+    const isRequestInvalid =
+      !body || typeof body !== "object" || isMissingKeys(body, requiredKeys);
 
     if (isRequestInvalid) {
       throw new InvalidRequestBodyException(requiredKeys);
@@ -30,7 +31,8 @@ class StudentID {
    */
 
   static fromRequestParams(params: unknown) {
-    const areParamsInvalid = !params || typeof params !== "object" || "id" in params === false;
+    const areParamsInvalid =
+      !params || typeof params !== "object" || "id" in params === false;
 
     if (areParamsInvalid) {
       throw new InvalidRequestBodyException(["id"]);

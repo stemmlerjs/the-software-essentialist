@@ -3,39 +3,24 @@ import express from "express";
 import { prisma } from "../database";
 import { isMissingKeys, isUUID, parseForResponse } from "../shared/utils";
 import Errors from "../shared/constants";
+import { CreateClassDTO } from "../dtos/classes";
+import ClassesService from "../services/classes";
 
 const router = express.Router();
 
 // POST class created
-router.post("/classes", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
-    if (isMissingKeys(req.body, ["name"])) {
-      return res.status(400).json({
-        error: Errors.ValidationError,
-        data: undefined,
-        success: false,
-      });
-    }
-
-    const { name } = req.body;
-
-    const cls = await prisma.class.create({
-      data: {
-        name,
-      },
-    });
+    const dto = CreateClassDTO.fromRequest(req.body);
+    const data = await ClassesService.createClass(dto);
 
     res.status(201).json({
       error: undefined,
-      data: parseForResponse(cls),
+      data: parseForResponse(data),
       success: true,
     });
   } catch (error) {
-    res.status(500).json({
-      error: Errors.ServerError,
-      data: undefined,
-      success: false,
-    });
+    next(error);
   }
 });
 
