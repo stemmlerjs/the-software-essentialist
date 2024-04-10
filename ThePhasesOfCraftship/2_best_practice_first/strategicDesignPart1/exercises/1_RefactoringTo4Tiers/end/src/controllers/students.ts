@@ -3,7 +3,7 @@ import express from 'express';
 import {  parseForResponse } from '../shared/utils';
 import Errors from '../shared/constants';
 import { CreateStudentDTO, StudentID } from '../dtos/students';
-import student from '../services/students';
+import StudentService from '../services/students';
 import { errorHandler } from '../shared/errors';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
     try {
         const dto = CreateStudentDTO.fromRequest(req.body);
-        const data = await student.createStudent(dto);
+        const data = await StudentService.createStudent(dto);
         res.status(201).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
         next(error)
@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
 // GET all students
 router.get('/', async (req, res, next) => {
     try {
-        const data = await student.getAllStudents();
+        const data = await StudentService.getAllStudents();
         res.status(200).json({ error: undefined, data: data, success: true });
     } catch (error) {
         next(error)
@@ -34,7 +34,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const dto = StudentID.fromRequest(req.params);
-        const data = await student.getStudent(dto);
+        const data = await StudentService.getStudent(dto);
     
         if (!data) {
             return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
@@ -50,7 +50,7 @@ router.get('/:id/assignments', async (req, res, next) => {
     try {
         const dto = StudentID.fromRequest(req.params);
 
-        const data = await student.getAssignments(dto);
+        const data = await StudentService.getAssignments(dto);
 
         res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
@@ -64,7 +64,7 @@ router.get('/:id/grades', async (req, res, next) => {
     try {
         const dto = StudentID.fromRequest(req.params);
 
-        const data = await student.getGrades(dto);
+        const data = await StudentService.getGrades(dto);
     
         res.status(200).json({ error: undefined, data: parseForResponse(data), success: true });
     } catch (error) {
