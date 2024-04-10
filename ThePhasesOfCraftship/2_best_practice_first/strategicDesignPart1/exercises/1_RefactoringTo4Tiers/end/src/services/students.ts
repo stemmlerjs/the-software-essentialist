@@ -7,22 +7,22 @@ class StudentsService {
     static createStudent = async (dto: CreateStudentDTO) => {
         const name = dto.name
 
-        const student = await Student.save(name)
+        const response = await Student.save(name)
 
-        return student;
+        return response;
     }
 
     static getAllStudents = async () => {
-        const students = await Student.getAll()
+        const response = await Student.getAll()
 
-        return students;
+        return response;
     }
 
     static getStudent = async (dto: StudentID) => {
         const { id } = dto
-        const student = await Student.getById(id)
+        const response = await Student.getById(id)
 
-        return student;
+        return response;
     }
 
     static getAssignments = async (dto: StudentID) => {
@@ -33,9 +33,9 @@ class StudentsService {
             throw new StudentNotFoundException()
         }
 
-        const studentAssignments = await Student.getAssignments(id)
+        const response = await Student.getAssignments(id)
 
-        return studentAssignments;
+        return response;
     }
 
     static getGrades = async (dto: StudentID) => {
