@@ -1,5 +1,6 @@
 import express from 'express';
 import { AssignmentsRouter, ClassesRouter, StudentsRouter } from './controllers';
+import { enableGracefulShutdown } from './utils/server';
 
 
 const app = express();
@@ -11,4 +12,5 @@ app.use('/classes', ClassesRouter);
 app.use('/assignments', AssignmentsRouter);
 
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+enableGracefulShutdown(server);
