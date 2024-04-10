@@ -1,8 +1,8 @@
 import express from 'express';
 
 import { prisma } from '../database';
-import { isMissingKeys, isUUID, parseForResponse } from '../utils/api_utils';
-import Errors from '../utils/errors';
+import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils';
+import Errors from '../shared/constants';
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import { isMissingKeys, isUUID } from "../utils/api_utils";
-import { InvalidRequestBodyError } from "../utils/exceptions";
+import { isMissingKeys, isUUID } from "../shared/utils";
+import { InvalidRequestBodyError } from "../shared/exceptions";
 
 class CreateStudentDTO {
     constructor(public name: string) {}
