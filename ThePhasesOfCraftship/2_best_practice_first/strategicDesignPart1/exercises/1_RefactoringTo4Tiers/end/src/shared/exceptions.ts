@@ -22,9 +22,16 @@ class StudentAlreadyEnrolledException extends Error {
   }
 }
 
+class AssignmentNotFoundException extends Error {
+  constructor() {
+    super("Assignment not found");
+  }
+}
+
 export {
   InvalidRequestBodyException,
   StudentNotFoundException,
   ClassNotFoundException,
   StudentAlreadyEnrolledException,
+  AssignmentNotFoundException,
 };

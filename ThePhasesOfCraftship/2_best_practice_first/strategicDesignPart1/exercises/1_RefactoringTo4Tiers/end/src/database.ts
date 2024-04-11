@@ -16,13 +16,21 @@ interface ClassPersistence {
   getAssignments(classId: string): any;
 }
 
+interface AssignmentPersistence {
+  save(classId: string, title: string): any;
+  getById(assignmentId: string): any;
+  addStudent(assignmentId: string, studentId: string): any;
+}
+
 class Database {
   public students: StudentPersistence;
   public classes: ClassPersistence;
+  public assignments: AssignmentPersistence;
 
   constructor(private prisma: PrismaClient) {
     this.students = this.buildStudentPersistence();
     this.classes = this.buildClassPersistence();
+    this.assignments = this.buildAssignmentPersistence();
   }
 
   private buildStudentPersistence(): StudentPersistence {
@@ -32,6 +40,24 @@ class Database {
       getById: this.getStudentById,
       getAssignments: this.getStudentAssignments,
       getGrades: this.getStudentGrades,
+    };
+  }
+
+  private buildClassPersistence(): ClassPersistence {
+    return {
+      save: this.saveClass,
+      getById: this.getClassById,
+      getEnrollment: this.getEnrollment,
+      saveEnrollment: this.saveEnrollment,
+      getAssignments: this.getClassAssignments,
+    };
+  }
+
+  private buildAssignmentPersistence(): AssignmentPersistence {
+    return {
+      save: this.saveAssignment,
+      getById: this.getAssignmentById,
+      addStudent: this.setStudentAssignment,
     };
   }
 
@@ -102,16 +128,6 @@ class Database {
     return data;
   }
 
-  private buildClassPersistence(): ClassPersistence {
-    return {
-      save: this.saveClass,
-      getById: this.getClassById,
-      getEnrollment: this.getEnrollment,
-      saveEnrollment: this.saveEnrollment,
-      getAssignments: this.getClassAssignments,
-    };
-  }
-
   private async saveClass(name: string) {
     const data = await this.prisma.class.create({
       data: {
@@ -162,6 +178,38 @@ class Database {
       include: {
         class: true,
         studentTasks: true,
+      },
+    });
+
+    return data;
+  }
+
+  private async saveAssignment(classId: string, title: string) {
+    const data = await this.prisma.assignment.create({
+      data: {
+        classId,
+        title,
+      },
+    });
+
+    return data;
+  }
+
+  private async getAssignmentById(assignmentId: string) {
+    const data = await this.prisma.assignment.findUnique({
+      where: {
+        id: assignmentId,
+      },
+    });
+
+    return data;
+  }
+
+  private async setStudentAssignment(assignmentId: string, studentId: string) {
+    const data = await this.prisma.studentAssignment.create({
+      data: {
+        assignmentId,
+        studentId,
       },
     });
 
