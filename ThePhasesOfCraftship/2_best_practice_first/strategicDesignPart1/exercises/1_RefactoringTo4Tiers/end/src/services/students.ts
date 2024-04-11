@@ -5,7 +5,7 @@ import { StudentNotFoundException } from "../shared/exceptions";
 class StudentsService {
   constructor(private db: Database) {}
 
-  createStudent = async (dto: CreateStudentDTO) => {
+  async createStudent (dto: CreateStudentDTO) {
     const name = dto.name;
 
     const response = await this.db.students.save(name);
@@ -13,19 +13,19 @@ class StudentsService {
     return response;
   };
 
-  getAllStudents = async () => {
+  async getAllStudents () {
     const response = await this.db.students.getAll();
 
     return response;
   };
 
-  getStudent = async (dto: StudentID) => {
-    const { id } = dto;
+  async getStudent  (dto: StudentID) {
+    const { id } = dto
     const response = await this.db.students.getById(id);
     return response;
   };
 
-  getAssignments = async (dto: StudentID) => {
+  async getAssignments (dto: StudentID)  {
     const { id } = dto;
     const estudentExists = !!(await this.db.students.getById(id));
 
@@ -38,7 +38,7 @@ class StudentsService {
     return response;
   };
 
-  getGrades = async (dto: StudentID) => {
+  async getGrades (dto: StudentID) {
     const { id } = dto;
     const studentExists = !!(await this.db.students.getById(id));
 

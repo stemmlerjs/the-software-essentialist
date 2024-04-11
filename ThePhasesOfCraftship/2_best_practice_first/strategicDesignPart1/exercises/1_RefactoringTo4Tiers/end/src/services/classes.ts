@@ -49,7 +49,7 @@ class ClassesService {
     return data;
   }
 
-  getAssignments = async (classId: ClassId) => {
+  async getAssignments (classId: ClassId) {
     const { id } = classId;
     const cls = await this.db.classes.getById(id);
 

@@ -14,7 +14,7 @@ import {
 class AssignmentsService {
   constructor(private db: Database) {}
 
-  createAssignment = async (dto: CreateAssignmentDTO) => {
+  async createAssignment (dto: CreateAssignmentDTO) {
     const { classId, title } = dto;
 
     const response = await this.db.assignments.save(classId, title);
@@ -22,7 +22,7 @@ class AssignmentsService {
     return response;
   };
 
-  assignStudent = async (dto: AssignStudentDTO) => {
+  async assignStudent (dto: AssignStudentDTO) {
     const { studentId, assignmentId } = dto;
 
     const student = await this.db.students.getById(studentId);
@@ -45,7 +45,7 @@ class AssignmentsService {
     return response;
   };
 
-  submitAssignment = async (dto: SubmitAssignmentDTO) => {
+  async submitAssignment (dto: SubmitAssignmentDTO) {
     const { studentId, assignmentId } = dto;
 
     const assignment = await this.db.assignments.getStudentAssignment(
@@ -62,7 +62,7 @@ class AssignmentsService {
     return response;
   };
 
-  gradeAssignment = async (dto: GradeAssignmentDTO) => {
+  async gradeAssignment (dto: GradeAssignmentDTO) {
     const { studentId, assignmentId, grade } = dto;
 
     const assignment = await this.db.assignments.getStudentAssignment(
