@@ -1,45 +1,66 @@
-import { CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
-import Class from "../models/class";
-import Student from "../models/student";
-import { ClassNotFoundException, StudentAlreadyEnrolledException, StudentNotFoundException } from "../shared/exceptions";
+import Database from "../database";
+import { ClassId, CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
+import {
+  ClassNotFoundException,
+  StudentAlreadyEnrolledException,
+  StudentNotFoundException,
+} from "../shared/exceptions";
 
 class ClassesService {
-  static createClass = async (dto: CreateClassDTO) => {
+  constructor(private db: Database) {}
+
+  async createClass(dto: CreateClassDTO) {
     const name = dto.name;
 
-    const response = await Class.save(name);
+    const response = await this.db.classes.save(name);
 
     return response;
-  };
+  }
 
-  static enrollStudent = async (dto: EnrollStudentDTO) => {
+  async enrollStudent(dto: EnrollStudentDTO) {
     const { studentId, classId } = dto;
 
     // check if student exists
-    const student = await Student.getById(studentId);
+    const student = await this.db.students.getById(studentId);
 
     if (!student) {
       throw new StudentNotFoundException();
     }
 
     // check if class exists
-    const cls = await Class.getById(classId);
+    const cls = await this.db.classes.getById(classId);
 
-    if(!cls) {
+    if (!cls) {
       throw new ClassNotFoundException(classId);
     }
 
     // check if student is already enrolled in class
-    const isStudentEnrolled = !!(await Class.getStudent(classId, studentId));
+    const isStudentEnrolled = !!(await this.db.classes.getEnrollment(
+      classId,
+      studentId
+    ));
 
     if (isStudentEnrolled) {
       throw new StudentAlreadyEnrolledException();
     }
 
-    const data = await Class.saveStudent(classId, studentId);
+    const data = await this.db.classes.saveEnrollment(classId, studentId);
 
     return data;
   }
+
+  getAssignments = async (classId: ClassId) => {
+    const { id } = classId;
+    const cls = await this.db.classes.getById(id);
+
+    if (!cls) {
+      throw new ClassNotFoundException(id);
+    }
+
+    const data = await this.db.classes.getAssignments(id);
+
+    return data;
+  };
 }
 
 export default ClassesService;

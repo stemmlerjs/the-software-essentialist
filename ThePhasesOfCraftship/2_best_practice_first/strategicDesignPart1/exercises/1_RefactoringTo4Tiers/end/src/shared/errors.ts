@@ -7,6 +7,13 @@ import {
 } from "./exceptions";
 import Errors from "./constants";
 
+type ErrorHandlerType = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Response;
+
 function errorHandler(
   error: Error,
   req: Request,
@@ -56,4 +63,4 @@ function errorHandler(
   });
 }
 
-export { errorHandler };
+export { errorHandler, ErrorHandlerType };

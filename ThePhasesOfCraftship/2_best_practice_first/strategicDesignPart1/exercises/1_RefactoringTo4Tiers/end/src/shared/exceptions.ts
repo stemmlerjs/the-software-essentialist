@@ -22,4 +22,9 @@ class StudentAlreadyEnrolledException extends Error {
   }
 }
 
-export { InvalidRequestBodyException, StudentNotFoundException, ClassNotFoundException, StudentAlreadyEnrolledException };
+export {
+  InvalidRequestBodyException,
+  StudentNotFoundException,
+  ClassNotFoundException,
+  StudentAlreadyEnrolledException,
+};

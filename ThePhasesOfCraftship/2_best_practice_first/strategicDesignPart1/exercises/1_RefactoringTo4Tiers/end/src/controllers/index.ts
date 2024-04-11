@@ -1,5 +1,5 @@
-import StudentsRouter from "./students";
-import ClassesRouter from "./classes";
+import StudentsController from "./students";
+import ClassesController from "./classes";
 import AssignmentsRouter from "./assignments";
 
-export { StudentsRouter, ClassesRouter, AssignmentsRouter };
+export { StudentsController, ClassesController, AssignmentsRouter };
