@@ -1,94 +1,92 @@
 import express from "express";
 
-import { prisma } from "../database";
-import { isMissingKeys, isUUID, parseForResponse } from "../shared/utils";
-import Errors from "../shared/constants";
-import { CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
+import { parseForResponse } from "../shared/utils";
+import { ClassId, CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
 import ClassesService from "../services/classes";
+import { ErrorHandlerType } from "../shared/errors";
 
-const router = express.Router();
+class ClassesController {
+  private router: express.Router;
 
-// POST class created
-router.post("/", async (req, res, next) => {
-  try {
-    const dto = CreateClassDTO.fromRequest(req.body);
-    const data = await ClassesService.createClass(dto);
-
-    res.status(201).json({
-      error: undefined,
-      data: parseForResponse(data),
-      success: true,
-    });
-  } catch (error) {
-    next(error);
+  constructor(
+    private classesService: ClassesService,
+    private errorHandler: ErrorHandlerType
+  ) {
+    this.router = express.Router();
+    this.routes();
+    this.setupErrorHandler();
   }
-});
 
-// POST student assigned to class
-router.post("/enrollments", async (req, res, next) => {
-  try {
-    const dto = EnrollStudentDTO.fromRequest(req.body);
-    const data = await ClassesService.enrollStudent(dto);
-
-    res.status(201).json({
-      error: undefined,
-      data: parseForResponse(data),
-      success: true,
-    });
-  } catch (error) {
-    next(error)
+  getRouter() {
+    return this.router;
   }
-});
 
-// GET all assignments for class
-router.get("/:id/assignments", async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!isUUID(id)) {
-      return res.status(400).json({
-        error: Errors.ValidationError,
-        data: undefined,
-        success: false,
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
+
+  private routes() {
+    this.router.post("/", this.createClass);
+    this.router.post("/enrollments", this.enrollStudent);
+    this.router.get("/:id/assignments", this.getAssignments);
+  }
+
+  private createClass = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = CreateClassDTO.fromRequest(req.body);
+      const data = await this.classesService.createClass(dto);
+
+      res.status(201).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
       });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    // check if class exists
-    const cls = await prisma.class.findUnique({
-      where: {
-        id,
-      },
-    });
+  private enrollStudent = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = EnrollStudentDTO.fromRequest(req.body);
+      const data = await this.classesService.enrollStudent(dto);
 
-    if (!cls) {
-      return res.status(404).json({
-        error: Errors.ClassNotFound,
-        data: undefined,
-        success: false,
+      res.status(201).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
       });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        classId: id,
-      },
-      include: {
-        class: true,
-        studentTasks: true,
-      },
-    });
+  private getAssignments = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = ClassId.fromRequestParams(req.params);
+      const data = await this.classesService.getAssignments(dto);
 
-    res.status(200).json({
-      error: undefined,
-      data: parseForResponse(assignments),
-      success: true,
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: Errors.ServerError,
-      data: undefined,
-      success: false,
-    });
-  }
-});
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+}
 
-export default router;
+export default ClassesController;
