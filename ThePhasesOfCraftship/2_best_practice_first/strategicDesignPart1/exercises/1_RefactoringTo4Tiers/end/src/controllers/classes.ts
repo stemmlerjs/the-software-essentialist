@@ -3,14 +3,14 @@ import express from "express";
 import { parseForResponse } from "../shared/utils";
 import { ClassId, CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
 import ClassesService from "../services/classes";
-import { ErrorHandlerType } from "../shared/errors";
+import { ErrorHandler } from "../shared/errors";
 
 class ClassesController {
   private router: express.Router;
 
   constructor(
     private classesService: ClassesService,
-    private errorHandler: ErrorHandlerType
+    private errorHandler: ErrorHandler
   ) {
     this.router = express.Router();
     this.routes();
