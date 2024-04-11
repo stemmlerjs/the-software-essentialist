@@ -1,5 +1,9 @@
 import express, { Application as ExpressApp } from "express";
-import { ClassesController, StudentsController } from "./controllers";
+import {
+  AssignmentsController,
+  ClassesController,
+  StudentsController,
+} from "./controllers";
 import { enableGracefulShutdown } from "./shared/server";
 
 class Application {
@@ -10,7 +14,8 @@ class Application {
   }
   constructor(
     private studentsController: StudentsController,
-    private classesController: ClassesController
+    private classesController: ClassesController,
+    private assignmentsController: AssignmentsController
   ) {
     this._instance = express();
     this.addMiddlewares();
@@ -23,6 +28,7 @@ class Application {
   private registerRouters() {
     this._instance.use("/students", this.studentsController.getRouter());
     this._instance.use("/classes", this.classesController.getRouter());
+    this._instance.use("/assignments", this.assignmentsController.getRouter());
   }
 
   public start(port: number) {

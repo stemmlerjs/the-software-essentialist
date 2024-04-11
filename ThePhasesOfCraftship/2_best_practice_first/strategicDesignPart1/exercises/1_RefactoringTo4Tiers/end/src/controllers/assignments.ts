@@ -1,108 +1,73 @@
-// import express from "express";
+import express from "express";
 
-// import { prisma } from "../database";
-// import { isMissingKeys, isUUID, parseForResponse } from "../shared/utils";
-// import Errors from "../shared/constants";
+import { ErrorHandlerType } from "../shared/errors";
+import { AssignStudentDTO, CreateAssignmentDTO } from "../dtos/assignments";
+import { parseForResponse } from "../shared/utils";
+import AssignmentsService from "../services/assignments";
 
-// const router = express.Router();
+class AssignmentsController {
+  private router: express.Router;
 
-// // POST assignment created
-// router.post("/", async (req, res) => {
-//   try {
-//     if (isMissingKeys(req.body, ["classId", "title"])) {
-//       return res.status(400).json({
-//         error: Errors.ValidationError,
-//         data: undefined,
-//         success: false,
-//       });
-//     }
+  constructor(
+    private assignmentsService: AssignmentsService,
+    private errorHandler: ErrorHandlerType
+  ) {
+    this.router = express.Router();
+    this.routes();
+    this.setupErrorHandler();
+  }
 
-//     const { classId, title } = req.body;
+  getRouter() {
+    return this.router;
+  }
 
-//     const assignment = await prisma.assignment.create({
-//       data: {
-//         classId,
-//         title,
-//       },
-//     });
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
 
-//     res.status(201).json({
-//       error: undefined,
-//       data: parseForResponse(assignment),
-//       success: true,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: Errors.ServerError,
-//       data: undefined,
-//       success: false,
-//     });
-//   }
-// });
+  private routes() {
+    this.router.post("/", this.createAssignment);
+    this.router.get("/:id", this.assignStudent);
+  }
 
-// // POST student assigned to assignment
-// router.post("/student", async (req, res) => {
-//   try {
-//     if (isMissingKeys(req.body, ["studentId", "assignmentId"])) {
-//       return res.status(400).json({
-//         error: Errors.ValidationError,
-//         data: undefined,
-//         success: false,
-//       });
-//     }
+  private createAssignment = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = CreateAssignmentDTO.fromRequest(req.body);
+      const data = await this.assignmentsService.createAssignment(dto);
 
-//     const { studentId, assignmentId, grade } = req.body;
+      res.status(201).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-//     // check if student exists
-//     const student = await prisma.student.findUnique({
-//       where: {
-//         id: studentId,
-//       },
-//     });
+  private assignStudent = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = AssignStudentDTO.fromRequest(req.body);
+      const data = await this.assignmentsService.assignStudent(dto);
 
-//     if (!student) {
-//       return res.status(404).json({
-//         error: Errors.StudentNotFound,
-//         data: undefined,
-//         success: false,
-//       });
-//     }
-
-//     // check if assignment exists
-//     const assignment = await prisma.assignment.findUnique({
-//       where: {
-//         id: assignmentId,
-//       },
-//     });
-
-//     if (!assignment) {
-//       return res.status(404).json({
-//         error: Errors.AssignmentNotFound,
-//         data: undefined,
-//         success: false,
-//       });
-//     }
-
-//     const studentAssignment = await prisma.studentAssignment.create({
-//       data: {
-//         studentId,
-//         assignmentId,
-//       },
-//     });
-
-//     res.status(201).json({
-//       error: undefined,
-//       data: parseForResponse(studentAssignment),
-//       success: true,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: Errors.ServerError,
-//       data: undefined,
-//       success: false,
-//     });
-//   }
-// });
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+}
 
 // // POST student submitted assignment
 // router.post("/submit", async (req, res) => {
@@ -259,3 +224,4 @@
 // });
 
 // export default router;
+export default AssignmentsController;
