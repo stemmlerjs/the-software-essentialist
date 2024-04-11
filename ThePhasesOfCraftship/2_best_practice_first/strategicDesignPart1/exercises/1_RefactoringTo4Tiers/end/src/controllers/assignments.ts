@@ -1,7 +1,11 @@
 import express from "express";
 
 import { ErrorHandlerType } from "../shared/errors";
-import { AssignStudentDTO, CreateAssignmentDTO } from "../dtos/assignments";
+import {
+  AssignStudentDTO,
+  CreateAssignmentDTO,
+  SubmitAssignmentDTO,
+} from "../dtos/assignments";
 import { parseForResponse } from "../shared/utils";
 import AssignmentsService from "../services/assignments";
 
@@ -28,6 +32,7 @@ class AssignmentsController {
   private routes() {
     this.router.post("/", this.createAssignment);
     this.router.get("/:id", this.assignStudent);
+    this.router.post("/submit", this.submitAssignment);
   }
 
   private createAssignment = async (
@@ -57,6 +62,25 @@ class AssignmentsController {
     try {
       const dto = AssignStudentDTO.fromRequest(req.body);
       const data = await this.assignmentsService.assignStudent(dto);
+
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(data),
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private submitAssignment = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const dto = SubmitAssignmentDTO.fromRequest(req.body);
+      const data = await this.assignmentsService.submitAssignment(dto);
 
       res.status(200).json({
         error: undefined,

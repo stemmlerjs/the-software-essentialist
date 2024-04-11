@@ -1,7 +1,12 @@
 import Database from "../database";
-import { AssignStudentDTO, CreateAssignmentDTO } from "../dtos/assignments";
+import {
+  AssignStudentDTO,
+  CreateAssignmentDTO,
+  SubmitAssignmentDTO,
+} from "../dtos/assignments";
 import {
   AssignmentNotFoundException,
+  StudentAssignmentNotFoundException,
   StudentNotFoundException,
 } from "../shared/exceptions";
 
@@ -32,9 +37,26 @@ class AssignmentsService {
     }
 
     const response = await this.db.assignments.addStudent(
-      studentId,
-      assignmentId
+      assignmentId,
+      studentId
     );
+
+    return response;
+  };
+
+  submitAssignment = async (dto: SubmitAssignmentDTO) => {
+    const { studentId, assignmentId } = dto;
+
+    const assignment = await this.db.assignments.getStudentAssignment(
+      assignmentId,
+      studentId
+    );
+
+    if (!assignment) {
+      throw new StudentAssignmentNotFoundException();
+    }
+
+    const response = await this.db.assignments.submit(assignment.id);
 
     return response;
   };

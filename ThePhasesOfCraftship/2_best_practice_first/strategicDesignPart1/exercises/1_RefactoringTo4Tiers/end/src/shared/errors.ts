@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  AssignmentNotFoundException,
   ClassNotFoundException,
   InvalidRequestBodyException,
   StudentAlreadyEnrolledException,
+  StudentAssignmentNotFoundException,
   StudentNotFoundException,
 } from "./exceptions";
 import Errors from "./constants";
@@ -49,6 +51,24 @@ function errorHandler(
   if (error instanceof StudentAlreadyEnrolledException) {
     return res.status(400).json({
       error: Errors.StudentAlreadyEnrolled,
+      data: undefined,
+      success: false,
+      message: error.message,
+    });
+  }
+
+  if (error instanceof AssignmentNotFoundException) {
+    return res.status(400).json({
+      error: Errors.AssignmentNotFound,
+      data: undefined,
+      success: false,
+      message: error.message,
+    });
+  }
+
+  if (error instanceof StudentAssignmentNotFoundException) {
+    return res.status(400).json({
+      error: Errors.StudentAssignmentNotFoundException,
       data: undefined,
       success: false,
       message: error.message,

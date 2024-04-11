@@ -6,6 +6,7 @@ const Errors = {
   ServerError: "ServerError",
   ClientError: "ClientError",
   StudentAlreadyEnrolled: "StudentAlreadyEnrolled",
+  StudentAssignmentNotFoundException: "StudentAssignmentNotFoundException",
 };
 
 export default Errors;
