@@ -10,4 +10,16 @@ class StudentNotFoundException extends Error {
   }
 }
 
-export { InvalidRequestBodyException, StudentNotFoundException };
+class ClassNotFoundException extends Error {
+  constructor(id: string) {
+    super(`Class with id ${id} not found`);
+  }
+}
+
+class StudentAlreadyEnrolledException extends Error {
+  constructor() {
+    super("Student is already enrolled in class");
+  }
+}
+
+export { InvalidRequestBodyException, StudentNotFoundException, ClassNotFoundException, StudentAlreadyEnrolledException };
