@@ -28,10 +28,19 @@ class AssignmentNotFoundException extends Error {
   }
 }
 
+class StudentAssignmentNotFoundException extends Error {
+  constructor() {
+    super(
+      "Student assignment not found. Please, make sure the student is assigned to the assignment."
+    );
+  }
+}
+
 export {
   InvalidRequestBodyException,
   StudentNotFoundException,
   ClassNotFoundException,
   StudentAlreadyEnrolledException,
   AssignmentNotFoundException,
+  StudentAssignmentNotFoundException,
 };
