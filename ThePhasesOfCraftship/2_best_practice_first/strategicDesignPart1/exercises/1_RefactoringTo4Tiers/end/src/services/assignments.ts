@@ -2,6 +2,7 @@ import Database from "../database";
 import {
   AssignStudentDTO,
   CreateAssignmentDTO,
+  GradeAssignmentDTO,
   SubmitAssignmentDTO,
 } from "../dtos/assignments";
 import {
@@ -57,6 +58,23 @@ class AssignmentsService {
     }
 
     const response = await this.db.assignments.submit(assignment.id);
+
+    return response;
+  };
+
+  gradeAssignment = async (dto: GradeAssignmentDTO) => {
+    const { studentId, assignmentId, grade } = dto;
+
+    const assignment = await this.db.assignments.getStudentAssignment(
+      assignmentId,
+      studentId
+    );
+
+    if (!assignment) {
+      throw new StudentAssignmentNotFoundException();
+    }
+
+    const response = await this.db.assignments.grade(assignment.id, grade);
 
     return response;
   };
