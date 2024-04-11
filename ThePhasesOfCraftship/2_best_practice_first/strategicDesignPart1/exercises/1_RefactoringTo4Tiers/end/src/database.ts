@@ -1,9 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export { prisma };
-
 interface StudentPersistence {
   save(name: string): any;
   getAll(): any;
@@ -24,7 +20,7 @@ class Database {
   public students: StudentPersistence;
   public classes: ClassPersistence;
 
-  constructor() {
+  constructor(private prisma: PrismaClient) {
     this.students = this.buildStudentPersistence();
     this.classes = this.buildClassPersistence();
   }
@@ -40,7 +36,7 @@ class Database {
   }
 
   private async saveStudent(name: string) {
-    const data = await prisma.student.create({
+    const data = await this.prisma.student.create({
       data: {
         name,
       },
@@ -50,7 +46,7 @@ class Database {
   }
 
   private async getAllStudents() {
-    const data = await prisma.student.findMany({
+    const data = await this.prisma.student.findMany({
       include: {
         classes: true,
         assignments: true,
@@ -65,7 +61,7 @@ class Database {
   }
 
   private async getStudentById(id: string) {
-    const data = await prisma.student.findUnique({
+    const data = await this.prisma.student.findUnique({
       where: {
         id,
       },
@@ -80,7 +76,7 @@ class Database {
   }
 
   private async getStudentAssignments(id: string) {
-    const data = await prisma.studentAssignment.findMany({
+    const data = await this.prisma.studentAssignment.findMany({
       where: {
         studentId: id,
         status: "submitted",
@@ -94,7 +90,7 @@ class Database {
   }
 
   private async getStudentGrades(id: string) {
-    const data = await prisma.studentAssignment.findMany({
+    const data = await this.prisma.studentAssignment.findMany({
       where: {
         studentId: id,
       },
@@ -117,7 +113,7 @@ class Database {
   }
 
   private async saveClass(name: string) {
-    const data = await prisma.class.create({
+    const data = await this.prisma.class.create({
       data: {
         name,
       },
@@ -127,7 +123,7 @@ class Database {
   }
 
   private async getClassById(id: string) {
-    const data = await prisma.class.findUnique({
+    const data = await this.prisma.class.findUnique({
       where: {
         id,
       },
@@ -137,7 +133,7 @@ class Database {
   }
 
   private async getEnrollment(classId: string, studentId: string) {
-    const data = await prisma.classEnrollment.findFirst({
+    const data = await this.prisma.classEnrollment.findFirst({
       where: {
         studentId,
         classId,
@@ -148,7 +144,7 @@ class Database {
   }
 
   private async saveEnrollment(classId: string, studentId: string) {
-    const data = await prisma.classEnrollment.create({
+    const data = await this.prisma.classEnrollment.create({
       data: {
         studentId,
         classId,
@@ -159,7 +155,7 @@ class Database {
   }
 
   private async getClassAssignments(classId: string) {
-    const data = await prisma.assignment.findMany({
+    const data = await this.prisma.assignment.findMany({
       where: {
         classId: classId,
       },

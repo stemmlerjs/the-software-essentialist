@@ -4,8 +4,11 @@ import Database from "./database";
 import ClassesService from "./services/classes";
 import StudentsService from "./services/students";
 import { errorHandler } from "./shared/errors";
+import { PrismaClient } from "@prisma/client";
 
-const db = new Database();
+const prisma = new PrismaClient();
+
+const db = new Database(prisma);
 
 const studentsService = new StudentsService(db);
 const classesService = new ClassesService(db);
