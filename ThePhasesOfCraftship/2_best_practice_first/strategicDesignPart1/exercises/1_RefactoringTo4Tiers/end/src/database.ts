@@ -20,8 +20,9 @@ interface AssignmentPersistence {
   save(classId: string, title: string): any;
   getById(assignmentId: string): any;
   addStudent(assignmentId: string, studentId: string): any;
-  getStudentAssignment(studentId: string, assignmentId: string): any;
+  getStudentAssignment(assignmentId: string, studentId: string): any;
   submit(id: string): any;
+  grade(id: string, grade: string): any;
 }
 
 class Database {
@@ -62,6 +63,7 @@ class Database {
       addStudent: this.setStudentAssignment,
       getStudentAssignment: this.getStudentAssignment,
       submit: this.submitAssignment,
+      grade: this.gradeAssignment,
     };
   }
 
@@ -238,6 +240,19 @@ class Database {
       },
       data: {
         status: "submitted",
+      },
+    });
+
+    return data;
+  }
+
+  private async gradeAssignment(id: string, grade: string) {
+    const data = await this.prisma.studentAssignment.update({
+      where: {
+        id,
+      },
+      data: {
+        grade,
       },
     });
 
