@@ -1,6 +1,6 @@
 import express from "express";
 
-import { ErrorHandlerType } from "../shared/errors";
+import { ErrorHandler } from "../shared/errors";
 import {
   AssignStudentDTO,
   CreateAssignmentDTO,
@@ -15,7 +15,7 @@ class AssignmentsController {
 
   constructor(
     private assignmentsService: AssignmentsService,
-    private errorHandler: ErrorHandlerType
+    private errorHandler: ErrorHandler
   ) {
     this.router = express.Router();
     this.routes();
