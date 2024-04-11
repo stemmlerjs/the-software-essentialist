@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  ClassNotFoundException,
   InvalidRequestBodyException,
+  StudentAlreadyEnrolledException,
   StudentNotFoundException,
 } from "./exceptions";
 import Errors from "./constants";
@@ -23,6 +25,23 @@ function errorHandler(
   if (error instanceof StudentNotFoundException) {
     return res.status(404).json({
       error: Errors.StudentNotFound,
+      data: undefined,
+      success: false,
+      message: error.message,
+    });
+  }
+
+  if (error instanceof ClassNotFoundException) {
+    return res.status(404).json({
+      error: Errors.ClassNotFound,
+      data: undefined,
+      success: false,
+    });
+  }
+
+  if (error instanceof StudentAlreadyEnrolledException) {
+    return res.status(400).json({
+      error: Errors.StudentAlreadyEnrolled,
       data: undefined,
       success: false,
       message: error.message,
