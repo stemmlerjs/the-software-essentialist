@@ -1,9 +1,5 @@
 import express, { Application as ExpressApp } from "express";
-import {
-  AssignmentsRouter,
-  ClassesController,
-  StudentsController,
-} from "./controllers";
+import { ClassesController, StudentsController } from "./controllers";
 import { enableGracefulShutdown } from "./shared/server";
 
 class Application {
@@ -27,7 +23,6 @@ class Application {
   private registerRouters() {
     this._instance.use("/students", this.studentsController.getRouter());
     this._instance.use("/classes", this.classesController.getRouter());
-    this._instance.use("/assignments", AssignmentsRouter);
   }
 
   public start(port: number) {
