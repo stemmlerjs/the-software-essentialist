@@ -23,7 +23,7 @@ Run the following command:
 
 `npm run test:e2e:back`
 
-## How to run the frontend E2E
+## How to run the frontend E2E tests
 
 ### Step 1: Start the frontend in a separate console
 
@@ -42,15 +42,4 @@ Run the following command:
 Run the following command:
 
 `npm run test:e2e:front`
-
-
-
-
-
-
-### Step 3: Run all the E2E tests
-
-From the root directory, run the following command:
-
-`npm run test:e2e:all`
 
