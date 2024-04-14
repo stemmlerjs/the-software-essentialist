@@ -119,7 +119,7 @@ As a student
 
 
 Our list of requirements for the first release is much simpler, allowing us to iterate rapidly and gather feedback earlier.
-It's time to go deeper and organized the selected set of stories following our role, goal, capabilities and grouping method.
+It's time to go deeper and organize the selected set of stories following our role, goal, capabilities and grouping method.
 Have you noticed that we followed a backwards approach and easily achieved most of the information required to reach 
 a cohesive grouping of features?
 
@@ -137,3 +137,6 @@ Now that we have a clear understanding of the features to be developed, we can u
 | Student Management   | - Create a student<br>- View a student<br>- View all students<br>- View grades<br>- Grade tracking  |
 | Assignment Management| - Create assignments<br>- Assign assignments to students<br>- Submit assignments<br>- Grade assignments<br>- View submission status |
 | Class Management     | - Create a class<br>- Assign a student to a class<br>- View all students in class   |
+
+
+Now it's your turn. Based on the information provided, develop the initial version of the system starting from the acceptance tests.
