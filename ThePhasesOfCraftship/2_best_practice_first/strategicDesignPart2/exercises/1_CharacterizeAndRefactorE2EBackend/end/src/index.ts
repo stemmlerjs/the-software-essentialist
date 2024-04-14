@@ -1,7 +1,5 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
-import { error } from 'console';
 const cors = require('cors');
 const app = express();
 app.use(express.json());
