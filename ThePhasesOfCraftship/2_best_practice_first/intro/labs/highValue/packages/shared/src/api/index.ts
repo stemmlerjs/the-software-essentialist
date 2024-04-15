@@ -5,7 +5,7 @@ import { createUsersAPI } from './users'
 
 export type APIResponse<T> = {
   success: boolean;
-  data?: T;
+  data: T;
   error?: string;
 }
 

@@ -3,7 +3,8 @@ import { CreateUserCommand, EditUserCommand, GetUserByEmailQuery } from "@dddfor
 import { User } from "@prisma/client";
 import { Errors } from "../../shared/errors/errors";
 import { EmailService } from "../email/emailService";
-import { DBConnection } from "../../shared/database/database";
+import { Database } from "../../shared/database/database";
+import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
   for (let key of keysToCheckFor) {
@@ -18,6 +19,7 @@ function generateRandomPassword(length: number): string {
 
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
+    // @ts-ignore
     passwordArray.push(charset[randomIndex]);
   }
 
@@ -32,12 +34,11 @@ function parseUserForResponse (user: User) {
 
 export class UserService {
 
-  constructor (private db: DBConnection, private emailService: EmailService) {
+  constructor (private db: Database, private emailService: EmailService) {
     
   }
 
   async createUser (input: CreateUserCommand) {
-    const dbConnection = this.db.getConnection()
     try {
       const keyIsMissing = isMissingKeys(input, 
         ['email', 'firstName', 'lastName', 'username']
@@ -48,45 +49,47 @@ export class UserService {
       }
   
       const isEmailValid = input.email.indexOf('@') !== -1;
-      const isFirstNameValid = input.firstName.length > 2 && input.firstName.length < 16;
-      const isLastNameValid = input.lastName.length > 2 && input.lastName.length < 25;
-      const isUsernameValid = input.username.length > 2 && input.firstName.length < 25;
+      const isFirstNameValid = TextUtil.isBetweenLength(input.firstName, 2, 16);
+      const isLastNameValid = TextUtil.isBetweenLength(input.lastName, 2, 25);
+      const isUsernameValid = TextUtil.isBetweenLength(input.username, 2, 25); 
   
       if (!isEmailValid || !isFirstNameValid || !isLastNameValid || !isUsernameValid) {
         return { error: Errors.ValidationError, data: undefined, success: false }
       }
   
       const userData = input;
-      const existingUserByEmail = await dbConnection.user.findFirst({ where: { email: input.email }});
+      const existingUserByEmail = await this.db.users.getUserByEmail(input.email);
 
+      
+      ;
       if (existingUserByEmail) {
         return { error: Errors.EmailAlreadyInUse, data: undefined, success: false };
       }
   
-      const existingUserByUsername = await dbConnection.user.findFirst({ where: { username: input.username as string }});
+      const existingUserByUsername = await this.db.users.getUserByEmail(input.email);
       if (existingUserByUsername) {
         return { error: Errors.UsernameAlreadyTaken, data: undefined, success: false };
       }
-  
-      const user = await dbConnection.user.create({
-        data: {
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          username: userData.username,
-          password: generateRandomPassword(10)
-        }
+
+      const pass = generateRandomPassword(10);
+      
+      const userDTO = await this.db.users.save({
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        username: userData.username,
+        password: pass,
       });
       
       await this.emailService.sendMail({ 
-        to: user.email, 
+        to: input.email, 
         subject: 'Your login details to DDDForum', 
         text: `Welcome to DDDForum. You can login with the following details </br>
-        email: ${user.email}
-        password: ${user.password}`
+        email: ${input.email}
+        password: ${pass}`
       });
   
-      return { error: undefined, data: parseUserForResponse(user), success: true }
+      return { error: undefined, data: userDTO, success: true }
     } catch (err) {
       console.log(err);
       return { error: Errors.ServerError, data: undefined, success: false }
@@ -94,7 +97,6 @@ export class UserService {
   }
 
   async editUser (editUserCommand: EditUserCommand) {
-    const dbConnection = this.db.getConnection()
     try {
       let id = Number(editUserCommand.id);
   
@@ -107,19 +109,20 @@ export class UserService {
       }
   
       // Get user by id
-      const userToUpdate = await dbConnection.user.findFirst({ where: { id }});
+      const userToUpdate = await this.db.users.findById(id);
       if (!userToUpdate) {
         return { error: Errors.UserNotFound, data: undefined, success: false };
       }
   
       // If target username already taken by another user
-      const existingUserByUsername = await dbConnection.user.findFirst({ where: { username: userToUpdate.username }})
+      const existingUserByUsername = await this.db.users.getUserByUsername(userToUpdate.username)
+      
       if (existingUserByUsername && userToUpdate.id !== existingUserByUsername.id) {
         return { error: Errors.UsernameAlreadyTaken, data: undefined, success: false };
       }
       
       // If target email already exists from another user
-      const existingUserByEmail = await dbConnection.user.findFirst({ where: { email: userToUpdate.email }})
+      const existingUserByEmail = await this.db.users.getUserByEmail(userToUpdate.email)
       if (existingUserByEmail && userToUpdate.id !== existingUserByEmail?.id) {
         return { error: Errors.EmailAlreadyInUse, data: undefined, success: false };
       }
@@ -127,27 +130,27 @@ export class UserService {
       const userData: any = editUserCommand;
       delete userData.id;
 
-      const user = await dbConnection.user.update({ where: { id }, data: userData });
-      return { error: undefined, data: parseUserForResponse(user), success: true };
+      const user = this.db.users.update(id, userData);
+      return { error: undefined, data: user, success: true };
     } catch (error) {
       return { error: Errors.ServerError, data: undefined, success: false };
     }
   }
 
   async getUserByEmail (query: GetUserByEmailQuery) {
-    const dbConnection = this.db.getConnection()
+    
     try {
       const email = query.email as string;
       if (email === undefined) {
         return { error: Errors.ValidationError, data: undefined, success: false };
       }
       
-      const user = await dbConnection.user.findUnique({ where: { email } });
+      const user = await this.db.users.getUserByEmail(email);
       if (!user) {
         return { error: Errors.UserNotFound, data: undefined, success: false }; 
       }
 
-      return { error: undefined, data: parseUserForResponse(user), succes: true };
+      return { error: undefined, data: user, succes: true };
 
     } catch (error) {
       return { error: Errors.ServerError, data: undefined, success: false };
@@ -155,11 +158,12 @@ export class UserService {
   }
 
   async deleteUser (email: string) {
-    const dbConnection = this.db.getConnection()
+    
     try {
-      await dbConnection.user.delete({ where: { email: email }})
+      await this.db.users.delete(email);
     } catch (err) {
       return 
     }
   }
 }
+

@@ -2,7 +2,6 @@
 import express from 'express';
 import { Errors } from '../../shared/errors/errors';
 import { CreateUserCommand, EditUserCommand, GetUserByEmailQuery } from '@dddforum/shared/src/api/users'
-import { UserService } from './usersService';
 import { Application } from '../../shared/application/applicationInterface'
 
 export class UserController {

@@ -8,15 +8,15 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { APIResponse, createAPIClient } from '@dddforum/shared/src/api';
+import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
 import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { DBConnection } from '@dddforum/backend/src/shared/database/database';
+import { DBConnection } from '@dddforum/backend/src/shared/database/productionDatabase';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
+import { WebServer } from '@dddforum/backend/src/shared/webAPI/webServer';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -32,7 +32,7 @@ defineFeature(feature, (test) => {
   let marketingServiceSpy: MarketingServiceSpy;
   let dbConnection: DBConnection;
   let commands: CreateUserCommand[] = [];
-  let createUserResponses: APIResponse[] = [];
+  let createUserResponses: any[] = [];
   let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {

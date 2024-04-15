@@ -1,7 +1,6 @@
 
 import express from 'express';
 import { Errors } from '../../shared/errors/errors';
-import { PostService } from './postService';
 import { GetPostsQuery, GetPostsQueryOptions } from '@dddforum/shared/src/api/posts';
 import { Application } from '../../shared/application/applicationInterface';
 
