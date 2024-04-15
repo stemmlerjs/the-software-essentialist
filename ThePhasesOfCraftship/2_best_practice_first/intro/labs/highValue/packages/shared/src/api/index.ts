@@ -3,9 +3,9 @@ import { createMarketingAPI } from './marketing'
 import { createPostsAPI } from './posts'
 import { createUsersAPI } from './users'
 
-export type APIResponse = {
+export type APIResponse<T> = {
   success: boolean;
-  data?: any;
+  data?: T;
   error?: string;
 }
 

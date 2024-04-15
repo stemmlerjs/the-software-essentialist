@@ -21,23 +21,27 @@ export type GetUserByEmailQuery = {
   email: string;
 }
 
+export type UserData = {
+
+}
+
 export const createUsersAPI = (apiURL: string) => {
   return {
-    register: async (input: CreateUserCommand) : Promise<APIResponse> => {
+    register: async (input: CreateUserCommand) : Promise<APIResponse<UserData>> => {
       try {
         const successResponse = await axios.post(`${apiURL}/users/new`, {
           ...input
         });
-        return successResponse.data as APIResponse;
+        return successResponse.data as APIResponse<UserData>;
       } catch (err) {
         //@ts-ignore
         return err.response.data as APIResponse;
       }
     },
-    getUserByEmail: async (input: GetUserByEmailQuery): Promise<APIResponse> => {
+    getUserByEmail: async (input: GetUserByEmailQuery): Promise<APIResponse<UserData>> => {
       try {
         const successResponse = await axios.get(`${apiURL}/users?email=${input.email}`)
-        return successResponse.data as APIResponse;
+        return successResponse.data as APIResponse<UserData>;
       } catch (err) {
         //@ts-ignore
         return err.response.data as APIResponse;
