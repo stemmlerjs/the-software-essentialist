@@ -5,6 +5,7 @@ import { PostsController } from "../../modules/posts/postController";
 import { UserController } from "../../modules/users/userController";
 import { MarketingController } from "../../modules/marketing/marketingController";
 import { ProcessService } from "../processes/processService";
+import { Application } from "../application/applicationInterface";
 
 interface Controllers {
   userController: UserController;
@@ -13,7 +14,8 @@ interface Controllers {
 }
 
 interface WebServerConfig {
-  port: number;
+  port?: number;
+  application: Application;
 }
 
 export class WebServer {
@@ -22,12 +24,12 @@ export class WebServer {
   private instance: Server | undefined;
   private config: WebServerConfig;
 
-  constructor(config: WebServerConfig, controllers: Controllers) {
+  constructor(config: WebServerConfig) {
     this.config = config;
     this.state = "stopped";
     this.express = express();
     this.initializeServer();
-    this.setupRoutes(controllers);
+    this.setupRoutes();
   }
 
   private initializeServer() {
@@ -35,8 +37,12 @@ export class WebServer {
     this.express.use(cors());
   }
 
-  private setupRoutes(controllers: Controllers) {
-    const { userController, postController, marketingController } = controllers;
+  private setupRoutes() {
+    const { application } = this.config;
+    const userController = new UserController(application);
+    const postController = new PostsController(application);
+    const marketingController = new MarketingController(application)
+    
     // Create a new user
     this.express.post("/users/new", (req, res) =>
       userController.createUser(req, res)
@@ -63,7 +69,7 @@ export class WebServer {
 
   async start(): Promise<void> {
     return new Promise((resolve, _reject) => {
-      ProcessService.killProcessOnPort(this.config.port, () => {
+      ProcessService.killProcessOnPort(this.config.port || 3000, () => {
         console.log("Starting the server");
         this.instance = this.express.listen(this.config.port, () => {
           console.log(`Server is running on port ${this.config.port}`);

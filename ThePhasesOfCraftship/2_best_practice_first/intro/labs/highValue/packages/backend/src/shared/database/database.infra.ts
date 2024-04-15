@@ -3,7 +3,7 @@ import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builder
 
 describe("database", () => {
   const compositionRoot = CompositionRoot.createCompositionRoot("test");
-  const db = compositionRoot.getDBConnection();
+  const db = compositionRoot.getDatabase();
 
   it("can connect", async () => {
     await db.connect();

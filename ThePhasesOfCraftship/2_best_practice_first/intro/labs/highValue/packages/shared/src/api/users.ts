@@ -21,27 +21,31 @@ export type GetUserByEmailQuery = {
   email: string;
 }
 
+// TODO: use mappers, dtos
 export type UserData = {
-
+  email: string;
 }
+
+export type CreateUserResponse = APIResponse<UserData>;
+export type GetUserByEmailResponse = APIResponse<UserData>;
 
 export const createUsersAPI = (apiURL: string) => {
   return {
-    register: async (input: CreateUserCommand) : Promise<APIResponse<UserData>> => {
+    register: async (input: CreateUserCommand) : Promise<CreateUserResponse> => {
       try {
         const successResponse = await axios.post(`${apiURL}/users/new`, {
           ...input
         });
-        return successResponse.data as APIResponse<UserData>;
+        return successResponse.data as CreateUserResponse;
       } catch (err) {
         //@ts-ignore
         return err.response.data as APIResponse;
       }
     },
-    getUserByEmail: async (input: GetUserByEmailQuery): Promise<APIResponse<UserData>> => {
+    getUserByEmail: async (input: GetUserByEmailQuery): Promise<GetUserByEmailResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/users?email=${input.email}`)
-        return successResponse.data as APIResponse<UserData>;
+        return successResponse.data as GetUserByEmailResponse;
       } catch (err) {
         //@ts-ignore
         return err.response.data as APIResponse;

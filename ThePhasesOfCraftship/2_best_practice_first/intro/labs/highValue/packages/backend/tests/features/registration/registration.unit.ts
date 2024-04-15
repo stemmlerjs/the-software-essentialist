@@ -1,49 +1,34 @@
 
-/**
- * @todo Refactor this into unit test
- */
-
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { APIResponse, createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
 import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
-import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { DBConnection } from '@dddforum/backend/src/shared/database/database';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
+import { Application } from '@dddforum/backend/src/shared/application/applicationInterface';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
 defineFeature(feature, (test) => {
 
-  let apiClient = createAPIClient('http://localhost:3000');
   let createUserCommand: CreateUserCommand;
   let createUserResponse: any;
   let addEmailToListResponse: any;
   let composition: CompositionRoot;
-  let server: WebServer;
   let emailServiceSpy: EmailServiceSpy;
   let marketingServiceSpy: MarketingServiceSpy;
-  let dbConnection: DBConnection;
   let commands: CreateUserCommand[] = [];
-  let createUserResponses: APIResponse[] = [];
-  let databaseFixture: DatabaseFixture;
+  let createUserResponses: any[] = [];
+  let application: Application;
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot('test');
+    composition = CompositionRoot.createCompositionRoot('development');
+    application = composition.getApplication()
     emailServiceSpy = composition.getEmailService() as EmailServiceSpy;
     marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
-    server = composition.getWebServer();
-    dbConnection = composition.getDBConnection();
-    databaseFixture = new DatabaseFixture(composition);
-
-    await server.start();
-    await dbConnection.connect();
   })
 
   afterEach(() => {
@@ -53,12 +38,7 @@ defineFeature(feature, (test) => {
     createUserResponses = []
   })
 
-  afterAll(async () => {
-    await server.stop();
-  });
-
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
-  
     given('I am a new user', async () => {
       createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
@@ -69,8 +49,8 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details accepting marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
-      addEmailToListResponse = await apiClient.marketing.addEmailToList(createUserCommand.email);
+      createUserResponse = await application.user.createUser(createUserCommand);
+      addEmailToListResponse = await application.marketing.addEmailToList(createUserCommand.email);
     });
 
     then('I should be granted access to my account', async () => {
@@ -86,7 +66,7 @@ defineFeature(feature, (test) => {
       expect(data.username).toEqual(createUserCommand.username);
 
       // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
+      const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(createUserCommand.email).toEqual(getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
@@ -118,7 +98,7 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details declining marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
+      createUserResponse = await application.user.createUser(createUserCommand);
     });
 
     then('I should be granted access to my account', async () => {
@@ -134,7 +114,7 @@ defineFeature(feature, (test) => {
       expect(data.username).toEqual(createUserCommand.username);
 
       // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
+      const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(createUserCommand.email).toEqual(getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
@@ -160,7 +140,7 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with invalid account details', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
+      createUserResponse = await application.user.createUser(createUserCommand);
     });
 
     then('I should see an error notifying me that my input is invalid', async () => {
@@ -171,7 +151,7 @@ defineFeature(feature, (test) => {
       expect(error).toBeDefined();
 
       // And the user does not exist (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
+      const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(getUserResponse.error).toBeDefined();
       expect(getUserResponse.error).toEqual(Errors.UserNotFound)
 
@@ -194,13 +174,14 @@ defineFeature(feature, (test) => {
         )
       })
 
-      await databaseFixture.setupWithExistingUsers(commands);
+      // TODO: set up a diff database
+      // await databaseFixture.setupWithExistingUsers(commands);
       emailServiceSpy.reset();
     });
 
     when('new users attempt to register with those emails', async () => {
       for (let command of commands) {
-        let response = await apiClient.users.register(command);
+        let response = await application.user.createUser(command);
         createUserResponses.push(response);
       }
     });
@@ -234,13 +215,13 @@ defineFeature(feature, (test) => {
         )
       });
 
-      await databaseFixture.setupWithExistingUsers(commands);
+      // await databaseFixture.setupWithExistingUsers(commands);
       emailServiceSpy.reset();
     });
 
     when('new users attempt to register with already taken usernames', async (table) => {
       for (let item of table) {
-        let response = await apiClient.users.register(item);
+        let response = await application.user.createUser(item);
         createUserResponses.push(response);
       }
     });

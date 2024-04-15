@@ -15,3 +15,4 @@ describe('server', () => {
     expect(server.isStarted()).toBeFalsy();
   });
 });
+

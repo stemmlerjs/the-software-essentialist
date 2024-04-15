@@ -11,6 +11,7 @@
     "types": ["node", "jest", "../../node_modules/.prisma/client"],
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "noImplicitAny": false,
   },
   
   "include": [

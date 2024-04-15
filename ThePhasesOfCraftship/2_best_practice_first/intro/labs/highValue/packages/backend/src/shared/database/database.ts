@@ -1,17 +1,11 @@
-import { PrismaClient } from "@prisma/client"
 
-export class DBConnection {
-  private connection: PrismaClient;
+import { UserRepo } from "../../modules/users/userRepo";
+import { PostRepo } from "../../modules/posts/postRepo";
 
-  constructor () {
-    this.connection = new PrismaClient()
-  }
-
-  getConnection () {
-    return this.connection;
-  }
-
-  async connect () {
-    await this.connection.$connect()
-  }
+export interface Database {
+  users: UserRepo;
+  posts: PostRepo;
 }
+
+
+

@@ -1,3 +1,4 @@
+
 export class TextUtil {
   public static createRandomText(length: number): string {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=_+';
@@ -9,5 +10,9 @@ export class TextUtil {
     }
   
     return password;
+  }
+
+  public static isBetweenLength(text: string, minLength: number, maxLength: number): boolean {
+    return text.length >= minLength && text.length <= maxLength;
   }
 }
