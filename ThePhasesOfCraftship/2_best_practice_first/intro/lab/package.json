@@ -10,6 +10,7 @@
   },
   "scripts": {
     "test:unit:all": "npm run test:unit --workspaces --if-present",
+    "test:infra:all": "npm run test:infra --workspaces --if-present",
     "test:e2e:all": "npm run db:start:dev --workspace=@dddforum/backend && jest -c jest.config.e2e.ts",
     "test:e2e:front": "npm run test:e2e --workspace=@dddforum/frontend",
     "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
