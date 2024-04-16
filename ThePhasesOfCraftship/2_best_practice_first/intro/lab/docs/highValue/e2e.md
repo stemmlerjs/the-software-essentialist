@@ -1,6 +1,6 @@
 # High Value E2E Testing
 
-> From UI to DB and from API to DB
+> These two scopes of tests (from UI to DB and from API to DB) run the dominant acceptance test found in packages/shared/tests/features. We run this same test from the unit and integration testing scopes.
 
 1. [Getting setup](#gettingsetup)
 2. [Testing API to DB](#apitodb)
