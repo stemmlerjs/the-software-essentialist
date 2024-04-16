@@ -166,7 +166,7 @@ app.post('/student-assignments', async (req: Request, res: Response) => {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
     
-        const { studentId, assignmentId, grade } = req.body;
+        const { studentId, assignmentId } = req.body;
     
         // check if student exists
         const student = await prisma.student.findUnique({
@@ -174,7 +174,7 @@ app.post('/student-assignments', async (req: Request, res: Response) => {
                 id: studentId
             }
         });
-    
+
         if (!student) {
             return res.status(404).json({ error: Errors.StudentNotFound, data: undefined, success: false });
         }

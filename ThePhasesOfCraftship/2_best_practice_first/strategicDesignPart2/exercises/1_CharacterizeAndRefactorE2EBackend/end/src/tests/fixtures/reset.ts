@@ -7,9 +7,13 @@ async function resetDatabase() {
     const deleteAllClasses = prisma.class.deleteMany()
     const deleteAllAssignments = prisma.assignment.deleteMany();
 
-    await prisma.$transaction([deleteAllClassEnrollments, deleteAllStudentAssignments, deleteAllStudents, deleteAllClasses, deleteAllAssignments]);
-
-    await prisma.$disconnect();
+    try {
+        await prisma.$transaction([deleteAllClassEnrollments, deleteAllStudentAssignments, deleteAllStudents, deleteAllClasses, deleteAllAssignments]);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await prisma.$disconnect();
+    }
 }
 
 export { resetDatabase };
