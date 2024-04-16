@@ -38,8 +38,6 @@ defineFeature(feature, (test) => {
             response = await request(app)
                 .post('/assignments')
                 .send(requestBody);
-
-            console.log(response.body)
         });
 
         then('the assignment should be created successfully', () => {
