@@ -1,8 +1,13 @@
-# High Value E2e
+# High Value E2E Testing
 
-> 🧱 ui to db + api to db high value e2e 
+> These
 
-## Getting setup
+1. [Getting setup](#gettingsetup)
+2. [Testing API to DB](#apitodb)
+3. [Testing UI to DB](#uitodb)
+4. [Important Files](#files)
+
+## Getting setup <a name="gettingsetup"></a>
 
 ### Step 1: Build & install
 
@@ -17,13 +22,13 @@ We use this for the Postgres Database. You can get it [here](https://www.docker.
 
 Then start it by selecting it in your tray.
 
-## How to run the backend E2E tests
+## How to run the backend E2E tests <a name="apitodb"></a>
 
 Run the following command:
 
 `npm run test:e2e:back`
 
-## How to run the frontend E2E tests
+## How to run the frontend E2E tests <a name="uitodb"></a>
 
 ### Step 1: Start the frontend in a separate console
 
@@ -43,3 +48,4 @@ Run the following command:
 
 `npm run test:e2e:front`
 
+## Important files to check out <a name="files"></a>
