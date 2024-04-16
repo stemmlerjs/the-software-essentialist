@@ -3,13 +3,12 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { APIResponse, createAPIClient } from '@dddforum/shared/src/api';
+import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
 import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { DBConnection } from '@dddforum/backend/src/shared/database/productionDatabase';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
 import { WebServer } from '@dddforum/backend/src/shared/webAPI/webServer';
 
@@ -25,7 +24,6 @@ defineFeature(feature, (test) => {
   let server: WebServer;
   let emailServiceSpy: EmailServiceSpy;
   let marketingServiceSpy: MarketingServiceSpy;
-  let dbConnection: DBConnection;
   let commands: CreateUserCommand[] = [];
   let createUserResponses: any[] = [];
   let databaseFixture: DatabaseFixture;
@@ -35,11 +33,9 @@ defineFeature(feature, (test) => {
     emailServiceSpy = composition.getEmailService() as EmailServiceSpy;
     marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
     server = composition.getWebServer();
-    dbConnection = composition.getDBConnection();
     databaseFixture = new DatabaseFixture(composition);
 
     await server.start();
-    await dbConnection.connect();
   })
 
   afterEach(() => {
