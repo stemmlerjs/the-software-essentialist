@@ -9,7 +9,7 @@ import { resetDatabase } from '../fixtures/reset';
 const feature = loadFeature(path.join(__dirname, '../features/create_class.feature'));
 
 defineFeature(feature, (test) => {
-    beforeEach(async () => {
+    afterAll(async () => {
         await resetDatabase();
     })
 

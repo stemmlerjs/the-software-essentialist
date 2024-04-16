@@ -10,7 +10,7 @@ const feature = loadFeature(path.join(__dirname, '../features/create_student.fea
 
 defineFeature(feature, (test) => {
 
-    beforeEach(async () => {
+    afterAll(async () => {
         await resetDatabase();
     })
 

@@ -1,4 +1,3 @@
-import { Student, Class, Assignment, StudentAssignment, ReportCard, ClassGradeReport, ClassEnrollment } from "@prisma/client";
 import { prisma } from "../src/database";
 
 
