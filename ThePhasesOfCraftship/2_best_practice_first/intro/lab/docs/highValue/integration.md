@@ -6,8 +6,7 @@ the application core (the services). We skip the controller entirely with this t
 paid transactional email and marketing services (ie: marketingService, emailService).
 
 1. [Getting setup](#gettingsetup)
-2. [Testing API to DB](#apitodb)
-3. [Testing UI to DB](#uitodb)
+2. [Testing API to DB](#integration)
 
 ## Getting setup <a name="gettingsetup"></a>
 
@@ -24,7 +23,7 @@ We use this for the Postgres Database. You can get it [here](https://www.docker.
 
 Then start it by selecting it in your tray.
 
-## How to run the integration tests 
+## How to run the integration tests  <a name="integration"></a>
 Run the following command from the root directory:
 
 `npm run test:infra:all`
