@@ -30,7 +30,6 @@ defineFeature(feature, (test) => {
             response = await request(app)
                 .post('/students')
                 .send(requestBody);
-                console.log(response.body);
         });
 
         then('the student should be created successfully', () => {
