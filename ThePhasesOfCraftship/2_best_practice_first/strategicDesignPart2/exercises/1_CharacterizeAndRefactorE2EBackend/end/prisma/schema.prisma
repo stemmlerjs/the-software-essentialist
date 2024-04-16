@@ -4,12 +4,13 @@ generator client {
 
 datasource db {
     provider = "sqlite"
-    url      = "file:./../dev.db" // Replace with your SQLite file path
+    url      = "file:../dev.db" // Replace with your SQLite file path
 }
 
 model Student {
     id          String              @id @default(uuid())
     name        String
+    email       String              @unique
     classes     ClassEnrollment[]
     assignments StudentAssignment[]
     reportCards ReportCard[]

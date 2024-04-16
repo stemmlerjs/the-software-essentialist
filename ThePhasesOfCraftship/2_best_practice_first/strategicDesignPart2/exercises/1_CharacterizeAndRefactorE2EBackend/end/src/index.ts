@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-const cors = require('cors');
+import cors from 'cors';
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -38,15 +39,16 @@ app.post('/students', async (req: Request, res: Response) => {
     
     try {
                 
-        if (isMissingKeys(req.body, ['name'])) {
+        if (isMissingKeys(req.body, ['name', 'email'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
 
-        const { name } = req.body;
+        const { name, email } = req.body;
 
         const student = await prisma.student.create({
             data: {
-                name
+                name,
+                email
             }
         });
 
@@ -464,6 +466,11 @@ app.get('/student/:id/grades', async (req: Request, res: Response) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
+
+
+export { app };

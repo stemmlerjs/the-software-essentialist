@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -52,6 +53,9 @@ CREATE TABLE "ClassGradeReport" (
     "classId" TEXT NOT NULL,
     CONSTRAINT "ClassGradeReport_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ClassGradeReport_classId_key" ON "ClassGradeReport"("classId");
