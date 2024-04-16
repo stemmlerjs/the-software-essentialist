@@ -55,8 +55,8 @@ export class ProductionUserRepo implements UserRepo {
     }
   }
 
-  async update(id: number, props: Partial<CreateUserInput>): Promise<UserDTO> {
+  async update(id: number, props: Partial<CreateUserInput>): Promise<UserDTO | undefined> {
     let prismaUser = await this.prisma.user.update({ where: { id }, data: props });
-    return UserMapper.toDTO(prismaUser)
+    return UserMapper.toDTO(prismaUser);
   }
 }

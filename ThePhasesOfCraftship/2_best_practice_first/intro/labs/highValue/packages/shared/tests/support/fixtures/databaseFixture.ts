@@ -8,13 +8,16 @@ export class DatabaseFixture {
   }
 
   async setupWithExistingUsers (commands: CreateUserCommand[]) {
-    let userService = this.compositionRoot.getUserService();
+    const database = this.compositionRoot.getDatabase();
+    const userService = this.compositionRoot.getUserService();
     
     for (let command of commands) {
-      await userService.deleteUser(command.email);
+      await database.users.delete(command.email);
+    }
+
+    for (let command of commands) {
       await userService.createUser(command);
     }
   }
-
   
 }

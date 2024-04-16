@@ -16,7 +16,7 @@ model User {
   email     String @unique
   firstName String
   lastName  String
-  username  String
+  username  String @unique
   password  String
 
   // Define a one-to-one relationship with Member

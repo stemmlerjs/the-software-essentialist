@@ -1,9 +1,6 @@
 
-import { User, Post, Vote, Comment } from "@prisma/client";
-import { CompositionRoot } from "../../composition/compositionRoot";
-const composition = CompositionRoot.createCompositionRoot('test');
-const dbConnection = composition.getDBConnection();
-const prisma = dbConnection.getConnection();
+import { User, Post, Vote, Comment, PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 const initialUsers: User[] = [
   {

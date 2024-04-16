@@ -14,11 +14,16 @@ import { Database } from "../database/database";
 import { WebServer } from "../webAPI/webServer";
 import { InMemoryUserRepo } from "../../modules/users/adapters/inMemoryUserRepo";
 import { InMemoryPostRepo } from "../../modules/posts/adapters/inMemoryPostRepo";
+import { MarketingService } from "../../modules/marketing/marketingService";
 
 export class CompositionRoot {
   private webServer: WebServer;
   private database: Database;
   private context: Environment;
+  private emailService: EmailService;
+  private postService: PostService;
+  private userService: UserService;
+  private marketingService: MarketingService;
   private application: Application;
   private static instance: CompositionRoot | null = null;
 
@@ -32,6 +37,10 @@ export class CompositionRoot {
   private constructor(context: Environment) {
     this.context = context;
     this.database = this.createDatabase();
+    this.emailService = this.createEmailService();
+    this.postService = this.createPostService();
+    this.userService = this.createUserService();
+    this.marketingService = this.createMarketingService();
     this.application = this.createApplication();
     this.webServer = this.createWebServer();
   }
@@ -40,21 +49,6 @@ export class CompositionRoot {
     return this.context;
   }
 
-  public getUserService() {
-    if (!this.application || !this.application.user) {
-      return this.createUserService();
-    }
-    return this.application.user;
-  }
-
-  private createApplication() {
-    return {
-      user: this.getUserService(),
-      email: this.getEmailService(),
-      marketing: this.getMarketingService(),
-      posts: this.getPostService(),
-    };
-  }
 
   private createUserService() {
     const database = this.getDatabase();
@@ -62,25 +56,25 @@ export class CompositionRoot {
     return new UserService(database, emailService);
   }
 
+  private createApplication() {
+    const emailService = this.getEmailService();
+    const userService = this.getUserService();
+    const marketingService = this.getMarketingService();
+    const postService = this.getPostService();
+    
+    return {
+      user: userService,
+      email: emailService,
+      marketing: marketingService,
+      posts: postService
+    };
+  }
+
   private createEmailService() {
     if (this.context === "production") {
       return new MailjetEmailService() as EmailService;
     }
     return new EmailServiceSpy() as EmailService;
-  }
-
-  public getEmailService() {
-    if (!this.application || !this.application.email) {
-      return this.createEmailService();
-    }
-    return this.application.email;
-  }
-
-  public getMarketingService() {
-    if (!this.application || !this.application.marketing) {
-      return this.createMarketingService();
-    }
-    return this.application.marketing;
   }
 
   private createMarketingService() {
@@ -91,21 +85,34 @@ export class CompositionRoot {
     return new MarketingServiceSpy();
   }
 
-  private getPostService() {
-    if (!this.application || !this.application.posts) {
-      return this.createPostService();
-    }
-    return this.application.posts;
+  public getUserService() {
+    if (this.userService) return this.userService;
+    return this.createUserService();
   }
 
-  private createPostService() {
-    let dbConnection = this.getDatabase();
-    return new PostService(dbConnection);
+  private getPostService() {
+    if (this.postService) return this.postService;
+    return this.createPostService();
+  }
+
+  public getEmailService() {
+    if (this.emailService) return this.emailService;
+    return this.createEmailService();
+  }
+
+  public getMarketingService() {
+    if (this.marketingService) return this.marketingService;
+    return this.createMarketingService()
   }
 
   public getApplication() {
-    if (!this.application) this.createApplication();
-    return this.application;
+    if (this.application) return this.application;
+    return this.createApplication();
+  }
+
+  private createPostService() {
+    const database = this.getDatabase();
+    return new PostService(database);
   }
 
   private createDatabase(): Database {
