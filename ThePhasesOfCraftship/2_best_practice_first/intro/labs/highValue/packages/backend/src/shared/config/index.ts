@@ -1,5 +1,5 @@
 
-export type Environment = 'development' | 'test' | 'production' | undefined;
+export type Environment = 'development' | 'test' | 'production' | 'staging' | undefined;
 
 export const config = {
   context: {

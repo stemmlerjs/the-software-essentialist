@@ -74,6 +74,12 @@ export class CompositionRoot {
     if (this.context === "production") {
       return new MailjetEmailService() as EmailService;
     }
+
+    /**
+     * For 'testing' and 'staging', if we wanted to use a different one
+     */
+
+    // When we execute unit tests, we use this.
     return new EmailServiceSpy() as EmailService;
   }
 

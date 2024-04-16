@@ -9,7 +9,6 @@ import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServic
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
 import { Application } from '@dddforum/backend/src/shared/application/applicationInterface';
-import { InMemoryUserRepo } from '@dddforum/backend/src/modules/users/adapters/inMemoryUserRepo';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
@@ -25,7 +24,6 @@ defineFeature(feature, (test) => {
   let commands: CreateUserCommand[] = [];
   let createUserResponses: any[] = [];
   let application: Application;
-  let userRepo: InMemoryUserRepo;
   let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
