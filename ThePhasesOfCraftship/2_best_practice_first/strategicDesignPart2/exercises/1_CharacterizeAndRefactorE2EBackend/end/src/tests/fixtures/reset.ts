@@ -1,16 +1,15 @@
 import { prisma } from '../../database';
 
 async function resetDatabase() {
-    const result: {name: string}[] = await prisma.$queryRaw`SELECT name FROM sqlite_master WHERE type = "table";`
-        const tableNames = result.map((table: any) => table.name).filter((name: string) => !name.startsWith('_'))
-        async function main() {
-            for (const tableName of tableNames) 
-            await prisma.$queryRawUnsafe(
-                `DELETE FROM ${tableName};`
-              );
-          }
+    const deleteAllClassEnrollments = prisma.classEnrollment.deleteMany();
+    const deleteAllStudentAssignments = prisma.studentAssignment.deleteMany();
+    const deleteAllStudents = prisma.student.deleteMany();
+    const deleteAllClasses = prisma.class.deleteMany()
+    const deleteAllAssignments = prisma.assignment.deleteMany();
 
-        await main();
+    await prisma.$transaction([deleteAllClassEnrollments, deleteAllStudentAssignments, deleteAllStudents, deleteAllClasses, deleteAllAssignments]);
+
+    await prisma.$disconnect();
 }
 
 export { resetDatabase };
