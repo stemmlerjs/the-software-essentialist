@@ -23,7 +23,7 @@
     "test:infra:dev": "jest -c jest.config.infra.ts --watch"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node src/shared/database/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
