@@ -39,5 +39,30 @@ defineFeature(feature, (test) => {
         });
 
     })
-  
+
+    test('Missing Student Email', ({ given, when, then, and }) => {
+        let requestBody: any = {};
+        let response: any = {};
+
+        given(/^I want to create a student named "(.*)" and no email$/, (name) => {
+            requestBody = {
+                name
+            }
+        })
+
+        when('I send a request to create a student', async () => {
+            response = await request(app)
+                .post('/students')
+                .send(requestBody);
+        });
+
+        then('the student should not be created', () => {
+            expect(response.status).toBe(400);
+            expect(response.body.success).toBeFalsy()
+        });
+
+        and('I should receive an error message', () => {
+            expect(response.body.error).toBe('ValidationError');
+        });
+    })
 })
