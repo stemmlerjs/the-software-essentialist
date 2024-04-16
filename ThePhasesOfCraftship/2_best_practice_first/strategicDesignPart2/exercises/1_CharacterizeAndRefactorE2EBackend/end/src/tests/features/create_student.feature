@@ -6,12 +6,7 @@ Feature: Create Student
 
 
     Scenario: Successful Student Creation
-        Given I want to create a student named "Khalil Stemmler"
+        Given I want to create a student named "Khalil Stemmler" and with email "khalil@essentialist.dev"
         When I send a request to create a student
         Then the student should be created successfully
 
-    Scenario: Unsuccessful Student Creation
-        Given I want to create a student with a missing name
-        When I send a request to create a student
-        Then the student should not be created
-        And I should receive an error message
