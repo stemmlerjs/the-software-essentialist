@@ -1,11 +1,10 @@
 # High Value E2E Testing
 
-> These
+> From UI to DB and from API to DB
 
 1. [Getting setup](#gettingsetup)
 2. [Testing API to DB](#apitodb)
 3. [Testing UI to DB](#uitodb)
-4. [Important Files](#files)
 
 ## Getting setup <a name="gettingsetup"></a>
 
@@ -48,4 +47,4 @@ Run the following command:
 
 `npm run test:e2e:front`
 
-## Important files to check out <a name="files"></a>
+
