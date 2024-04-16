@@ -48,3 +48,17 @@ Run the following command:
 `npm run test:e2e:front`
 
 
+## See the following
+
+_UI to DB_
+- `packages/shared/tests/features/registration.feature`: the acceptance test
+- `packages/frontend/tests/features/registration.e2e.ts`: the executable specification
+- `packages/frontend/tests/pages`: the domain specific language layer (page objects)
+- `packages/frontend/tests/driver`: the protocol driver (puppeteer/browser automation)
+
+
+_API to DB_
+- `packages/shared/tests/features/registration.feature`: the acceptance test
+- `packages/backend/tests/features/registration.e2e.ts`: the executable specification
+- `packages/shared/api/index.ts`: the domain specific language layer (apiClient)
+

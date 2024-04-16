@@ -27,3 +27,17 @@ Then start it by selecting it in your tray.
 Run the following command from the root directory:
 
 `npm run test:infra:all`
+
+## See the following
+
+_For the high value test_
+- `packages/shared/tests/features/registration.feature`: the acceptance test
+- `packages/backend/tests/features/registration.infra.ts`: the executable specification
+- `packages/backend/src/shared/application/applicationInterface.ts`: the domain specific language
+
+_Incoming Adapters_
+- `packages/backend/src/modules/users/userController.infra.spec.ts`: incoming adapter (controller) test
+- `packages/backend/src/modules/posts/postsController.infra.spec.ts`: incoming adapter (controller) test
+
+_Outgoing Adapters_
+- `packages/backend/src/modules/users/adapters/userRepo.infra.spec.ts`: outgoing adapter (contract) test
