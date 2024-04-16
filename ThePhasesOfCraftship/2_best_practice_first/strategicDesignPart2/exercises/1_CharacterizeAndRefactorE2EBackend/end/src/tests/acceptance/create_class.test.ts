@@ -52,6 +52,7 @@ defineFeature(feature, (test) => {
         then('the class should not be created', () => {
             expect(response.status).toBe(400);
             expect(response.body.success).toBeFalsy();
+            expect(response.body.error).toBe('ValidationError');
         });
     })
 })
