@@ -19,3 +19,11 @@ Run the following commands
 You can run the unit tests across all projects (`frontend`, `backend`, `shared`) by running the following command:
 
 `npm run test:unit:all`
+
+## See the following
+
+_For the high value test_
+- `packages/shared/tests/features/registration.feature`: the acceptance test
+- `packages/backend/tests/features/registration.unit.ts`: the executable specification
+
+
