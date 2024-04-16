@@ -8,7 +8,10 @@ export type GetPostsQuery = {
   sort: GetPostsQueryOptions
 }
 
-export type PostsData = {};
+// TODO: Refactor to using dtos
+export type PostsData = {
+  posts: []
+};
 
 export type ServerError = {};
 
@@ -19,7 +22,7 @@ export const createPostsAPI = (apiURL: string) => {
     getPosts: async (): Promise<APIResponse<GetPostsResponse>> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=recent`);
-        return successResponse.data as APIResponse<GetPostsResponse>;
+        return successResponse.data as any;
       } catch (err) {
         //@ts-ignore
         return err.response.data as APIResponse;
