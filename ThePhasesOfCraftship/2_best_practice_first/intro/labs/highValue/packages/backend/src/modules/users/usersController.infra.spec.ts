@@ -4,6 +4,7 @@ import { APIResponse, createAPIClient } from "@dddforum/shared/src/api";
 import { Application } from "../../shared/application/applicationInterface";
 import { WebServer } from "../../shared/webAPI/webServer";
 import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
+import { UserDTOBuilder } from "@dddforum/shared/tests/support/builders/userDTOBuilder";
 
 describe("usersController", () => {
   let client = createAPIClient("http://localhost:3000");
@@ -26,10 +27,14 @@ describe("usersController", () => {
         .withRandomUsername()
         .withRandomEmail()
         .build();
+        
+    let responseDTO = new UserDTOBuilder()
+      .fromCommand(createUserCommand)
+      .build();
 
     application.user.createUser.mockReturnValue(
       new Promise((resolve) =>
-        resolve({ error: undefined, data: {  }, success: true }),
+        resolve({ error: undefined, data: responseDTO, success: true }),
       ),
     );
 

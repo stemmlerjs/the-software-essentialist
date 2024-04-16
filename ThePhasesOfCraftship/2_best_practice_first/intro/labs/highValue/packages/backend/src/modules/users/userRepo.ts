@@ -18,5 +18,5 @@ export interface UserRepo {
   findById (id: number): Promise<UserDTO | undefined>;
   delete(email: string): Promise<void>;
   getUserByUsername (username: string): Promise<UserDTO | undefined>;
-  update (id: number, props: Partial<CreateUserInput>): Promise<UserDTO>;
+  update (id: number, props: Partial<CreateUserInput>): Promise<UserDTO | undefined>;
 }

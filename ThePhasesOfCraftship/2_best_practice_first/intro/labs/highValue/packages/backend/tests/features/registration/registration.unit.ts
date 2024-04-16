@@ -9,6 +9,8 @@ import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServic
 import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
 import { Application } from '@dddforum/backend/src/shared/application/applicationInterface';
+import { InMemoryUserRepo } from '@dddforum/backend/src/modules/users/adapters/inMemoryUserRepo';
+import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -16,19 +18,22 @@ defineFeature(feature, (test) => {
 
   let createUserCommand: CreateUserCommand;
   let createUserResponse: any;
-  let addEmailToListResponse: any;
+  let addEmailToListResponse: boolean | undefined;
   let composition: CompositionRoot;
   let emailServiceSpy: EmailServiceSpy;
   let marketingServiceSpy: MarketingServiceSpy;
   let commands: CreateUserCommand[] = [];
   let createUserResponses: any[] = [];
   let application: Application;
+  let userRepo: InMemoryUserRepo;
+  let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot('development');
-    application = composition.getApplication()
+    application = composition.getApplication();
     emailServiceSpy = composition.getEmailService() as EmailServiceSpy;
     marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
+    databaseFixture = new DatabaseFixture(composition);
   })
 
   afterEach(() => {
@@ -36,9 +41,11 @@ defineFeature(feature, (test) => {
     marketingServiceSpy.reset();
     commands = [];
     createUserResponses = []
-  })
+    addEmailToListResponse = undefined;
+  });
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
+
     given('I am a new user', async () => {
       createUserCommand = new CreateUserCommandBuilder()
         .withFirstName('Khalil')
@@ -67,7 +74,7 @@ defineFeature(feature, (test) => {
 
       // And the user exists (State Verification)
       const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
+      expect(createUserCommand.email).toEqual(getUserResponse.data && getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
       expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
@@ -80,9 +87,8 @@ defineFeature(feature, (test) => {
       // a new contact to a list? Yes, we do. But we're not going to worry 
       // about this yet because we need to learn how to validate this without
       // filling up a production Mailchimp account with test data. 
-      const { success } = addEmailToListResponse
 
-      expect(success).toBeTruthy();
+      expect(addEmailToListResponse).toBeTruthy();
       expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(1);
     });
   });
@@ -115,16 +121,14 @@ defineFeature(feature, (test) => {
 
       // And the user exists (State Verification)
       const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
+      expect(createUserCommand.email).toEqual(getUserResponse.data && getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
       expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
     });
 
     and('I should not expect to receive marketing emails', () => {
-      const { success } = addEmailToListResponse
-
-      expect(success).toBeTruthy();
+      expect(addEmailToListResponse).toBeFalsy();
       expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(0);
     });
   });
@@ -174,8 +178,7 @@ defineFeature(feature, (test) => {
         )
       })
 
-      // TODO: set up a diff database
-      // await databaseFixture.setupWithExistingUsers(commands);
+      await databaseFixture.setupWithExistingUsers(commands);
       emailServiceSpy.reset();
     });
 
@@ -214,8 +217,8 @@ defineFeature(feature, (test) => {
           .build()
         )
       });
-
-      // await databaseFixture.setupWithExistingUsers(commands);
+      
+      await databaseFixture.setupWithExistingUsers(commands);
       emailServiceSpy.reset();
     });
 

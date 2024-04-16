@@ -1,6 +1,5 @@
 
 import { CreateUserCommand, EditUserCommand, GetUserByEmailQuery } from "@dddforum/shared/src/api/users";
-import { User } from "@prisma/client";
 import { Errors } from "../../shared/errors/errors";
 import { EmailService } from "../email/emailService";
 import { Database } from "../../shared/database/database";
@@ -11,25 +10,6 @@ function isMissingKeys (data: any, keysToCheckFor: string[]) {
     if (data[key] === undefined) return true;
   } 
   return false;
-}
-
-function generateRandomPassword(length: number): string {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-  const passwordArray = [];
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    // @ts-ignore
-    passwordArray.push(charset[randomIndex]);
-  }
-
-  return passwordArray.join('');
-}
-
-function parseUserForResponse (user: User) {
-  const returnData = JSON.parse(JSON.stringify(user));
-  delete returnData.password;
-  return returnData;
 }
 
 export class UserService {
@@ -60,18 +40,16 @@ export class UserService {
       const userData = input;
       const existingUserByEmail = await this.db.users.getUserByEmail(input.email);
 
-      
-      ;
       if (existingUserByEmail) {
         return { error: Errors.EmailAlreadyInUse, data: undefined, success: false };
       }
   
-      const existingUserByUsername = await this.db.users.getUserByEmail(input.email);
+      const existingUserByUsername = await this.db.users.getUserByUsername(input.username);
       if (existingUserByUsername) {
         return { error: Errors.UsernameAlreadyTaken, data: undefined, success: false };
       }
 
-      const pass = generateRandomPassword(10);
+      const pass = TextUtil.createRandomText(10);
       
       const userDTO = await this.db.users.save({
         email: userData.email,
@@ -138,7 +116,6 @@ export class UserService {
   }
 
   async getUserByEmail (query: GetUserByEmailQuery) {
-    
     try {
       const email = query.email as string;
       if (email === undefined) {
@@ -158,7 +135,6 @@ export class UserService {
   }
 
   async deleteUser (email: string) {
-    
     try {
       await this.db.users.delete(email);
     } catch (err) {
