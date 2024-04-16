@@ -6,7 +6,7 @@ the application core (the services). We skip the controller entirely with this t
 paid transactional email and marketing services (ie: marketingService, emailService).
 
 1. [Getting setup](#gettingsetup)
-2. [Testing API to DB](#integration)
+2. [How to run the integration tests](#integration)
 
 ## Getting setup <a name="gettingsetup"></a>
 
