@@ -7,7 +7,7 @@ import { resetDatabase } from "../fixtures/reset";
 import { prisma } from "../../database";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/assign_student_to_class.feature")
+  path.join(__dirname, "../features/enroll_student_to_class.feature")
 );
 
 defineFeature(feature, (test) => {
@@ -15,7 +15,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully assign a student to a class", ({
+  test("Successfully enroll a student to a class", ({
     given,
     and,
     when,
@@ -52,7 +52,7 @@ defineFeature(feature, (test) => {
       };
     });
 
-    when("I request to assign the student to the class", async () => {
+    when("I request to enroll the student to the class", async () => {
       response = await request(app)
         .post("/class-enrollments")
         .send(requestBody);
@@ -67,10 +67,48 @@ defineFeature(feature, (test) => {
       });
     });
 
-    then("the student should be assigned to the class successfully", () => {
+    then("the student should be enrolled to the class successfully", () => {
       expect(response.status).toBe(201);
       expect(response.body.data.studentName).toBe(requestBody.studentName);
       expect(response.body.data.className).toBe(requestBody.className);
     });
   });
+
+  test("Enroll a student to a class that doesn't exist", ({given, when, then}) => {
+    let requestBody: any = {};
+    let response: any = {};
+
+    given("there is a student with the data below", async (table) => {
+      const { Name, Email } = table[0];
+      const student = await prisma.student.create({
+        data: {
+          name: Name,
+          email: Email,
+        },
+      });
+
+      requestBody = {
+        studentId: student.id,
+        ...requestBody,
+      };
+    });
+
+    when("I request to enroll the student to a class that doesn't exist", async () => {
+      requestBody = {
+        classId: "72463da6-3f58-4d82-b5e8-800c6f30d8a0",
+        ...requestBody,
+      };
+
+      response = await request(app)
+        .post("/class-enrollments")
+        .send(requestBody);
+    });
+
+
+
+    then("the student should not be enrolled to the class", () => {
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBe("ClassNotFound");
+    });
+  })
 });
