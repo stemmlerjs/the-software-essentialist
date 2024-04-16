@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-const cors = require('cors');
+
+import cors from 'cors';
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -38,15 +40,16 @@ app.post('/students', async (req: Request, res: Response) => {
     
     try {
                 
-        if (isMissingKeys(req.body, ['name'])) {
+        if (isMissingKeys(req.body, ['name', 'email'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
 
-        const { name } = req.body;
+        const { name, email } = req.body;
 
         const student = await prisma.student.create({
             data: {
-                name
+                name,
+                email            
             }
         });
 

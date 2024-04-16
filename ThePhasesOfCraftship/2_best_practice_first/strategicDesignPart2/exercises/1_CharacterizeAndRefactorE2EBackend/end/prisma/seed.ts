@@ -8,6 +8,7 @@ async function seed() {
       return prisma.student.create({
         data: {
           name: `Student ${i + 1}`,
+          email: `student${i + 1}@essentialist.com`,
         },
       });
     }),
