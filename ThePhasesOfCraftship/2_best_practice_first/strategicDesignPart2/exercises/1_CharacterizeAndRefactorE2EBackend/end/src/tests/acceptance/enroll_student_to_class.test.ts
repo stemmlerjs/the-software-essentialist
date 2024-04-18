@@ -5,6 +5,7 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import { prisma } from "../../database";
+import { classBuilder, studentBuilder } from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/enroll_student_to_class.feature")
@@ -23,48 +24,23 @@ defineFeature(feature, (test) => {
   }) => {
     let requestBody: any = {};
     let response: any = {};
+    let class_: any = {};
+    let student: any = {};
 
-    given("there is a student with the data below", async (table) => {
-      const { Name, Email } = table[0];
-      const student = await prisma.student.create({
-        data: {
-          name: Name,
-          email: Email,
-        },
-      });
+    given("there is a class and a student", async () => {
+      class_ = await classBuilder();
+      student = await studentBuilder();
 
       requestBody = {
         studentId: student.id,
-        ...requestBody,
-      };
-    });
-
-    and(/^there is a "(.*)" class$/, async (className) => {
-      const class_ = await prisma.class.create({
-        data: {
-          name: className,
-        },
-      });
-
-      requestBody = {
         classId: class_.id,
-        ...requestBody,
       };
     });
 
-    when("I request to enroll the student to the class", async () => {
+    when("I enroll the student to the class", async () => {
       response = await request(app)
         .post("/class-enrollments")
         .send(requestBody);
-
-      const data = await prisma.student.findUnique({
-        where: {
-          id: requestBody.studentId,
-        },
-        include: {
-          classes: true,
-        },
-      });
     });
 
     then("the student should be enrolled to the class successfully", () => {
@@ -74,18 +50,16 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Enroll a student to a class that doesn't exist", ({given, when, then}) => {
+  test("Enroll a student to a class that doesn't exist", ({
+    given,
+    when,
+    then,
+  }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    given("there is a student with the data below", async (table) => {
-      const { Name, Email } = table[0];
-      const student = await prisma.student.create({
-        data: {
-          name: Name,
-          email: Email,
-        },
-      });
+    given("there is a student", async () => {
+      const student = await studentBuilder();
 
       requestBody = {
         studentId: student.id,
@@ -93,7 +67,7 @@ defineFeature(feature, (test) => {
       };
     });
 
-    when("I request to enroll the student to a class that doesn't exist", async () => {
+    when("I enroll the student to a class that doesn't exist", async () => {
       requestBody = {
         classId: "72463da6-3f58-4d82-b5e8-800c6f30d8a0",
         ...requestBody,
@@ -104,11 +78,9 @@ defineFeature(feature, (test) => {
         .send(requestBody);
     });
 
-
-
     then("the student should not be enrolled to the class", () => {
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("ClassNotFound");
     });
-  })
+  });
 });
