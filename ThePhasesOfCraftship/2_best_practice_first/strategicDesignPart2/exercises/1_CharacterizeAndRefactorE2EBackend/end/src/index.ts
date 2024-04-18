@@ -15,6 +15,7 @@ const Errors = {
   ClientError: "ClientError",
   StudentAlreadyEnrolled: "StudentAlreadyEnrolled",
   StudentNotEnrolled: "StudentNotEnrolled",
+  AssignmentAlreadySubmitted: "AssignmentAlreadySubmitted",
 };
 
 function isMissingKeys(data: any, keysToCheckFor: string[]) {
@@ -305,6 +306,14 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
     if (!studentAssignment) {
       return res.status(404).json({
         error: Errors.AssignmentNotFound,
+        data: undefined,
+        success: false,
+      });
+    }
+
+    if (studentAssignment.status === "submitted") {
+      return res.status(400).json({
+        error: Errors.AssignmentAlreadySubmitted,
         data: undefined,
         success: false,
       });
