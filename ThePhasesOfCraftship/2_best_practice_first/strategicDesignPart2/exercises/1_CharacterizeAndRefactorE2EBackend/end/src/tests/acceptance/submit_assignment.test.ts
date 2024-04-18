@@ -4,7 +4,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { prisma } from "../../database";
+import { studentAssignmentBuilder } from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submit_assignment.feature")
@@ -18,52 +18,32 @@ defineFeature(feature, (test) => {
   test("Successfully submit an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: any = {};
-    let class_: any = {};
-    let assignment: any = {};
-    let studentAssignment: any = {};
-
-    beforeAll(async () => {
-      student = await prisma.student.create({
-        data: {
-          name: "John Doe",
-          email: "johndoe@essentialist.dev",
-        },
-      });
-
-      class_ = await prisma.class.create({
-        data: {
-          name: "Math",
-        },
-      });
-
-      assignment = await prisma.assignment.create({
-        data: {
-          title: "Math Assignment",
-          classId: class_.id,
-        },
-      });
-
-      await prisma.classEnrollment.create({
-        data: {
-          classId: class_.id,
-          studentId: student.id,
-        },
-      });
-    });
+    let resources: {
+      student: any;
+      class_: any;
+      assignment: any;
+      studentAssignment: any;
+    } = {
+      student: null,
+      class_: null,
+      assignment: null,
+      studentAssignment: null,
+    };
 
     given("I was assigned to an assignment", async () => {
-      studentAssignment = await prisma.studentAssignment.create({
-        data: {
-          studentId: student.id,
-          assignmentId: assignment.id,
-        },
-      });
+      const { student, class_, assignment, studentAssignment } =
+        await studentAssignmentBuilder();
+      resources = {
+        student,
+        class_,
+        assignment,
+        studentAssignment,
+      };
     });
 
     when("I submit the assignment", async () => {
       requestBody = {
-        id: studentAssignment.id,
+        id: resources.studentAssignment.id,
       };
 
       response = await request(app)
@@ -73,7 +53,9 @@ defineFeature(feature, (test) => {
 
     then("It should be marked as submitted", async () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.studentId).toBe(studentAssignment.studentId);
+      expect(response.body.data.studentId).toBe(
+        resources.studentAssignment.studentId
+      );
     });
   });
 });
