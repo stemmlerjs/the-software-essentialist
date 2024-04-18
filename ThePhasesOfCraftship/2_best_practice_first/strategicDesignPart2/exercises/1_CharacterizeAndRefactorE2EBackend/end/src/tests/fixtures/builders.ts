@@ -9,9 +9,7 @@ const studentBuilder = async () => {
     },
   });
 
-  return {
-    student,
-  };
+  return student;
 };
 
 const classBuilder = async () => {
@@ -21,61 +19,43 @@ const classBuilder = async () => {
     },
   });
 
-  return {
-    class_,
-  };
+  return class_;
 };
 
-const assignmentBuilder = async () => {
-  const { class_ } = await classBuilder();
+const assignmentBuilder = async (classId: string) => {
   const assignment = await prisma.assignment.create({
     data: {
       title: faker.lorem.word(),
-      classId: class_.id,
+      classId,
     },
   });
 
-  return {
-    assignment,
-    class_,
-  };
+  return assignment;
 };
 
-const classEnrollmentBuilder = async () => {
-  const { student } = await studentBuilder();
-  const { class_ } = await classBuilder();
-
+const classEnrollmentBuilder = async (classId: string, studentId: string) => {
   const classEnrollment = await prisma.classEnrollment.create({
     data: {
-      classId: class_.id,
-      studentId: student.id,
+      classId,
+      studentId,
     },
   });
 
-  return {
-    student,
-    class_,
-    classEnrollment,
-  };
+  return classEnrollment;
 };
 
-const studentAssignmentBuilder = async () => {
-  const { student } = await studentBuilder();
-  const { assignment, class_ } = await assignmentBuilder();
-
+const studentAssignmentBuilder = async (
+  studentId: string,
+  assignmentId: string
+) => {
   const studentAssignment = await prisma.studentAssignment.create({
     data: {
-      studentId: student.id,
-      assignmentId: assignment.id,
+      studentId,
+      assignmentId,
     },
   });
 
-  return {
-    student,
-    class_,
-    assignment,
-    studentAssignment,
-  };
+  return studentAssignment;
 };
 
 export {

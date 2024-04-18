@@ -4,7 +4,12 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { studentAssignmentBuilder } from "../fixtures/builders";
+import {
+  assignmentBuilder,
+  classBuilder,
+  studentAssignmentBuilder,
+  studentBuilder,
+} from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submit_assignment.feature")
@@ -18,32 +23,27 @@ defineFeature(feature, (test) => {
   test("Successfully submit an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let resources: {
-      student: any;
-      class_: any;
-      assignment: any;
-      studentAssignment: any;
-    } = {
-      student: null,
-      class_: null,
-      assignment: null,
-      studentAssignment: null,
-    };
+    let student: any = null;
+    let class_: any = null;
+    let assignment: any = null;
+    let studentAssignment: any = null;
+
+    beforeAll(async () => {
+      student = await studentBuilder();
+      class_ = await classBuilder();
+      assignment = await assignmentBuilder(class_.id);
+    });
 
     given("I was assigned to an assignment", async () => {
-      const { student, class_, assignment, studentAssignment } =
-        await studentAssignmentBuilder();
-      resources = {
-        student,
-        class_,
-        assignment,
-        studentAssignment,
-      };
+      studentAssignment = await studentAssignmentBuilder(
+        student.id,
+        assignment.id
+      );
     });
 
     when("I submit the assignment", async () => {
       requestBody = {
-        id: resources.studentAssignment.id,
+        id: studentAssignment.id,
       };
 
       response = await request(app)
@@ -53,9 +53,7 @@ defineFeature(feature, (test) => {
 
     then("It should be marked as submitted", async () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.studentId).toBe(
-        resources.studentAssignment.studentId
-      );
+      expect(response.body.data.studentId).toBe(studentAssignment.studentId);
     });
   });
 });
