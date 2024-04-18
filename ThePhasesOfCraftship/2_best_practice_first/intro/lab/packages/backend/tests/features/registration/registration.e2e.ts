@@ -3,18 +3,26 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { createAPIClient } from '@dddforum/shared/src/api';
 import { CreateUserCommand } from '@dddforum/shared/src/api/users';
 import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-import { EmailServiceSpy } from '@dddforum/backend/src/modules/email/emailServiceSpy';
-import { MarketingServiceSpy } from '@dddforum/backend/src/modules/marketing/marketingServiceSpy';
-import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 import { Errors } from '@dddforum/backend/src/shared/errors/errors';
-import { WebServer } from '@dddforum/backend/src/shared/webAPI/webServer';
+import { Application } from '@dddforum/backend/src/shared/application/applicationInterface';
+import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
+import { WebServer } from '../../../src/shared/webAPI/webServer';
+import { createAPIClient } from '@dddforum/shared/src/api';
+import { TransactionalEmailAPISpy } from '../../../src/modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
+import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
 defineFeature(feature, (test) => {
+
+  let transactionalEmailAPISpy: TransactionalEmailAPISpy;
+  let contactListAPISpy: ContactListAPISpy;
+  let commands: CreateUserCommand[] = [];
+  let createUserResponses: any[] = [];
+  let application: Application;
+  let databaseFixture: DatabaseFixture;
 
   let apiClient = createAPIClient('http://localhost:3000');
   let createUserCommand: CreateUserCommand;
@@ -22,25 +30,19 @@ defineFeature(feature, (test) => {
   let addEmailToListResponse: any;
   let composition: CompositionRoot;
   let server: WebServer;
-  let emailServiceSpy: EmailServiceSpy;
-  let marketingServiceSpy: MarketingServiceSpy;
-  let commands: CreateUserCommand[] = [];
-  let createUserResponses: any[] = [];
-  let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot('test');
-    emailServiceSpy = composition.getEmailService() as EmailServiceSpy;
-    marketingServiceSpy = composition.getMarketingService() as MarketingServiceSpy;
-    server = composition.getWebServer();
+    application = composition.getApplication();
+    transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
+    contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
     databaseFixture = new DatabaseFixture(composition);
-
     await server.start();
   })
 
   afterEach(() => {
-    emailServiceSpy.reset();
-    marketingServiceSpy.reset();
+    transactionalEmailAPISpy.reset();
+    contactListAPISpy.reset();
     commands = [];
     createUserResponses = []
   })
@@ -82,7 +84,7 @@ defineFeature(feature, (test) => {
       expect(createUserCommand.email).toEqual(getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
+      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
     });
 
     and('I should expect to receive marketing emails', () => {
@@ -95,7 +97,7 @@ defineFeature(feature, (test) => {
       const { success } = addEmailToListResponse
 
       expect(success).toBeTruthy();
-      expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(1);
+      expect(contactListAPISpy.getTimesMethodCalled('addEmailToList')).toEqual(1);
     });
   });
 
@@ -130,14 +132,14 @@ defineFeature(feature, (test) => {
       expect(createUserCommand.email).toEqual(getUserResponse.data.email);
 
       // Verify that an email has been sent (Communication Verification)
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(1);
+      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
     });
 
     and('I should not expect to receive marketing emails', () => {
       const { success } = addEmailToListResponse
 
       expect(success).toBeTruthy();
-      expect(marketingServiceSpy.getTimesMethodCalled('addEmailToList')).toEqual(0);
+      expect(contactListAPISpy.getTimesMethodCalled('addEmailToList')).toEqual(0);
     });
   });
 
@@ -170,7 +172,7 @@ defineFeature(feature, (test) => {
     });
 
     and('I should not have been sent access to account details', () => {
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
+      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 
@@ -187,7 +189,7 @@ defineFeature(feature, (test) => {
       })
 
       await databaseFixture.setupWithExistingUsers(commands);
-      emailServiceSpy.reset();
+      transactionalEmailAPISpy.reset();
     });
 
     when('new users attempt to register with those emails', async () => {
@@ -209,7 +211,7 @@ defineFeature(feature, (test) => {
     });
 
     and('they should not have been sent access to account details', () => {
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
+      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 
@@ -227,7 +229,7 @@ defineFeature(feature, (test) => {
       });
 
       await databaseFixture.setupWithExistingUsers(commands);
-      emailServiceSpy.reset();
+      transactionalEmailAPISpy.reset();
     });
 
     when('new users attempt to register with already taken usernames', async (table) => {
@@ -249,7 +251,7 @@ defineFeature(feature, (test) => {
     });
 
     and('they should not have been sent access to account details', () => {
-      expect(emailServiceSpy.getTimesMethodCalled('sendMail')).toEqual(0);
+      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
     });
   });
 });

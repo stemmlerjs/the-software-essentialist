@@ -1,9 +1,9 @@
 
 import { CreateUserCommand, EditUserCommand, GetUserByEmailQuery } from "@dddforum/shared/src/api/users";
 import { Errors } from "../../shared/errors/errors";
-import { EmailService } from "../email/emailService";
 import { Database } from "../../shared/database/database";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
+import { TransactionEmailAPI } from "../marketing/ports/transactionalEmailAPI";
 
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
   for (let key of keysToCheckFor) {
@@ -14,7 +14,7 @@ function isMissingKeys (data: any, keysToCheckFor: string[]) {
 
 export class UserService {
 
-  constructor (private db: Database, private emailService: EmailService) {
+  constructor (private db: Database, private emailAPI: TransactionEmailAPI) {
     
   }
 
@@ -59,7 +59,7 @@ export class UserService {
         password: pass,
       });
       
-      await this.emailService.sendMail({ 
+      await this.emailAPI.sendMail({ 
         to: input.email, 
         subject: 'Your login details to DDDForum', 
         text: `Welcome to DDDForum. You can login with the following details </br>

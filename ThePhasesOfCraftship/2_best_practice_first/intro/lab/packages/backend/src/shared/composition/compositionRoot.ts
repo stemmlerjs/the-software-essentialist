@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { EmailService } from "../../modules/email/emailService";
-import { EmailServiceSpy } from "../../modules/email/emailServiceSpy";
-import { MailjetEmailService } from "../../modules/email/mailjetEmailService";
-import { Mailchimp } from "../../modules/marketing/mailchimp";
-import { MarketingServiceSpy } from "../../modules/marketing/marketingServiceSpy";
+import { TransactionalEmailAPISpy } from "../../modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy";
+import { MailjetTransactionalEmail } from "../../modules/marketing/adapters/transactionalEmailAPI/mailjetTransactionalEmailAPI";
+import { MailchimpContactList } from "../../modules/marketing/adapters/contactListAPI/mailchimpContactList";
+import { ContactListAPISpy } from "../../modules/marketing/adapters/contactListAPI/contactListSpy";
 import { ProductionPostRepo } from "../../modules/posts/adapters/productionPostRepo";
 import { PostService } from "../../modules/posts/postService";
 import { ProductionUserRepo } from "../../modules/users/adapters/productionUserRepo";
@@ -14,16 +13,19 @@ import { Database } from "../database/database";
 import { WebServer } from "../webAPI/webServer";
 import { InMemoryUserRepo } from "../../modules/users/adapters/inMemoryUserRepo";
 import { InMemoryPostRepo } from "../../modules/posts/adapters/inMemoryPostRepo";
+import { ContactListAPI } from "../../modules/marketing/ports/contactListAPI";
+import { TransactionEmailAPI } from "../../modules/marketing/ports/transactionalEmailAPI";
 import { MarketingService } from "../../modules/marketing/marketingService";
 
 export class CompositionRoot {
   private webServer: WebServer;
   private database: Database;
   private context: Environment;
-  private emailService: EmailService;
+  private transactionalEmailAPI: TransactionEmailAPI;
   private postService: PostService;
   private userService: UserService;
   private marketingService: MarketingService;
+  private contactListAPI: ContactListAPI;
   private application: Application;
   private static instance: CompositionRoot | null = null;
 
@@ -37,7 +39,8 @@ export class CompositionRoot {
   private constructor(context: Environment) {
     this.context = context;
     this.database = this.createDatabase();
-    this.emailService = this.createEmailService();
+    this.transactionalEmailAPI = this.createTransactionalEmailAPI();
+    this.contactListAPI = this.createContactListAPI();
     this.postService = this.createPostService();
     this.userService = this.createUserService();
     this.marketingService = this.createMarketingService();
@@ -52,27 +55,25 @@ export class CompositionRoot {
 
   private createUserService() {
     const database = this.getDatabase();
-    const emailService = this.getEmailService();
+    const emailService = this.getTransactionalEmailAPI();
     return new UserService(database, emailService);
   }
 
   private createApplication() {
-    const emailService = this.getEmailService();
     const userService = this.getUserService();
     const marketingService = this.getMarketingService();
     const postService = this.getPostService();
     
     return {
       user: userService,
-      email: emailService,
       marketing: marketingService,
       posts: postService
     };
   }
 
-  private createEmailService() {
+  private createTransactionalEmailAPI() {
     if (this.context === "production") {
-      return new MailjetEmailService() as EmailService;
+      return new MailjetTransactionalEmail() as TransactionEmailAPI;
     }
 
     /**
@@ -80,15 +81,15 @@ export class CompositionRoot {
      */
 
     // When we execute unit tests, we use this.
-    return new EmailServiceSpy() as EmailService;
+    return new TransactionalEmailAPISpy() as TransactionEmailAPI;
   }
 
-  private createMarketingService() {
+  private createContactListAPI() {
     if (this.context === "production") {
-      return new Mailchimp();
+      return new MailchimpContactList();
     }
 
-    return new MarketingServiceSpy();
+    return new ContactListAPISpy();
   }
 
   public getUserService() {
@@ -101,19 +102,29 @@ export class CompositionRoot {
     return this.createPostService();
   }
 
-  public getEmailService() {
-    if (this.emailService) return this.emailService;
-    return this.createEmailService();
+  public getTransactionalEmailAPI() {
+    if (this.transactionalEmailAPI) return this.transactionalEmailAPI;
+    return this.createTransactionalEmailAPI();
   }
 
-  public getMarketingService() {
+  public getMarketingService () {
     if (this.marketingService) return this.marketingService;
-    return this.createMarketingService()
+    return this.createMarketingService();
+  }
+
+  public getContactListAPI() {
+    if (this.contactListAPI) return this.contactListAPI;
+    return this.createContactListAPI()
   }
 
   public getApplication() {
     if (this.application) return this.application;
     return this.createApplication();
+  }
+
+  private createMarketingService () {
+    const contactListAPI = this.getContactListAPI();
+    return new MarketingService(contactListAPI);
   }
 
   private createPostService() {
