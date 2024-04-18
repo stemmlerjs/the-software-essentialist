@@ -4,7 +4,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { prisma } from "../../database";
+import { classBuilder } from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/create_assignment.feature")
@@ -20,28 +20,22 @@ defineFeature(feature, (test) => {
     let response: any = {};
     let class_: any = null;
 
-    given(/^I give a class named "(.*)"$/, async (name) => {
-      class_ = await prisma.class.create({
-        data: {
-          name,
-        },
-      });
+    given("I give a class", async () => {
+      class_ = await classBuilder();
     });
 
-    and(/^I want to create an assignment named "(.*)"$/, (title) => {
+    when("I create an assignment to the class", async () => {
       requestBody = {
-        title,
+        title: "Assignment 1",
         classId: class_.id,
       };
-    });
 
-    when("I send a request to create an assignment", async () => {
       response = await request(app).post("/assignments").send(requestBody);
     });
 
     then("the assignment should be created successfully", () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.name).toBe(requestBody.name);
+      expect(response.body.data.title).toBe(requestBody.title);
     });
   });
 });
