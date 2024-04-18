@@ -4,7 +4,6 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { prisma } from "../../database";
 import {
   assignmentBuilder,
   classBuilder,
@@ -67,7 +66,7 @@ defineFeature(feature, (test) => {
     let assignment: any = null;
     let student: any = null;
 
-    given("A student is not enrolled to my class", async (name) => {
+    given("A student is not enrolled to my class", async () => {
       class_ = await classBuilder();
       assignment = await assignmentBuilder(class_.id);
       student = await studentBuilder();
