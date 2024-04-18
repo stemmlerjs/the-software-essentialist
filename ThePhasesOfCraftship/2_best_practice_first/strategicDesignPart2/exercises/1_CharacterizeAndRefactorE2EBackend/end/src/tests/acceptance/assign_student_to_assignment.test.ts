@@ -5,6 +5,12 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import { prisma } from "../../database";
+import {
+  assignmentBuilder,
+  classBuilder,
+  classEnrollmentBuilder,
+  studentBuilder,
+} from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/assign_student_to_assignment.feature")
@@ -15,44 +21,21 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Assign a student to an assignment", ({ given, when, then, and }) => {
+  test("Assign a student to an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
+    let student: any = null;
     let class_: any = null;
     let assignment: any = null;
-    let student: any = null;
 
-    given(/^I give a class named "(.*)"$/, async (name) => {
-      class_ = await prisma.class.create({
-        data: {
-          name,
-        },
-      });
+    beforeAll(async () => {
+      student = await studentBuilder();
+      class_ = await classBuilder();
+      assignment = await assignmentBuilder(class_.id);
     });
 
-    and(/^I create an assignment named "(.*)"$/, async (title) => {
-      assignment = await prisma.assignment.create({
-        data: {
-          title,
-          classId: class_.id,
-        },
-      });
-    });
-
-    and("There is a student enrolled to the class", async () => {
-      student = await prisma.student.create({
-        data: {
-          name: "Student Name",
-          email: "student@essentialist.dev",
-        },
-      });
-
-      await prisma.classEnrollment.create({
-        data: {
-          classId: class_.id,
-          studentId: student.id,
-        },
-      });
+    given("There is a student enrolled to my class", async (name) => {
+      classEnrollmentBuilder(class_.id, student.id);
     });
 
     when("I assign him to the assignment", async () => {
@@ -77,7 +60,6 @@ defineFeature(feature, (test) => {
     given,
     when,
     then,
-    and,
   }) => {
     let requestBody: any = {};
     let response: any = {};
@@ -85,30 +67,10 @@ defineFeature(feature, (test) => {
     let assignment: any = null;
     let student: any = null;
 
-    given(/^I give a class named "(.*)"$/, async (name) => {
-      class_ = await prisma.class.create({
-        data: {
-          name,
-        },
-      });
-    });
-
-    and(/^I create an assignment named "(.*)"$/, async (title) => {
-      assignment = await prisma.assignment.create({
-        data: {
-          title,
-          classId: class_.id,
-        },
-      });
-    });
-
-    and("There is a student not enrolled to the class", async () => {
-      student = await prisma.student.create({
-        data: {
-          name: "Student Name",
-          email: "student@essentialist.dev",
-        },
-      });
+    given("A student is not enrolled to my class", async (name) => {
+      class_ = await classBuilder();
+      assignment = await assignmentBuilder(class_.id);
+      student = await studentBuilder();
     });
 
     when("I assign him to the assignment", async () => {
