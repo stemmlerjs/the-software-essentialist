@@ -1,6 +1,6 @@
 
 import nodemailer from 'nodemailer'
-import { EmailService, SendMailInput } from './emailService';
+import { TransactionEmailAPI, SendMailInput } from '../../ports/transactionalEmailAPI';
 
 const mailSettings = {
   service: process.env.MAIL_SENDER_SERVICE || 'gmail',
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-export class MailjetEmailService implements EmailService {
+export class MailjetTransactionalEmail implements TransactionEmailAPI {
   
   async sendMail (input: SendMailInput) {
     // Email content
