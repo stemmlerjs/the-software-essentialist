@@ -8,3 +8,8 @@ Feature: Submit an assignment
         Given I was assigned to an assignment
         When I submit the assignment
         Then It should be marked as submitted
+
+    Scenario: Fail to submit an assignment twice
+        And I submitted the assignment
+        When I submit the assignment again
+        Then I should see an error message
