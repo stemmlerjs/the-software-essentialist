@@ -1,5 +1,8 @@
 # High Value Integration Testing
 
+<img width="1297" alt="Untitled-2" src="https://github.com/stemmlerjs/the-software-essentialist/assets/6892666/b05e50a4-3f5c-4cbc-b4c9-d5aef02cbcda">
+
+
 > This test verifies the same functionality verified at the E2E scope (UI -> DB & API -> DB) and the Unit scope.  
 Using the 4-Tier Acceptance Testing Rig, we run the test at packages/shared/tests/features and verify the application directly from
 the application core (the services). We skip the controller entirely with this test. For demonstration purposes, we've mocked the 
