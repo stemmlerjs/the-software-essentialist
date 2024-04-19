@@ -1,5 +1,8 @@
 # High Value E2E Testing
 
+<img width="1477" alt="Untitled-1" src="https://github.com/stemmlerjs/the-software-essentialist/assets/6892666/74e7e2ca-ec1e-49c4-bf63-e5d64e8ae76e">
+
+
 > These two scopes of tests (from UI to DB and from API to DB) run the dominant acceptance test found in packages/shared/tests/features. Using the 4-Tier Acceptance Testing Rig, we run this same test from the unit and integration testing scopes.
 
 1. [Getting setup](#gettingsetup)
