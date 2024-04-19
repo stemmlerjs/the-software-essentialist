@@ -1,5 +1,7 @@
 # High Value Unit Testing
 
+<img width="1297" alt="Untitled-3" src="https://github.com/stemmlerjs/the-software-essentialist/assets/6892666/f5921d4f-4a51-4d0f-93c0-da956689efa9">
+
 > You can run the acceptance test from a unit testing scope. That means it'll execute extremely fast. 
 
 1. [Getting setup](#gettingsetup)
