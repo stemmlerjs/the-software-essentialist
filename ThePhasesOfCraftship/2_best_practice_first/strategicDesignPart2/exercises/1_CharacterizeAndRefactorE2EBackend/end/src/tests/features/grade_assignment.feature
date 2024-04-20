@@ -8,3 +8,8 @@ Feature: Grade an assignment
         Given An student submited an assignment
         When I grade the assignment
         Then It should be marked as graded
+
+    Scenario: Fail to grade an assignment when it is not submitted
+        Given A student is assigned to an assignment
+        When I try to grade his assignment before he submits it
+        Then It should not be marked as graded
