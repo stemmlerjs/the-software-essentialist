@@ -386,7 +386,7 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json({
+    res.status(201).json({
       error: undefined,
       data: parseForResponse(studentAssignmentUpdated),
       success: true,
