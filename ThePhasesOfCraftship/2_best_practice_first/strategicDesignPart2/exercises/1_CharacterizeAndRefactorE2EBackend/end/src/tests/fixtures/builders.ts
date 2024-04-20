@@ -69,6 +69,8 @@ const studentAssignmentSubmissionBuilder = async (
       status: "submitted",
     },
   });
+
+  return studentAssignmentUpdated;
 };
 
 export {
