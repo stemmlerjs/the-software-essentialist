@@ -17,5 +17,17 @@
 // There is no duplication in my test code or my production code
 
 export function fizzbuzz(num: number) {
-  return num === 3 ? "Fizz" : "Buzz";
+  if (!(num % 15)) {
+    return 'FizzBuzz';
+  }
+
+  if (!(num % 5)) {
+    return 'Buzz';
+  }
+
+  if (!(num % 3)) {
+    return 'Fizz';
+  }
+
+  return num;
 }
