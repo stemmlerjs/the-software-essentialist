@@ -17,5 +17,5 @@
 // There is no duplication in my test code or my production code
 
 export function fizzbuzz(num: number) {
-  return "str";
+  return "Fizz";
 }
