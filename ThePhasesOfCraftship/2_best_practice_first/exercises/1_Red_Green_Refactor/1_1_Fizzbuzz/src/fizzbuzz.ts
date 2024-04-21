@@ -17,6 +17,10 @@
 // There is no duplication in my test code or my production code
 
 export function fizzbuzz(num: number) {
+  if (1 > num || num > 100) {
+    throw new Error('Number must be between 1 and 100');
+  }
+
   if (!(num % 15)) {
     return 'FizzBuzz';
   }
