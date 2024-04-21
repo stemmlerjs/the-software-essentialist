@@ -1,5 +1,4 @@
-import { Student, Class, Assignment, StudentAssignment, ReportCard, ClassGradeReport, ClassEnrollment } from "@prisma/client";
-import { prisma } from "../src/database";
+import { prisma } from "../../end/src/database";
 
 
 async function seed() {
@@ -8,7 +7,7 @@ async function seed() {
       return prisma.student.create({
         data: {
           name: `Student ${i + 1}`,
-          email: `student${i + 1}@essentialist.com`
+          email: `student${i + 1}@essentialist.com`,
         },
       });
     }),
