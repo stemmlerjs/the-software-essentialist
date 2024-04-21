@@ -17,6 +17,11 @@
 // There is no duplication in my test code or my production code
 
 export function fizzbuzz(num: number) {
+  // noinspection SuspiciousTypeOfGuard
+  if (typeof num !== 'number') {
+    throw new Error('Input must be a number');
+  }
+
   if (1 > num || num > 100) {
     throw new Error('Number must be between 1 and 100');
   }
