@@ -12,6 +12,7 @@ describe('fizzbuzz', () => {
     ${5}  | ${'Buzz'}
     ${15} | ${'FizzBuzz'}
     ${9}  | ${'Fizz'}
+    ${43} | ${'43'}
   `('returns $expected when the input is $input', ({ input, expected }) => {
     expect(fizzbuzz(input)).toBe(expected);
   });
