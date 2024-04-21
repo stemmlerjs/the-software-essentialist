@@ -27,8 +27,8 @@ model Class {
 model ClassEnrollment {
     studentId String
     classId   String
-    student   Student @relation(fields: [studentId], references: [id])
-    class     Class   @relation(fields: [classId], references: [id])
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
 
     @@id([studentId, classId])
 }
@@ -37,7 +37,7 @@ model Assignment {
     id           String              @id @default(uuid())
     classId      String
     title        String
-    class        Class               @relation(fields: [classId], references: [id])
+    class        Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
     studentTasks StudentAssignment[]
 }
 
@@ -47,18 +47,18 @@ model StudentAssignment {
     assignmentId String
     grade        String?
     status       String     @default("NOT_STARTED")
-    student      Student    @relation(fields: [studentId], references: [id])
-    assignment   Assignment @relation(fields: [assignmentId], references: [id])
+    student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 }
 
 model ReportCard {
     id        String  @id @default(uuid())
     studentId String
-    student   Student @relation(fields: [studentId], references: [id])
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model ClassGradeReport {
     id      String @id @default(uuid())
     classId String @unique
-    class   Class  @relation(fields: [classId], references: [id])
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 }
