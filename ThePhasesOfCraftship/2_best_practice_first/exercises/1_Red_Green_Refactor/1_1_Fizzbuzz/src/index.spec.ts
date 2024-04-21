@@ -19,8 +19,12 @@ describe('fizzbuzz', () => {
     expect(fizzbuzz(input)).toBe(expected);
   });
 
-  it('throws an error when the input is 102', () => {
-    expect(() => fizzbuzz(102)).toThrowError(
+  it.each`
+    input
+    ${102}
+    ${-12}
+  `('throws an error when the input is $input', ({ input }) => {
+    expect(() => fizzbuzz(input)).toThrowError(
       'Number must be between 1 and 100'
     );
   });
