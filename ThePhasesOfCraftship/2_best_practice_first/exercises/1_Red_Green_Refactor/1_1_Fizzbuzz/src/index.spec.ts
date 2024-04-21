@@ -1,8 +1,10 @@
 import { fizzbuzz } from './fizzbuzz';
 
 describe('fizzbuzz', () => {
-  it('returns a string', () => {
-    expect(typeof fizzbuzz(5)).toBe('string');
+  it('throws an error when the input is not a number', () => {
+    expect(() => fizzbuzz('a' as unknown as number)).toThrowError(
+      'Input must be a number'
+    );
   });
 
   // Cool, I didn't know you could use tagged template literals with it.each
@@ -26,12 +28,6 @@ describe('fizzbuzz', () => {
   `('throws an error when the input is $input', ({ input }) => {
     expect(() => fizzbuzz(input)).toThrowError(
       'Number must be between 1 and 100'
-    );
-  });
-
-  it('throws an error when the input is not a number', () => {
-    expect(() => fizzbuzz('a' as unknown as number)).toThrowError(
-      'Input must be a number'
     );
   });
 });
