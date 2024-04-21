@@ -13,7 +13,13 @@ describe('fizzbuzz', () => {
     ${15} | ${'FizzBuzz'}
     ${9}  | ${'Fizz'}
     ${43} | ${'43'}
+    ${42} | ${'Fizz'}
+    ${45} | ${'FizzBuzz'}
   `('returns $expected when the input is $input', ({ input, expected }) => {
     expect(fizzbuzz(input)).toBe(expected);
+  });
+
+  it('throws an error when the input is 102', () => {
+    expect(() => fizzbuzz(102)).toThrowError();
   });
 });
