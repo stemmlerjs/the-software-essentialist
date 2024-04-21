@@ -73,6 +73,19 @@ const studentAssignmentSubmissionBuilder = async (
   return studentAssignmentUpdated;
 };
 
+const gradedAssignmentBuilder = async (studentAssignmentId: string) => {
+  const gradedAssignment = await prisma.studentAssignment.update({
+    where: {
+      id: studentAssignmentId,
+    },
+    data: {
+      grade: "A",
+    },
+  });
+
+  return gradedAssignment;
+};
+
 export {
   studentBuilder,
   classBuilder,
@@ -80,4 +93,5 @@ export {
   classEnrollmentBuilder,
   studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
+  gradedAssignmentBuilder,
 };
