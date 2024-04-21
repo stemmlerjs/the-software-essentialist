@@ -12,4 +12,8 @@ describe('fizzbuzz', () => {
   it("returns 'Buzz' when the input is 5", () => {
     expect(fizzbuzz(5)).toBe('Buzz');
   });
+
+  it("returns 'FizzBuzz' when the input is 15", () => {
+    expect(fizzbuzz(15).toBe('FizzBuzz'));
+  });
 });
