@@ -28,4 +28,10 @@ describe('fizzbuzz', () => {
       'Number must be between 1 and 100'
     );
   });
+
+  it('throws an error when the input is not a number', () => {
+    expect(() => fizzbuzz('a' as unknown as number)).toThrowError(
+      'Input must be a number'
+    );
+  });
 });
