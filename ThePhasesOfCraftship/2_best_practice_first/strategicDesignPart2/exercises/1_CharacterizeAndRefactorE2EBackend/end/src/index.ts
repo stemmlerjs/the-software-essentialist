@@ -651,6 +651,8 @@ app.get("/student/:id/grades", async (req: Request, res: Response) => {
       },
     });
 
+    console.log(studentAssignments);
+
     res.status(200).json({
       error: undefined,
       data: parseForResponse(studentAssignments),
