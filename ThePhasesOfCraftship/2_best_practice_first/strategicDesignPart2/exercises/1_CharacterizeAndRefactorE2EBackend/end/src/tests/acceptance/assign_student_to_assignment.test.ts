@@ -8,10 +8,6 @@ import {
   AssignmentBuilder,
   ClassBuilder,
   StudentBuilder,
-  assignmentBuilder,
-  classBuilder,
-  classEnrollmentBuilder,
-  studentBuilder,
 } from "../fixtures/builders";
 
 const feature = loadFeature(
@@ -29,25 +25,21 @@ defineFeature(feature, (test) => {
     let student: any = null;
     let class_: any = null;
     let assignment: any = null;
+    let classBuilder: ClassBuilder = new ClassBuilder();
 
     beforeAll(async () => {
-      // 1 class, 1 student, 1 assignment
-      const classBuilder = new ClassBuilder()
+      // 1 class, 1 assignment
 
-      const {students, clazz, assignments } = await classBuilder.withStudent(
-        new StudentBuilder()
-      ).withAssignment(
-        new AssignmentBuilder()
-      ).build()
+      const { clazz, assignments } = await classBuilder
+        .withAssignment(new AssignmentBuilder())
+        .build();
 
-      student = students[0]
-      class_ = clazz
-      assignment = assignments[0]
-
+      class_ = clazz;
+      assignment = assignments[0];
     });
 
-    given("There is a student enrolled to my class", async (name) => {
-      classEnrollmentBuilder(class_.id, student.id);
+    given("There is a student enrolled to my class", async () => {
+      student = await classBuilder.enrollStudent(new StudentBuilder());
     });
 
     when("I assign him to the assignment", async () => {
@@ -78,11 +70,16 @@ defineFeature(feature, (test) => {
     let class_: any = null;
     let assignment: any = null;
     let student: any = null;
+    let classBuilder: ClassBuilder = new ClassBuilder();
 
     given("A student is not enrolled to my class", async () => {
-      class_ = await classBuilder();
-      assignment = await assignmentBuilder(class_.id);
-      student = await studentBuilder();
+      const { clazz, assignments } = await classBuilder
+        .withAssignment(new AssignmentBuilder())
+        .build();
+
+      class_ = clazz;
+      assignment = assignments[0];
+      student = await new StudentBuilder().build();
     });
 
     when("I assign him to the assignment", async () => {
