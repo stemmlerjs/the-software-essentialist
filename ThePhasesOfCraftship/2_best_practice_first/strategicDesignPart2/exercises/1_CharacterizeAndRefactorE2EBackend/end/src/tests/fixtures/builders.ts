@@ -1,6 +1,80 @@
 import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 
+class StudentBuilder {
+  private data: any
+
+  constructor() {
+    this.data = {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+    }
+  }
+
+  build() {
+    return prisma.student.create({
+      data: this.data
+    })
+  }
+}
+
+class AssignmentBuilder {
+  private data: any;
+
+  constructor() {
+    this.data = {
+      title: faker.lorem.word()
+    }
+  }
+
+  build(classId: string) {
+    return prisma.assignment.create({
+      data: {
+        ...this.data,
+        classId,
+      },
+    });
+  }
+}
+
+class ClassBuilder {
+  private studentsBuilders: StudentBuilder[]
+  private assignmentsBuilders: AssignmentBuilder[]
+
+  constructor() {
+    this.studentsBuilders = []
+    this.assignmentsBuilders = []
+  }
+
+
+  withStudent(studentBuilder: any) {
+    this.studentsBuilders.push(studentBuilder)
+    return this
+  }
+
+  withAssignment(assignmentBuilder: any) {
+    this.assignmentsBuilders.push(assignmentBuilder)
+    return this
+  }
+
+  async build() {
+    const clazz = await prisma.class.create({
+      data: {
+        name: faker.lorem.word(),
+      },
+    });
+
+    const students = await Promise.all(this.studentsBuilders.map(builder => builder.build()))
+    const assignments = await Promise.all(this.assignmentsBuilders.map(builder => builder.build(clazz.id)))
+
+
+    return {
+      clazz, students, assignments
+    }
+  }
+}
+
+
 const studentBuilder = async () => {
   const student = await prisma.student.create({
     data: {
@@ -94,4 +168,7 @@ export {
   studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
   gradedAssignmentBuilder,
+  ClassBuilder,
+  StudentBuilder,
+  AssignmentBuilder
 };

@@ -5,6 +5,9 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
+  AssignmentBuilder,
+  ClassBuilder,
+  StudentBuilder,
   assignmentBuilder,
   classBuilder,
   classEnrollmentBuilder,
@@ -28,9 +31,19 @@ defineFeature(feature, (test) => {
     let assignment: any = null;
 
     beforeAll(async () => {
-      student = await studentBuilder();
-      class_ = await classBuilder();
-      assignment = await assignmentBuilder(class_.id);
+      // 1 class, 1 student, 1 assignment
+      const classBuilder = new ClassBuilder()
+
+      const {students, clazz, assignments } = await classBuilder.withStudent(
+        new StudentBuilder()
+      ).withAssignment(
+        new AssignmentBuilder()
+      ).build()
+
+      student = students[0]
+      class_ = clazz
+      assignment = assignments[0]
+
     });
 
     given("There is a student enrolled to my class", async (name) => {
