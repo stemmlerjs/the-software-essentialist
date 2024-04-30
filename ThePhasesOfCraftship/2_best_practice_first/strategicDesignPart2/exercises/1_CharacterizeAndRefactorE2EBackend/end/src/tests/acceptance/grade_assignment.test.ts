@@ -86,7 +86,6 @@ defineFeature(feature, (test) => {
     });
 
     then("It should not be marked as graded", async () => {
-      console.log(response.body);
       expect(response.status).toBe(400);
       expect(response.body.error).toBe("NotSubmittedError");
     });
