@@ -23,7 +23,9 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have an assignment with a valid ID", async () => {
-      ({ assignments: [assignment] } = await new ClassBuilder()
+      ({
+        assignments: [assignment],
+      } = await new ClassBuilder()
         .withAssignment(new AssignmentBuilder())
         .build());
     });

@@ -2,10 +2,12 @@ import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 
 class StudentBuilder {
-  private student: any
+  private student: any;
+  private assignments: any[];
 
   constructor() {
     this.student = null;
+    this.assignments = [];
   }
 
   async build() {
@@ -13,33 +15,56 @@ class StudentBuilder {
       data: {
         name: faker.person.fullName(),
         email: faker.internet.email(),
-      }
+      },
     });
 
-    return this.student
+    return this.student;
+  }
+
+  async assignAssignments(assignments: any[]) {
+    this.assignments = await Promise.all(
+      assignments.map((assignment) => {
+        return prisma.studentAssignment.create({
+          data: {
+            studentId: this.student.id,
+            assignmentId: assignment.id,
+          },
+        });
+      })
+    );
+
+    return this.assignments;
   }
 
   getStudent() {
-    return this.student
+    return this.student;
+  }
+
+  getAssignments() {
+    return this.assignments;
   }
 }
 
 class AssignmentBuilder {
-  private assignment: any
+  private assignment: any;
 
   constructor() {
     this.assignment = null;
   }
 
-  build(classId: string) {
-    this.assignment = prisma.assignment.create({
+  async build(classId: string) {
+    this.assignment = await prisma.assignment.create({
       data: {
         title: faker.lorem.word(),
         classId,
       },
     });
 
-    return this.assignment
+    return this.assignment;
+  }
+
+  getAssignment() {
+    return this.assignment;
   }
 }
 
@@ -70,18 +95,14 @@ class ClassBuilder {
   private assignmentsBuilders: AssignmentBuilder[];
 
   private clazz: any;
-  private assignments: any[];
   private enrolledStudents: any[];
-  private studentAssignments: any[];
   private shouldAssignAssignments: boolean;
 
   constructor() {
     this.studentsBuilders = [];
     this.assignmentsBuilders = [];
     this.clazz = null;
-    this.assignments = [];
     this.enrolledStudents = [];
-    this.studentAssignments = [];
     this.shouldAssignAssignments = false;
   }
 
@@ -123,10 +144,14 @@ class ClassBuilder {
 
     return {
       clazz: this.clazz,
-      students: this.studentsBuilders.map(builder => builder.getStudent()),
-      assignments: this.assignments,
+      students: this.studentsBuilders.map((builder) => builder.getStudent()),
+      assignments: this.assignmentsBuilders.map((builder) =>
+        builder.getAssignment()
+      ),
       classEnrollment: this.enrolledStudents,
-      studentAssignments: this.studentAssignments,
+      studentAssignments: this.studentsBuilders.flatMap((builder) =>
+        builder.getAssignments()
+      ),
     };
   }
 
@@ -139,19 +164,19 @@ class ClassBuilder {
   }
 
   private async createStudents() {
-    await Promise.all(
-      this.studentsBuilders.map((builder) => builder.build())
-    );
+    await Promise.all(this.studentsBuilders.map((builder) => builder.build()));
   }
 
   private async createAssignments() {
-    this.assignments = await Promise.all(
+    await Promise.all(
       this.assignmentsBuilders.map((builder) => builder.build(this.clazz.id))
     );
   }
 
   private async enrollStudents() {
-    const students = this.studentsBuilders.map(builder => builder.getStudent())
+    const students = this.studentsBuilders.map((builder) =>
+      builder.getStudent()
+    );
     const studentPromises = students.map((student) => {
       return prisma.classEnrollment.create({
         data: {
@@ -168,21 +193,14 @@ class ClassBuilder {
     if (!this.shouldAssignAssignments) {
       return;
     }
-    const students = this.studentsBuilders.map(builder => builder.getStudent())
-    const allPromises = students
-      .map((student) => {
-        return this.assignments.map((assignment) => {
-          return prisma.studentAssignment.create({
-            data: {
-              studentId: student.id,
-              assignmentId: assignment.id,
-            },
-          });
-        });
-      })
-      .flat();
-
-    this.studentAssignments = await Promise.all(allPromises);
+    const assignments = this.assignmentsBuilders.map((builder) =>
+      builder.getAssignment()
+    );
+    return Promise.all(
+      this.studentsBuilders.map((builder) =>
+        builder.assignAssignments(assignments)
+      )
+    );
   }
 }
 
