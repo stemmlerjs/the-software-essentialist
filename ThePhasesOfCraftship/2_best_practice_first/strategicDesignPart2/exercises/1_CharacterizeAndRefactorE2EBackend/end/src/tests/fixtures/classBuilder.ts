@@ -32,6 +32,7 @@ class ClassBuilder {
   private clazz: any;
   private enrolledStudents: any[];
   private shouldAssignAssignments: boolean;
+  private shouldSubmitAssignments: boolean;
 
   constructor() {
     this.studentsBuilders = [];
@@ -39,6 +40,7 @@ class ClassBuilder {
     this.clazz = null;
     this.enrolledStudents = [];
     this.shouldAssignAssignments = false;
+    this.shouldSubmitAssignments = false;
   }
 
   withStudent(studentBuilder: StudentBuilder) {
@@ -70,12 +72,18 @@ class ClassBuilder {
     return this;
   }
 
+  withAssignedAndSubmittedAssignments() {
+    this.shouldSubmitAssignments = true;
+    return this;
+  }
+
   async build() {
     await this.createClass();
     await this.createStudents();
     await this.createAssignments();
     await this.enrollStudents();
     await this.assignAssignments();
+    await this.submitAssignments();
 
     return {
       clazz: this.clazz,
@@ -134,6 +142,21 @@ class ClassBuilder {
     return Promise.all(
       this.studentsBuilders.map((builder) =>
         builder.assignAssignments(assignments)
+      )
+    );
+  }
+
+  private async submitAssignments() {
+    if (!this.shouldSubmitAssignments) {
+      return;
+    }
+
+    const assignments = this.assignmentsBuilders.map((builder) =>
+      builder.getAssignment()
+    );
+    return Promise.all(
+      this.studentsBuilders.map((builder) =>
+        builder.submitAssignments(assignments)
       )
     );
   }

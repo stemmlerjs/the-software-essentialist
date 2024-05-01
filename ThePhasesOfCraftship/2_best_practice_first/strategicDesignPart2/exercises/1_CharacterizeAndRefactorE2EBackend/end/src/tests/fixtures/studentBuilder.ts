@@ -1,12 +1,29 @@
 import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 
+interface StudentAssignment {
+  studentId: string;
+  assignmentId: string;
+  grade: string | null;
+  status: string;
+}
+
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+}
+
 class StudentBuilder {
-  private student: any;
-  private assignments: any[];
+  private student: Student;
+  private assignments: StudentAssignment[];
 
   constructor() {
-    this.student = null;
+    this.student = {
+      id: "",
+      name: "",
+      email: "",
+    };
     this.assignments = [];
   }
 
@@ -28,6 +45,22 @@ class StudentBuilder {
           data: {
             studentId: this.student.id,
             assignmentId: assignment.id,
+          },
+        });
+      })
+    );
+
+    return this.assignments;
+  }
+
+  async submitAssignments(assignments: any[]) {
+    this.assignments = await Promise.all(
+      assignments.map((assignment) => {
+        return prisma.studentAssignment.create({
+          data: {
+            assignmentId: assignment.id,
+            studentId: this.student.id,
+            status: "submitted",
           },
         });
       })
