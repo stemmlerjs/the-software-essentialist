@@ -302,8 +302,8 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
       where: {
         studentId_assignmentId: {
           assignmentId,
-          studentId
-        }
+          studentId,
+        },
       },
     });
 
@@ -327,8 +327,8 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
       where: {
         studentId_assignmentId: {
           assignmentId,
-          studentId
-        }
+          studentId,
+        },
       },
       data: {
         status: "submitted",
@@ -350,7 +350,7 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
 // POST student assignment graded
 app.post("/student-assignments/grade", async (req: Request, res: Response) => {
   try {
-    if (isMissingKeys(req.body, ["studentId", "assignmentId" ,"grade"])) {
+    if (isMissingKeys(req.body, ["studentId", "assignmentId", "grade"])) {
       return res.status(400).json({
         error: Errors.ValidationError,
         data: undefined,
@@ -374,8 +374,8 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
       where: {
         studentId_assignmentId: {
           assignmentId,
-          studentId
-        }
+          studentId,
+        },
       },
     });
 
@@ -399,8 +399,8 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
       where: {
         studentId_assignmentId: {
           assignmentId,
-          studentId
-        }
+          studentId,
+        },
       },
       data: {
         grade,

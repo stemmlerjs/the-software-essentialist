@@ -36,16 +36,16 @@ defineFeature(feature, (test) => {
     });
 
     given("I was assigned to an assignment", async () => {
-      studentAssignment = await studentAssignmentBuilder(
-        student.id,
-        assignment.id
-      );
+      studentAssignment = await studentAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment.id,
+      });
     });
 
     when("I submit the assignment", async () => {
       requestBody = {
         studentId: student.id,
-        assignmentId: assignment.id
+        assignmentId: assignment.id,
       };
 
       response = await request(app)
@@ -71,20 +71,23 @@ defineFeature(feature, (test) => {
       student = await studentBuilder();
       class_ = await classBuilder();
       assignment = await assignmentBuilder(class_.id);
-      studentAssignment = await studentAssignmentBuilder(
-        student.id,
-        assignment.id
-      );
+      studentAssignment = await studentAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment.id,
+      });
     });
 
     given("I submitted the assignment", async () => {
-      await studentAssignmentSubmissionBuilder(studentAssignment);
+      await studentAssignmentSubmissionBuilder({
+        assignmentId: assignment.id,
+        studentId: student.id,
+      });
     });
 
     when("I submit the assignment again", async () => {
       requestBody = {
         studentId: student.id,
-        assignmentId: assignment.id
+        assignmentId: assignment.id,
       };
 
       response = await request(app)

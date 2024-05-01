@@ -8,7 +8,6 @@ import {
   AssignmentBuilder,
   ClassBuilder,
   StudentBuilder,
-  studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
 } from "../fixtures/builders";
 
@@ -24,35 +23,33 @@ defineFeature(feature, (test) => {
   let requestBody: any = {};
   let response: any = {};
   let student: any = null;
-  let class_: any = null;
   let assignment: any = null;
-  let studentAssignment: any = null;
   let classBuilder: ClassBuilder = new ClassBuilder();
 
   beforeEach(async () => {
     // 1 class, 1 student, 1 assignment, 1 enrollment
-    const { clazz, students, assignments, studentAssignments } =
-      await classBuilder
-        .withAssignment(new AssignmentBuilder())
-        .withStudent(new StudentBuilder())
-        .withAssignedAssignments()
-        .build();
-
-    student = students[0];
-    class_ = clazz;
-    assignment = assignments[0];
-    studentAssignment = studentAssignments[0];
+    ({
+      students: [student],
+      assignments: [assignment],
+    } = await classBuilder
+      .withAssignment(new AssignmentBuilder())
+      .withStudent(new StudentBuilder())
+      .withAssignedAssignments()
+      .build());
   });
 
   test("Successfully grade an assignment", ({ given, when, then }) => {
     given("An student submited an assignment", async () => {
-      await studentAssignmentSubmissionBuilder(studentAssignment);
+      await studentAssignmentSubmissionBuilder({
+        studentId: student.id,
+        assignmentId: assignment.id,
+      });
     });
 
     when("I grade the assignment", async () => {
       requestBody = {
-        studentId: studentAssignment.studentId,
-        assignmentId: studentAssignment.assignmentId,
+        studentId: student.id,
+        assignmentId: assignment.id,
         grade: "A",
       };
 
@@ -73,8 +70,8 @@ defineFeature(feature, (test) => {
   }) => {
     when("I try to grade his assignment before he submits it", async () => {
       requestBody = {
-        studentId: studentAssignment.studentId,
-        assignmentId: studentAssignment.assignmentId,
+        studentId: student.id,
+        assignmentId: assignment.id,
         grade: "A",
       };
 

@@ -8,9 +8,9 @@ import {
   assignmentBuilder,
   classBuilder,
   classEnrollmentBuilder,
-  studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
   gradedAssignmentBuilder,
+  studentAssignmentBuilder,
 } from "../fixtures/builders";
 
 const feature = loadFeature(
@@ -41,18 +41,32 @@ defineFeature(feature, (test) => {
       const assignment1 = await assignmentBuilder(class_.id);
       const assignment2 = await assignmentBuilder(class_.id);
       await classEnrollmentBuilder(class_.id, student.id);
-      const studentAssignment1 = await studentAssignmentBuilder(
-        student.id,
-        assignment1.id
-      );
-      const studentAssignment2 = await studentAssignmentBuilder(
-        student.id,
-        assignment2.id
-      );
-      await studentAssignmentSubmissionBuilder(studentAssignment1);
-      await studentAssignmentSubmissionBuilder(studentAssignment2);
-      await gradedAssignmentBuilder(studentAssignment1);
-      await gradedAssignmentBuilder(studentAssignment2);
+      await studentAssignmentBuilder({
+        assignmentId: assignment1.id,
+        studentId: student.id,
+      });
+
+      await studentAssignmentBuilder({
+        assignmentId: assignment2.id,
+        studentId: student.id,
+      });
+
+      await studentAssignmentSubmissionBuilder({
+        studentId: student.id,
+        assignmentId: assignment1.id,
+      });
+      await studentAssignmentSubmissionBuilder({
+        studentId: student.id,
+        assignmentId: assignment2.id,
+      });
+      await gradedAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment1.id,
+      });
+      await gradedAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment2.id,
+      });
 
       assignments.push(assignment1, assignment2);
     });

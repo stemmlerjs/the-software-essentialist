@@ -42,16 +42,22 @@ defineFeature(feature, (test) => {
       const assignment2 = await assignmentBuilder(class_.id);
       assignments.push(assignment1, assignment2);
       await classEnrollmentBuilder(class_.id, student.id);
-      const studentAssignment1 = await studentAssignmentBuilder(
-        student.id,
-        assignment1.id
-      );
-      const studentAssignment2 = await studentAssignmentBuilder(
-        student.id,
-        assignment2.id
-      );
-      await studentAssignmentSubmissionBuilder(studentAssignment1);
-      await studentAssignmentSubmissionBuilder(studentAssignment2);
+      const studentAssignment1 = await studentAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment1.id,
+      });
+      const studentAssignment2 = await studentAssignmentBuilder({
+        studentId: student.id,
+        assignmentId: assignment2.id,
+      });
+      await studentAssignmentSubmissionBuilder({
+        assignmentId: assignment1.id,
+        studentId: student.id,
+      });
+      await studentAssignmentSubmissionBuilder({
+        assignmentId: assignment2.id,
+        studentId: student.id,
+      });
       studentAssignments.push(studentAssignment1, studentAssignment2);
     });
 

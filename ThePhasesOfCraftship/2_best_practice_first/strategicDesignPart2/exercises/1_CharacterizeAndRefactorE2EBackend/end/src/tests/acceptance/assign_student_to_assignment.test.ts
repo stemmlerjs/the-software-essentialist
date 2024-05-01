@@ -23,19 +23,15 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let student: any = null;
-    let class_: any = null;
+    let clazz: any = null;
     let assignment: any = null;
     let classBuilder: ClassBuilder = new ClassBuilder();
 
     beforeAll(async () => {
-      // 1 class, 1 assignment
-
-      const { clazz, assignments } = await classBuilder
-        .withAssignment(new AssignmentBuilder())
-        .build();
-
-      class_ = clazz;
-      assignment = assignments[0];
+      ({
+        clazz,
+        assignments: [assignment],
+      } = await classBuilder.withAssignment(new AssignmentBuilder()).build());
     });
 
     given("There is a student enrolled to my class", async () => {
@@ -67,18 +63,15 @@ defineFeature(feature, (test) => {
   }) => {
     let requestBody: any = {};
     let response: any = {};
-    let class_: any = null;
     let assignment: any = null;
     let student: any = null;
     let classBuilder: ClassBuilder = new ClassBuilder();
 
     given("A student is not enrolled to my class", async () => {
-      const { clazz, assignments } = await classBuilder
-        .withAssignment(new AssignmentBuilder())
-        .build();
+      ({
+        assignments: [assignment],
+      } = await classBuilder.withAssignment(new AssignmentBuilder()).build());
 
-      class_ = clazz;
-      assignment = assignments[0];
       student = await new StudentBuilder().build();
     });
 
