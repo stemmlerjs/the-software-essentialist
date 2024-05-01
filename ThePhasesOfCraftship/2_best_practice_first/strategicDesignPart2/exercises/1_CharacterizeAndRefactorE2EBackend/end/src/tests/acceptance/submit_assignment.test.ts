@@ -44,7 +44,8 @@ defineFeature(feature, (test) => {
 
     when("I submit the assignment", async () => {
       requestBody = {
-        id: studentAssignment.id,
+        studentId: student.id,
+        assignmentId: assignment.id
       };
 
       response = await request(app)
@@ -77,12 +78,13 @@ defineFeature(feature, (test) => {
     });
 
     given("I submitted the assignment", async () => {
-      await studentAssignmentSubmissionBuilder(studentAssignment.id);
+      await studentAssignmentSubmissionBuilder(studentAssignment);
     });
 
     when("I submit the assignment again", async () => {
       requestBody = {
-        id: studentAssignment.id,
+        studentId: student.id,
+        assignmentId: assignment.id
       };
 
       response = await request(app)

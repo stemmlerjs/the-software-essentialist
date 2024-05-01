@@ -38,11 +38,14 @@ class AssignmentBuilder {
 }
 
 const studentAssignmentSubmissionBuilder = async (
-  studentAssignmentId: string
+  studentAssignment: any
 ) => {
   const studentAssignmentUpdated = await prisma.studentAssignment.update({
     where: {
-      id: studentAssignmentId,
+      studentId_assignmentId: {
+        assignmentId: studentAssignment.assignmentId,
+        studentId: studentAssignment.studentId
+      }
     },
     data: {
       status: "submitted",
@@ -231,10 +234,13 @@ const studentAssignmentBuilder = async (
   return studentAssignment;
 };
 
-const gradedAssignmentBuilder = async (studentAssignmentId: string) => {
+const gradedAssignmentBuilder = async (studentAssignment: any) => {
   const gradedAssignment = await prisma.studentAssignment.update({
     where: {
-      id: studentAssignmentId,
+      studentId_assignmentId: {
+        assignmentId: studentAssignment.assignmentId,
+        studentId: studentAssignment.studentId
+      }
     },
     data: {
       grade: "A",
