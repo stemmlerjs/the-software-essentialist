@@ -1,0 +1,63 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:./../dev.db" // Replace with your SQLite file path
+}
+
+model Student {
+    id          String              @id @default(uuid())
+    name        String
+    classes     ClassEnrollment[]
+    assignments StudentAssignment[]
+    reportCards ReportCard[]
+}
+
+model Class {
+    id               String            @id @default(uuid())
+    name             String
+    students         ClassEnrollment[]
+    assignments      Assignment[]
+    classGradeReport ClassGradeReport?
+}
+
+model ClassEnrollment {
+    studentId String
+    classId   String
+    student   Student @relation(fields: [studentId], references: [id])
+    class     Class   @relation(fields: [classId], references: [id])
+
+    @@id([studentId, classId])
+}
+
+model Assignment {
+    id           String              @id @default(uuid())
+    classId      String
+    title        String
+    class        Class               @relation(fields: [classId], references: [id])
+    studentTasks StudentAssignment[]
+}
+
+model StudentAssignment {
+    id           String     @id @default(uuid())
+    studentId    String
+    assignmentId String
+    grade        String?
+    status       String     @default("NOT_STARTED")
+    student      Student    @relation(fields: [studentId], references: [id])
+    assignment   Assignment @relation(fields: [assignmentId], references: [id])
+}
+
+model ReportCard {
+    id        String  @id @default(uuid())
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id])
+}
+
+model ClassGradeReport {
+    id      String @id @default(uuid())
+    classId String @unique
+    class   Class  @relation(fields: [classId], references: [id])
+}
