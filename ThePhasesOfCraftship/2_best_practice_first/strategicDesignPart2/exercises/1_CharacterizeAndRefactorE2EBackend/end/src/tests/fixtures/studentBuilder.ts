@@ -1,29 +1,13 @@
 import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
-
-interface StudentAssignment {
-  studentId: string;
-  assignmentId: string;
-  grade: string | null;
-  status: string;
-}
-
-interface Student {
-  id: string;
-  name: string;
-  email: string;
-}
+import { Student, StudentAssignment } from "./types";
 
 class StudentBuilder {
   private student: Student;
   private assignments: StudentAssignment[];
 
   constructor() {
-    this.student = {
-      id: "",
-      name: "",
-      email: "",
-    };
+    this.student = this.emptyStudent();
     this.assignments = [];
   }
 
@@ -53,6 +37,18 @@ class StudentBuilder {
     return this.assignments;
   }
 
+  async assignAssignment(assignmentId: string) {
+    const assignment = await prisma.studentAssignment.create({
+      data: {
+        assignmentId,
+        studentId: this.student.id,
+      },
+    });
+
+    this.assignments.push(assignment);
+    return this.assignments;
+  }
+
   async submitAssignments(assignments: any[]) {
     this.assignments = await Promise.all(
       assignments.map((assignment) => {
@@ -67,6 +63,20 @@ class StudentBuilder {
     );
 
     return this.assignments;
+  }
+
+  async submitAssignment(assignmentId: string) {
+    return prisma.studentAssignment.update({
+      where: {
+        studentId_assignmentId: {
+          assignmentId,
+          studentId: this.student.id,
+        },
+      },
+      data: {
+        status: "submitted",
+      },
+    });
   }
 
   async gradeAssignments(assignments: any[]) {
@@ -93,49 +103,14 @@ class StudentBuilder {
   getAssignments() {
     return this.assignments;
   }
+
+  emptyStudent(): Student {
+    return {
+      id: "",
+      name: "",
+      email: "",
+    };
+  }
 }
 
-const studentAssignmentSubmissionBuilder = async ({
-  studentId,
-  assignmentId,
-}: {
-  studentId: string;
-  assignmentId: string;
-}) => {
-  const studentAssignmentUpdated = await prisma.studentAssignment.update({
-    where: {
-      studentId_assignmentId: {
-        assignmentId,
-        studentId,
-      },
-    },
-    data: {
-      status: "submitted",
-    },
-  });
-
-  return studentAssignmentUpdated;
-};
-
-const studentAssignmentBuilder = async ({
-  studentId,
-  assignmentId,
-}: {
-  studentId: string;
-  assignmentId: string;
-}) => {
-  const studentAssignment = await prisma.studentAssignment.create({
-    data: {
-      studentId,
-      assignmentId,
-    },
-  });
-
-  return studentAssignment;
-};
-
-export {
-  StudentBuilder,
-  studentAssignmentBuilder,
-  studentAssignmentSubmissionBuilder,
-};
+export { StudentBuilder };

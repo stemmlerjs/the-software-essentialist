@@ -3,7 +3,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { StudentBuilder } from "../fixtures";
+import { Student, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_students.feature")
@@ -16,7 +16,7 @@ defineFeature(feature, (test) => {
 
   test("Successfully retrieving all students", ({ given, when, then }) => {
     let response: any = {};
-    let students: any = [];
+    let students: Student[] = [];
 
     given("there are students registered", async () => {
       students = await Promise.all([

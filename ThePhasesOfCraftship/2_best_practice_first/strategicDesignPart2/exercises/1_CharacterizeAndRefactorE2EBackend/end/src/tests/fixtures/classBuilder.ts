@@ -2,13 +2,15 @@ import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 import { StudentBuilder } from "./studentBuilder";
 import { AssignmentBuilder } from "./assignmentBuilder";
+import { Clazz, EnrolledStudent } from "./types";
 
 class ClassBuilder {
   private studentsBuilders: StudentBuilder[];
   private assignmentsBuilders: AssignmentBuilder[];
 
-  private clazz: any;
-  private enrolledStudents: any[];
+  private clazz: Clazz;
+  private enrolledStudents: EnrolledStudent[];
+
   private shouldAssignAssignments: boolean;
   private shouldSubmitAssignments: boolean;
   private shouldGradeAssignments: boolean;
@@ -16,7 +18,10 @@ class ClassBuilder {
   constructor() {
     this.studentsBuilders = [];
     this.assignmentsBuilders = [];
-    this.clazz = null;
+    this.clazz = {
+      id: "",
+      name: "",
+    };
     this.enrolledStudents = [];
     this.shouldAssignAssignments = false;
     this.shouldSubmitAssignments = false;
@@ -45,6 +50,8 @@ class ClassBuilder {
 
       return student;
     }
+
+    return studentBuilder.emptyStudent();
   }
 
   withAssignedAssignments() {

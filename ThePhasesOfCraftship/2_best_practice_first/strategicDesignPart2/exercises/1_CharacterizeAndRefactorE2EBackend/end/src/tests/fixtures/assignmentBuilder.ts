@@ -1,11 +1,16 @@
 import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
+import { Assignment } from "./types";
 
 class AssignmentBuilder {
-  private assignment: any;
+  private assignment: Assignment;
 
   constructor() {
-    this.assignment = null;
+    this.assignment = {
+      id: "",
+      classId: "",
+      title: "",
+    };
   }
 
   async build(classId: string) {
