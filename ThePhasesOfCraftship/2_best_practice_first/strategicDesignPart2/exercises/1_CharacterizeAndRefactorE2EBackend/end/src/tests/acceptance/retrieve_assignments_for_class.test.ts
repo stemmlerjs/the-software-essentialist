@@ -3,7 +3,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { classBuilder, assignmentBuilder } from "../fixtures/builders";
+import { ClassBuilder, AssignmentBuilder } from "../fixtures/builders";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_assignments_for_class.feature")
@@ -19,18 +19,21 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let class_: any = {};
+    let classId: string = "";
     let assignments: any = [];
     let response: any = {};
 
     given("I have a class with assignments", async () => {
-      class_ = await classBuilder();
-      assignments.push(await assignmentBuilder(class_.id));
-      assignments.push(await assignmentBuilder(class_.id));
+      const { clazz, assignments: assignments_ } = await new ClassBuilder()
+        .withAssignment(new AssignmentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .build();
+      classId = clazz.id;
+      assignments = assignments_;
     });
 
     when("I request all assignments for this class by ID", async () => {
-      response = await request(app).get(`/classes/${class_.id}/assignments`);
+      response = await request(app).get(`/classes/${classId}/assignments`);
     });
 
     then("I should receive a list of all assignments for that class", () => {
@@ -45,7 +48,6 @@ defineFeature(feature, (test) => {
   });
 
   test("Attempt to retrieve assignments for a class with a non-existent ID", ({
-    given,
     when,
     then,
   }) => {
