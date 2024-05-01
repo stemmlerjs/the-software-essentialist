@@ -3,14 +3,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import {
-  studentBuilder,
-  assignmentBuilder,
-  classBuilder,
-  studentAssignmentBuilder,
-  classEnrollmentBuilder,
-  studentAssignmentSubmissionBuilder,
-} from "../fixtures/classBuilder";
+import { ClassBuilder, AssignmentBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(
@@ -31,34 +24,22 @@ defineFeature(feature, (test) => {
   }) => {
     let student: any = {};
     let response: any = {};
-    let class_: any = {};
+    let clazz: any = {};
     let studentAssignments: any = [];
     let assignments: any = [];
 
     given("I have a student with submitted assignments", async () => {
-      student = await studentBuilder();
-      class_ = await classBuilder();
-      const assignment1 = await assignmentBuilder(class_.id);
-      const assignment2 = await assignmentBuilder(class_.id);
-      assignments.push(assignment1, assignment2);
-      await classEnrollmentBuilder(class_.id, student.id);
-      const studentAssignment1 = await studentAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment1.id,
-      });
-      const studentAssignment2 = await studentAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment2.id,
-      });
-      await studentAssignmentSubmissionBuilder({
-        assignmentId: assignment1.id,
-        studentId: student.id,
-      });
-      await studentAssignmentSubmissionBuilder({
-        assignmentId: assignment2.id,
-        studentId: student.id,
-      });
-      studentAssignments.push(studentAssignment1, studentAssignment2);
+      ({
+        clazz: clazz,
+        students: [student],
+        assignments: assignments,
+      } = await new ClassBuilder()
+        .withStudent(new StudentBuilder())
+        .withStudent(new StudentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .withAssignedAndSubmittedAssignments()
+        .build());
     });
 
     when(
@@ -72,7 +53,7 @@ defineFeature(feature, (test) => {
       "I should receive a list of all submitted assignments for that student",
       () => {
         expect(response.status).toBe(200);
-        expect(response.body.data.length).toBe(studentAssignments.length);
+        expect(response.body.data.length).toBe(2);
         assignments.forEach((assignment: any) => {
           expect(
             response.body.data.some(
