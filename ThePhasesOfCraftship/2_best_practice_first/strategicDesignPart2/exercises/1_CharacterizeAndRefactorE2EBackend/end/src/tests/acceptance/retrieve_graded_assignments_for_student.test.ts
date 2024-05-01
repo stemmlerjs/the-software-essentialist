@@ -49,10 +49,10 @@ defineFeature(feature, (test) => {
         student.id,
         assignment2.id
       );
-      await studentAssignmentSubmissionBuilder(studentAssignment1.id);
-      await studentAssignmentSubmissionBuilder(studentAssignment2.id);
-      await gradedAssignmentBuilder(studentAssignment1.id);
-      await gradedAssignmentBuilder(studentAssignment2.id);
+      await studentAssignmentSubmissionBuilder(studentAssignment1);
+      await studentAssignmentSubmissionBuilder(studentAssignment2);
+      await gradedAssignmentBuilder(studentAssignment1);
+      await gradedAssignmentBuilder(studentAssignment2);
 
       assignments.push(assignment1, assignment2);
     });

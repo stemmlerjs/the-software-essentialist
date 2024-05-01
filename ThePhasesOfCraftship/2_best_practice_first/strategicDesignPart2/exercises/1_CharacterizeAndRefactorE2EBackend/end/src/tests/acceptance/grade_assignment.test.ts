@@ -46,12 +46,13 @@ defineFeature(feature, (test) => {
 
   test("Successfully grade an assignment", ({ given, when, then }) => {
     given("An student submited an assignment", async () => {
-      await studentAssignmentSubmissionBuilder(studentAssignment.id);
+      await studentAssignmentSubmissionBuilder(studentAssignment);
     });
 
     when("I grade the assignment", async () => {
       requestBody = {
-        id: studentAssignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId,
         grade: "A",
       };
 
@@ -67,20 +68,13 @@ defineFeature(feature, (test) => {
   });
 
   test("Fail to grade an assignment when it is not submitted", ({
-    given,
     when,
     then,
   }) => {
-    given("A student is assigned to an assignment", async () => {
-      studentAssignment = await studentAssignmentBuilder(
-        student.id,
-        assignment.id
-      );
-    });
-
     when("I try to grade his assignment before he submits it", async () => {
       requestBody = {
-        id: studentAssignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId,
         grade: "A",
       };
 
