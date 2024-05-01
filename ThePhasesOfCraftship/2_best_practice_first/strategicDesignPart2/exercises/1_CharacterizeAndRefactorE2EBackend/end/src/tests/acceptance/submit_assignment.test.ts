@@ -5,12 +5,14 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
+  ClassBuilder,
   assignmentBuilder,
   classBuilder,
   studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
   studentBuilder,
 } from "../fixtures/classBuilder";
+import { AssignmentBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submit_assignment.feature")
@@ -25,14 +27,17 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let student: any = null;
-    let class_: any = null;
     let assignment: any = null;
     let studentAssignment: any = null;
 
     beforeAll(async () => {
-      student = await studentBuilder();
-      class_ = await classBuilder();
-      assignment = await assignmentBuilder(class_.id);
+      ({
+        students: [student],
+        assignments: [assignment],
+      } = await new ClassBuilder()
+        .withStudent(new StudentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .build());
     });
 
     given("I was assigned to an assignment", async () => {
@@ -63,18 +68,17 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let student: any = null;
-    let class_: any = null;
     let assignment: any = null;
-    let studentAssignment: any = null;
 
     beforeEach(async () => {
-      student = await studentBuilder();
-      class_ = await classBuilder();
-      assignment = await assignmentBuilder(class_.id);
-      studentAssignment = await studentAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment.id,
-      });
+      ({
+        students: [student],
+        assignments: [assignment],
+      } = await new ClassBuilder()
+        .withStudent(new StudentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .withAssignedAssignments()
+        .build());
     });
 
     given("I submitted the assignment", async () => {
