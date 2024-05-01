@@ -69,6 +69,23 @@ class StudentBuilder {
     return this.assignments;
   }
 
+  async gradeAssignments(assignments: any[]) {
+    this.assignments = await Promise.all(
+      assignments.map((assignment) => {
+        return prisma.studentAssignment.create({
+          data: {
+            assignmentId: assignment.id,
+            studentId: this.student.id,
+            status: "submitted",
+            grade: "A",
+          },
+        });
+      })
+    );
+
+    return this.assignments;
+  }
+
   getStudent() {
     return this.student;
   }
