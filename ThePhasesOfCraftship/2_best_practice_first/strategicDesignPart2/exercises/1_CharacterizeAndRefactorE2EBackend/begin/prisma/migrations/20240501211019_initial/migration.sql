@@ -31,11 +31,12 @@ CREATE TABLE "Assignment" (
 
 -- CreateTable
 CREATE TABLE "StudentAssignment" (
-    "id" TEXT NOT NULL PRIMARY KEY,
     "studentId" TEXT NOT NULL,
     "assignmentId" TEXT NOT NULL,
     "grade" TEXT,
     "status" TEXT NOT NULL DEFAULT 'NOT_STARTED',
+
+    PRIMARY KEY ("studentId", "assignmentId"),
     CONSTRAINT "StudentAssignment_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "StudentAssignment_assignmentId_fkey" FOREIGN KEY ("assignmentId") REFERENCES "Assignment" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -17,7 +17,6 @@ const Errors = {
     StudentAlreadyEnrolled: 'StudentAlreadyEnrolled'
   }
 
-
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
     for (let key of keysToCheckFor) {
       if (data[key] === undefined) return true;
@@ -208,16 +207,19 @@ app.post('/student-assignments', async (req: Request, res: Response) => {
 // POST student submitted assignment
 app.post('/student-assignments/submit', async (req: Request, res: Response) => {
     try {
-        if (isMissingKeys(req.body, ['id'])) {
+        if (isMissingKeys(req.body, ['assignmentId', 'studentId'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
     
-        const { id } = req.body;
+        const { studentId, assignmentId } = req.body;
         
         // check if student assignment exists
         const studentAssignment = await prisma.studentAssignment.findUnique({
             where: {
-                id
+                studentId_assignmentId: {
+                    assignmentId,
+                    studentId
+                }
             }
         });
     
@@ -227,7 +229,10 @@ app.post('/student-assignments/submit', async (req: Request, res: Response) => {
     
         const studentAssignmentUpdated = await prisma.studentAssignment.update({
             where: {
-                id
+                studentId_assignmentId: {
+                    assignmentId,
+                    studentId
+                }
             },
             data: {
                 status: 'submitted'
@@ -244,11 +249,11 @@ app.post('/student-assignments/submit', async (req: Request, res: Response) => {
 app.post('/student-assignments/grade', async (req: Request, res: Response) => {
     try {
 
-        if (isMissingKeys(req.body, ['id', 'grade'])) {
+        if (isMissingKeys(req.body, ['studentId', 'assignmentId', 'grade'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
     
-        const { id, grade } = req.body;
+        const { assignmentId, studentId, grade } = req.body;
     
         // validate grade
         if (!['A', 'B', 'C', 'D'].includes(grade)) {
@@ -258,7 +263,10 @@ app.post('/student-assignments/grade', async (req: Request, res: Response) => {
         // check if student assignment exists
         const studentAssignment = await prisma.studentAssignment.findUnique({
             where: {
-                id
+                studentId_assignmentId: {
+                    assignmentId,
+                    studentId
+                }
             }
         });
     
@@ -268,7 +276,10 @@ app.post('/student-assignments/grade', async (req: Request, res: Response) => {
     
         const studentAssignmentUpdated = await prisma.studentAssignment.update({
             where: {
-                id
+                studentId_assignmentId: {
+                    assignmentId,
+                    studentId
+                }
             },
             data: {
                 grade,

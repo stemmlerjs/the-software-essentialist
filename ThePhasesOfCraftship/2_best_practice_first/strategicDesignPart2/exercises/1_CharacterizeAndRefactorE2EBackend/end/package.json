@@ -20,14 +20,7 @@
     "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test": "jest",
-    "test:e2e": "jest --verbose src/tests/acceptance/ --runInBand",
-    "test:dev": "jest --watchAll"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run test && npm run prettier-format && npm run lint"
-    }
+    "test:e2e": "jest --verbose src/tests/acceptance/ --runInBand"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
