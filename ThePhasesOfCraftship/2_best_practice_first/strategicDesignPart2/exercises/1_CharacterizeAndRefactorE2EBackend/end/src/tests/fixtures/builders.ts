@@ -2,38 +2,44 @@ import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 
 class StudentBuilder {
-  private data: any;
+  private student: any
 
   constructor() {
-    this.data = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-    };
+    this.student = null;
   }
 
   async build() {
-    return prisma.student.create({
-      data: this.data,
+    this.student = await prisma.student.create({
+      data: {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+      }
     });
+
+    return this.student
+  }
+
+  getStudent() {
+    return this.student
   }
 }
 
 class AssignmentBuilder {
-  private data: any;
+  private assignment: any
 
   constructor() {
-    this.data = {
-      title: faker.lorem.word(),
-    };
+    this.assignment = null;
   }
 
   build(classId: string) {
-    return prisma.assignment.create({
+    this.assignment = prisma.assignment.create({
       data: {
-        ...this.data,
+        title: faker.lorem.word(),
         classId,
       },
     });
+
+    return this.assignment
   }
 }
 
@@ -64,7 +70,6 @@ class ClassBuilder {
   private assignmentsBuilders: AssignmentBuilder[];
 
   private clazz: any;
-  private students: any[];
   private assignments: any[];
   private enrolledStudents: any[];
   private studentAssignments: any[];
@@ -74,7 +79,6 @@ class ClassBuilder {
     this.studentsBuilders = [];
     this.assignmentsBuilders = [];
     this.clazz = null;
-    this.students = [];
     this.assignments = [];
     this.enrolledStudents = [];
     this.studentAssignments = [];
@@ -119,7 +123,7 @@ class ClassBuilder {
 
     return {
       clazz: this.clazz,
-      students: this.students,
+      students: this.studentsBuilders.map(builder => builder.getStudent()),
       assignments: this.assignments,
       classEnrollment: this.enrolledStudents,
       studentAssignments: this.studentAssignments,
@@ -135,7 +139,7 @@ class ClassBuilder {
   }
 
   private async createStudents() {
-    this.students = await Promise.all(
+    await Promise.all(
       this.studentsBuilders.map((builder) => builder.build())
     );
   }
@@ -147,7 +151,8 @@ class ClassBuilder {
   }
 
   private async enrollStudents() {
-    const studentPromises = this.students.map((student) => {
+    const students = this.studentsBuilders.map(builder => builder.getStudent())
+    const studentPromises = students.map((student) => {
       return prisma.classEnrollment.create({
         data: {
           classId: this.clazz.id,
@@ -163,8 +168,8 @@ class ClassBuilder {
     if (!this.shouldAssignAssignments) {
       return;
     }
-
-    const allPromises = this.students
+    const students = this.studentsBuilders.map(builder => builder.getStudent())
+    const allPromises = students
       .map((student) => {
         return this.assignments.map((assignment) => {
           return prisma.studentAssignment.create({
