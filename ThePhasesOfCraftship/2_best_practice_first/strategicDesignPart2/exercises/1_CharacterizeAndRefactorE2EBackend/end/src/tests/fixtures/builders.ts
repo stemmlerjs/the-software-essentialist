@@ -104,11 +104,11 @@ class ClassBuilder {
   }
 
   async build() {
-    await this.createClass()
-    await this.createStudents()
-    await this.createAssignments()
-    await this.enrollStudents()
-    await this.assignAssignments()
+    await this.createClass();
+    await this.createStudents();
+    await this.createAssignments();
+    await this.enrollStudents();
+    await this.assignAssignments();
 
     return {
       clazz: this.clazz,
