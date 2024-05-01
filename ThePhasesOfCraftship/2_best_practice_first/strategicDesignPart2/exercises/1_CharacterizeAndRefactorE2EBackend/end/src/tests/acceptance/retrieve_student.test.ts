@@ -4,6 +4,7 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import { studentBuilder } from "../fixtures/classBuilder";
+import { StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_student.feature")
@@ -19,7 +20,7 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have a student with a valid ID", async () => {
-      student = await studentBuilder();
+      student = await new StudentBuilder().build();
     });
 
     when("I request the student by this ID", async () => {
