@@ -4,12 +4,8 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import {
-  AssignmentBuilder,
-  ClassBuilder,
-  StudentBuilder,
-  studentAssignmentSubmissionBuilder,
-} from "../fixtures/builders";
+import { AssignmentBuilder, ClassBuilder, StudentBuilder } from "../fixtures";
+import { studentAssignmentSubmissionBuilder } from "../fixtures/classBuilder";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/grade_assignment.feature")

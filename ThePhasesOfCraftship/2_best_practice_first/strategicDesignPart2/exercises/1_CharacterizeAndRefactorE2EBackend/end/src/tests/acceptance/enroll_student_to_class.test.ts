@@ -4,7 +4,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassBuilder, StudentBuilder } from "../fixtures/builders";
+import { ClassBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/enroll_student_to_class.feature")
