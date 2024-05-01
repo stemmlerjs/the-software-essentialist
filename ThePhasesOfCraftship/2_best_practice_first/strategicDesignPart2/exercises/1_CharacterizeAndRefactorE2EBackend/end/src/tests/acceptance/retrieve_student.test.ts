@@ -3,7 +3,6 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { studentBuilder } from "../fixtures/classBuilder";
 import { StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
