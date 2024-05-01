@@ -18,18 +18,17 @@ defineFeature(feature, (test) => {
   test("Successfully create an assignment", ({ given, when, then, and }) => {
     let requestBody: any = {};
     let response: any = {};
-    let class_: any = null;
+    let clazz: any = null;
     let classBuilder: ClassBuilder = new ClassBuilder();
 
     given("I give a class", async () => {
-      const { clazz } = await classBuilder.build();
-      class_ = clazz;
+      ({ clazz } = await classBuilder.build());
     });
 
     when("I create an assignment to the class", async () => {
       requestBody = {
         title: "Assignment 1",
-        classId: class_.id,
+        classId: clazz.id,
       };
 
       response = await request(app).post("/assignments").send(requestBody);
