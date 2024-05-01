@@ -95,4 +95,47 @@ class StudentBuilder {
   }
 }
 
-export { StudentBuilder };
+const studentAssignmentSubmissionBuilder = async ({
+  studentId,
+  assignmentId,
+}: {
+  studentId: string;
+  assignmentId: string;
+}) => {
+  const studentAssignmentUpdated = await prisma.studentAssignment.update({
+    where: {
+      studentId_assignmentId: {
+        assignmentId,
+        studentId,
+      },
+    },
+    data: {
+      status: "submitted",
+    },
+  });
+
+  return studentAssignmentUpdated;
+};
+
+const studentAssignmentBuilder = async ({
+  studentId,
+  assignmentId,
+}: {
+  studentId: string;
+  assignmentId: string;
+}) => {
+  const studentAssignment = await prisma.studentAssignment.create({
+    data: {
+      studentId,
+      assignmentId,
+    },
+  });
+
+  return studentAssignment;
+};
+
+export {
+  StudentBuilder,
+  studentAssignmentBuilder,
+  studentAssignmentSubmissionBuilder,
+};
