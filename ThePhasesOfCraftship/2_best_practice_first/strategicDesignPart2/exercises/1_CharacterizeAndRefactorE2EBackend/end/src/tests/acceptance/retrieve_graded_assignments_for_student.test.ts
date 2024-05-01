@@ -11,7 +11,7 @@ import {
   studentAssignmentSubmissionBuilder,
   gradedAssignmentBuilder,
   studentAssignmentBuilder,
-} from "../fixtures/builders";
+} from "../fixtures/classBuilder";
 
 const feature = loadFeature(
   path.join(

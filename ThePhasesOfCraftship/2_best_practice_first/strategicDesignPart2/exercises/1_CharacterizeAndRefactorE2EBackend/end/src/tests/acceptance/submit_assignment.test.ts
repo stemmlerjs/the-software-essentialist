@@ -10,7 +10,7 @@ import {
   studentAssignmentBuilder,
   studentAssignmentSubmissionBuilder,
   studentBuilder,
-} from "../fixtures/builders";
+} from "../fixtures/classBuilder";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submit_assignment.feature")
