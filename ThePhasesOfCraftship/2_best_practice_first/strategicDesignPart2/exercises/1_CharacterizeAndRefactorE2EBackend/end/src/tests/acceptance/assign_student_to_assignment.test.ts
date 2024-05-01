@@ -5,6 +5,7 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import { AssignmentBuilder, ClassBuilder, StudentBuilder } from "../fixtures";
+import { Assignment, Clazz, Student } from "../fixtures/types";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/assign_student_to_assignment.feature")
@@ -18,9 +19,10 @@ defineFeature(feature, (test) => {
   test("Assign a student to an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: any = null;
-    let clazz: any = null;
-    let assignment: any = null;
+    let student: Student;
+    let clazz: Clazz;
+    let assignment: Assignment;
+
     let classBuilder: ClassBuilder = new ClassBuilder();
 
     beforeAll(async () => {

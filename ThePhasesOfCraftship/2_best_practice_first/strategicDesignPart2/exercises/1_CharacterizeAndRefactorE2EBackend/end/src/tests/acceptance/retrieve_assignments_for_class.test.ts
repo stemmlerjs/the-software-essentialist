@@ -3,7 +3,12 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { AssignmentBuilder, ClassBuilder } from "../fixtures";
+import {
+  Assignment,
+  AssignmentBuilder,
+  ClassBuilder,
+  Clazz,
+} from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_assignments_for_class.feature")
@@ -19,21 +24,19 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let classId: string = "";
-    let assignments: any = [];
+    let clazz: Clazz;
+    let assignments: Assignment[] = [];
     let response: any = {};
 
     given("I have a class with assignments", async () => {
-      const { clazz, assignments: assignments_ } = await new ClassBuilder()
+      ({ clazz: clazz, assignments: assignments } = await new ClassBuilder()
         .withAssignment(new AssignmentBuilder())
         .withAssignment(new AssignmentBuilder())
-        .build();
-      classId = clazz.id;
-      assignments = assignments_;
+        .build());
     });
 
     when("I request all assignments for this class by ID", async () => {
-      response = await request(app).get(`/classes/${classId}/assignments`);
+      response = await request(app).get(`/classes/${clazz.id}/assignments`);
     });
 
     then("I should receive a list of all assignments for that class", () => {

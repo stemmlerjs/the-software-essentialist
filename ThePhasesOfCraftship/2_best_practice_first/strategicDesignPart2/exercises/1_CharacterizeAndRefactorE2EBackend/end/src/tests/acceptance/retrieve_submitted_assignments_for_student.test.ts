@@ -3,7 +3,14 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassBuilder, AssignmentBuilder, StudentBuilder } from "../fixtures";
+import {
+  ClassBuilder,
+  AssignmentBuilder,
+  StudentBuilder,
+  Student,
+  Clazz,
+  Assignment,
+} from "../fixtures";
 
 const feature = loadFeature(
   path.join(
@@ -22,11 +29,10 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let student: any = {};
+    let student: Student;
     let response: any = {};
-    let clazz: any = {};
-    let studentAssignments: any = [];
-    let assignments: any = [];
+    let clazz: Clazz;
+    let assignments: Assignment[] = [];
 
     given("I have a student with submitted assignments", async () => {
       ({

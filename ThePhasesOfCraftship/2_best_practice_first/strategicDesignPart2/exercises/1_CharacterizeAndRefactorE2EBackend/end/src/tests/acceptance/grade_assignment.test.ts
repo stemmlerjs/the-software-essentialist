@@ -4,8 +4,13 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { AssignmentBuilder, ClassBuilder, StudentBuilder } from "../fixtures";
-import { studentAssignmentSubmissionBuilder } from "../fixtures/studentBuilder";
+import {
+  Assignment,
+  AssignmentBuilder,
+  ClassBuilder,
+  Student,
+  StudentBuilder,
+} from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/grade_assignment.feature")
@@ -18,28 +23,25 @@ defineFeature(feature, (test) => {
 
   let requestBody: any = {};
   let response: any = {};
-  let student: any = null;
-  let assignment: any = null;
-  let classBuilder: ClassBuilder = new ClassBuilder();
+  let student: Student;
+  let assignment: Assignment;
+  let studentBuilder: StudentBuilder;
 
   beforeEach(async () => {
-    // 1 class, 1 student, 1 assignment, 1 enrollment
+    studentBuilder = new StudentBuilder();
     ({
       students: [student],
       assignments: [assignment],
-    } = await classBuilder
+    } = await new ClassBuilder()
       .withAssignment(new AssignmentBuilder())
-      .withStudent(new StudentBuilder())
+      .withStudent(studentBuilder)
       .withAssignedAssignments()
       .build());
   });
 
   test("Successfully grade an assignment", ({ given, when, then }) => {
     given("An student submited an assignment", async () => {
-      await studentAssignmentSubmissionBuilder({
-        studentId: student.id,
-        assignmentId: assignment.id,
-      });
+      await studentBuilder.submitAssignment(assignment.id);
     });
 
     when("I grade the assignment", async () => {

@@ -3,7 +3,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { StudentBuilder } from "../fixtures";
+import { Student, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_student.feature")
@@ -15,7 +15,7 @@ defineFeature(feature, (test) => {
   });
 
   test("Successfully retrieving a student by ID", ({ given, when, then }) => {
-    let student: any = {};
+    let student: Student;
     let response: any = {};
 
     given("I have a student with a valid ID", async () => {

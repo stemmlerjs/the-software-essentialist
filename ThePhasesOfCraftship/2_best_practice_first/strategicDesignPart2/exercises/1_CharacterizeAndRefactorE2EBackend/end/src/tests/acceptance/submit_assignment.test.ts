@@ -4,11 +4,13 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassBuilder, AssignmentBuilder, StudentBuilder } from "../fixtures";
 import {
-  studentAssignmentBuilder,
-  studentAssignmentSubmissionBuilder,
-} from "../fixtures/studentBuilder";
+  ClassBuilder,
+  AssignmentBuilder,
+  StudentBuilder,
+  Student,
+  Assignment,
+} from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submit_assignment.feature")
@@ -22,25 +24,23 @@ defineFeature(feature, (test) => {
   test("Successfully submit an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: any = null;
-    let assignment: any = null;
-    let studentAssignment: any = null;
+    let student: Student;
+    let assignment: Assignment;
+    let studentBuilder: StudentBuilder;
 
     beforeAll(async () => {
+      studentBuilder = new StudentBuilder();
       ({
         students: [student],
         assignments: [assignment],
       } = await new ClassBuilder()
-        .withStudent(new StudentBuilder())
+        .withStudent(studentBuilder)
         .withAssignment(new AssignmentBuilder())
         .build());
     });
 
     given("I was assigned to an assignment", async () => {
-      studentAssignment = await studentAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment.id,
-      });
+      await studentBuilder.assignAssignment(assignment.id);
     });
 
     when("I submit the assignment", async () => {
@@ -56,32 +56,31 @@ defineFeature(feature, (test) => {
 
     then("It should be marked as submitted", async () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.studentId).toBe(studentAssignment.studentId);
+      expect(response.body.data.status).toBe("submitted");
     });
   });
 
   test("Fail to submit an assignment twice", ({ given, when, then, and }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: any = null;
-    let assignment: any = null;
+    let student: Student;
+    let assignment: Assignment;
+    let studentBuilder: StudentBuilder;
 
     beforeEach(async () => {
+      studentBuilder = new StudentBuilder();
       ({
         students: [student],
         assignments: [assignment],
       } = await new ClassBuilder()
-        .withStudent(new StudentBuilder())
+        .withStudent(studentBuilder)
         .withAssignment(new AssignmentBuilder())
         .withAssignedAssignments()
         .build());
     });
 
     given("I submitted the assignment", async () => {
-      await studentAssignmentSubmissionBuilder({
-        assignmentId: assignment.id,
-        studentId: student.id,
-      });
+      await studentBuilder.submitAssignment(assignment.id);
     });
 
     when("I submit the assignment again", async () => {

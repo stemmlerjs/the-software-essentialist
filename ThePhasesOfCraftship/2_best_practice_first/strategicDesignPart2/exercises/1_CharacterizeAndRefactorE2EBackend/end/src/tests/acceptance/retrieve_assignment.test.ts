@@ -3,7 +3,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { AssignmentBuilder, ClassBuilder } from "../fixtures";
+import { Assignment, AssignmentBuilder, ClassBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieve_assignment.feature")
@@ -19,7 +19,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let assignment: any = {};
+    let assignment: Assignment;
     let response: any = {};
 
     given("I have an assignment with a valid ID", async () => {
