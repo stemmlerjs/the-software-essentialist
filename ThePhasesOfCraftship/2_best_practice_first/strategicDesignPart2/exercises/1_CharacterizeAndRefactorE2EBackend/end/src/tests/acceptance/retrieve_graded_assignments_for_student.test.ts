@@ -11,7 +11,9 @@ import {
   studentAssignmentSubmissionBuilder,
   gradedAssignmentBuilder,
   studentAssignmentBuilder,
+  ClassBuilder,
 } from "../fixtures/classBuilder";
+import { AssignmentBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(
@@ -33,42 +35,19 @@ defineFeature(feature, (test) => {
     let student: any;
     let assignments: any = [];
     let response: any;
-    let class_: any = {};
+    let clazz: any = {};
 
     given("I have a student with graded assignments", async () => {
-      student = await studentBuilder();
-      class_ = await classBuilder();
-      const assignment1 = await assignmentBuilder(class_.id);
-      const assignment2 = await assignmentBuilder(class_.id);
-      await classEnrollmentBuilder(class_.id, student.id);
-      await studentAssignmentBuilder({
-        assignmentId: assignment1.id,
-        studentId: student.id,
-      });
-
-      await studentAssignmentBuilder({
-        assignmentId: assignment2.id,
-        studentId: student.id,
-      });
-
-      await studentAssignmentSubmissionBuilder({
-        studentId: student.id,
-        assignmentId: assignment1.id,
-      });
-      await studentAssignmentSubmissionBuilder({
-        studentId: student.id,
-        assignmentId: assignment2.id,
-      });
-      await gradedAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment1.id,
-      });
-      await gradedAssignmentBuilder({
-        studentId: student.id,
-        assignmentId: assignment2.id,
-      });
-
-      assignments.push(assignment1, assignment2);
+      ({
+        students: [student],
+        clazz: clazz,
+        assignments: assignments,
+      } = await new ClassBuilder()
+        .withStudent(new StudentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .withAssignment(new AssignmentBuilder())
+        .withAssignedAndSubmittedAndGradedAssigments()
+        .build());
     });
 
     when(
