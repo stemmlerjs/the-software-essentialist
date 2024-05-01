@@ -18,12 +18,12 @@ defineFeature(feature, (test) => {
   test("Successfully create an assignment", ({ given, when, then, and }) => {
     let requestBody: any = {};
     let response: any = {};
-    let class_: any = null
-    let classBuilder: ClassBuilder = new ClassBuilder()
+    let class_: any = null;
+    let classBuilder: ClassBuilder = new ClassBuilder();
 
     given("I give a class", async () => {
-      const {clazz} = await classBuilder.build()
-      class_ = clazz
+      const { clazz } = await classBuilder.build();
+      class_ = clazz;
     });
 
     when("I create an assignment to the class", async () => {

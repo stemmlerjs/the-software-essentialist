@@ -15,23 +15,18 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully enroll a student to a class", ({
-    given,
-    when,
-    then,
-  }) => {
+  test("Successfully enroll a student to a class", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
 
     given("there is a class and a student", async () => {
-      const {clazz} = await (new ClassBuilder()).build()
-      const student = await (new StudentBuilder()).build()
+      const { clazz } = await new ClassBuilder().build();
+      const student = await new StudentBuilder().build();
 
       requestBody = {
         studentId: student.id,
         classId: clazz.id,
       };
-
     });
 
     when("I enroll the student to the class", async () => {
@@ -56,7 +51,7 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("there is a student", async () => {
-      const student = await (new StudentBuilder()).build()
+      const student = await new StudentBuilder().build();
       requestBody = {
         studentId: student.id,
         ...requestBody,
