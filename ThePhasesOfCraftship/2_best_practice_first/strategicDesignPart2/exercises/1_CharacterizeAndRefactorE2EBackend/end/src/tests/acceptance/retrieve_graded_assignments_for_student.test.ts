@@ -41,8 +41,7 @@ defineFeature(feature, (test) => {
         assignments: assignments,
       } = await new ClassBuilder()
         .withStudent(new StudentBuilder())
-        .withAssignment(new AssignmentBuilder())
-        .withAssignment(new AssignmentBuilder())
+        .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
         .withAssignedAndSubmittedAndGradedAssigments()
         .build());
     });

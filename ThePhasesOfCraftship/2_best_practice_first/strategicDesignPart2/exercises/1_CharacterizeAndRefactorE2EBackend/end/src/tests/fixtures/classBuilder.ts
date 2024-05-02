@@ -33,10 +33,21 @@ class ClassBuilder {
     return this;
   }
 
+  withStudents(studentBuilders: StudentBuilder[]) {
+    this.studentsBuilders = [...this.studentsBuilders, ...studentBuilders]
+    return this;
+  }
+
   withAssignment(assignmentBuilder: AssignmentBuilder) {
     this.assignmentsBuilders.push(assignmentBuilder);
     return this;
   }
+
+  withAssignments(assignmentBuilders: AssignmentBuilder[]) {
+    this.assignmentsBuilders = [...this.assignmentsBuilders, ...assignmentBuilders]
+    return this
+  }
+
 
   async enrollStudent(studentBuilder: StudentBuilder) {
     if (this.clazz) {
