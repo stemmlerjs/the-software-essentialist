@@ -1,9 +1,9 @@
 import { StudentBuilder } from "./studentBuilder";
 import { AssignmentBuilder } from "./assignmentBuilder";
-import { ClassBuilder } from "./classBuilder";
+import { ClassRoomBuilder } from "./classRoomBuilder";
 import {
   Assignment,
-  Clazz,
+  ClassRoom,
   EnrolledStudent,
   Student,
   StudentAssignment,
@@ -12,9 +12,9 @@ import {
 export {
   StudentBuilder,
   AssignmentBuilder,
-  ClassBuilder,
+  ClassRoomBuilder,
   Assignment,
-  Clazz,
+  ClassRoom,
   EnrolledStudent,
   Student,
   StudentAssignment,
