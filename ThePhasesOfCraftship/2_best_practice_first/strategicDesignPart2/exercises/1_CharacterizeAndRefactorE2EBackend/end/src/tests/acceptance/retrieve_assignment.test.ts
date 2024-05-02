@@ -14,7 +14,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving an assignment by ID", ({
+  test("Successfully retrieving an assignment", ({
     given,
     when,
     then,
@@ -22,7 +22,7 @@ defineFeature(feature, (test) => {
     let assignment: Assignment;
     let response: any = {};
 
-    given("I have an assignment with a valid ID", async () => {
+    given("I have a valid assignment", async () => {
       ({
         assignments: [assignment],
       } = await new ClassRoomBuilder()
@@ -30,7 +30,7 @@ defineFeature(feature, (test) => {
         .build());
     });
 
-    when("I request the assignment by this ID", async () => {
+    when("I request the assignment", async () => {
       response = await request(app).get(`/assignments/${assignment.id}`);
     });
 
@@ -42,34 +42,34 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve an assignment with a non-existent ID", ({
+  test("Attempt to retrieve a non-existent assignment", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request the assignment with non-existent ID", async () => {
+    when("I request the assignment", async () => {
       response = await request(app).get(
         "/assignments/aec6817e-66b4-4ce5-8a25-f3ec459e40df"
       );
     });
 
-    then("I should receive a 404 not found error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(404);
     });
   });
 
-  test("Attempt to retrieve an assignment with an invalid ID format", ({
+  test("Attempt to retrieve an invalid assignment", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request an assignment with an invalid ID", async () => {
+    when("I request an invalid assignment", async () => {
       response = await request(app).get("/assignments/123");
     });
 
-    then("I should receive a 400 bad request error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(400);
     });
   });

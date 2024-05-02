@@ -1,18 +1,18 @@
-Feature: Retrieve submitted assignments for a student by ID
+Feature: Retrieve submitted assignments for a student
 
     As a teacher
     I want to retrieve all submitted assignments for a specific student
     So that I can view grade each assignment
 
-    Scenario: Successfully retrieving submitted assignments for a student by ID
+    Scenario: Successfully retrieving submitted assignments for a student
         Given I have a student with submitted assignments
-        When I request all submitted assignments for this student by ID
-        Then I should receive a list of all submitted assignments for that student
+        When I request all submitted assignments for this student
+        Then I should receive all submitted assignments for that student
 
-    Scenario: Attempt to retrieve submitted assignments for a student with a non-existent ID
-        When I request submitted assignments for a student with non-existent ID
-        Then I should receive a 404 not found error
+    Scenario: Attempt to retrieve submitted assignments for a non-existent student
+        When I request submitted assignments for a non-existent student
+        Then I should receive an error
 
-    Scenario: Attempt to retrieve submitted assignments for a student with an invalid ID format
-        When I request submitted assignments for a student with an invalid ID
-        Then I should receive a 400 bad request error
+    Scenario: Attempt to retrieve submitted assignments for an invalid student
+        When I request submitted assignments for an invalid student
+        Then I should receive an error
