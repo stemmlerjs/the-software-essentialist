@@ -11,7 +11,7 @@ interface Student {
   email: string;
 }
 
-interface Clazz {
+interface ClassRoom {
   id: string;
   name: string;
 }
@@ -27,4 +27,4 @@ interface Assignment {
   title: string;
 }
 
-export { Assignment, Clazz, EnrolledStudent, Student, StudentAssignment };
+export { Assignment, ClassRoom, EnrolledStudent, Student, StudentAssignment };

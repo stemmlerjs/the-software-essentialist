@@ -4,12 +4,12 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
-  ClassBuilder,
+  ClassRoomBuilder,
   AssignmentBuilder,
   StudentBuilder,
   Student,
   Assignment,
-  Clazz,
+  ClassRoom,
 } from "../fixtures";
 
 const feature = loadFeature(
@@ -32,14 +32,14 @@ defineFeature(feature, (test) => {
     let student: Student;
     let assignments: Assignment[] = [];
     let response: any;
-    let clazz: Clazz;
+    let classRoom: ClassRoom;
 
     given("I have a student with graded assignments", async () => {
       ({
         students: [student],
-        clazz: clazz,
+        classRoom: classRoom,
         assignments: assignments,
-      } = await new ClassBuilder()
+      } = await new ClassRoomBuilder()
         .withStudent(new StudentBuilder())
         .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
         .withAssignedAndSubmittedAndGradedAssigments()

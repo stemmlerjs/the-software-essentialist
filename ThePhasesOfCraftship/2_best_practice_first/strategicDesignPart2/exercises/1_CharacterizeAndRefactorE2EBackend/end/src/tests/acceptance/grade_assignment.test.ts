@@ -7,7 +7,7 @@ import { resetDatabase } from "../fixtures/reset";
 import {
   Assignment,
   AssignmentBuilder,
-  ClassBuilder,
+  ClassRoomBuilder,
   Student,
   StudentBuilder,
 } from "../fixtures";
@@ -32,7 +32,7 @@ defineFeature(feature, (test) => {
     ({
       students: [student],
       assignments: [assignment],
-    } = await new ClassBuilder()
+    } = await new ClassRoomBuilder()
       .withStudent(studentBuilder)
       .withAssignmentAssignedToAllStudents(new AssignmentBuilder())
       .build());

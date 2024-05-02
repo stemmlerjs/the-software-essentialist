@@ -4,8 +4,8 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { AssignmentBuilder, ClassBuilder, StudentBuilder } from "../fixtures";
-import { Assignment, Clazz, Student } from "../fixtures/types";
+import { AssignmentBuilder, ClassRoomBuilder, StudentBuilder } from "../fixtures";
+import { Assignment, ClassRoom, Student } from "../fixtures/types";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/assign_student_to_assignment.feature")
@@ -20,14 +20,14 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let student: Student;
-    let clazz: Clazz;
+    let classRoom: ClassRoom;
     let assignment: Assignment;
 
-    let classBuilder: ClassBuilder = new ClassBuilder();
+    let classBuilder: ClassRoomBuilder = new ClassRoomBuilder();
 
     beforeAll(async () => {
       ({
-        clazz,
+        classRoom,
         assignments: [assignment],
       } = await classBuilder.withAssignment(new AssignmentBuilder()).build());
     });
@@ -63,7 +63,7 @@ defineFeature(feature, (test) => {
     let response: any = {};
     let assignment: any = null;
     let student: any = null;
-    let classBuilder: ClassBuilder = new ClassBuilder();
+    let classBuilder: ClassRoomBuilder = new ClassRoomBuilder();
 
     given("A student is not enrolled to my class", async () => {
       ({

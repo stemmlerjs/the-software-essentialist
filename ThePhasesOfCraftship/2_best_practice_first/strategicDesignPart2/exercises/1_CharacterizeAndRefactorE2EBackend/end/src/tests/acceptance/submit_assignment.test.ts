@@ -5,7 +5,7 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
-  ClassBuilder,
+  ClassRoomBuilder,
   AssignmentBuilder,
   StudentBuilder,
   Student,
@@ -33,7 +33,7 @@ defineFeature(feature, (test) => {
       ({
         students: [student],
         assignments: [assignment],
-      } = await new ClassBuilder()
+      } = await new ClassRoomBuilder()
         .withStudent(studentBuilder)
         .withAssignment(new AssignmentBuilder())
         .build());
@@ -72,7 +72,7 @@ defineFeature(feature, (test) => {
       ({
         students: [student],
         assignments: [assignment],
-      } = await new ClassBuilder()
+      } = await new ClassRoomBuilder()
         .withStudent(studentBuilder)
         .withAssignment(new AssignmentBuilder())
         .withAssignedAssignments()

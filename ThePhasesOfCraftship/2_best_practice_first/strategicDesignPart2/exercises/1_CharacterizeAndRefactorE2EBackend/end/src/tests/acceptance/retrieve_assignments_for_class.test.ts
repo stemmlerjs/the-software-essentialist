@@ -6,8 +6,8 @@ import { resetDatabase } from "../fixtures/reset";
 import {
   Assignment,
   AssignmentBuilder,
-  ClassBuilder,
-  Clazz,
+  ClassRoomBuilder,
+  ClassRoom,
 } from "../fixtures";
 
 const feature = loadFeature(
@@ -24,18 +24,18 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let clazz: Clazz;
+    let classRoom: ClassRoom;
     let assignments: Assignment[] = [];
     let response: any = {};
 
     given("I have a class with assignments", async () => {
-      ({ clazz: clazz, assignments: assignments } = await new ClassBuilder()
+      ({ classRoom: classRoom, assignments: assignments } = await new ClassRoomBuilder()
         .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
         .build());
     });
 
     when("I request all assignments for this class by ID", async () => {
-      response = await request(app).get(`/classes/${clazz.id}/assignments`);
+      response = await request(app).get(`/classes/${classRoom.id}/assignments`);
     });
 
     then("I should receive a list of all assignments for that class", () => {

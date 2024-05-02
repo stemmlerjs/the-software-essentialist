@@ -2,13 +2,13 @@ import { prisma } from "../../database";
 import { faker } from "@faker-js/faker";
 import { StudentBuilder } from "./studentBuilder";
 import { AssignmentBuilder } from "./assignmentBuilder";
-import { Clazz, EnrolledStudent } from "./types";
+import { ClassRoom, EnrolledStudent } from "./types";
 
-class ClassBuilder {
+class ClassRoomBuilder {
   private studentsBuilders: StudentBuilder[];
   private assignmentsBuilders: AssignmentBuilder[];
 
-  private clazz: Clazz;
+  private classRoom: ClassRoom;
   private enrolledStudents: EnrolledStudent[];
 
   private shouldAssignAssignments: boolean;
@@ -18,7 +18,7 @@ class ClassBuilder {
   constructor() {
     this.studentsBuilders = [];
     this.assignmentsBuilders = [];
-    this.clazz = {
+    this.classRoom = {
       id: "",
       name: "",
     };
@@ -67,11 +67,11 @@ class ClassBuilder {
 
 
   async enrollStudent(studentBuilder: StudentBuilder) {
-    if (this.clazz) {
+    if (this.classRoom) {
       const student = await studentBuilder.build();
       await prisma.classEnrollment.create({
         data: {
-          classId: this.clazz.id,
+          classId: this.classRoom.id,
           studentId: student.id,
         },
       });
@@ -110,7 +110,7 @@ class ClassBuilder {
     await this.gradeAssignments();
 
     return {
-      clazz: this.clazz,
+      classRoom: this.classRoom,
       students: this.studentsBuilders.map((builder) => builder.getStudent()),
       assignments: this.assignmentsBuilders.map((builder) =>
         builder.getAssignment()
@@ -123,7 +123,7 @@ class ClassBuilder {
   }
 
   private async createClass() {
-    this.clazz = await prisma.class.create({
+    this.classRoom = await prisma.class.create({
       data: {
         name: faker.lorem.word(),
       },
@@ -136,7 +136,7 @@ class ClassBuilder {
 
   private async createAssignments() {
     await Promise.all(
-      this.assignmentsBuilders.map((builder) => builder.build(this.clazz.id))
+      this.assignmentsBuilders.map((builder) => builder.build(this.classRoom.id))
     );
   }
 
@@ -147,7 +147,7 @@ class ClassBuilder {
     const studentPromises = students.map((student) => {
       return prisma.classEnrollment.create({
         data: {
-          classId: this.clazz.id,
+          classId: this.classRoom.id,
           studentId: student.id,
         },
       });
@@ -202,4 +202,4 @@ class ClassBuilder {
   }
 }
 
-export { ClassBuilder };
+export { ClassRoomBuilder };

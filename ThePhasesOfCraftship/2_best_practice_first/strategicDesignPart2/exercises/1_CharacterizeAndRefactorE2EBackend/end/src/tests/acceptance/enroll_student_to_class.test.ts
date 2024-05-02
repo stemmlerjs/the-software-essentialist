@@ -4,7 +4,7 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassBuilder, StudentBuilder } from "../fixtures";
+import { ClassRoomBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/enroll_student_to_class.feature")
@@ -20,12 +20,12 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("there is a class and a student", async () => {
-      const { clazz } = await new ClassBuilder().build();
+      const { classRoom } = await new ClassRoomBuilder().build();
       const student = await new StudentBuilder().build();
 
       requestBody = {
         studentId: student.id,
-        classId: clazz.id,
+        classId: classRoom.id,
       };
     });
 

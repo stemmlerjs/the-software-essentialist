@@ -4,8 +4,8 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassBuilder } from "../fixtures/classBuilder";
-import { Clazz } from "../fixtures";
+import { ClassRoomBuilder } from "../fixtures/classRoomBuilder";
+import { ClassRoom } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/create_assignment.feature")
@@ -16,20 +16,20 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully create an assignment", ({ given, when, then, and }) => {
+  test("Successfully create an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let clazz: Clazz;
-    let classBuilder: ClassBuilder = new ClassBuilder();
+    let classRoom: ClassRoom;
+    let classRoomBuilder: ClassRoomBuilder = new ClassRoomBuilder();
 
     given("I give a class", async () => {
-      ({ clazz } = await classBuilder.build());
+      ({ classRoom } = await classRoomBuilder.build());
     });
 
     when("I create an assignment to the class", async () => {
       requestBody = {
         title: "Assignment 1",
-        classId: clazz.id,
+        classId: classRoom.id,
       };
 
       response = await request(app).post("/assignments").send(requestBody);
