@@ -34,37 +34,76 @@ class ClassRoomBuilder {
   }
 
   withStudents(studentBuilders: StudentBuilder[]) {
-    this.studentsBuilders = [...this.studentsBuilders, ...studentBuilders]
+    this.studentsBuilders = [...this.studentsBuilders, ...studentBuilders];
     return this;
   }
 
   withAssignment(assignmentBuilder: AssignmentBuilder) {
-    if(this.assignmentsBuilders.length) {
-      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    if (this.assignmentsBuilders.length) {
+      throw new Error(
+        "You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously"
+      );
     }
     this.assignmentsBuilders.push(assignmentBuilder);
     return this;
   }
 
   withAssignments(assignmentBuilders: AssignmentBuilder[]) {
-    if(this.assignmentsBuilders.length) {
-      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    if (this.assignmentsBuilders.length) {
+      throw new Error(
+        "You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously"
+      );
     }
-    this.assignmentsBuilders = assignmentBuilders
-    return this
+    this.assignmentsBuilders = assignmentBuilders;
+    return this;
+  }
+
+  withAssignmentAssignmentToAllStudentsThenSubmittedAndGraded(
+    assignmentBuilders: AssignmentBuilder[]
+  ) {
+    if (this.assignmentsBuilders.length) {
+      throw new Error(
+        "You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously"
+      );
+    }
+    this.assignmentsBuilders = assignmentBuilders;
+    this.shouldGradeAssignments = true;
+    return this;
   }
 
   withAssignmentAssignedToAllStudents(assignmentBuilder: AssignmentBuilder) {
-    if(this.assignmentsBuilders.length) {
-      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    if (this.assignmentsBuilders.length) {
+      throw new Error(
+        "You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously"
+      );
     }
-
     this.assignmentsBuilders.push(assignmentBuilder);
     this.shouldAssignAssignments = true;
     return this;
-    
   }
 
+  withAssignedAssignments() {
+    if (this.shouldAssignAssignments) {
+      throw new Error(
+        "You can't assign assignments to students more than once"
+      );
+    }
+    this.shouldAssignAssignments = true;
+    return this;
+  }
+
+  withAssignmentsAssignedToAllStudentsThenSubmitted(
+    assignmentBuilders: AssignmentBuilder[]
+  ) {
+    if (this.assignmentsBuilders.length) {
+      throw new Error(
+        "You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously"
+      );
+    }
+    this.assignmentsBuilders = assignmentBuilders;
+    this.shouldSubmitAssignments = true;
+    return this;
+  }
 
   async enrollStudent(studentBuilder: StudentBuilder) {
     if (this.classRoom) {
@@ -80,24 +119,6 @@ class ClassRoomBuilder {
     }
 
     return studentBuilder.emptyStudent();
-  }
-
-  withAssignedAssignments() {
-    if(this.shouldAssignAssignments) {
-      throw new Error("You can't assign assignments to students more than once")
-    }
-    this.shouldAssignAssignments = true;
-    return this;
-  }
-
-  withAssignedAndSubmittedAssignments() {
-    this.shouldSubmitAssignments = true;
-    return this;
-  }
-
-  withAssignedAndSubmittedAndGradedAssigments() {
-    this.shouldGradeAssignments = true;
-    return this;
   }
 
   async build() {
@@ -136,7 +157,9 @@ class ClassRoomBuilder {
 
   private async createAssignments() {
     await Promise.all(
-      this.assignmentsBuilders.map((builder) => builder.build(this.classRoom.id))
+      this.assignmentsBuilders.map((builder) =>
+        builder.build(this.classRoom.id)
+      )
     );
   }
 

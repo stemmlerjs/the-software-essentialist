@@ -41,32 +41,28 @@ defineFeature(feature, (test) => {
         assignments: assignments,
       } = await new ClassRoomBuilder()
         .withStudent(new StudentBuilder())
-        .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
-        .withAssignedAndSubmittedAndGradedAssigments()
+        .withAssignmentAssignmentToAllStudentsThenSubmittedAndGraded([
+          new AssignmentBuilder(),
+          new AssignmentBuilder(),
+        ])
         .build());
     });
 
-    when(
-      "I request all graded assignments for this student",
-      async () => {
-        response = await request(app).get(`/student/${student.id}/grades`);
-      }
-    );
+    when("I request all graded assignments for this student", async () => {
+      response = await request(app).get(`/student/${student.id}/grades`);
+    });
 
-    then(
-      "I should receive all graded assignments for that student",
-      () => {
-        expect(response.status).toBe(200);
-        expect(response.body.data.length).toBe(assignments.length);
-        assignments.forEach((assignment: any) => {
-          expect(
-            response.body.data.some(
-              (a: any) => a.assignment.title === assignment.title
-            )
-          ).toBeTruthy();
-        });
-      }
-    );
+    then("I should receive all graded assignments for that student", () => {
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBe(assignments.length);
+      assignments.forEach((assignment: any) => {
+        expect(
+          response.body.data.some(
+            (a: any) => a.assignment.title === assignment.title
+          )
+        ).toBeTruthy();
+      });
+    });
   });
 
   test("Attempt to retrieve graded assignments for a non-existent student", ({
@@ -95,12 +91,9 @@ defineFeature(feature, (test) => {
   }) => {
     let response: any = {};
 
-    when(
-      "I request graded assignments for an invalid student",
-      async () => {
-        response = await request(app).get("/student/123/grades");
-      }
-    );
+    when("I request graded assignments for an invalid student", async () => {
+      response = await request(app).get("/student/123/grades");
+    });
 
     then("I should receive an error", () => {
       expect(response.status).toBe(400);

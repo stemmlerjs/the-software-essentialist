@@ -14,11 +14,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving an assignment", ({
-    given,
-    when,
-    then,
-  }) => {
+  test("Successfully retrieving an assignment", ({ given, when, then }) => {
     let assignment: Assignment;
     let response: any = {};
 
@@ -42,10 +38,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve a non-existent assignment", ({
-    when,
-    then,
-  }) => {
+  test("Attempt to retrieve a non-existent assignment", ({ when, then }) => {
     let response: any = {};
 
     when("I request the assignment", async () => {
@@ -59,10 +52,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve an invalid assignment", ({
-    when,
-    then,
-  }) => {
+  test("Attempt to retrieve an invalid assignment", ({ when, then }) => {
     let response: any = {};
 
     when("I request an invalid assignment", async () => {

@@ -37,10 +37,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve a non-existent student", ({
-    when,
-    then,
-  }) => {
+  test("Attempt to retrieve a non-existent student", ({ when, then }) => {
     let response: any = {};
 
     when("I request the student", async () => {
@@ -54,10 +51,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve an invalid student", ({
-    when,
-    then,
-  }) => {
+  test("Attempt to retrieve an invalid student", ({ when, then }) => {
     let response: any = {};
 
     when("I request an invalid student", async () => {

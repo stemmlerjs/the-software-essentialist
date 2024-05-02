@@ -20,10 +20,9 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let classRoom: ClassRoom;
-    let classRoomBuilder: ClassRoomBuilder = new ClassRoomBuilder();
 
     given("I give a class", async () => {
-      ({ classRoom } = await classRoomBuilder.build());
+      ({ classRoom } = await new ClassRoomBuilder().build());
     });
 
     when("I create an assignment to the class", async () => {
