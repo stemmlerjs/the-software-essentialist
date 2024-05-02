@@ -39,13 +39,30 @@ class ClassBuilder {
   }
 
   withAssignment(assignmentBuilder: AssignmentBuilder) {
+    if(this.assignmentsBuilders.length) {
+      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    }
     this.assignmentsBuilders.push(assignmentBuilder);
     return this;
   }
 
   withAssignments(assignmentBuilders: AssignmentBuilder[]) {
-    this.assignmentsBuilders = [...this.assignmentsBuilders, ...assignmentBuilders]
+    if(this.assignmentsBuilders.length) {
+      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    }
+    this.assignmentsBuilders = assignmentBuilders
     return this
+  }
+
+  withAssignmentAssignedToAllStudents(assignmentBuilder: AssignmentBuilder) {
+    if(this.assignmentsBuilders.length) {
+      throw new Error("You must use only one assigment clause. Check if you have used withAssignment(s) or withAssignment(s)AssignedToAllStudents previously")
+    }
+
+    this.assignmentsBuilders.push(assignmentBuilder);
+    this.shouldAssignAssignments = true;
+    return this;
+    
   }
 
 
@@ -66,6 +83,9 @@ class ClassBuilder {
   }
 
   withAssignedAssignments() {
+    if(this.shouldAssignAssignments) {
+      throw new Error("You can't assign assignments to students more than once")
+    }
     this.shouldAssignAssignments = true;
     return this;
   }
