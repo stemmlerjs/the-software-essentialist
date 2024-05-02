@@ -24,7 +24,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving submitted assignments for a student by ID", ({
+  test("Successfully retrieving submitted assignments for a student", ({
     given,
     when,
     then,
@@ -47,14 +47,14 @@ defineFeature(feature, (test) => {
     });
 
     when(
-      "I request all submitted assignments for this student by ID",
+      "I request all submitted assignments for this student",
       async () => {
         response = await request(app).get(`/student/${student.id}/assignments`);
       }
     );
 
     then(
-      "I should receive a list of all submitted assignments for that student",
+      "I should receive all submitted assignments for that student",
       () => {
         expect(response.status).toBe(200);
         expect(response.body.data.length).toBe(2);
@@ -69,14 +69,14 @@ defineFeature(feature, (test) => {
     );
   });
 
-  test("Attempt to retrieve submitted assignments for a student with a non-existent ID", ({
+  test("Attempt to retrieve submitted assignments for a non-existent student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
     when(
-      "I request submitted assignments for a student with non-existent ID",
+      "I request submitted assignments for a non-existent student",
       async () => {
         response = await request(app).get(
           "/student/aec6817e-66b4-4ce5-8a25-f3ec459e40df/assignments"
@@ -84,25 +84,25 @@ defineFeature(feature, (test) => {
       }
     );
 
-    then("I should receive a 404 not found error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(404);
     });
   });
 
-  test("Attempt to retrieve submitted assignments for a student with an invalid ID format", ({
+  test("Attempt to retrieve submitted assignments for an invalid student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
     when(
-      "I request submitted assignments for a student with an invalid ID",
+      "I request submitted assignments for an invalid student",
       async () => {
         response = await request(app).get("/student/123/assignments");
       }
     );
 
-    then("I should receive a 400 bad request error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(400);
     });
   });

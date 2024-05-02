@@ -14,15 +14,15 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving a student by ID", ({ given, when, then }) => {
+  test("Successfully retrieving a student", ({ given, when, then }) => {
     let student: Student;
     let response: any = {};
 
-    given("I have a student with a valid ID", async () => {
+    given("I have a valid student", async () => {
       student = await new StudentBuilder().build();
     });
 
-    when("I request the student by this ID", async () => {
+    when("I request the student", async () => {
       response = await request(app).get(`/students/${student.id}`);
     });
 
@@ -37,34 +37,34 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve a student with a non-existent ID", ({
+  test("Attempt to retrieve a non-existent student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request the student with non existent ID", async () => {
+    when("I request the student", async () => {
       response = await request(app).get(
         "/students/aec6817e-66b4-4ce5-8a25-f3ec459e40df"
       );
     });
 
-    then("I should receive a 404 not found error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(404);
     });
   });
 
-  test("Attempt to retrieve a student with an invalid ID format", ({
+  test("Attempt to retrieve an invalid student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request a student with an invalid ID", async () => {
+    when("I request an invalid student", async () => {
       response = await request(app).get("/students/123");
     });
 
-    then("I should receive a 400 bad request error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(400);
     });
   });

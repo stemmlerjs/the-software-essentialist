@@ -19,7 +19,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving assignments for a class by ID", ({
+  test("Successfully retrieving assignments for a class room", ({
     given,
     when,
     then,
@@ -28,17 +28,17 @@ defineFeature(feature, (test) => {
     let assignments: Assignment[] = [];
     let response: any = {};
 
-    given("I have a class with assignments", async () => {
+    given("I have a class room with assignments", async () => {
       ({ classRoom: classRoom, assignments: assignments } = await new ClassRoomBuilder()
         .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
         .build());
     });
 
-    when("I request all assignments for this class by ID", async () => {
+    when("I request all assignments for this class room", async () => {
       response = await request(app).get(`/classes/${classRoom.id}/assignments`);
     });
 
-    then("I should receive a list of all assignments for that class", () => {
+    then("I should receive all assignments for that class room", () => {
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(assignments.length);
       assignments.forEach((assignment: any) => {
@@ -49,30 +49,30 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve assignments for a class with a non-existent ID", ({
+  test("Attempt to retrieve assignments for a non-existent class room", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request assignments for a class with non-existent ID", async () => {
+    when("I request assignments for a non-existent class room", async () => {
       response = await request(app).get(
         "/classes/aec6817e-66b4-4ce5-8a25-f3ec459e40df/assignments"
       );
     });
 
-    then("I should receive a 404 not found error", () => {
+    then("I should receive an error", () => {
       expect(response.status).toBe(404);
     });
   });
 
-  test("Attempt to retrieve assignments for a class with an invalid ID format", ({
+  test("Attempt to retrieve assignments for an invalid class room", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request assignments for a class with an invalid ID", async () => {
+    when("I request assignments for an invalid class room", async () => {
       response = await request(app).get("/classes/123/assignments");
     });
 
