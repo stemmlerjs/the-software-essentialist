@@ -30,8 +30,7 @@ defineFeature(feature, (test) => {
 
     given("I have a class with assignments", async () => {
       ({ clazz: clazz, assignments: assignments } = await new ClassBuilder()
-        .withAssignment(new AssignmentBuilder())
-        .withAssignment(new AssignmentBuilder())
+        .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
         .build());
     });
 
