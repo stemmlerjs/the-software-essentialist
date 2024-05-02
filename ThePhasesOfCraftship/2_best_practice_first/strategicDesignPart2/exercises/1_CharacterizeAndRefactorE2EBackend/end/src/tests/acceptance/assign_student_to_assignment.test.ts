@@ -4,7 +4,11 @@ import { app } from "../../index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { AssignmentBuilder, ClassRoomBuilder, StudentBuilder } from "../fixtures";
+import {
+  AssignmentBuilder,
+  ClassRoomBuilder,
+  StudentBuilder,
+} from "../fixtures";
 import { Assignment, ClassRoom, Student } from "../fixtures/types";
 
 const feature = loadFeature(
@@ -20,14 +24,12 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
     let student: Student;
-    let classRoom: ClassRoom;
     let assignment: Assignment;
 
     let classBuilder: ClassRoomBuilder = new ClassRoomBuilder();
 
     beforeAll(async () => {
       ({
-        classRoom,
         assignments: [assignment],
       } = await classBuilder.withAssignment(new AssignmentBuilder()).build());
     });

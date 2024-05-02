@@ -41,32 +41,28 @@ defineFeature(feature, (test) => {
         assignments: assignments,
       } = await new ClassRoomBuilder()
         .withStudent(new StudentBuilder())
-        .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
-        .withAssignedAndSubmittedAssignments()
+        .withAssignmentsAssignedToAllStudentsThenSubmitted([
+          new AssignmentBuilder(),
+          new AssignmentBuilder(),
+        ])
         .build());
     });
 
-    when(
-      "I request all submitted assignments for this student",
-      async () => {
-        response = await request(app).get(`/student/${student.id}/assignments`);
-      }
-    );
+    when("I request all submitted assignments for this student", async () => {
+      response = await request(app).get(`/student/${student.id}/assignments`);
+    });
 
-    then(
-      "I should receive all submitted assignments for that student",
-      () => {
-        expect(response.status).toBe(200);
-        expect(response.body.data.length).toBe(2);
-        assignments.forEach((assignment: any) => {
-          expect(
-            response.body.data.some(
-              (a: any) => a.assignment.title === assignment.title
-            )
-          ).toBeTruthy();
-        });
-      }
-    );
+    then("I should receive all submitted assignments for that student", () => {
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBe(2);
+      assignments.forEach((assignment: any) => {
+        expect(
+          response.body.data.some(
+            (a: any) => a.assignment.title === assignment.title
+          )
+        ).toBeTruthy();
+      });
+    });
   });
 
   test("Attempt to retrieve submitted assignments for a non-existent student", ({
@@ -95,12 +91,9 @@ defineFeature(feature, (test) => {
   }) => {
     let response: any = {};
 
-    when(
-      "I request submitted assignments for an invalid student",
-      async () => {
-        response = await request(app).get("/student/123/assignments");
-      }
-    );
+    when("I request submitted assignments for an invalid student", async () => {
+      response = await request(app).get("/student/123/assignments");
+    });
 
     then("I should receive an error", () => {
       expect(response.status).toBe(400);

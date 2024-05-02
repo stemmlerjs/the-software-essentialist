@@ -29,9 +29,10 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have a class room with assignments", async () => {
-      ({ classRoom: classRoom, assignments: assignments } = await new ClassRoomBuilder()
-        .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
-        .build());
+      ({ classRoom: classRoom, assignments: assignments } =
+        await new ClassRoomBuilder()
+          .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
+          .build());
     });
 
     when("I request all assignments for this class room", async () => {
