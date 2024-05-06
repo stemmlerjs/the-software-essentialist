@@ -20,7 +20,7 @@
     "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test:e2e": "jest --verbose src/tests/acceptance/ --runInBand"
+    "tests:e2e": "jest --verbose src/tests/acceptance/ --runInBand"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
