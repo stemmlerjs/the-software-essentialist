@@ -10,6 +10,6 @@ Feature: Create Class Room
         Then the class room should be created successfully
 
     Scenario: Fail to create a class room
-        Given I want to create a class no name
+        Given I want to create a class room with no name
         When I send a request to create a class room
         Then the class room should not be created

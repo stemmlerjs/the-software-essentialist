@@ -38,7 +38,7 @@ defineFeature(feature, (test) => {
     let requestBody: any = {};
     let response: any = {};
 
-    given("I want to create a class room no name", () => {
+    given("I want to create a class room with no name", () => {
       requestBody = {};
     });
 
