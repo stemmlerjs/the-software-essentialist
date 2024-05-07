@@ -1,15 +1,15 @@
-Feature: Create Class
+Feature: Create Class Room
 
     As an administrator
     I want to create a class
     So that I can add students to it
 
-    Scenario: Sucessfully create a class
-        Given I want to create a class named "Math"
-        When I send a request to create a class
-        Then the class should be created successfully
+    Scenario: Sucessfully create a class room
+        Given I want to create a class room named "Math"
+        When I send a request to create a class room
+        Then the class room should be created successfully
 
-    Scenario: Fail to create a class
+    Scenario: Fail to create a class room
         Given I want to create a class no name
-        When I send a request to create a class
-        Then the class should not be created
+        When I send a request to create a class room
+        Then the class room should not be created

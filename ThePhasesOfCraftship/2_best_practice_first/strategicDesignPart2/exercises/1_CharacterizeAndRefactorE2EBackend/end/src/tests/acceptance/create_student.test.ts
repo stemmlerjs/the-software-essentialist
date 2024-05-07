@@ -14,7 +14,7 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successful Student Creation", ({ given, when, then }) => {
+  test("Successfuly create a student", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
 

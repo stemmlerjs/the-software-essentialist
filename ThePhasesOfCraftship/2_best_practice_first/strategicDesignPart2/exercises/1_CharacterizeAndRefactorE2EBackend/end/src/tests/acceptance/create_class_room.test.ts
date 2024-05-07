@@ -6,7 +6,7 @@ import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/create_class.feature")
+  path.join(__dirname, "../features/create_class_room.feature")
 );
 
 defineFeature(feature, (test) => {
@@ -14,39 +14,39 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Sucessfully create a class", ({ given, when, then }) => {
+  test("Sucessfully create a class room", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    given(/^I want to create a class named "(.*)"$/, (name) => {
+    given(/^I want to create a class room named "(.*)"$/, (name) => {
       requestBody = {
         name,
       };
     });
 
-    when("I send a request to create a class", async () => {
+    when("I send a request to create a class room", async () => {
       response = await request(app).post("/classes").send(requestBody);
     });
 
-    then("the class should be created successfully", () => {
+    then("the class room should be created successfully", () => {
       expect(response.status).toBe(201);
       expect(response.body.data.name).toBe(requestBody.name);
     });
   });
 
-  test("Fail to create a class", ({ given, when, then }) => {
+  test("Fail to create a class room", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    given("I want to create a class no name", () => {
+    given("I want to create a class room no name", () => {
       requestBody = {};
     });
 
-    when("I send a request to create a class", async () => {
+    when("I send a request to create a class room", async () => {
       response = await request(app).post("/classes").send(requestBody);
     });
 
-    then("the class should not be created", () => {
+    then("the class room should not be created", () => {
       expect(response.status).toBe(400);
       expect(response.body.success).toBeFalsy();
       expect(response.body.error).toBe("ValidationError");
