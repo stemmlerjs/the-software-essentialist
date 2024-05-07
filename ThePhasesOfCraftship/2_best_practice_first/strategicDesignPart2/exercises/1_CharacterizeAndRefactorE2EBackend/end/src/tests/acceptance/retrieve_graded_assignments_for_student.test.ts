@@ -41,7 +41,7 @@ defineFeature(feature, (test) => {
         assignments: assignments,
       } = await new ClassRoomBuilder()
         .withStudent(new StudentBuilder())
-        .withAssignmentAssignmentToAllStudentsThenSubmittedAndGraded([
+        .withAssignmentAssignedToAllStudentsThenSubmittedAndGraded([
           new AssignmentBuilder(),
           new AssignmentBuilder(),
         ])
