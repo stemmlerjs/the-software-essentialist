@@ -37,3 +37,4 @@ const application = new Application(
 );
 
 export default application;
+

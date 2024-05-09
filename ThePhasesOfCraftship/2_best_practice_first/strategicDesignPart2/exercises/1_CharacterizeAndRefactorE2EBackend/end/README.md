@@ -23,7 +23,7 @@ afterEach(async () => {
 
 - In case you realize some routes don't properly handle business rules based on any acceptance test you have written, take the opportunity to improve the route instead adjusting the scenario to the code. In real life it's normal to find hidden bugs when you're writing tests to legacy code. Trust in your tests!
 
-- Run `npm run tests:e2e` to run the tests
+- Run `npm run test:e2e` to run the tests
 
 ## Solution
 

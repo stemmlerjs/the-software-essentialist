@@ -6,6 +6,3 @@ export interface Database {
   users: UserRepo;
   posts: PostRepo;
 }
-
-
-

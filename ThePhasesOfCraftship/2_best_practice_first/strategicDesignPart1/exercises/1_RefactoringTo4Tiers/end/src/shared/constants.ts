@@ -1,4 +1,5 @@
-const Errors = {
+
+const ErrorExceptionType = {
   ValidationError: "ValidationError",
   StudentNotFound: "StudentNotFound",
   ClassNotFound: "ClassNotFound",
@@ -9,4 +10,4 @@ const Errors = {
   StudentAssignmentNotFoundException: "StudentAssignmentNotFoundException",
 };
 
-export default Errors;
+export default ErrorExceptionType;
