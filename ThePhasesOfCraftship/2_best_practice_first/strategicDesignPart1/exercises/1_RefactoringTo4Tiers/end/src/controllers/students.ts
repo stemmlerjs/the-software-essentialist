@@ -14,7 +14,7 @@ class StudentsController {
     private errorHandler: ErrorHandler
   ) {
     this.router = express.Router();
-    this.routes();
+    this.setupRoutes();
     this.setupErrorHandler();
   }
 
@@ -26,7 +26,7 @@ class StudentsController {
     this.router.use(this.errorHandler);
   }
 
-  private routes() {
+  private setupRoutes() {
     this.router.post("/", this.createStudent);
     this.router.get("/", this.getAllStudents);
     this.router.get("/:id", this.getStudent);

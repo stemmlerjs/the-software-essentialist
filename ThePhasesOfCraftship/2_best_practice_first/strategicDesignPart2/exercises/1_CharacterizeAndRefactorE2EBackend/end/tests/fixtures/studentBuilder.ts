@@ -1,4 +1,4 @@
-import { prisma } from "../../database";
+import { prisma } from "../../src/database";
 import { faker } from "@faker-js/faker";
 import { Student, StudentAssignment } from "./types";
 

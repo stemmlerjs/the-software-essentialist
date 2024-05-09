@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../index";
+import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
