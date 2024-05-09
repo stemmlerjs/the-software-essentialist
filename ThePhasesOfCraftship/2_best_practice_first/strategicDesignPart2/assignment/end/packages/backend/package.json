@@ -1,27 +1,18 @@
 {
-  "name": "typescript-starter",
+  "name": "@dddforum/backend",
   "version": "1.0.0",
-  "description": "A basic typescript app starter for 2023.",
+  "description": "The backend for dddforum",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc -b tsconfig.json ",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:reset": "rimraf ./dev.db && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
-    "start": "npm run build && node build/index.js",
-    "lint": "eslint . --ext .ts",
-    "prettier-format": "run-script-os",
-    "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
-    "prettier-format:darwin:linux": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-format:default": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-watch": "run-script-os",
-    "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
-    "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test": "jest",
-    "test:dev": "jest --watchAll"
+    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
+    "start": "npm run build && npm run db:seed && node build/index.js",
+    "lint": "eslint . --ext .ts"
   },
   "husky": {
     "hooks": {
