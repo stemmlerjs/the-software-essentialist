@@ -1,8 +1,8 @@
 
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-import { User } from '@prisma/client';
-const cors = require('cors')
+import cors from 'cors';
+
 const app = express();
 app.use(express.json());
 app.use(cors())
@@ -17,7 +17,7 @@ const Errors = {
 }
 
 function isMissingKeys (data: any, keysToCheckFor: string[]) {
-  for (let key of keysToCheckFor) {
+  for (const key of keysToCheckFor) {
     if (data[key] === undefined) return true;
   } 
   return false;
@@ -35,7 +35,7 @@ function generateRandomPassword(length: number): string {
   return passwordArray.join('');
 }
 
-function parseUserForResponse (user: User) {
+function parseUserForResponse (user: any) {
   const returnData = JSON.parse(JSON.stringify(user));
   delete returnData.password;
   return returnData;
@@ -64,7 +64,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return res.status(409).json({ error: Errors.UsernameAlreadyTaken, data: undefined, success: false })
     }
 
-    const { user, member } = await prisma.$transaction(async (tx) => {
+    const { user } = await prisma.$transaction(async () => {
       const user = await prisma.user.create({ data: { ...userData, password: generateRandomPassword(10) } });
       const member = await prisma.member.create({ data: { userId: user.id }})
       return { user, member }
@@ -72,7 +72,6 @@ app.post('/users/new', async (req: Request, res: Response) => {
     
     return res.status(201).json({ error: undefined, data: parseUserForResponse(user), success: true });
   } catch (error) {
-    console.log(error)
     // Return a failure error response
     return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
   }
@@ -81,7 +80,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
 // Edit a user
 app.post('/users/edit/:userId', async (req: Request, res: Response) => {
   try {
-    let id = Number(req.params.userId);
+    const id = Number(req.params.userId);
 
     const keyIsMissing = isMissingKeys(req.body, 
       ['email', 'firstName', 'lastName', 'username']
@@ -145,7 +144,7 @@ app.get('/posts', async (req: Request, res: Response) => {
       return res.status(400).json({ error: Errors.ClientError, data: undefined, success: false })
     } 
 
-    let postsWithVotes = await prisma.post.findMany({
+    const postsWithVotes = await prisma.post.findMany({
       include: {
         votes: true, // Include associated votes for each post
         memberPostedBy: {
@@ -174,5 +173,5 @@ app.listen(port, () => {
 
 
 prisma.post.findMany({})
-  .then((posts) => console.log(posts))
-  .catch((err) => console.log(err));
+  .then((posts: any) => console.log(posts))
+  .catch((err: any) => console.log(err));

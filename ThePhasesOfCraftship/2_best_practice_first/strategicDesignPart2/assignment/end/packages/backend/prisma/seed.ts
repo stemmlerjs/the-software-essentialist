@@ -29,11 +29,6 @@ const initialUsers: User[] = [
   },
 ];
 
-const initialMemberUserIds = [
-  { memberId: 1, userId: 1 },
-  { memberId: 2, userId: 2 },
-  { memberId: 3, userId: 3 },
-];
 
 const initialPosts: Post[] = [
   {
