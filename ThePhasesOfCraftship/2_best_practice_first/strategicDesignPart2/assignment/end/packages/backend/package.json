@@ -4,11 +4,11 @@
   "description": "The backend for dddforum",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc -b tsconfig.json ",
-    "generate": "prisma generate",
-    "migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed",
-    "db:reset": "rimraf ./dev.db && npm run migrate && npm run generate",
+    "build": "tsc -b tsconfig.json && npm run generate",
+    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
+    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
+    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run build && npm run db:seed && node build/index.js",
@@ -24,7 +24,7 @@
     }
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node ./src/shared/database/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

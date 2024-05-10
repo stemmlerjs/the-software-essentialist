@@ -1,6 +1,6 @@
 
 import express, { Request, Response } from 'express';
-import { prisma } from './database';
+import { prisma } from './shared/database/database';
 import cors from 'cors';
 
 const app = express();
