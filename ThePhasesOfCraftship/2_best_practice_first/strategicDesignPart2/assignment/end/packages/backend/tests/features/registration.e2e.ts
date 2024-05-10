@@ -3,7 +3,6 @@ import request from "supertest";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { app } from '@dddforum/backend/src/index';
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
-import { afterEach } from "node:test";
 import { resetDatabase } from "@dddforum/shared/tests/support/fixtures/reset";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
