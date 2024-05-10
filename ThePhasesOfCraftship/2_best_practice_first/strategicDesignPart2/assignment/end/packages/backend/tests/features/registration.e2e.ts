@@ -131,4 +131,55 @@ defineFeature(feature, (test) => {
         })
     })
 
+    test('Username already taken', ({ given, when, then, and }) => {
+
+        let existingUsers: CreateUserParams[] = [];
+        let createUserResponses: request.Response[] = [];
+        
+        given('a set of users have already created their accounts with valid details', async (table) => {
+            existingUsers = table.map((row: any) => {
+                return new CreateUserBuilder()
+                    .withFirstName(row.firstName)
+                    .withLastName(row.lastName)
+                    .withEmail(row.email)
+                    .withUsername(row.username)
+                    .build();
+            })
+            await databaseFixture.setupWithExistingUsers(existingUsers)
+        })
+
+        when('new users attempt to register with already taken usernames', async (table) => {
+            const newUsers: CreateUserParams[] = table.map((row: any) => {
+                return new CreateUserBuilder()
+                    .withFirstName(row.firstName)
+                    .withLastName(row.lastName)
+                    .withEmail(row.email)
+                    .withUsername(row.username)
+                    .build();
+            })
+            
+            createUserResponses = await Promise.all(newUsers.map((user) => {
+                return request(app)
+                    .post('/users/new')
+                    .send(user);
+            }))
+        })
+
+        then('they see an error notifying them that the username has already been taken', () => {
+            for (const {body} of createUserResponses) {
+                expect(body.error).toBeDefined();
+                expect(body.success).toBeFalsy();
+                expect(body.error).toEqual(Errors.UsernameAlreadyTaken);
+              }
+        })
+
+        and('they should not have been sent access to account details', () => {
+            createUserResponses.forEach((response) => {
+                expect(response.status).toBe(409);
+                expect(response.body.success).toBe(false);
+                expect(response.body.data).toBeUndefined();
+                expect(response.body.error).toBeDefined();
+            })
+        })
+    })
 })

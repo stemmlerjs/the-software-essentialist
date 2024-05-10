@@ -30,7 +30,7 @@ Feature: Registration
         Then they should see an error notifying them that the account already exists
         And they should not have been sent access to account details
 
-    @backend @excluded
+    @backend
     Scenario: Username already taken
         Given a set of users have already created their accounts with valid details
             | firstName | lastName | username     | email              |
