@@ -12,7 +12,7 @@ Feature: Registration
 
 
     # Failure scenarios
-    @backend @excluded
+    @backend
     Scenario: Invalid or missing registration details
         Given I am a new user
         When I register with invalid account details
