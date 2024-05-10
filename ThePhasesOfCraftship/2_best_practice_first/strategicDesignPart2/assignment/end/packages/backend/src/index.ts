@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
-const Errors = {
+export const Errors = {
   UsernameAlreadyTaken: 'UserNameAlreadyTaken',
   EmailAlreadyInUse: 'EmailAlreadyInUse',
   ValidationError: 'ValidationError',
@@ -23,7 +23,7 @@ function isMissingKeys (data: any, keysToCheckFor: string[]) {
   return false;
 }
 
-function generateRandomPassword(length: number): string {
+export function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
   const passwordArray = [];
 

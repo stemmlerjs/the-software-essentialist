@@ -1,11 +1,11 @@
 import path from "path";
 import request from "supertest";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { app } from '@dddforum/backend/src/index';
+import { app, Errors } from '@dddforum/backend/src/index';
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
-import { resetDatabase } from "@dddforum/shared/tests/support/fixtures/reset";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 
 const feature = loadFeature(
     path.join(sharedTestRoot, 'features/registration.feature'),
@@ -13,8 +13,15 @@ const feature = loadFeature(
 );
 
 defineFeature(feature, (test) => {
+
+    let databaseFixture: DatabaseFixture
+
+    beforeAll(() => {
+        databaseFixture = new DatabaseFixture();
+    })
+
     afterEach(async () => {
-        await resetDatabase();
+        await databaseFixture.resetDatabase();
     });
 
     test('Successful registration', ({ given, when, then }) => {
@@ -42,6 +49,48 @@ defineFeature(feature, (test) => {
             expect(response.body.data.firstName).toBe(user.firstName);
             expect(response.body.data.lastName).toBe(user.lastName);
             expect(response.body.data.id).toBeDefined();
+        })
+    })
+
+    test('Account already created with email', ({ given, when, then, and }) => {
+
+        let existingUsers: CreateUserParams[] = [];
+        let createUserResponses: request.Response[] = [];
+        
+        given('a set of users already created accounts', async (table) => {
+            existingUsers = table.map((row: any) => {
+                return new CreateUserBuilder()
+                    .withFirstName(row.firstName)
+                    .withLastName(row.lastName)
+                    .withEmail(row.email)
+                    .build();
+            })
+            await databaseFixture.setupWithExistingUsers(existingUsers)
+        })
+
+        when('new users attempt to register with those emails', async () => {
+            createUserResponses = await Promise.all(existingUsers.map((user) => {
+                return request(app)
+                    .post('/users/new')
+                    .send(user);
+            }))
+        })
+
+        then('they should see an error notifying them that the account already exists', () => {
+            for (const {body} of createUserResponses) {
+                expect(body.error).toBeDefined();
+                expect(body.success).toBeFalsy();
+                expect(body.error).toEqual(Errors.EmailAlreadyInUse);
+              }
+        })
+
+        and('they should not have been sent access to account details', () => {
+            createUserResponses.forEach((response) => {
+                expect(response.status).toBe(409);
+                expect(response.body.success).toBe(false);
+                expect(response.body.data).toBeUndefined();
+                expect(response.body.error).toBeDefined();
+            })
         })
     })
 })

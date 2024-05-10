@@ -19,7 +19,7 @@ Feature: Registration
         Then I should see an error notifying me that my input is invalid
         And I should not have been sent access to account details
 
-    @backend @excluded
+    @backend
     Scenario: Account already created with email
         Given a set of users already created accounts
             | firstName | lastName | email             |

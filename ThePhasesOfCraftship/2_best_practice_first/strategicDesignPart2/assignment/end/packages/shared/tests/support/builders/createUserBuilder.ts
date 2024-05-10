@@ -22,7 +22,7 @@ export class CreateUserBuilder {
         return this;
     }
 
-    private withFirstName(firstName: string) {
+    public withFirstName(firstName: string) {
         this.props = {
             ...this.props,
             firstName
@@ -30,7 +30,7 @@ export class CreateUserBuilder {
         return this;
     }
 
-    private withLastName(lastName: string) {
+    public withLastName(lastName: string) {
         this.props = {
             ...this.props,
             lastName
@@ -38,7 +38,7 @@ export class CreateUserBuilder {
         return this;
     }
 
-    private withEmail(email: string) {
+    public withEmail(email: string) {
         this.props = {
             ...this.props,
             email
@@ -46,7 +46,7 @@ export class CreateUserBuilder {
         return this;
     }
 
-    private withUsername(username: string) {
+    public withUsername(username: string) {
         this.props = {
             ...this.props,
             username
