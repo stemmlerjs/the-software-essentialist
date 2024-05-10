@@ -1,6 +1,6 @@
 
 import express, { Request, Response } from 'express';
-import { prisma } from './shared/database/database';
+import { prisma } from './shared/database/';
 import cors from 'cors';
 
 const app = express();
@@ -167,11 +167,12 @@ app.get('/posts', async (req: Request, res: Response) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if(process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
 
 
-prisma.post.findMany({})
-  .then((posts: any) => console.log(posts))
-  .catch((err: any) => console.log(err));
+
+export { app }
