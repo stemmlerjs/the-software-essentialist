@@ -52,6 +52,43 @@ defineFeature(feature, (test) => {
         })
     })
 
+    test('Invalid or missing registration details', ({ given, when, then, and }) => {
+        let user: any;
+        let response: request.Response;
+
+        given('I am a new user', () => {
+            const validUser = new CreateUserBuilder()
+                .withAllRandomDetails()
+                .build();
+
+            user = {
+                firstName: validUser.firstName,
+                email: validUser.email,
+                lastName: validUser.lastName
+            }
+        })
+
+        when('I register with invalid account details', async () => {
+            response = await request(app)
+                .post('/users/new')
+                .send(user);
+        })
+
+        then('I should see an error notifying me that my input is invalid', () => {
+            expect(response.status).toBe(400);
+            expect(response.body.success).toBe(false);
+            expect(response.body.data).toBeUndefined();
+            expect(response.body.error).toBeDefined();
+        })
+
+        and('I should not have been sent access to account details', () => {
+            expect(response.status).toBe(400);
+            expect(response.body.success).toBe(false);
+            expect(response.body.data).toBeUndefined();
+            expect(response.body.error).toBeDefined();
+        })
+    })
+
     test('Account already created with email', ({ given, when, then, and }) => {
 
         let existingUsers: CreateUserParams[] = [];
@@ -93,4 +130,5 @@ defineFeature(feature, (test) => {
             })
         })
     })
+
 })

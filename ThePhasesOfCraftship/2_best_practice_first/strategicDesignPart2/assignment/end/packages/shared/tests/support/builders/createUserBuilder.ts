@@ -54,6 +54,7 @@ export class CreateUserBuilder {
         return this;
     }
 
+
     public build() {
         return this.props;
     }
