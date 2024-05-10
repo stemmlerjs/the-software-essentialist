@@ -8,7 +8,7 @@
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
-    "types": ["node",  "../../node_modules/.prisma/client"],
+    "types": ["node","jest", "../../node_modules/.prisma/client"],
     "skipLibCheck": true,
     "resolveJsonModule": true,
   },

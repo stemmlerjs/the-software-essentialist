@@ -14,5 +14,5 @@ export default async (): Promise<JestConfigWithTsJest> => ({
     prefix: path.resolve(__dirname, '../../'),
   }),
   maxWorkers: 1,
-  globalSetup: './tests/support/globalDevEnvTestSetup.ts'
+  globalSetup: './tests/support/globalDevEnvTestSetup.ts',
 });
