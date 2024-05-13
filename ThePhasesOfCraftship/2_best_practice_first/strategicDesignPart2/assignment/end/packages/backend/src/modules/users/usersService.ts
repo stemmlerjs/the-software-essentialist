@@ -1,37 +1,24 @@
-import { prisma } from '@dddforum/backend/src/shared/database';
-import { generateRandomPassword } from '../../shared/utils';
+import { Database } from '@dddforum/backend/src/shared/database';
 
 export class UsersService {
 
-    constructor() {}
+    constructor(private db: Database) {}
 
     async createUser(userData: any) {
-        const existingUserByEmail = await prisma.user.findFirst({ where: { email: userData.email }});
-
+        const existingUserByEmail = await this.db.users.findUserByEmail(userData.email);
         if (existingUserByEmail) {
             throw new Error('EmailAlreadyInUse');
         }
 
-        const existingUserByUsername = await prisma.user.findFirst({ where: { username: userData.username }});
+        const existingUserByUsername = await this.db.users.findUserByUsername(userData.username);
         if (existingUserByUsername) {
             throw new Error('UsernameAlreadyTaken');
         }
 
-        const { user } = await prisma.$transaction(async () => {
-            const user = await prisma.user.create({ data: { ...userData, password: generateRandomPassword(10) } });
-            const member = await prisma.member.create({ data: { userId: user.id }})
-            return { user, member }
-        })
+        const { user } = await this.db.users.save(userData)
 
         return user;
 
     }
 
-
-}
-
-const usersService = new UsersService();
-
-export {
-    usersService
 }
