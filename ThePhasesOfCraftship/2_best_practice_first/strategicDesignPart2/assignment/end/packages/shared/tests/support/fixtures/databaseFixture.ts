@@ -1,5 +1,5 @@
-import { generateRandomPassword } from "@dddforum/backend/src";
 import { prisma } from "@dddforum/backend/src/shared/database/";
+import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 
 export class DatabaseFixture {
