@@ -2,13 +2,14 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './shared/database/';
 import cors from 'cors';
+import { usersService } from './modules/users/usersService';
 
 const app = express();
 app.use(express.json());
 app.use(cors())
 
 export const Errors = {
-  UsernameAlreadyTaken: 'UserNameAlreadyTaken',
+  UsernameAlreadyTaken: 'UsernameAlreadyTaken',
   EmailAlreadyInUse: 'EmailAlreadyInUse',
   ValidationError: 'ValidationError',
   ServerError: 'ServerError',
@@ -23,17 +24,7 @@ function isMissingKeys (data: any, keysToCheckFor: string[]) {
   return false;
 }
 
-export function generateRandomPassword(length: number): string {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-  const passwordArray = [];
 
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    passwordArray.push(charset[randomIndex]);
-  }
-
-  return passwordArray.join('');
-}
 
 function parseUserForResponse (user: any) {
   const returnData = JSON.parse(JSON.stringify(user));
@@ -43,6 +34,7 @@ function parseUserForResponse (user: any) {
 
 // Create a new user
 app.post('/users/new', async (req: Request, res: Response) => {
+  
   try {
     const keyIsMissing = isMissingKeys(req.body, 
       ['email', 'firstName', 'lastName', 'username']
@@ -54,25 +46,23 @@ app.post('/users/new', async (req: Request, res: Response) => {
 
     const userData = req.body;
     
-    const existingUserByEmail = await prisma.user.findFirst({ where: { email: req.body.email }});
-    if (existingUserByEmail) {
-      return res.status(409).json({ error: Errors.EmailAlreadyInUse, data: undefined, success: false })
-    }
+    try {
+      const user = await usersService.createUser(userData);
+      return res.status(201).json({ error: undefined, data: parseUserForResponse(user), success: true });
 
-    const existingUserByUsername = await prisma.user.findFirst({ where: { username: req.body.username as string }});
-    if (existingUserByUsername) {
-      return res.status(409).json({ error: Errors.UsernameAlreadyTaken, data: undefined, success: false })
-    }
+    } catch (error: any) {
+      if (error.message === Errors.EmailAlreadyInUse) {
+        return res.status(409).json({ error: Errors.EmailAlreadyInUse, data: undefined, success: false });
+      }
+      if (error.message === Errors.UsernameAlreadyTaken) {
 
-    const { user } = await prisma.$transaction(async () => {
-      const user = await prisma.user.create({ data: { ...userData, password: generateRandomPassword(10) } });
-      const member = await prisma.member.create({ data: { userId: user.id }})
-      return { user, member }
-    })
+        return res.status(409).json({ error: Errors.UsernameAlreadyTaken, data: undefined, success: false });
+      }
+
+      return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+    }
     
-    return res.status(201).json({ error: undefined, data: parseUserForResponse(user), success: true });
   } catch (error) {
-    // Return a failure error response
     return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
   }
 });
