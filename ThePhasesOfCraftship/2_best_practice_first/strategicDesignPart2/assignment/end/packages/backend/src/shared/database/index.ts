@@ -4,8 +4,4 @@ import { Database } from "./database";
 const prisma = new PrismaClient();
 const database = new Database(prisma);
 
-export {
-    Database,
-    prisma,
-    database
-}
+export { Database, prisma, database };
