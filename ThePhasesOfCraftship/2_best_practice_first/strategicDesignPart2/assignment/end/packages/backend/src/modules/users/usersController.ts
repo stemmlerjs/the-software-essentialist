@@ -1,7 +1,7 @@
 import express from "express";
 import { UsersService } from "./usersService";
 import {  parseUserForResponse } from "../../shared/utils/parser";
-import { CreateUserDTO } from "./usersDTO";
+import { CreateUserCommand } from "./usersCommand";
 import { ErrorHandler } from "../../shared/errors";
 
 export class UsersController {
@@ -34,8 +34,8 @@ export class UsersController {
     next: express.NextFunction,
   ) {
     try {
-      const dto = CreateUserDTO.fromRequest(req.body);
-      const user = await this.usersService.createUser(dto);
+      const command = CreateUserCommand.fromRequest(req.body);
+      const user = await this.usersService.createUser(command);
       return res.status(201).json({
         error: undefined,
         data: parseUserForResponse(user),
