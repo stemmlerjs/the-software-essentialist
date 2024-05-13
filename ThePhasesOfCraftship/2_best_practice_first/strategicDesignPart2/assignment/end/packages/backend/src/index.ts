@@ -1,8 +1,8 @@
 
 import express, { Request, Response } from 'express';
-import { prisma } from './shared/database/';
+import { database, prisma } from './shared/database/';
 import cors from 'cors';
-import { usersService } from './modules/users/usersService';
+import { UsersService } from './modules';
 
 const app = express();
 app.use(express.json());
@@ -25,12 +25,15 @@ function isMissingKeys (data: any, keysToCheckFor: string[]) {
 }
 
 
-
 function parseUserForResponse (user: any) {
   const returnData = JSON.parse(JSON.stringify(user));
   delete returnData.password;
   return returnData;
 }
+
+
+const usersService = new UsersService(database);
+
 
 // Create a new user
 app.post('/users/new', async (req: Request, res: Response) => {
