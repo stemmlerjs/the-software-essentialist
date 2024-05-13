@@ -6,7 +6,7 @@ import { sharedTestRoot } from "@dddforum/shared/src/paths";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
-import { Errors } from "../../src/modules/users/usersController";
+import { Errors } from "../../src/shared/errors";
 
 const feature = loadFeature(
     path.join(sharedTestRoot, 'features/registration.feature'),

@@ -1,4 +1,5 @@
 import { Database } from "@dddforum/backend/src/shared/database";
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from "../../shared/exceptions";
 
 export class UsersService {
   constructor(private db: Database) {}
@@ -8,14 +9,14 @@ export class UsersService {
       userData.email,
     );
     if (existingUserByEmail) {
-      throw new Error("EmailAlreadyInUse");
+      throw new EmailAlreadyInUseException(userData.email);
     }
 
     const existingUserByUsername = await this.db.users.findUserByUsername(
       userData.username,
     );
     if (existingUserByUsername) {
-      throw new Error("UsernameAlreadyTaken");
+      throw new UsernameAlreadyTakenException(userData.username);
     }
 
     const { user } = await this.db.users.save(userData);
