@@ -1,10 +1,11 @@
 import { Database } from "@dddforum/backend/src/shared/database";
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from "../../shared/exceptions";
+import { CreateUserCommand } from "./usersCommand";
 
 export class UsersService {
   constructor(private db: Database) {}
 
-  async createUser(userData: any) {
+  async createUser(userData: CreateUserCommand) {
     const existingUserByEmail = await this.db.users.findUserByEmail(
       userData.email,
     );
