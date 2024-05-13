@@ -1,11 +1,12 @@
 import path from "path";
 import request from "supertest";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { app, Errors } from '@dddforum/backend/src/index';
+import { app } from '@dddforum/backend/src/index';
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
+import { Errors } from "../../src/modules/users/usersController";
 
 const feature = loadFeature(
     path.join(sharedTestRoot, 'features/registration.feature'),
