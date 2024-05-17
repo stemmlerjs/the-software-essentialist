@@ -1,7 +1,7 @@
 import path from "path";
 import request from "supertest";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { app } from '@dddforum/backend/src/index';
+import { app } from '@dddforum/backend/src/shared/bootstrap'; 
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";

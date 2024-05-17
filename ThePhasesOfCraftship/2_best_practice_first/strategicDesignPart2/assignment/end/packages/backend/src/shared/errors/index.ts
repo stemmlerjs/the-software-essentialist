@@ -23,7 +23,7 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ) {
-  if (error.type ===  'InvalidRequestBodyException') {
+  if (error.type === "InvalidRequestBodyException") {
     return res.status(400).json({
       error: Errors.ValidationError,
       data: undefined,

@@ -16,9 +16,19 @@ type NewUser = {
 
 export class Database {
   public users: UsersPersistence;
+  private connection: PrismaClient;
 
-  constructor(private prisma: PrismaClient) {
+  constructor() {
+    this.connection = new PrismaClient();
     this.users = this.buildUsersPersistence();
+  }
+
+  getConnection() {
+    return this.connection;
+  }
+
+  async connect() {
+    await this.connection.$connect();
   }
 
   private buildUsersPersistence(): UsersPersistence {
@@ -31,8 +41,8 @@ export class Database {
 
   private async saveUser(user: NewUser) {
     const { email, firstName, lastName, username } = user;
-    return await this.prisma.$transaction(async () => {
-      const user = await this.prisma.user.create({
+    return await this.connection.$transaction(async () => {
+      const user = await this.connection.user.create({
         data: {
           email,
           username,
@@ -41,7 +51,7 @@ export class Database {
           password: generateRandomPassword(10),
         },
       });
-      const member = await this.prisma.member.create({
+      const member = await this.connection.member.create({
         data: { userId: user.id },
       });
       return { user, member };
@@ -49,10 +59,10 @@ export class Database {
   }
 
   private async findUserByEmail(email: string) {
-    return this.prisma.user.findFirst({ where: { email } });
+    return this.connection.user.findFirst({ where: { email } });
   }
 
   private async findUserByUsername(username: string) {
-    return this.prisma.user.findFirst({ where: { username } });
+    return this.connection.user.findFirst({ where: { username } });
   }
 }
