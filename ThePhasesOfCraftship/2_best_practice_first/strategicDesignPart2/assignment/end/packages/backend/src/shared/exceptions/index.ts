@@ -1,5 +1,5 @@
 export class CustomException extends Error {
-  public type: string
+  public type: string;
   constructor(message: string, type: string = "CustomException") {
     super(message);
     this.type = type;
@@ -7,12 +7,13 @@ export class CustomException extends Error {
 }
 
 class InvalidRequestBodyException extends CustomException {
-  
   constructor(missingKeys: string[]) {
-    super("Body is missing required key: " + missingKeys.join(", "), "InvalidRequestBodyException");
+    super(
+      "Body is missing required key: " + missingKeys.join(", "),
+      "InvalidRequestBodyException",
+    );
   }
 }
-
 
 class EmailAlreadyInUseException extends CustomException {
   constructor(email: string) {
@@ -22,8 +23,15 @@ class EmailAlreadyInUseException extends CustomException {
 
 class UsernameAlreadyTakenException extends CustomException {
   constructor(username: string) {
-    super(`Username ${username} is already taken`, "UsernameAlreadyTakenException");
+    super(
+      `Username ${username} is already taken`,
+      "UsernameAlreadyTakenException",
+    );
   }
 }
 
-export { InvalidRequestBodyException, EmailAlreadyInUseException, UsernameAlreadyTakenException };
+export {
+  InvalidRequestBodyException,
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+};

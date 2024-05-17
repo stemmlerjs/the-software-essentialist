@@ -1,22 +1,23 @@
-import { prisma } from "@dddforum/backend/src/shared/database/";
+import { PrismaClient } from "@prisma/client";
+import { database } from "@dddforum/backend/src/shared/bootstrap";
 import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 
 export class DatabaseFixture {
-
+    private connection: PrismaClient
     constructor() {
-
+        this.connection = database.getConnection()
     }
 
     async resetDatabase() {
-        const deleteAllComments = prisma.comment.deleteMany();
-        const deleteAllVotes = prisma.vote.deleteMany();
-        const deleteAllPosts = prisma.post.deleteMany();
-        const deleteMembers = prisma.member.deleteMany();
-        const deleteAllUsers = prisma.user.deleteMany();
+        const deleteAllComments = this.connection.comment.deleteMany();
+        const deleteAllVotes = this.connection.vote.deleteMany();
+        const deleteAllPosts = this.connection.post.deleteMany();
+        const deleteMembers = this.connection.member.deleteMany();
+        const deleteAllUsers = this.connection.user.deleteMany();
 
         try {
-            await prisma.$transaction([
+            await this.connection.$transaction([
                 deleteAllComments,
                 deleteAllVotes,
                 deleteAllPosts,
@@ -26,13 +27,13 @@ export class DatabaseFixture {
         } catch (error) {
             console.error(error);
         } finally {
-            await prisma.$disconnect();
+            await this.connection.$disconnect();
         }
     }
 
     async setupWithExistingUsers(createUserParams: CreateUserParams[]) {
-        await prisma.$transaction(createUserParams.map((user) => {
-            return prisma.user.create({
+        await this.connection.$transaction(createUserParams.map((user) => {
+            return this.connection.user.create({
                 data: {
                     email: user.email,
                     firstName: user.firstName,

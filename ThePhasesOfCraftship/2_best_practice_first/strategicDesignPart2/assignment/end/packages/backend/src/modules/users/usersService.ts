@@ -1,5 +1,8 @@
 import { Database } from "@dddforum/backend/src/shared/database";
-import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from "../../shared/exceptions";
+import {
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+} from "../../shared/exceptions";
 import { CreateUserCommand } from "./usersCommand";
 
 export class UsersService {

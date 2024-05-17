@@ -1,6 +1,6 @@
 import express from "express";
 import { UsersService } from "./usersService";
-import {  parseUserForResponse } from "../../shared/utils/parser";
+import { parseUserForResponse } from "../../shared/utils/parser";
 import { CreateUserCommand } from "./usersCommand";
 import { ErrorHandler } from "../../shared/errors";
 
@@ -45,5 +45,4 @@ export class UsersController {
       next(error);
     }
   }
-
 }
