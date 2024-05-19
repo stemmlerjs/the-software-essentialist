@@ -13,6 +13,7 @@
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
     "db:start:dev": "docker-compose up -d",
     "start:dev": "npm run db:seed && npm run migrate && npm run generate && npx nodemon",
+    "start:test": "NODE_ENV=test npm run db:seed && NODE_ENV=test npm run migrate && NODE_ENV=test npm run generate && NODE_ENV=test npx nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run build && npm run migrate && node dist/index.js",
     "test:e2e": "npm run db:start:dev && jest -c jest.config.e2e.ts",

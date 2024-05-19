@@ -18,7 +18,7 @@ Feature: Registration
 		Then I should be granted access to my account
 		And I should not expect to receive marketing emails
 
-	# Failure scenarios
+	# Failure scenario
 	@backend @frontend
 	Scenario: Invalid or missing registration details
 		Given I am a new user
@@ -26,8 +26,14 @@ Feature: Registration
 		Then I should see an error notifying me that my input is invalid
 		And I should not have been sent access to account details
 
+  # Failure scenario
+  @frontend
   Scenario: Account already created w/ email
+    Given I have already created an account using some email
+		When I attempt to register with this email
+		Then I should see an error notifying me that the account already exists
 
+  # Failure scenario
 	@backend 
 	Scenario: Many accounts already created w/ email
 		Given a set of users already created accounts
@@ -39,6 +45,7 @@ Feature: Registration
 		Then they should see an error notifying them that the account already exists
 		And they should not have been sent access to account details
 
+  # Failure scenario
 	@backend
 	Scenario: Username already taken
 		Given a set of users have already created their accounts with valid details

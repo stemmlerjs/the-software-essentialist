@@ -140,12 +140,16 @@ export class CompositionRoot {
       return {
         users: new InMemoryUserRepo(),
         posts: new InMemoryPostRepo(),
+        connect: () => {}
       };
     } else {
       const prisma = new PrismaClient();
       return {
         users: new ProductionUserRepo(prisma),
         posts: new ProductionPostRepo(prisma),
+        connect: async () => {
+          return prisma.$connect();
+        }
       };
     }
   }
