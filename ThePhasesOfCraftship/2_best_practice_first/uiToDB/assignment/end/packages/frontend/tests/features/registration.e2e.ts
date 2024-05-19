@@ -33,9 +33,9 @@ defineFeature(feature, (test) => {
     await puppeteerPageDriver.browser.close();
   });
 
-  afterEach(async () => {
-    await databaseFixture.resetDatabase();
-  });
+  // afterEach(async () => {
+  //   await databaseFixture.resetDatabase();
+  // });
 
   // Need to put timeout here.
   jest.setTimeout(60000);
