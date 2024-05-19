@@ -26,8 +26,8 @@ export type UserData = {
   email: string;
 }
 
-export type CreateUserResponse = APIResponse<UserData>;
-export type GetUserByEmailResponse = APIResponse<UserData>;
+export type CreateUserResponse = APIResponse<UserData, 'AccountAlreadyExists' | 'EmailAlreadyInUse'>;
+export type GetUserByEmailResponse = APIResponse<UserData, ''>;
 
 export const createUsersAPI = (apiURL: string) => {
   return {

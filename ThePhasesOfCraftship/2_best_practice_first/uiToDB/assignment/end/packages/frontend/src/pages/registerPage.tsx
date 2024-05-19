@@ -39,12 +39,26 @@ export const RegisterPage = () => {
       });
     }
 
-    // If the form is valid
-    // Start loading spinner
     spinner.activate();
+
     try {
-      // Make API call
       const response = await api.users.register(input);
+
+      if (!response.success) {
+        switch (response.error) {
+          case "AccountAlreadyExists":
+            spinner.deactivate();
+            return toast.error('Account already exists', { toastId: `failure-toast` });
+          case "EmailAlreadyInUse":
+            spinner.deactivate();
+            return toast.error('Email already in use', { toastId: `failure-toast` });
+          default:
+            // Client processing error
+            throw new Error('Client')
+        }
+      }
+
+      debugger
       
       if (addToList) {
         await api.marketing.addEmailToList(input.email);

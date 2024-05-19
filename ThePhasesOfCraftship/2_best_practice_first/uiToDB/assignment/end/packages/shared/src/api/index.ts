@@ -3,10 +3,10 @@ import { createMarketingAPI } from './marketing'
 import { createPostsAPI } from './posts'
 import { createUsersAPI } from './users'
 
-export type APIResponse<T> = {
+export type APIResponse<T, U> = {
   success: boolean;
   data: T;
-  error?: string;
+  error?: U;
 }
 
 export const createAPIClient = (apiURL: string) => {
