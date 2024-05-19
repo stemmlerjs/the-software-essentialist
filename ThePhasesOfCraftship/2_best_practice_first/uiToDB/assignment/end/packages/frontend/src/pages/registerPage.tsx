@@ -57,8 +57,6 @@ export const RegisterPage = () => {
             throw new Error('Client')
         }
       }
-
-      debugger
       
       if (addToList) {
         await api.marketing.addEmailToList(input.email);
