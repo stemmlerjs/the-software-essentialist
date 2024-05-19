@@ -3,8 +3,10 @@ import { PuppeteerPageDriver } from "../driver/puppeteerPageDriver";
 
 type ElementType = "input" | "button" | "div" | "checkbox";
 
-interface PageElementsConfig {
-  [key: string]: { selector: string; type: ElementType } | Component;
+export type PageElementsSelector = { selector: string; type: ElementType } | Component;
+
+export interface PageElementsConfig {
+  [key: string]: PageElementsSelector;
 }
 
 export abstract class Component {
