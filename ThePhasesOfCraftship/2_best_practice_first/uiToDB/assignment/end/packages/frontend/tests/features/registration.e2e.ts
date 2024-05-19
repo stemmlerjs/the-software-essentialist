@@ -33,9 +33,9 @@ defineFeature(feature, (test) => {
     await puppeteerPageDriver.browser.close();
   });
 
-  // afterEach(async () => {
-  //   await databaseFixture.resetDatabase();
-  // });
+  afterEach(async () => {
+    await databaseFixture.resetDatabase();
+  });
 
   // Need to put timeout here.
   jest.setTimeout(60000);
@@ -96,7 +96,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test.only('Account already created w/ email', ({ given, when, then }) => {
+  test('Account already created w/ email', ({ given, when, then }) => {
     given('I have already created an account using some email', async () => {
       // create the user already using a database fixture
       createUserCommand = new CreateUserCommandBuilder()
@@ -117,7 +117,7 @@ defineFeature(feature, (test) => {
   
     then('I should see an error notifying me that the account already exists', async () => {
       expect(await app.notifications.getErrorNotificationText()).toBeDefined();
-      expect(await app.notifications.getErrorNotificationText()).toContain('exists');
+      expect(await app.notifications.getErrorNotificationText()).toContain('in use');
     });
   });
 });

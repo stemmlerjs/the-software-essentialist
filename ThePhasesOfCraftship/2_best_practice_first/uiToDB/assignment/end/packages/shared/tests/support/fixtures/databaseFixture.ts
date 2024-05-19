@@ -45,6 +45,5 @@ export class DatabaseFixture {
         });
       }),
     );
-    console.log('created user for testing', createUserParams);
   }
 }

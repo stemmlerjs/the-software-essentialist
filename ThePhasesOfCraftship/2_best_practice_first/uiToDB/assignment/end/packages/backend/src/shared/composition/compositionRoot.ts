@@ -144,13 +144,6 @@ export class CompositionRoot {
       };
     } else {
       const prisma = new PrismaClient();
-      prisma.user.findMany({
-        where: {
-          email: {
-            contains: 'john@example.com',
-          },
-        },
-      }).then((c) => console.log(c))
       return {
         users: new ProductionUserRepo(prisma),
         posts: new ProductionPostRepo(prisma),
