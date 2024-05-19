@@ -40,6 +40,8 @@ export class UserService {
       const userData = input;
       const existingUserByEmail = await this.db.users.getUserByEmail(input.email);
 
+      console.log(existingUserByEmail, 'exists?', input.email)
+
       if (existingUserByEmail) {
         return { error: Errors.EmailAlreadyInUse, data: undefined, success: false };
       }

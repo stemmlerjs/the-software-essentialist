@@ -9,8 +9,7 @@ import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databas
 import { Errors } from "../../src/shared/errors";
 
 const feature = loadFeature(
-  path.join(sharedTestRoot, "features/registration.feature"),
-  { tagFilter: "@backend and not @excluded" },
+  path.join(sharedTestRoot, "features/registration.feature")
 );
 
 defineFeature(feature, (test) => {
