@@ -27,7 +27,7 @@ defineFeature(feature, (test) => {
   let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot('development');
+    composition = CompositionRoot.createCompositionRoot('test');
     application = composition.getApplication();
     contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
     transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;

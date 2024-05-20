@@ -21,7 +21,7 @@ import { MarketingService } from "../../modules/marketing/marketingService";
 export class CompositionRoot {
   private webServer: WebServer;
   private database: Database;
-  private context: Environment;
+  private environment: Environment;
   private transactionalEmailAPI: TransactionEmailAPI;
   private postService: PostService;
   private userService: UserService;
@@ -30,15 +30,15 @@ export class CompositionRoot {
   private application: Application;
   private static instance: CompositionRoot | null = null;
 
-  public static createCompositionRoot(context: Environment) {
+  public static createCompositionRoot(environment: Environment) {
     if (!CompositionRoot.instance) {
-      CompositionRoot.instance = new this(context);
+      CompositionRoot.instance = new this(environment);
     }
     return CompositionRoot.instance;
   }
 
-  private constructor(context: Environment) {
-    this.context = context;
+  private constructor(environment: Environment) {
+    this.environment = environment;
     this.database = this.createDatabase();
     this.transactionalEmailAPI = this.createTransactionalEmailAPI();
     this.contactListAPI = this.createContactListAPI();
@@ -49,8 +49,8 @@ export class CompositionRoot {
     this.webServer = this.createWebServer();
   }
 
-  public getContext() {
-    return this.context;
+  public getEnvironment() {
+    return this.environment;
   }
 
 
@@ -73,7 +73,7 @@ export class CompositionRoot {
   }
 
   private createTransactionalEmailAPI() {
-    if (this.context === "production") {
+    if (this.getEnvironment() === "production") {
       return new MailjetTransactionalEmail() as TransactionEmailAPI;
     }
 
@@ -86,7 +86,7 @@ export class CompositionRoot {
   }
 
   private createContactListAPI() {
-    if (this.context === "production") {
+    if (this.getEnvironment() === "production") {
       return new MailchimpContactList();
     }
 
@@ -136,7 +136,7 @@ export class CompositionRoot {
   private createDatabase(): Database {
     if (this.database) return this.database;
 
-    if (this.context === "development") {
+    if (this.getEnvironment() === "development") {
       return {
         users: new InMemoryUserRepo(),
         posts: new InMemoryPostRepo(),
