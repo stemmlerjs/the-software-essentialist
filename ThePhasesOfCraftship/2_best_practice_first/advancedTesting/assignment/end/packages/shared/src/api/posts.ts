@@ -19,7 +19,7 @@ export type GetPostsResponse = PostsData | ServerError;
 
 export const createPostsAPI = (apiURL: string) => {
   return {
-    getPosts: async (): Promise<APIResponse<GetPostsResponse, undefined>> => {
+    getPosts: async (): Promise<APIResponse<GetPostsResponse>> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=recent`);
         return successResponse.data as any;

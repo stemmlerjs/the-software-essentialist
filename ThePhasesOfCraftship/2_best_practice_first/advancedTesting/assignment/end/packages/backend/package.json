@@ -1,0 +1,49 @@
+{
+  "name": "@dddforum/backend",
+  "version": "1.0.0",
+  "description": "The backend for dddforum.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"**/src/**/*.ts\"",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && npm run generate && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json -r ../../tsAliasReplacer.js",
+    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
+    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prism",
+    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
+    "db:start:dev": "docker-compose up -d",
+    "start:dev": "npm run db:seed && npm run migrate && npm run generate && npx nodemon",
+    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
+    "start": "npm run build && npm run migrate && node dist/index.js",
+    "test:unit": "jest -c jest.config.unit.ts",
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll",
+    "test:e2e": "npm run db:start:dev && jest -c jest.config.e2e.ts",
+    "test:e2e:dev": "npm run db:start:dev && jest -c jest.config.e2e.ts --watch",
+    "test:infra": "jest -c jest.config.infra.ts",
+    "test:infra:dev": "jest -c jest.config.infra.ts --watch"
+  },
+  "prisma": {
+    "seed": "ts-node src/shared/database/prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.17",
+    "@types/nodemailer": "^6.4.14",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "@dddforum/shared": "file:../shared",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@prisma/client": "^4.16.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7",
+    "pg": "^8.11.0",
+    "prisma": "^4.16.0"
+  }
+}
