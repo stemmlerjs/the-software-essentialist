@@ -20,7 +20,7 @@ defineFeature(feature, (test) => {
   let transactionalEmailAPISpy: TransactionalEmailAPISpy;
   let contactListAPISpy: ContactListAPISpy;
   let commands: CreateUserCommand[] = [];
-  let createUserResponses: any[] = [];
+  let createUserResponses: any[] = []; 
   let application: Application;
   let databaseFixture: DatabaseFixture;
 
