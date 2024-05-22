@@ -9,7 +9,7 @@ import { PostService } from "../../modules/posts/postService";
 import { ProductionUserRepo } from "../../modules/users/adapters/productionUserRepo";
 import { UserService } from "../../modules/users/usersService";
 import { Application } from "../application/applicationInterface";
-import { Environment } from "../config";
+import { Config } from "../config";
 import { Database } from "../database/database";
 import { WebServer } from "../webAPI/webServer";
 import { InMemoryUserRepo } from "../../modules/users/adapters/inMemoryUserRepo";
@@ -21,7 +21,7 @@ import { MarketingService } from "../../modules/marketing/marketingService";
 export class CompositionRoot {
   private webServer: WebServer;
   private database: Database;
-  private environment: Environment;
+  private config: Config;
   private transactionalEmailAPI: TransactionEmailAPI;
   private postService: PostService;
   private userService: UserService;
@@ -30,15 +30,16 @@ export class CompositionRoot {
   private application: Application;
   private static instance: CompositionRoot | null = null;
 
-  public static createCompositionRoot(environment: Environment) {
+  public static createCompositionRoot(config: Config) {
+
     if (!CompositionRoot.instance) {
-      CompositionRoot.instance = new this(environment);
+      CompositionRoot.instance = new this(config);
     }
     return CompositionRoot.instance;
   }
 
-  private constructor(environment: Environment) {
-    this.environment = environment;
+  private constructor(config: Config) {
+    this.config = config;
     this.database = this.createDatabase();
     this.transactionalEmailAPI = this.createTransactionalEmailAPI();
     this.contactListAPI = this.createContactListAPI();
@@ -50,7 +51,7 @@ export class CompositionRoot {
   }
 
   public getEnvironment() {
-    return this.environment;
+    return this.config.env;
   }
 
 
@@ -128,6 +129,10 @@ export class CompositionRoot {
     return new MarketingService(contactListAPI);
   }
 
+  private getContext () {
+    return this.config.context;
+  }
+
   private createPostService() {
     const database = this.getDatabase();
     return new PostService(database);
@@ -136,7 +141,7 @@ export class CompositionRoot {
   private createDatabase(): Database {
     if (this.database) return this.database;
 
-    if (this.getEnvironment() === "development") {
+    if (this.getContext() === 'test:unit' || this.getEnvironment() === "development") {
       return {
         users: new InMemoryUserRepo(),
         posts: new InMemoryPostRepo(),

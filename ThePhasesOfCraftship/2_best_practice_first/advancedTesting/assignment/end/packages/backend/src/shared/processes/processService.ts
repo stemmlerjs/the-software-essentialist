@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 
 export class ProcessService {
+
   public static killProcessOnPort(port: number, cb: any) {
     const killCommand =
       process.platform === 'win32' ? `netstat -ano | findstr :${port} | findstr LISTENING` : `lsof -i:${port} -t`;
