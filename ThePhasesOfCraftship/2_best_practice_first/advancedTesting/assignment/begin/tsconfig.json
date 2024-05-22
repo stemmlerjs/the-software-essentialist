@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6"],
+    "strict": true,
+    "esModuleInterop": true,
+    "types": ["node", "jest"],
+    "resolveJsonModule": true,
+    "paths": {
+      "@dddforum/backend/*": ["./packages/backend/*"],
+      "@dddforum/frontend/*": ["./packages/frontend/*"],
+      "@dddforum/shared/*": ["./packages/shared/*"]
+    }
+  }
+}
