@@ -1,86 +1,65 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CreateUserCommand } from '@dddforum/shared/src/api/users'
-import { appSelectors, toClass } from "../shared/selectors";
+
+export type RegistrationInput = {
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+}
 
 interface RegistrationFormProps {
-  onSubmit: (formDetails: CreateUserCommand, allowMarketingEmails: boolean) => void;
+  onSubmit: (formDetails: RegistrationInput) => void;
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
-
-  const selectors = appSelectors.registration.registrationForm;
-
-  const [email, setEmail] = useState("email");
-  const [username, setUsername] = useState("username");
-  const [firstName, setFirstName] = useState("firstName");
-  const [lastName, setLastName] = useState("lastName");
-  const [allowMarketingEmails, setAllowMarketingEmails] = useState(false);
-
-  const toggleAllowMarketingEmails = () => {
-    setAllowMarketingEmails(!allowMarketingEmails);
-  };
+  const [email, setEmail] = useState('email');
+  const [username, setUsername] = useState('username');
+  const [firstName, setFirstName] = useState('firstName');
+  const [lastName, setLastName] = useState('lastName');
 
   const handleSubmit = () => {
     props.onSubmit({
-      email,
-      username,
-      firstName,
-      lastName,
-    }, allowMarketingEmails);
-  };
+      email, username, firstName, lastName
+    })
+  }
 
   return (
-    <div>
+    <div className="registration-form">
+      <div>Create Account</div>
       <input
-        className={toClass(selectors.email.selector)}
+        className="registration email"
         type="email"
         placeholder="email"
         onChange={(e) => setEmail(e.target.value)}
       ></input>
       <input
-        className={toClass(selectors.username.selector)}
+        className="registatation-input username"
         type="text"
         placeholder="username"
         onChange={(e) => setUsername(e.target.value)}
       ></input>
       <input
-        className={toClass(selectors.firstname.selector)}
+        className="registatation-input username"
         type="text"
         placeholder="first name"
         onChange={(e) => setFirstName(e.target.value)}
       ></input>
       <input
-        className={toClass(selectors.lastname.selector)}
+        className="registatation-input username"
         type="text"
         placeholder="last name"
         onChange={(e) => setLastName(e.target.value)}
       ></input>
-      <br/>
-      <br/>
       <div>
-        <button
-          onClick={() => handleSubmit()}
-          className={toClass(selectors.submit.selector)}
-          type="submit"
-        >
+        <div className="to-login">
+          <div>Already have an account?</div>
+          <Link to="/login">Login</Link>
+        </div>
+        <button onClick={() => handleSubmit()} className="submit-button" type="submit">
           Submit
         </button>
-        <label>
-          <input
-            className={toClass(selectors.marketingCheckbox.selector)}
-            type="checkbox"
-            checked={allowMarketingEmails}
-            onChange={() => toggleAllowMarketingEmails()}
-          />
-          Want to be notified about events & discounts?
-        </label>
-      </div>
-      <br />
-      <div className="to-login">
-        <div>Already have an account?</div>
-        <Link to="/login">Login</Link>
       </div>
     </div>
   );
-};
+}

@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import { PostsList } from "../components/postsList";
 import { PostsViewSwitcher } from "../components/postsViewSwitcher";
-import { api } from "../App";
+import { api } from "../api";
 
 export const MainPage = () => {
   const [posts, setPosts] = useState([]);
   const loadPosts = async () => {
     try {
       const response = await api.posts.getPosts();
-      // @ts-ignore
-      setPosts(response.data.posts)
+
+      setPosts(response.data.data.posts)
     } catch (err) {
       console.log(err);
     }
@@ -31,3 +31,6 @@ export const MainPage = () => {
     </Layout>
   );
 };
+
+
+
