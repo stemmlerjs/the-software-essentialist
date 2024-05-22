@@ -10,6 +10,7 @@ import { Application } from '@dddforum/backend/src/shared/application/applicatio
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 import { TransactionalEmailAPISpy } from '../../../src/modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
 import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
+import { Config } from '../../../src/shared/config';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -27,7 +28,7 @@ defineFeature(feature, (test) => {
   let databaseFixture: DatabaseFixture;
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot('test');
+    composition = CompositionRoot.createCompositionRoot(new Config('test:infra'));
     application = composition.getApplication();
     transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
     contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;

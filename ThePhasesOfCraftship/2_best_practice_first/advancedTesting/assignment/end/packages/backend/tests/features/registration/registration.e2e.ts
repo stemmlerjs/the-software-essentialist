@@ -12,6 +12,7 @@ import { WebServer } from '../../../src/shared/webAPI/webServer';
 import { createAPIClient } from '@dddforum/shared/src/api';
 import { TransactionalEmailAPISpy } from '../../../src/modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
 import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
+import { Config } from '../../../src/shared/config';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -32,7 +33,7 @@ defineFeature(feature, (test) => {
   let server: WebServer;
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot('test');
+    composition = CompositionRoot.createCompositionRoot(new Config('test:e2e'));
     application = composition.getApplication();
     transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
     contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
