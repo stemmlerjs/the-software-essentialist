@@ -1,6 +1,6 @@
 
 import { mockDeep } from "jest-mock-extended";
-import { APIResponse, createAPIClient } from "@dddforum/shared/src/api";
+import { createAPIClient } from "@dddforum/shared/src/api";
 import { Application } from "../../shared/application/applicationInterface";
 import { WebServer } from "../../shared/webAPI/webServer";
 import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
@@ -41,7 +41,7 @@ describe("usersController", () => {
     // Act
     // Use the client library to make the api call (pass through as much 
     // uncertainty as possible)
-    const response = await client.users.register(createUserCommand);
+    await client.users.register(createUserCommand);
 
     // Communication: Expect it to have called the correct use case
     expect(application.user.createUser).toHaveBeenCalledTimes(1);

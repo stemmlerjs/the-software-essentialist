@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6"],
+    "strict": true,
+    "esModuleInterop": true,
+    "types": [],
+    "resolveJsonModule": true,
+    "declaration": true
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.infra.ts",
+    "**/*.test.ts",
+    "**/*.unit.ts",
+    "**/*.e2e.ts",
+  ]
+}
