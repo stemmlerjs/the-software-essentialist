@@ -49,7 +49,7 @@ export class WebServer {
   async start(): Promise<void> {
     return new Promise((resolve, _reject) => {
       ProcessService.killProcessOnPort(this.config.port, () => {
-        if (this.config.env === "test") {
+        if (this.config.env === " test") {
           resolve();
         }
         console.log("Starting the server");

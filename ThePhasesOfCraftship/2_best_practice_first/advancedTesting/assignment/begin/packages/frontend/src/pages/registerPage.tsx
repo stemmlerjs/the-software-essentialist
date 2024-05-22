@@ -2,21 +2,22 @@
 import { Layout } from "../components/layout";
 import {
   RegistrationForm,
+  RegistrationInput,
 } from "../components/registrationForm";
 import { ToastContainer, toast } from 'react-toastify';
+import { api } from "../api";
 import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useSpinner } from "../contexts/spinnerContext";
 import { OverlaySpinner } from "../components/overlaySpinner";
-import { CreateUserCommand } from "@dddforum/shared/src/api/users";
-import { api } from "../App";
+
 
 type ValidationResult = {
   success: boolean;
   errorMessage?: string;
 }
 
-function validateForm (input: CreateUserCommand): ValidationResult {
+function validateForm (input: RegistrationInput): ValidationResult {
   if (input.email.indexOf('@') === -1) return { success: false, errorMessage: "Email invalid" };
   if (input.username.length < 2) return { success: false, errorMessage: "Username invalid" };
   return { success: true }
@@ -27,49 +28,29 @@ export const RegisterPage = () => {
   const navigate = useNavigate()
   const spinner = useSpinner();
 
-  const handleSubmitRegistrationForm = async (input: CreateUserCommand, addToList: boolean) => {
+  const handleSubmitRegistrationForm = async (input: RegistrationInput) => {
     // Validate the form
     const validationResult = validateForm(input);
 
     // If the form is invalid
     if (!validationResult.success) {
       // Show an error toast (for invalid input)
-      return toast.error(validationResult.errorMessage, {
-        toastId: `failure-toast`
-      });
+      return toast.error(validationResult.errorMessage);
     }
 
+    // If the form is valid
+    // Start loading spinner
     spinner.activate();
-
     try {
-      const response = await api.users.register(input);
-
-      if (!response.success) {
-        switch (response.error) {
-          case "AccountAlreadyExists":
-            spinner.deactivate();
-            return toast.error('Account already exists', { toastId: `failure-toast` });
-          case "EmailAlreadyInUse":
-            spinner.deactivate();
-            return toast.error('Email already in use', { toastId: `failure-toast` });
-          default:
-            // Client processing error
-            throw new Error('Client')
-        }
-      }
-      
-      if (addToList) {
-        await api.marketing.addEmailToList(input.email);
-      }
-
+      // Make API call
+      const response = await api.register(input);
       // Save the user details to the cache
-      setUser(response.data as any);
+      setUser(response.data.data);
+      console.log('setting data', response.data.data)
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
-      toast('Success! Redirecting home.', {
-        toastId: `success-toast`
-      })
+      toast('Success! Redirecting home.')
       // In 3 seconds, redirect to the main page
       setTimeout(() => { navigate('/') }, 3000)
     } catch (err) {
@@ -77,9 +58,7 @@ export const RegisterPage = () => {
       // Stop the spinner
       spinner.deactivate();
       // Show the toast (for unknown error)
-      return toast.error('Some backend error occurred', {
-        toastId: `failure-toast`
-      });
+      return toast.error('Some backend error occurred');
     }
 
   };
@@ -87,10 +66,9 @@ export const RegisterPage = () => {
   return (
     <Layout>
       <ToastContainer/>
-      <div>Create Account</div>
       <RegistrationForm
-        onSubmit={(input: CreateUserCommand, allowMarketingEmails: boolean) =>
-          handleSubmitRegistrationForm(input, allowMarketingEmails)
+        onSubmit={(input: RegistrationInput) =>
+          handleSubmitRegistrationForm(input)
         }
       />
       <OverlaySpinner isActive={spinner.spinner?.isActive}/>

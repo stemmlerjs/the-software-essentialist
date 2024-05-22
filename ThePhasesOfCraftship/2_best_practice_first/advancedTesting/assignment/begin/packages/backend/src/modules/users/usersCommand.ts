@@ -1,10 +1,9 @@
 import { InvalidRequestBodyException } from "@dddforum/backend/src/shared/exceptions";
 import { isMissingKeys } from "@dddforum/backend/src/shared/utils/parser";
-import { CreateUserInput } from "@dddforum/shared/src/api/users";
-
+import { CreateUserParams } from "@dddforum/shared/src/api/users";
 
 export class CreateUserCommand {
-  constructor(public props: CreateUserInput) {}
+  constructor(public props: CreateUserParams) {}
 
   static fromRequest(body: unknown) {
     const requiredKeys = ["email", "firstName", "lastName", "username"];
@@ -15,7 +14,7 @@ export class CreateUserCommand {
       throw new InvalidRequestBodyException(requiredKeys);
     }
 
-    const { username, email, firstName, lastName } = body as CreateUserInput;
+    const { username, email, firstName, lastName } = body as CreateUserParams;
 
     return new CreateUserCommand({ email, firstName, lastName, username });
   }

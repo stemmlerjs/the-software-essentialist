@@ -1,5 +1,5 @@
 import { UsersController, UsersService } from "../../modules";
-import { Environment } from "../config";
+import { Config, Environment } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
 import { ErrorHandler, errorHandler } from "../errors";
@@ -7,34 +7,24 @@ import { ErrorHandler, errorHandler } from "../errors";
 export class CompositionRoot {
   private webServer: WebServer;
   private dbConnection: Database;
-  private environment: Environment;
   private errorHandler: ErrorHandler;
   private usersService: UsersService;
+  private config: Config;
   private static instance: CompositionRoot | null = null;
 
-  public static createCompositionRoot(
-    environment: Environment
-  ) {
+  public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
-      CompositionRoot.instance = new this(environment);
+      CompositionRoot.instance = new this(config);
     }
     return CompositionRoot.instance;
   }
 
-  private constructor(environment: Environment) {
-    this.environment = environment;
-    this.errorHandler = this.createErrorHandler();
+  private constructor(config: Config) {
+    this.config = config
+    this.errorHandler = errorHandler;
     this.dbConnection = this.createDBConnection();
     this.usersService = this.createUserService();
     this.webServer = this.createWebServer();
-  }
-
-  private createErrorHandler () {
-    return errorHandler;
-  }
-
-  public getenvironment() {
-    return this.environment;
   }
 
   private getUsersService() {
@@ -75,7 +65,7 @@ export class CompositionRoot {
 
   createWebServer() {
     const controllers = this.createControllers();
-    return new WebServer({ port: 3000, env: this.environment }, controllers);
+    return new WebServer({ port: 3000, env: this.config.env }, controllers);
   }
 
   getWebServer() {

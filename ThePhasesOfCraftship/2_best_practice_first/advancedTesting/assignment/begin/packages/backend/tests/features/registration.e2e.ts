@@ -1,238 +1,191 @@
+import path from "path";
+import request from "supertest";
+import { defineFeature, loadFeature } from "jest-cucumber";
+import { app } from "@dddforum/backend/src/shared/bootstrap";
+import { sharedTestRoot } from "@dddforum/shared/src/paths";
+import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
+import { Errors } from "../../src/shared/errors";
 
-import { defineFeature, loadFeature } from 'jest-cucumber';
-import * as path from 'path';
-import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-
-import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { createAPIClient } from '@dddforum/shared/src/api';
-import { CreateUserCommand } from '@dddforum/shared/dist/api/users';
-import { WebServer } from '@dddforum/backend/src/shared/http/webServer';
-import { Errors } from '@dddforum/backend/src/shared/errors';
-
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
+const feature = loadFeature(
+  path.join(sharedTestRoot, "features/registration.feature"),
+);
 
 defineFeature(feature, (test) => {
-
-  let commands: CreateUserCommand[] = [];
-  let createUserResponses: any[] = [];
   let databaseFixture: DatabaseFixture;
 
-  let apiClient = createAPIClient('http://localhost:3000');
-  let createUserCommand: CreateUserCommand;
-  let createUserResponse: any;
-  let addEmailToListResponse: any;
-  let composition: CompositionRoot;
-  let server: WebServer
-
-  beforeAll(async () => {
-    
-    composition = CompositionRoot.createCompositionRoot('test');
+  beforeAll(() => {
     databaseFixture = new DatabaseFixture();
-    server = composition.getWebServer();
-
-    await server.start();
-  })
-
-  afterEach(() => {
-    commands = [];
-    createUserResponses = []
-  })
-
-  afterAll(async () => {
-    await server.stop();
   });
 
-  test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
-  
-    given('I am a new user', async () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('Stemmler')
-        .withRandomUsername()
-        .withRandomEmail()
-        .build();
+  afterEach(async () => {
+    await databaseFixture.resetDatabase();
+  });
+
+  test("Successful registration", ({ given, when, then }) => {
+    let user: CreateUserParams;
+    let response: request.Response;
+
+    given("I am a new user", () => {
+      user = new CreateUserBuilder().withAllRandomDetails().build();
     });
 
-    when('I register with valid account details accepting marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
-      addEmailToListResponse = await apiClient.marketing.addEmailToList(createUserCommand.email);
+    when("I register with valid account details", async () => {
+      response = await request(app).post("/users/new").send(user);
     });
 
-    then('I should be granted access to my account', async () => {
-      const { data, success, error } = createUserResponse;
-      console.log(createUserResponse)
-
-      // Expect a successful response (Result Verification)
-      expect(success).toBeTruthy();
-      expect(error).toBeFalsy();
-      expect(data.id).toBeDefined();
-      expect(data.email).toEqual(createUserCommand.email);
-      expect(data.firstName).toEqual(createUserCommand.firstName);
-      expect(data.lastName).toEqual(createUserCommand.lastName);
-      expect(data.username).toEqual(createUserCommand.username);
-
-      // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
-    });
-
-    and('I should expect to receive marketing emails', () => {
-      // How can we test this? what do we want to place under test?
-      // Well, what's the tool they'll use? mailchimp?
-      // And do we want to expect that mailchimp is going to get called to add
-      // a new contact to a list? Yes, we do. But we're not going to worry 
-      // about this yet because we need to learn how to validate this without
-      // filling up a production Mailchimp account with test data. 
-      const { success } = addEmailToListResponse
-
-      expect(success).toBeTruthy();
+    then("I should be granted access to my account", () => {
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.email).toBe(user.email);
+      expect(response.body.data.username).toBe(user.username);
+      expect(response.body.data.firstName).toBe(user.firstName);
+      expect(response.body.data.lastName).toBe(user.lastName);
+      expect(response.body.data.id).toBeDefined();
     });
   });
 
-  test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
-    given('I am a new user', () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('Stemmler')
-        .withRandomUsername()
-        .withRandomEmail()
-        .build();
+  test("Invalid or missing registration details", ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    let user: any;
+    let response: request.Response;
+
+    given("I am a new user", () => {
+      const validUser = new CreateUserBuilder().withAllRandomDetails().build();
+
+      user = {
+        firstName: validUser.firstName,
+        email: validUser.email,
+        lastName: validUser.lastName,
+      };
     });
 
-    when('I register with valid account details declining marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
+    when("I register with invalid account details", async () => {
+      response = await request(app).post("/users/new").send(user);
     });
 
-    then('I should be granted access to my account', async () => {
-      const { data, success, error } = createUserResponse
-
-      // Expect a successful response (Result Verification)
-      expect(success).toBeTruthy();
-      expect(error).toBeFalsy();
-      expect(data.id).toBeDefined();
-      expect(data.email).toEqual(createUserCommand.email);
-      expect(data.firstName).toEqual(createUserCommand.firstName);
-      expect(data.lastName).toEqual(createUserCommand.lastName);
-      expect(data.username).toEqual(createUserCommand.username);
-
-      // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
+    then("I should see an error notifying me that my input is invalid", () => {
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.data).toBeUndefined();
+      expect(response.body.error).toBeDefined();
     });
 
-    and('I should not expect to receive marketing emails', () => {
-      const { success } = addEmailToListResponse
-
-      expect(success).toBeTruthy();
-    });
-  });
-
-  test('Invalid or missing registration details', ({ given, when, then, and }) => {
-    given('I am a new user', () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('')
-        .withRandomUsername()
-        .withRandomEmail()
-        .build();
-    });
-
-    when('I register with invalid account details', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
-    });
-
-    then('I should see an error notifying me that my input is invalid', async () => {
-      const { success, error } = createUserResponse;
-
-      // Expect a failure response (Result Verification)
-      expect(success).toBeFalsy();
-      expect(error).toBeDefined();
-
-      // And the user does not exist (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(getUserResponse.error).toBeDefined();
-      expect(getUserResponse.error).toEqual(Errors.UserNotFound)
-
-    });
-
-    and('I should not have been sent access to account details', () => {
-
+    and("I should not have been sent access to account details", () => {
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.data).toBeUndefined();
+      expect(response.body.error).toBeDefined();
     });
   });
 
-  test('Account already created w/ email', ({ given, when, then, and }) => {
-    given('a set of users already created accounts', async (table) => {
-      table.forEach((item: any) => {
-        commands.push(new CreateUserCommandBuilder()
-          .withFirstName(item.firstName)
-          .withLastName(item.lastName)
-          .withEmail(item.email)
-          .withRandomUsername()
-          .build()
-        )
-      })
-    });
+  test("Account already created with email", ({ given, when, then, and }) => {
+    let existingUsers: CreateUserParams[] = [];
+    let createUserResponses: request.Response[] = [];
 
-    when('new users attempt to register with those emails', async () => {
-      for (let command of commands) {
-        let response = await apiClient.users.register(command);
-        createUserResponses.push(response);
-      }
-    });
-
-    then('they should see an error notifying them that the account already exists', async () => {
-      for (let response of createUserResponses) {
-        const { success, error } = response;
-
-        // Expect a failure response (Result Verification)
-        expect(success).toBeFalsy();
-        expect(error).toBeDefined();
-        expect(error).toEqual(Errors.EmailAlreadyInUse);
-      }
-    });
-
-    and('they should not have been sent access to account details', () => {
-
-    });
-  });
-
-  test('Username already taken', ({ given, when, then, and }) => {
-
-    given('a set of users have already created their accounts with valid details', async (table) => {
-      table.forEach((item: any) => {
-        commands.push(new CreateUserCommandBuilder()
-          .withFirstName(item.firstName)
-          .withLastName(item.lastName)
-          .withUsername(item.username)
-          .withRandomEmail()
-          .build()
-        )
+    given("a set of users already created accounts", async (table) => {
+      existingUsers = table.map((row: any) => {
+        return new CreateUserBuilder()
+          .withFirstName(row.firstName)
+          .withLastName(row.lastName)
+          .withEmail(row.email)
+          .build();
       });
-
+      await databaseFixture.setupWithExistingUsers(existingUsers);
     });
 
-    when('new users attempt to register with already taken usernames', async (table) => {
-      for (let item of table) {
-        let response = await apiClient.users.register(item);
-        createUserResponses.push(response);
-      }
+    when("new users attempt to register with those emails", async () => {
+      createUserResponses = await Promise.all(
+        existingUsers.map((user) => {
+          return request(app).post("/users/new").send(user);
+        }),
+      );
     });
 
-    then('they see an error notifying them that the username has already been taken', () => {
-      for (let response of createUserResponses) {
-        const { success, error } = response;
+    then(
+      "they should see an error notifying them that the account already exists",
+      () => {
+        for (const { body } of createUserResponses) {
+          expect(body.error).toBeDefined();
+          expect(body.success).toBeFalsy();
+          expect(body.error).toEqual(Errors.EmailAlreadyInUse);
+        }
+      },
+    );
 
-        // Expect a failure response (Result Verification)
-        expect(success).toBeFalsy();
-        expect(error).toBeDefined();
-        expect(error).toEqual(Errors.UsernameAlreadyTaken);
-      }
+    and("they should not have been sent access to account details", () => {
+      createUserResponses.forEach((response) => {
+        expect(response.status).toBe(409);
+        expect(response.body.success).toBe(false);
+        expect(response.body.data).toBeUndefined();
+        expect(response.body.error).toBeDefined();
+      });
     });
+  });
 
-    and('they should not have been sent access to account details', () => {
+  test("Username already taken", ({ given, when, then, and }) => {
+    let existingUsers: CreateUserParams[] = [];
+    let createUserResponses: request.Response[] = [];
 
+    given(
+      "a set of users have already created their accounts with valid details",
+      async (table) => {
+        existingUsers = table.map((row: any) => {
+          return new CreateUserBuilder()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .withUsername(row.username)
+            .build();
+        });
+        await databaseFixture.setupWithExistingUsers(existingUsers);
+      },
+    );
+
+    when(
+      "new users attempt to register with already taken usernames",
+      async (table) => {
+        const newUsers: CreateUserParams[] = table.map((row: any) => {
+          return new CreateUserBuilder()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .withUsername(row.username)
+            .build();
+        });
+
+        createUserResponses = await Promise.all(
+          newUsers.map((user) => {
+            return request(app).post("/users/new").send(user);
+          }),
+        );
+      },
+    );
+
+    then(
+      "they see an error notifying them that the username has already been taken",
+      () => {
+        for (const { body } of createUserResponses) {
+          expect(body.error).toBeDefined();
+          expect(body.success).toBeFalsy();
+          expect(body.error).toEqual(Errors.UsernameAlreadyTaken);
+        }
+      },
+    );
+
+    and("they should not have been sent access to account details", () => {
+      createUserResponses.forEach((response) => {
+        expect(response.status).toBe(409);
+        expect(response.body.success).toBe(false);
+        expect(response.body.data).toBeUndefined();
+        expect(response.body.error).toBeDefined();
+      });
     });
   });
 });
