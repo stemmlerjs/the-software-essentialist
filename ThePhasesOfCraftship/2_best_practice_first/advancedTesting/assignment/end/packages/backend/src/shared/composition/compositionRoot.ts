@@ -31,7 +31,6 @@ export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
 
   public static createCompositionRoot(config: Config) {
-
     if (!CompositionRoot.instance) {
       CompositionRoot.instance = new this(config);
     }
