@@ -4,7 +4,7 @@ import { CreateUserCommand } from "@dddforum/shared/src/api/users";
 import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
-export class UserDTOBuilder {
+export class UserResponseStub {
   private props: UserDTO;
 
   constructor() {

@@ -6,7 +6,7 @@ import { compilerOptions } from '../../tsconfig.json';
 
 export default async (): Promise<JestConfigWithTsJest> => ({
   displayName: 'Backend (Infra)',
-  testMatch: ['**/@(src|tests)/**/*.@(infra).*'],
+  testMatch: ['**/@(src|tests)/**/*.@(infra|api).*'],
   transform: {
     '^.+\\.(t|j)sx?$': ['ts-jest', {}],
   },
