@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { InMemoryUserRepo } from "./inMemoryUserRepo";
 import { ProductionUserRepo } from "./productionUserRepo";
-import { UserDTOBuilder } from "@dddforum/shared/tests/support/builders/userDTOBuilder";
+import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 
 describe("userRepo", () => {
   let userRepos = [
@@ -11,7 +11,7 @@ describe("userRepo", () => {
   ];
 
   it("can save and retrieve users by email", () => {
-    let createUserInput = new UserDTOBuilder().withAllRandomDetails().build();
+    let createUserInput = new CreateUserCommandBuilder().withAllRandomDetails().build();
 
     userRepos.forEach(async (userRepo) => {
       let savedUserResult = await userRepo.save({
@@ -29,7 +29,7 @@ describe("userRepo", () => {
   });
 
   it("can find a user by username", () => {
-    let createUserInput = new UserDTOBuilder()
+    let createUserInput = new CreateUserCommandBuilder()
       .withAllRandomDetails()
       .withRandomUsername()
       .build();

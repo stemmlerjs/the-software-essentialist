@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { TransactionalEmailAPISpy } from "../../modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy";
 import { MailjetTransactionalEmail } from "../../modules/marketing/adapters/transactionalEmailAPI/mailjetTransactionalEmailAPI";
@@ -53,7 +52,6 @@ export class CompositionRoot {
     return this.config.env;
   }
 
-
   private createUserService() {
     const database = this.getDatabase();
     const emailService = this.getTransactionalEmailAPI();
@@ -64,11 +62,11 @@ export class CompositionRoot {
     const userService = this.getUserService();
     const marketingService = this.getMarketingService();
     const postService = this.getPostService();
-    
+
     return {
       user: userService,
       marketing: marketingService,
-      posts: postService
+      posts: postService,
     };
   }
 
@@ -108,14 +106,14 @@ export class CompositionRoot {
     return this.createTransactionalEmailAPI();
   }
 
-  public getMarketingService () {
+  public getMarketingService() {
     if (this.marketingService) return this.marketingService;
     return this.createMarketingService();
   }
 
   public getContactListAPI() {
     if (this.contactListAPI) return this.contactListAPI;
-    return this.createContactListAPI()
+    return this.createContactListAPI();
   }
 
   public getApplication() {
@@ -123,12 +121,12 @@ export class CompositionRoot {
     return this.createApplication();
   }
 
-  private createMarketingService () {
+  private createMarketingService() {
     const contactListAPI = this.getContactListAPI();
     return new MarketingService(contactListAPI);
   }
 
-  private getContext () {
+  private getContext() {
     return this.config.context;
   }
 
@@ -140,7 +138,11 @@ export class CompositionRoot {
   private createDatabase(): Database {
     if (this.database) return this.database;
 
-    if (this.getContext() === 'test:unit' || this.getEnvironment() === "development") {
+    const shouldBuildFakeRepos =
+      this.getContext() === "test:unit" ||
+      this.getEnvironment() === "development";
+
+    if (shouldBuildFakeRepos) {
       return {
         users: new InMemoryUserRepo(),
         posts: new InMemoryPostRepo(),
