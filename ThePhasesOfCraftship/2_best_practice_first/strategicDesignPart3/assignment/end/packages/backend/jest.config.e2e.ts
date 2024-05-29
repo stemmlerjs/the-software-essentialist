@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
