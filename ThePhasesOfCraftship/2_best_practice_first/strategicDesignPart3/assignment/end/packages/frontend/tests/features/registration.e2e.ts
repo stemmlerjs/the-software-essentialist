@@ -6,7 +6,7 @@ import * as path from 'path';
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@frontend' });
 
 defineFeature(feature, (test) => {
-  test('Successful registration', ({ given, when, then, and }) => {
+  test('Successful registration', ({ given, when, then }) => {
     
     given('I am a new user', async () => {
       // to be implemented
