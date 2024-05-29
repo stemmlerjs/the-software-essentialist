@@ -11,6 +11,7 @@ import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databas
 import { TransactionalEmailAPISpy } from '../../../src/modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
 import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
 import { Config } from '../../../src/shared/config';
+import { InMemoryUserRepoSpy } from '../../../src/modules/users/adapters/inMemoryUserRepoSpy';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -26,18 +27,21 @@ defineFeature(feature, (test) => {
   let createUserResponses: any[] = [];
   let application: Application;
   let databaseFixture: DatabaseFixture;
+  let userRepoSpy: InMemoryUserRepoSpy;
 
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot(new Config('test:unit'));
     application = composition.getApplication();
     contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
     transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
+    userRepoSpy = composition.getDatabase().users as InMemoryUserRepoSpy;
     databaseFixture = new DatabaseFixture(composition);
   })
 
   afterEach(() => {
     contactListAPISpy.reset();
     transactionalEmailAPISpy.reset();
+    userRepoSpy.reset();
     commands = [];
     createUserResponses = []
     addEmailToListResponse = undefined;
@@ -74,6 +78,8 @@ defineFeature(feature, (test) => {
       // And the user exists (State Verification)
       const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(createUserCommand.email).toEqual(getUserResponse.data && getUserResponse.data.email);
+
+      expect(userRepoSpy.getTimesMethodCalled('save')).toEqual(1);
 
       // Verify that an email has been sent (Communication Verification)
       expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
@@ -118,9 +124,12 @@ defineFeature(feature, (test) => {
       expect(data.lastName).toEqual(createUserCommand.lastName);
       expect(data.username).toEqual(createUserCommand.username);
 
+      expect(userRepoSpy.getTimesMethodCalled('save')).toEqual(1);
+
       // And the user exists (State Verification)
       const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(createUserCommand.email).toEqual(getUserResponse.data && getUserResponse.data.email);
+      
 
       // Verify that an email has been sent (Communication Verification)
       expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
@@ -153,10 +162,12 @@ defineFeature(feature, (test) => {
       expect(success).toBeFalsy();
       expect(error).toBeDefined();
 
+      expect(userRepoSpy.getTimesMethodCalled('save')).toEqual(0);
+
       // And the user does not exist (State Verification)
       const getUserResponse = await application.user.getUserByEmail({ email: createUserCommand.email });
       expect(getUserResponse.error).toBeDefined();
-      expect(getUserResponse.error).toEqual(Errors.UserNotFound)
+      expect(getUserResponse.error).toEqual(Errors.UserNotFound);
 
     });
 

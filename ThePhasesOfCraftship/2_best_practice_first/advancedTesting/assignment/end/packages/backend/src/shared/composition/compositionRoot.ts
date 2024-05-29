@@ -11,7 +11,7 @@ import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database/database";
 import { WebServer } from "../webAPI/webServer";
-import { InMemoryUserRepo } from "../../modules/users/adapters/inMemoryUserRepo";
+import { InMemoryUserRepoSpy } from "../../modules/users/adapters/inMemoryUserRepoSpy";
 import { InMemoryPostRepo } from "../../modules/posts/adapters/inMemoryPostRepo";
 import { ContactListAPI } from "../../modules/marketing/ports/contactListAPI";
 import { TransactionEmailAPI } from "../../modules/marketing/ports/transactionalEmailAPI";
@@ -144,7 +144,7 @@ export class CompositionRoot {
 
     if (shouldBuildFakeRepos) {
       return {
-        users: new InMemoryUserRepo(),
+        users: new InMemoryUserRepoSpy(),
         posts: new InMemoryPostRepo(),
       };
     } else {

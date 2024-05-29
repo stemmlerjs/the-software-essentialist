@@ -1,11 +1,13 @@
+import { Spy } from "../../../shared/testDoubles/spy";
 import { UserDTO } from "../userDTO";
 import { CreateUserInput, UserRepo } from "../userRepo";
 
-export class InMemoryUserRepo implements UserRepo {
+export class InMemoryUserRepoSpy extends Spy<UserRepo> implements UserRepo {
 
   private users: UserDTO[];
   
   constructor () {
+    super();
     this.users = [];
   }
   
@@ -14,6 +16,7 @@ export class InMemoryUserRepo implements UserRepo {
   }
   
   save(user: CreateUserInput): Promise<UserDTO> {
+    this.addCall('save', [user]);
     const newUser: UserDTO = { ...user, id: this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1 };
     this.users.push(newUser);
     return Promise.resolve(newUser);
