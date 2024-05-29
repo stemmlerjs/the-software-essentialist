@@ -11,7 +11,6 @@
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
-    "start": "npm run build && npm run db:seed && node build/index.js",
     "lint": "eslint . --ext .ts --fix",
     "test": "jest",
     "test:dev": "jest --watchAll",

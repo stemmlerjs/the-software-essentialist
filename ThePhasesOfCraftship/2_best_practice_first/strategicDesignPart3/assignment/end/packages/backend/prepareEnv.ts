@@ -12,7 +12,7 @@
  */
 
 import { execSync } from 'child_process';
-import path from 'path';
+import * as path from 'path';
 
 export const prepareEnv = (): void => {
   const env = process.env.NODE_ENV || 'development';
