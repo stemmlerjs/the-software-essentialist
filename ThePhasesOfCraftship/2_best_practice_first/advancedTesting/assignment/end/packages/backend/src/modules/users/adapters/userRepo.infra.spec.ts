@@ -1,12 +1,12 @@
 
 import { PrismaClient } from "@prisma/client";
-import { InMemoryUserRepo } from "./inMemoryUserRepo";
+import { InMemoryUserRepoSpy } from "./inMemoryUserRepoSpy";
 import { ProductionUserRepo } from "./productionUserRepo";
 import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 
 describe("userRepo", () => {
   let userRepos = [
-    new InMemoryUserRepo(),
+    new InMemoryUserRepoSpy(),
     new ProductionUserRepo(new PrismaClient()),
   ];
 
