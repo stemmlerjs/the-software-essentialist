@@ -126,8 +126,8 @@ export class CompositionRoot {
     return new MarketingService(contactListAPI);
   }
 
-  private getContext() {
-    return this.config.context;
+  private getScript() {
+    return this.config.script;
   }
 
   private createPostService() {
@@ -139,7 +139,7 @@ export class CompositionRoot {
     if (this.database) return this.database;
 
     const shouldBuildFakeRepos =
-      this.getContext() === "test:unit" ||
+      this.getScript() === "test:unit" ||
       this.getEnvironment() === "development";
 
     if (shouldBuildFakeRepos) {

@@ -51,6 +51,7 @@ export class Database {
           password: generateRandomPassword(10),
         },
       });
+
       const member = await this.connection.member.create({
         data: { userId: user.id },
       });

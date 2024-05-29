@@ -2,6 +2,7 @@
 import { ContactListAPI } from "./ports/contactListAPI";
 
 export class MarketingService {
+  
   constructor (private contactListAPI: ContactListAPI) {
 
   }
