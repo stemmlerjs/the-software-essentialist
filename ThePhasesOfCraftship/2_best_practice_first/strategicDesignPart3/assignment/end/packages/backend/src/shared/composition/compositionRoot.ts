@@ -1,5 +1,5 @@
 import { UsersController, UsersService } from "../../modules";
-import { Config, Environment } from "../config";
+import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
 import { ErrorHandler, errorHandler } from "../errors";

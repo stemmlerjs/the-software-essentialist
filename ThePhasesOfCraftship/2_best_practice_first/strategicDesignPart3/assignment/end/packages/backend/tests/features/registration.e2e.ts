@@ -4,7 +4,6 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import { app } from "@dddforum/backend/src/shared/bootstrap";
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { Errors } from "../../src/shared/errors";
 
