@@ -1,7 +1,6 @@
 import { User, Post, Vote, Comment } from "@prisma/client";
 import { Database } from "@dddforum/backend/src/shared/database";
 
-
 const prisma = new Database().getConnection();
 
 const initialUsers: User[] = [

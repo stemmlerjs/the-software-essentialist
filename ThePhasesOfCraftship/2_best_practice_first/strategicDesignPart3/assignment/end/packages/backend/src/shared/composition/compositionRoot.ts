@@ -20,7 +20,7 @@ export class CompositionRoot {
   }
 
   private constructor(config: Config) {
-    this.config = config
+    this.config = config;
     this.errorHandler = errorHandler;
     this.dbConnection = this.createDBConnection();
     this.usersService = this.createUserService();
