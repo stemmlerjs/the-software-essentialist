@@ -1,27 +1,23 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import path from 'path';
+import * as path from 'path';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@frontend' });
 
 defineFeature(feature, (test) => {
-  test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
+  test('Successful registration', ({ given, when, then, and }) => {
     
     given('I am a new user', async () => {
-
+      // to be implemented
     });
 
-    when('I register with valid account details accepting marketing emails', async () => {
-
+    when('I register with valid account details', async () => {
+      // to be implemented
     });
 
     then('I should be granted access to my account', async () => {
-     
-    });
-
-    and('I should expect to receive marketing emails', () => {
-
+      // to be implemented
     });
   });
 });
