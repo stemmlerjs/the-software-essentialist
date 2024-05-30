@@ -1,6 +1,5 @@
 import express from "express";
 import { UsersService } from "./usersService";
-import { parseUserForResponse } from "../../shared/utils/parser";
 import { CreateUserCommand } from "./usersCommand";
 import { ErrorHandler } from "../../shared/errors";
 
@@ -38,7 +37,7 @@ export class UsersController {
       const user = await this.usersService.createUser(command);
       return res.status(201).json({
         error: undefined,
-        data: parseUserForResponse(user),
+        data: user,
         success: true,
       });
     } catch (error) {

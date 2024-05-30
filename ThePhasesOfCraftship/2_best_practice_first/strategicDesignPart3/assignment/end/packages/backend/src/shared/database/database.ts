@@ -1,18 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "../utils";
+import { User } from "@prisma/client";
+import { CreateUserCommand } from "@dddforum/backend/src/modules/users";
+import { CreateUserResponse } from "@dddforum/shared/src/api/users";
 
 export interface UsersPersistence {
-  save(user: NewUser): any;
-  findUserByEmail(email: string): any;
-  findUserByUsername(username: string): any;
+  save(user: CreateUserCommand): Promise<CreateUserResponse>;
+  findUserByEmail(email: string): Promise<User | null>;
+  findUserByUsername(username: string): Promise<User | null>;
 }
-
-type NewUser = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-};
 
 export class Database {
   public users: UsersPersistence;
@@ -39,7 +35,7 @@ export class Database {
     };
   }
 
-  private async saveUser(user: NewUser) {
+  private async saveUser(user: CreateUserCommand) {
     const { email, firstName, lastName, username } = user;
     return await this.connection.$transaction(async () => {
       const user = await this.connection.user.create({
@@ -51,10 +47,14 @@ export class Database {
           password: generateRandomPassword(10),
         },
       });
-      const member = await this.connection.member.create({
+      await this.connection.member.create({
         data: { userId: user.id },
       });
-      return { user, member };
+
+      const userWithoutPassword = (({ password: _password, ...rest }) => rest)(
+        user,
+      );
+      return userWithoutPassword;
     });
   }
 
