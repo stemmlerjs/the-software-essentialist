@@ -23,7 +23,7 @@ export class UsersService {
       throw new UsernameAlreadyTakenException(userData.username);
     }
 
-    const { user } = await this.db.users.save(userData);
+    const user = await this.db.users.save(userData);
 
     return user;
   }
