@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "../utils";
-import { User } from "@prisma/client";
 import { CreateUserCommand } from "@dddforum/backend/src/modules/users";
-import { CreateUserResponse } from "@dddforum/shared/src/api/users";
+import { User } from "@dddforum/shared/src/api/users";
 
 export interface UsersPersistence {
-  save(user: CreateUserCommand): Promise<CreateUserResponse>;
+  save(user: CreateUserCommand): Promise<User>;
   findUserByEmail(email: string): Promise<User | null>;
   findUserByUsername(username: string): Promise<User | null>;
 }

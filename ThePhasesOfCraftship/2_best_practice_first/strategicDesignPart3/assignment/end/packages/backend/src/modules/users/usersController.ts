@@ -1,7 +1,8 @@
 import express from "express";
 import { UsersService } from "./usersService";
 import { CreateUserCommand } from "./usersCommand";
-import { ErrorHandler } from "../../shared/errors";
+import { ErrorHandler } from "@dddforum/backend/src/shared/errors";
+import { CreateUserResponse } from "@dddforum/shared/src/api/users";
 
 export class UsersController {
   private router: express.Router;
@@ -35,11 +36,12 @@ export class UsersController {
     try {
       const command = CreateUserCommand.fromRequest(req.body);
       const user = await this.usersService.createUser(command);
-      return res.status(201).json({
-        error: undefined,
-        data: user,
+      const response: CreateUserResponse = {
         success: true,
-      });
+        data: user,
+        error: {},
+      };
+      return res.status(201).json(response);
     } catch (error) {
       next(error);
     }

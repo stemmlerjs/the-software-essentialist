@@ -1,12 +1,14 @@
 import * as path from "path";
-import request from "supertest";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { app } from "@dddforum/backend/src/shared/bootstrap";
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
-import { Errors } from "../../src/shared/errors";
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { CreateUserParams, CreateUserResponse } from "@dddforum/shared/src/api/users";
+import { createAPIClient } from "@dddforum/shared/src/api";
+import { CompositionRoot } from "@dddforum/backend/src/shared/composition/compositionRoot";
+import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
+import { Config } from "@dddforum/backend/src/shared/config";
+import { Database } from "../../src/shared/database";
 
 const feature = loadFeature(
   path.join(sharedTestRoot, "features/registration.feature"),
@@ -14,36 +16,54 @@ const feature = loadFeature(
 
 defineFeature(feature, (test) => {
   let databaseFixture: DatabaseFixture;
+  const apiClient = createAPIClient('http://localhost:3000');
+  let composition: CompositionRoot
+  let server: WebServer
+  const config: Config = new Config("test:e2e");
+  let response: CreateUserResponse
+  let createUserResponses: CreateUserResponse[] = [];
+  let dbConnection: Database
+  
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    composition = CompositionRoot.createCompositionRoot(config);
+    server = composition.getWebServer();
     databaseFixture = new DatabaseFixture();
+    dbConnection = composition.getDBConnection();
+
+    await server.start();
+    await dbConnection.connect();
   });
 
   afterEach(async () => {
     await databaseFixture.resetDatabase();
+    createUserResponses = []
+  });
+
+  afterAll(async () => {
+    await server.stop();
   });
 
   test("Successful registration", ({ given, when, then }) => {
     let user: CreateUserParams;
-    let response: request.Response;
+    
 
     given("I am a new user", () => {
       user = new CreateUserBuilder().withAllRandomDetails().build();
     });
 
     when("I register with valid account details", async () => {
-      response = await request(app).post("/users/new").send(user);
+      response = await apiClient.users.register(user);
     });
 
     then("I should be granted access to my account", () => {
-      expect(response.status).toBe(201);
-      expect(response.body.success).toBe(true);
-      expect(response.body.data).toBeDefined();
-      expect(response.body.data.email).toBe(user.email);
-      expect(response.body.data.username).toBe(user.username);
-      expect(response.body.data.firstName).toBe(user.firstName);
-      expect(response.body.data.lastName).toBe(user.lastName);
-      expect(response.body.data.id).toBeDefined();
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data!.email).toBe(user.email);
+      expect(response.data!.username).toBe(user.username);
+      expect(response.data!.firstName).toBe(user.firstName);
+      expect(response.data!.lastName).toBe(user.lastName);
+      expect(response.data!.id).toBeDefined();
     });
   });
 
@@ -54,7 +74,6 @@ defineFeature(feature, (test) => {
     and,
   }) => {
     let user: any;
-    let response: request.Response;
 
     given("I am a new user", () => {
       const validUser = new CreateUserBuilder().withAllRandomDetails().build();
@@ -67,27 +86,24 @@ defineFeature(feature, (test) => {
     });
 
     when("I register with invalid account details", async () => {
-      response = await request(app).post("/users/new").send(user);
+      response = await apiClient.users.register(user);
     });
 
     then("I should see an error notifying me that my input is invalid", () => {
-      expect(response.status).toBe(400);
-      expect(response.body.success).toBe(false);
-      expect(response.body.data).toBeUndefined();
-      expect(response.body.error).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.data).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
     and("I should not have been sent access to account details", () => {
-      expect(response.status).toBe(400);
-      expect(response.body.success).toBe(false);
-      expect(response.body.data).toBeUndefined();
-      expect(response.body.error).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.data).toBeNull();
+      expect(response.error).toBeDefined();
     });
   });
 
   test("Account already created with email", ({ given, when, then, and }) => {
     let existingUsers: CreateUserParams[] = [];
-    let createUserResponses: request.Response[] = [];
 
     given("a set of users already created accounts", async (table) => {
       existingUsers = table.map((row: any) => {
@@ -103,7 +119,7 @@ defineFeature(feature, (test) => {
     when("new users attempt to register with those emails", async () => {
       createUserResponses = await Promise.all(
         existingUsers.map((user) => {
-          return request(app).post("/users/new").send(user);
+          return apiClient.users.register(user);
         }),
       );
     });
@@ -111,27 +127,25 @@ defineFeature(feature, (test) => {
     then(
       "they should see an error notifying them that the account already exists",
       () => {
-        for (const { body } of createUserResponses) {
-          expect(body.error).toBeDefined();
-          expect(body.success).toBeFalsy();
-          expect(body.error).toEqual(Errors.EmailAlreadyInUse);
+        for (const response of createUserResponses) {
+          expect(response.error).toBeDefined();
+          expect(response.success).toBeFalsy();
+          expect(response.error.code).toEqual("EmailAlreadyInUse");
         }
       },
     );
 
     and("they should not have been sent access to account details", () => {
       createUserResponses.forEach((response) => {
-        expect(response.status).toBe(409);
-        expect(response.body.success).toBe(false);
-        expect(response.body.data).toBeUndefined();
-        expect(response.body.error).toBeDefined();
+        expect(response.success).toBe(false);
+        expect(response.data).toBeNull();
+        expect(response.error).toBeDefined();
       });
     });
   });
 
   test("Username already taken", ({ given, when, then, and }) => {
     let existingUsers: CreateUserParams[] = [];
-    let createUserResponses: request.Response[] = [];
 
     given(
       "a set of users have already created their accounts with valid details",
@@ -162,7 +176,7 @@ defineFeature(feature, (test) => {
 
         createUserResponses = await Promise.all(
           newUsers.map((user) => {
-            return request(app).post("/users/new").send(user);
+            return apiClient.users.register(user);
           }),
         );
       },
@@ -171,20 +185,19 @@ defineFeature(feature, (test) => {
     then(
       "they see an error notifying them that the username has already been taken",
       () => {
-        for (const { body } of createUserResponses) {
-          expect(body.error).toBeDefined();
-          expect(body.success).toBeFalsy();
-          expect(body.error).toEqual(Errors.UsernameAlreadyTaken);
+        for (const response of createUserResponses) {
+          expect(response.error).toBeDefined();
+          expect(response.success).toBeFalsy();
+          expect(response.error.code).toEqual("UsernameAlreadyTaken");
         }
       },
     );
 
     and("they should not have been sent access to account details", () => {
       createUserResponses.forEach((response) => {
-        expect(response.status).toBe(409);
-        expect(response.body.success).toBe(false);
-        expect(response.body.data).toBeUndefined();
-        expect(response.body.error).toBeDefined();
+        expect(response.success).toBe(false);
+        expect(response.data).toBeNull();
+        expect(response.error).toBeDefined();
       });
     });
   });
