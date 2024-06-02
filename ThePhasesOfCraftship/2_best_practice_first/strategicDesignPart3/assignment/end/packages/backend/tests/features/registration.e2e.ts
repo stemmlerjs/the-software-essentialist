@@ -58,7 +58,6 @@ defineFeature(feature, (test) => {
     when('I register with valid account details accepting marketing emails', async () => {
       response = await apiClient.users.register(user);
       addEmailToListResponse = await apiClient.marketing.addEmailToList(user.email);
-      console.log(addEmailToListResponse);
     });
 
     then('I should be granted access to my account', async () => {
@@ -92,7 +91,7 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Successful registration", ({ given, when, then }) => {
+  test("Successful registration without marketing emails accepted", ({ given, when, then, and }) => {
     let user: CreateUserParams;
     
 
@@ -100,7 +99,7 @@ defineFeature(feature, (test) => {
       user = new CreateUserBuilder().withAllRandomDetails().build();
     });
 
-    when("I register with valid account details", async () => {
+    when("I register with valid account details declining marketing emails", async () => {
       response = await apiClient.users.register(user);
     });
 
@@ -112,6 +111,14 @@ defineFeature(feature, (test) => {
       expect(response.data!.firstName).toBe(user.firstName);
       expect(response.data!.lastName).toBe(user.lastName);
       expect(response.data!.id).toBeDefined();
+    });
+
+    and("I should not expect to receive marketing emails", () => {
+      const { success } = addEmailToListResponse
+
+      expect(success).toBeTruthy();
+      // How can we test this? what do we want to place under test?
+      // we'll implement this later
     });
   });
 
