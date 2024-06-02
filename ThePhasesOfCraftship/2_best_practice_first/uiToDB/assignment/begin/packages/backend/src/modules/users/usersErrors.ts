@@ -1,21 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomException } from "../exceptions";
-import { CreateUserResponse } from "@dddforum/shared/src/api/users";
+import { UserResponse } from "@dddforum/shared/src/api/users";
+import { CustomException } from "../../shared/exceptions";
 
-export type ErrorHandler = (
+export type UserErrorHandler = (
   error: CustomException,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => Response;
 
-export function errorHandler(
+export function userErrorHandler(
   error: CustomException,
   _: Request,
   res: Response,
   _next: NextFunction,
-): Response<CreateUserResponse> {
-  let responseBody: CreateUserResponse;
+): Response<UserResponse> {
+  let responseBody: UserResponse;
   if (error.type === "InvalidRequestBodyException") {
     responseBody = {
       success: false,
@@ -48,6 +48,17 @@ export function errorHandler(
       },
     };
     return res.status(409).json(responseBody);
+  }
+
+  if (error.type === "UserNotFoundException") {
+    responseBody = {
+      success: false,
+      data: null,
+      error: {
+        code: "UserNotFound",
+      },
+    };
+    return res.status(404).json(responseBody);
   }
 
   responseBody = {
