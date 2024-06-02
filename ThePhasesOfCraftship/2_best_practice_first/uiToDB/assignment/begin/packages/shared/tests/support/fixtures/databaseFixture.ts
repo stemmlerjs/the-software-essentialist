@@ -1,12 +1,12 @@
-
 import { PrismaClient } from "@prisma/client";
-import { CreateUserCommand } from "@dddforum/shared/src/api/users";
-import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
+import { database } from "@dddforum/backend/src/shared/bootstrap";
+import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
+import { CreateUserParams } from "@dddforum/shared/src/api/users";
 
 export class DatabaseFixture {
   private connection: PrismaClient;
   constructor() {
-    this.connection = new PrismaClient()
+    this.connection = database.getConnection();
   }
 
   async resetDatabase() {
@@ -31,7 +31,7 @@ export class DatabaseFixture {
     }
   }
 
-  async setupWithExistingUsers(createUserParams: CreateUserCommand[]) {
+  async setupWithExistingUsers(createUserParams: CreateUserParams[]) {
     await this.connection.$transaction(
       createUserParams.map((user) => {
         return this.connection.user.create({
@@ -40,7 +40,7 @@ export class DatabaseFixture {
             firstName: user.firstName,
             lastName: user.lastName,
             username: user.username,
-            password: TextUtil.createRandomText(10)
+            password: generateRandomPassword(10),
           },
         });
       }),
