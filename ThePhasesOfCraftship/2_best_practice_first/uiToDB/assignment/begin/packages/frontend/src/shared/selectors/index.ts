@@ -1,4 +1,3 @@
-
 export const appSelectors = {
   registration: {
     registrationForm: {
@@ -13,23 +12,23 @@ export const appSelectors = {
       submit: { selector: ".registration.submit-button", type: "button" },
     },
   },
-  header: { selector: '.header.username', type: 'div' },
+  header: { selector: ".header.username", type: "div" },
   notifications: {
-    failure: '#failure-toast',
-    success: '#success-toast'
-  }
+    failure: "#failure-toast",
+    success: "#success-toast",
+  },
 };
 
-export function toClass(input: string): string {  
+export function toClass(input: string): string {
   // Remove the leading dot and replace all remaining dots with spaces
-  return input.slice(1).replace(/\./g, ' ');
+  return input.slice(1).replace(/\./g, " ");
 }
 
 export function toId(input: string): string {
-  if (!input.startsWith('#')) {
+  if (!input.startsWith("#")) {
     throw new Error("Input string must start with a hash symbol (#).");
   }
-  
+
   // Remove the leading hash symbol
   return input.slice(1);
 }

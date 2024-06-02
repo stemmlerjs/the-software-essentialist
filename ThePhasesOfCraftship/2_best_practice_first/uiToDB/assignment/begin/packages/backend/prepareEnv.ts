@@ -12,35 +12,22 @@
  */
 
 import { execSync } from 'child_process';
-import path from 'path';
-
-const getEnvFile = (env: string) => {
-  switch (env) {
-    case 'development':
-      return '.env.development';
-    case 'test':
-      return '.env.test'
-    case 'production':
-      return '.env.production'
-    default:
-      return '';
-  }
-}
+import * as path from 'path';
 
 export const prepareEnv = (): void => {
-  let env = process.env.NODE_ENV || 'development';
+  const env = process.env.NODE_ENV || 'development';
   const packageRoot = path.resolve(__dirname);
   const execParams = {
     cwd: packageRoot,
     stdio: 'inherit',
   } as const;
 
-  let script = process.argv.splice(2).join(' ');
+  const script = process.argv.splice(2).join(' ');
 
-  const envFile =  getEnvFile(env);
-  if (envFile) {
-    console.log(`Preparing environment using ${envFile}`)
-    execSync(`dotenv -e ${envFile} -- ${script}`, execParams);
+  if (env === 'development') {
+    const devEnvFile = '.env.development'
+    console.log(`Preparing dev environment using ${devEnvFile}`);
+    execSync(`dotenv -e ${devEnvFile} -- ${script}`, execParams);
     return;
   }
 
