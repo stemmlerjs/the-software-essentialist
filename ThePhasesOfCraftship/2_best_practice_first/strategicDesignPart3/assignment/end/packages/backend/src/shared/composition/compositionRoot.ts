@@ -1,5 +1,5 @@
 import { UsersController, UsersService } from "../../modules";
-import { MailchimpContactList } from "../../modules/marketing/adapters/contactListAPI/mailchimpContactList";
+import { TransactionalEmailAPI } from "../../modules/marketing/transactionalEmailAPI";
 import { MarketingController } from "../../modules/marketing/marketingController";
 import {
   MarketingErrorHandler,
@@ -10,6 +10,7 @@ import { UserErrorHandler, userErrorHandler } from "../../modules/users";
 import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
+import { ContactListAPI } from "../../modules/marketing/contactListAPI";
 
 type ErrorHandlers = {
   usersErrorHandler: UserErrorHandler;
@@ -22,6 +23,7 @@ export class CompositionRoot {
   private errorHandlers: ErrorHandlers;
   private usersService: UsersService;
   private config: Config;
+  private transactionalEmailAPI: TransactionalEmailAPI;
   private static instance: CompositionRoot | null = null;
 
   public static createCompositionRoot(config: Config) {
@@ -38,6 +40,7 @@ export class CompositionRoot {
       marketingErrorHandler: marketingErrorHandler,
     };
     this.dbConnection = this.createDBConnection();
+    this.transactionalEmailAPI = this.createTransactionalEmailAPI();
     this.usersService = this.createUserService();
     this.webServer = this.createWebServer();
   }
@@ -52,7 +55,11 @@ export class CompositionRoot {
 
   private createUserService() {
     const dbConnection = this.getDBConnection();
-    return new UsersService(dbConnection);
+    return new UsersService(dbConnection, this.transactionalEmailAPI);
+  }
+
+  private createTransactionalEmailAPI() {
+    return new TransactionalEmailAPI();
   }
 
   private createControllers() {
@@ -87,7 +94,7 @@ export class CompositionRoot {
   }
 
   private createContactListAPI() {
-    return new MailchimpContactList();
+    return new ContactListAPI();
   }
 
   private createDBConnection() {
@@ -110,5 +117,9 @@ export class CompositionRoot {
 
   getWebServer() {
     return this.webServer;
+  }
+
+  public getEnvironment() {
+    return this.config.env;
   }
 }
