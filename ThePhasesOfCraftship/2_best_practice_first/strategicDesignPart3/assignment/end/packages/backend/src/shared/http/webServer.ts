@@ -3,6 +3,7 @@ import cors from "cors";
 import { Server } from "http";
 import { ProcessService } from "@dddforum/backend/src/shared/processes/processService";
 import { UsersController } from "@dddforum/backend/src/modules/users";
+import { MarketingController } from "../../modules/marketing/marketingController";
 
 interface WebServerConfig {
   port: number;
@@ -11,6 +12,7 @@ interface WebServerConfig {
 
 interface Controllers {
   usersController: UsersController;
+  marketingController: MarketingController;
 }
 
 export class WebServer {
@@ -38,8 +40,9 @@ export class WebServer {
   }
 
   private registerRouters(controllers: Controllers) {
-    const { usersController } = controllers;
-    this.express.use("/", usersController.getRouter());
+    const { usersController, marketingController } = controllers;
+    this.express.use("/users", usersController.getRouter());
+    this.express.use("/marketing", marketingController.getRouter());
   }
 
   public getApplication() {
