@@ -1,13 +1,25 @@
 import { UsersController, UsersService } from "../../modules";
+import { MailchimpContactList } from "../../modules/marketing/adapters/contactListAPI/mailchimpContactList";
+import { MarketingController } from "../../modules/marketing/marketingController";
+import {
+  MarketingErrorHandler,
+  marketingErrorHandler,
+} from "../../modules/marketing/marketingErrors";
+import { MarketingService } from "../../modules/marketing/marketingService";
+import { UserErrorHandler, userErrorHandler } from "../../modules/users";
 import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
-import { ErrorHandler, errorHandler } from "../errors";
+
+type ErrorHandlers = {
+  usersErrorHandler: UserErrorHandler;
+  marketingErrorHandler: MarketingErrorHandler;
+};
 
 export class CompositionRoot {
   private webServer: WebServer;
   private dbConnection: Database;
-  private errorHandler: ErrorHandler;
+  private errorHandlers: ErrorHandlers;
   private usersService: UsersService;
   private config: Config;
   private static instance: CompositionRoot | null = null;
@@ -21,7 +33,10 @@ export class CompositionRoot {
 
   private constructor(config: Config) {
     this.config = config;
-    this.errorHandler = errorHandler;
+    this.errorHandlers = {
+      usersErrorHandler: userErrorHandler,
+      marketingErrorHandler: marketingErrorHandler,
+    };
     this.dbConnection = this.createDBConnection();
     this.usersService = this.createUserService();
     this.webServer = this.createWebServer();
@@ -31,8 +46,8 @@ export class CompositionRoot {
     return this.usersService;
   }
 
-  private getErrorHandler() {
-    return this.errorHandler;
+  private getUserErrorHandler() {
+    return this.errorHandlers.usersErrorHandler;
   }
 
   private createUserService() {
@@ -41,13 +56,38 @@ export class CompositionRoot {
   }
 
   private createControllers() {
-    const usersService = this.getUsersService();
-    const errorHandler = this.getErrorHandler();
-    const usersController = new UsersController(usersService, errorHandler);
+    const usersController = this.createUsersController();
+    const marketingController = this.createMarketingController();
 
     return {
       usersController,
+      marketingController,
     };
+  }
+
+  private createUsersController() {
+    const usersService = this.getUsersService();
+    const errorHandler = this.getUserErrorHandler();
+    return new UsersController(usersService, errorHandler);
+  }
+
+  private createMarketingController() {
+    const marketingService = this.createMarketingService();
+    const errorHandler = this.getMarketingErrorHandler();
+    return new MarketingController(marketingService, errorHandler);
+  }
+
+  private getMarketingErrorHandler() {
+    return this.errorHandlers.marketingErrorHandler;
+  }
+
+  private createMarketingService() {
+    const contactListAPI = this.createContactListAPI();
+    return new MarketingService(contactListAPI);
+  }
+
+  private createContactListAPI() {
+    return new MailchimpContactList();
   }
 
   private createDBConnection() {

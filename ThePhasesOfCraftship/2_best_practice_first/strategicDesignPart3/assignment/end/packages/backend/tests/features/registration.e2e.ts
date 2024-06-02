@@ -9,6 +9,7 @@ import { CompositionRoot } from "@dddforum/backend/src/shared/composition/compos
 import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
 import { Config } from "@dddforum/backend/src/shared/config";
 import { Database } from "../../src/shared/database";
+import { AddEmailToListResponse } from "@dddforum/shared/src/api/marketing";
 
 const feature = loadFeature(
   path.join(sharedTestRoot, "features/registration.feature"),
@@ -22,6 +23,7 @@ defineFeature(feature, (test) => {
   const config: Config = new Config("test:e2e");
   let response: CreateUserResponse
   let createUserResponses: CreateUserResponse[] = [];
+  let addEmailToListResponse: AddEmailToListResponse;
   let dbConnection: Database
   
 
@@ -42,6 +44,52 @@ defineFeature(feature, (test) => {
 
   afterAll(async () => {
     await server.stop();
+  });
+
+  test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
+    let user: CreateUserParams;
+    
+    given('I am a new user', async () => {
+      user = new CreateUserBuilder()
+        .withAllRandomDetails()
+        .build();
+    });
+
+    when('I register with valid account details accepting marketing emails', async () => {
+      response = await apiClient.users.register(user);
+      addEmailToListResponse = await apiClient.marketing.addEmailToList(user.email);
+      console.log(addEmailToListResponse);
+    });
+
+    then('I should be granted access to my account', async () => {
+      const { data, success, error } = response;
+
+      // Expect a successful response (Result Verification)
+      expect(success).toBeTruthy();
+      expect(error).toEqual({});
+      expect(data!.id).toBeDefined();
+      expect(data!.email).toEqual(user.email);
+      expect(data!.firstName).toEqual(user.firstName);
+      expect(data!.lastName).toEqual(user.lastName);
+      expect(data!.username).toEqual(user.username);
+
+      // And the user exists (State Verification)
+      const getUserResponse = await apiClient.users.getUserByEmail(user.email);
+      const {data: getUserData} = getUserResponse;
+      expect(user.email).toEqual(getUserData!.email);
+    });
+
+    and('I should expect to receive marketing emails', () => {
+      // How can we test this? what do we want to place under test?
+      // Well, what's the tool they'll use? mailchimp?
+      // And do we want to expect that mailchimp is going to get called to add
+      // a new contact to a list? Yes, we do. But we're not going to worry 
+      // about this yet because we need to learn how to validate this without
+      // filling up a production Mailchimp account with test data. 
+      const { success } = addEmailToListResponse
+
+      expect(success).toBeTruthy();
+    });
   });
 
   test("Successful registration", ({ given, when, then }) => {
