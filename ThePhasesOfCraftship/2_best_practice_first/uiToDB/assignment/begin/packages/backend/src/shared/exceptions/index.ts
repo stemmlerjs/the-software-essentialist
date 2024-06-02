@@ -15,23 +15,10 @@ class InvalidRequestBodyException extends CustomException {
   }
 }
 
-class EmailAlreadyInUseException extends CustomException {
-  constructor(email: string) {
-    super(`Email ${email} is already in use`, "EmailAlreadyInUseException");
+class ServerErrorException extends CustomException {
+  constructor() {
+    super("An error occurred", "ServerErrorException");
   }
 }
 
-class UsernameAlreadyTakenException extends CustomException {
-  constructor(username: string) {
-    super(
-      `Username ${username} is already taken`,
-      "UsernameAlreadyTakenException",
-    );
-  }
-}
-
-export {
-  InvalidRequestBodyException,
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-};
+export { InvalidRequestBodyException, ServerErrorException };

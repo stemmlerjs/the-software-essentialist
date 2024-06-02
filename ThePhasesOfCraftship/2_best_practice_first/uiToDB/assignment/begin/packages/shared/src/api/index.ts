@@ -1,4 +1,5 @@
-import { User, createUsersAPI } from "./users";
+import { createUsersAPI } from "./users";
+import { createMarketingAPI } from "./marketing";
 
 export type Error<U> = {
   message?: string;
@@ -18,5 +19,6 @@ export type GenericErrors = ValidationError | ServerError;
 export const createAPIClient = (apiURL: string) => {
   return {
     users: createUsersAPI(apiURL),
+    marketing: createMarketingAPI(apiURL),
   };
 };

@@ -4,7 +4,7 @@ import { CreateUserCommand } from "@dddforum/backend/src/modules/users";
 import { User } from "@dddforum/shared/src/api/users";
 
 export interface UsersPersistence {
-  save(user: CreateUserCommand): Promise<User>;
+  save(user: CreateUserCommand): Promise<User & { password: string }>;
   findUserByEmail(email: string): Promise<User | null>;
   findUserByUsername(username: string): Promise<User | null>;
 }
@@ -50,10 +50,7 @@ export class Database {
         data: { userId: user.id },
       });
 
-      const userWithoutPassword = (({ password: _password, ...rest }) => rest)(
-        user,
-      );
-      return userWithoutPassword;
+      return user;
     });
   }
 
