@@ -1,23 +1,24 @@
-import { TransactionalEmailAPI } from "../../modules/marketing/transactionalEmailAPI";
-
 import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
-import { ContactListAPI } from "../../modules/marketing/contactListAPI";
-import { UsersModule } from "../../modules/users";
-import { MarketingModule } from "../../modules/marketing";
-import { PostsModule } from "../../modules/posts/postsModule";
+import {
+  UsersModule,
+  PostsModule,
+  NotificationsModule,
+  MarketingModule,
+} from "@dddforum/backend/src/modules";
 
 export class CompositionRoot {
+  private static instance: CompositionRoot | null = null;
+
   private webServer: WebServer;
   private dbConnection: Database;
   private config: Config;
-  private transactionalEmailAPI: TransactionalEmailAPI;
-  private static instance: CompositionRoot | null = null;
 
   private usersModule: UsersModule;
   private marketingModule: MarketingModule;
   private postsModule: PostsModule;
+  private notificationsModule: NotificationsModule;
 
   public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
@@ -29,14 +30,15 @@ export class CompositionRoot {
   private constructor(config: Config) {
     this.config = config;
     this.dbConnection = this.createDBConnection();
-    this.transactionalEmailAPI = this.createTransactionalEmailAPI();
-    this.marketingModule = MarketingModule.build(this.createContactListAPI());
+    this.notificationsModule = NotificationsModule.build();
+    this.marketingModule = MarketingModule.build();
     this.usersModule = UsersModule.build(
       this.dbConnection,
-      this.transactionalEmailAPI,
+      this.notificationsModule.getTransactionalEmailAPI(),
     );
     this.postsModule = PostsModule.build(this.dbConnection);
     this.webServer = this.createWebServer();
+    this.mountRoutes();
   }
 
   getDBConnection() {
@@ -45,32 +47,17 @@ export class CompositionRoot {
   }
 
   createWebServer() {
-    const controllers = this.createControllers();
-    return new WebServer({ port: 3000, env: this.config.env }, controllers);
+    return new WebServer({ port: 3000, env: this.config.env });
   }
 
   getWebServer() {
     return this.webServer;
   }
 
-  private createTransactionalEmailAPI() {
-    return new TransactionalEmailAPI();
-  }
-
-  private createControllers() {
-    const usersController = this.usersModule.getUsersController();
-    const marketingController = this.marketingModule.getMarketingController();
-    const postsController = this.postsModule.getPostsController();
-
-    return {
-      usersController,
-      marketingController,
-      postsController,
-    };
-  }
-
-  private createContactListAPI() {
-    return new ContactListAPI();
+  private mountRoutes() {
+    this.marketingModule.mountRoutes(this.webServer);
+    this.usersModule.mountRoutes(this.webServer);
+    this.postsModule.mountRoutes(this.webServer);
   }
 
   private createDBConnection() {

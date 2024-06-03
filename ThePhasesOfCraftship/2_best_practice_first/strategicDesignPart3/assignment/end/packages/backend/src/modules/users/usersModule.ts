@@ -1,7 +1,9 @@
 import { UsersController } from "./usersController";
-import { UsersService, userErrorHandler } from ".";
 import { Database } from "../../shared/database";
-import { TransactionalEmailAPI } from "../marketing/transactionalEmailAPI";
+import { TransactionalEmailAPI } from "../notifications/transactionalEmailAPI";
+import { WebServer } from "../../shared/http/webServer";
+import { UsersService } from "./usersService";
+import { userErrorHandler } from "./usersErrors";
 
 export class UsersModule {
   private usersService: UsersService;
@@ -27,7 +29,11 @@ export class UsersModule {
     return new UsersController(this.usersService, userErrorHandler);
   }
 
-  public getUsersController() {
+  public getController() {
     return this.usersController;
+  }
+
+  public mountRoutes(webServer: WebServer) {
+    webServer.getApplication().use("/users", this.usersController.getRouter());
   }
 }

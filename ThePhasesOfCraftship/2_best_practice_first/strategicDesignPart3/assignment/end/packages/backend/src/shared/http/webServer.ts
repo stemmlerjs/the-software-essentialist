@@ -1,20 +1,12 @@
 import express from "express";
 import cors from "cors";
 import { Server } from "http";
+
 import { ProcessService } from "@dddforum/backend/src/shared/processes/processService";
-import { UsersController } from "@dddforum/backend/src/modules/users";
-import { MarketingController } from "../../modules/marketing/marketingController";
-import { PostsController } from "../../modules/posts/postsController";
 
 interface WebServerConfig {
   port: number;
   env: string;
-}
-
-interface Controllers {
-  usersController: UsersController;
-  marketingController: MarketingController;
-  postsController: PostsController;
 }
 
 export class WebServer {
@@ -22,14 +14,10 @@ export class WebServer {
   private state: "stopped" | "started";
   private instance: Server | undefined;
 
-  constructor(
-    private config: WebServerConfig,
-    controllers: Controllers,
-  ) {
+  constructor(private config: WebServerConfig) {
     this.state = "stopped";
     this.express = express();
     this.initializeServer();
-    this.registerRouters(controllers);
   }
 
   private initializeServer() {
@@ -39,14 +27,6 @@ export class WebServer {
 
   private addMiddlewares() {
     this.express.use(express.json());
-  }
-
-  private registerRouters(controllers: Controllers) {
-    const { usersController, marketingController, postsController } =
-      controllers;
-    this.express.use("/users", usersController.getRouter());
-    this.express.use("/marketing", marketingController.getRouter());
-    this.express.get("/posts", postsController.getRouter());
   }
 
   public getApplication() {
