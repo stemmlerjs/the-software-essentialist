@@ -1,3 +1,4 @@
+import { WebServer } from "../../shared/http/webServer";
 import { ContactListAPI } from "./contactListAPI";
 import { MarketingController } from "./marketingController";
 import { marketingErrorHandler } from "./marketingErrors";
@@ -6,14 +7,16 @@ import { MarketingService } from "./marketingService";
 export class MarketingModule {
   private marketingService: MarketingService;
   private marketingController: MarketingController;
+  private contactListAPI: ContactListAPI;
 
-  private constructor(private contactListAPI: ContactListAPI) {
+  private constructor() {
+    this.contactListAPI = this.BuildContactListAPI();
     this.marketingService = this.createMarketingService();
     this.marketingController = this.createMarketingController();
   }
 
-  static build(contactListAPI: ContactListAPI) {
-    return new MarketingModule(contactListAPI);
+  static build() {
+    return new MarketingModule();
   }
 
   private createMarketingService() {
@@ -27,7 +30,17 @@ export class MarketingModule {
     );
   }
 
+  private BuildContactListAPI() {
+    return new ContactListAPI();
+  }
+
   public getMarketingController() {
     return this.marketingController;
+  }
+
+  public mountRoutes(webServer: WebServer) {
+    webServer
+      .getApplication()
+      .use("/marketing", this.marketingController.getRouter());
   }
 }

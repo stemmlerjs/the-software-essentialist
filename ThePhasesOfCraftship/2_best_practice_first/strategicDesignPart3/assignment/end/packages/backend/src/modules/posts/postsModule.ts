@@ -1,4 +1,5 @@
 import { Database } from "../../shared/database";
+import { WebServer } from "../../shared/http/webServer";
 import { PostsController } from "./postsController";
 import { postsErrorHandler } from "./postsErrors";
 import { PostsService } from "./postsService";
@@ -26,5 +27,9 @@ export class PostsModule {
 
   public getPostsController() {
     return this.postsController;
+  }
+
+  public mountRoutes(webServer: WebServer) {
+    webServer.getApplication().use("/posts", this.postsController.getRouter());
   }
 }
