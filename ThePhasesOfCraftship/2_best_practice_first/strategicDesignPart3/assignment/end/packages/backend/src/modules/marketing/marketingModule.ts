@@ -10,7 +10,7 @@ export class MarketingModule {
   private contactListAPI: ContactListAPI;
 
   private constructor() {
-    this.contactListAPI = this.BuildContactListAPI();
+    this.contactListAPI = this.buildContactListAPI();
     this.marketingService = this.createMarketingService();
     this.marketingController = this.createMarketingController();
   }
@@ -30,7 +30,7 @@ export class MarketingModule {
     );
   }
 
-  private BuildContactListAPI() {
+  private buildContactListAPI() {
     return new ContactListAPI();
   }
 
