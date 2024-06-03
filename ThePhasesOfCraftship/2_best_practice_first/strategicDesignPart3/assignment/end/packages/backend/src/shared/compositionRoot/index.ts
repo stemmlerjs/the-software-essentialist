@@ -30,15 +30,31 @@ export class CompositionRoot {
   private constructor(config: Config) {
     this.config = config;
     this.dbConnection = this.createDBConnection();
-    this.notificationsModule = NotificationsModule.build();
-    this.marketingModule = MarketingModule.build();
-    this.usersModule = UsersModule.build(
+    this.notificationsModule = this.createNotificationsModule();
+    this.marketingModule = this.createMarketingModule();
+    this.usersModule = this.createUsersModule();
+    this.postsModule = this.createPostsModule();
+    this.webServer = this.createWebServer();
+    this.mountRoutes();
+  }
+
+  createNotificationsModule () {
+    return NotificationsModule.build();
+  }
+
+  createMarketingModule () {
+    return MarketingModule.build();
+  }
+
+  createUsersModule () {
+    return UsersModule.build(
       this.dbConnection,
       this.notificationsModule.getTransactionalEmailAPI(),
     );
-    this.postsModule = PostsModule.build(this.dbConnection);
-    this.webServer = this.createWebServer();
-    this.mountRoutes();
+  }
+
+  createPostsModule () {
+    return PostsModule.build(this.dbConnection);;
   }
 
   getDBConnection() {
