@@ -79,7 +79,7 @@ export class Database {
   private async findPosts(_: string): Promise<Post[]> {
     try {
       const posts = await this.connection.post.findMany({
-        orderBy: { dateCreated: "desc"},
+        orderBy: { dateCreated: "desc" },
       });
       const formattedPosts = posts.map(this.formatPost);
 

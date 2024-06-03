@@ -12,7 +12,7 @@ export class UsersController {
 
   constructor(
     private usersService: UsersService,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
   ) {
     this.router = express.Router();
     this.setupRoutes();

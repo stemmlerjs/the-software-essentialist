@@ -4,27 +4,27 @@ import { postsErrorHandler } from "./postsErrors";
 import { PostsService } from "./postsService";
 
 export class PostsModule {
-    private postsService: PostsService;
-    private postsController: PostsController;
+  private postsService: PostsService;
+  private postsController: PostsController;
 
-    private constructor(private dbConnection: Database) {
-        this.postsService = this.createPostsService();
-        this.postsController = this.createPostsController();
-    }
+  private constructor(private dbConnection: Database) {
+    this.postsService = this.createPostsService();
+    this.postsController = this.createPostsController();
+  }
 
-    static build(dbConnection: Database) {
-        return new PostsModule(dbConnection);
-    }
+  static build(dbConnection: Database) {
+    return new PostsModule(dbConnection);
+  }
 
-    private createPostsService() {
-        return new PostsService(this.dbConnection);
-    }
+  private createPostsService() {
+    return new PostsService(this.dbConnection);
+  }
 
-    private createPostsController() {
-        return new PostsController(this.postsService, postsErrorHandler);
-    }
+  private createPostsController() {
+    return new PostsController(this.postsService, postsErrorHandler);
+  }
 
-    public getPostsController() {
-        return this.postsController;
-    }
+  public getPostsController() {
+    return this.postsController;
+  }
 }

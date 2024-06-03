@@ -14,7 +14,7 @@ interface WebServerConfig {
 interface Controllers {
   usersController: UsersController;
   marketingController: MarketingController;
-  postsController: PostsController
+  postsController: PostsController;
 }
 
 export class WebServer {
@@ -42,7 +42,8 @@ export class WebServer {
   }
 
   private registerRouters(controllers: Controllers) {
-    const { usersController, marketingController, postsController } = controllers;
+    const { usersController, marketingController, postsController } =
+      controllers;
     this.express.use("/users", usersController.getRouter());
     this.express.use("/marketing", marketingController.getRouter());
     this.express.get("/posts", postsController.getRouter());

@@ -8,8 +8,6 @@ import { UsersModule } from "../../modules/users";
 import { MarketingModule } from "../../modules/marketing";
 import { PostsModule } from "../../modules/posts/postsModule";
 
-
-
 export class CompositionRoot {
   private webServer: WebServer;
   private dbConnection: Database;
@@ -18,8 +16,8 @@ export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
 
   private usersModule: UsersModule;
-  private marketingModule: MarketingModule
-  private postsModule: PostsModule
+  private marketingModule: MarketingModule;
+  private postsModule: PostsModule;
 
   public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
@@ -33,7 +31,10 @@ export class CompositionRoot {
     this.dbConnection = this.createDBConnection();
     this.transactionalEmailAPI = this.createTransactionalEmailAPI();
     this.marketingModule = MarketingModule.build(this.createContactListAPI());
-    this.usersModule = UsersModule.build(this.dbConnection, this.transactionalEmailAPI);
+    this.usersModule = UsersModule.build(
+      this.dbConnection,
+      this.transactionalEmailAPI,
+    );
     this.postsModule = PostsModule.build(this.dbConnection);
     this.webServer = this.createWebServer();
   }
@@ -79,6 +80,4 @@ export class CompositionRoot {
     }
     return dbConnection;
   }
-
-
 }

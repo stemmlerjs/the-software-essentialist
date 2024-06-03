@@ -39,4 +39,9 @@ class ServerErrorException extends CustomException {
   }
 }
 
-export { InvalidRequestBodyException, ServerErrorException, InvalidRequestParamsException, MissingRequestParamsException };
+export {
+  InvalidRequestBodyException,
+  ServerErrorException,
+  InvalidRequestParamsException,
+  MissingRequestParamsException,
+};

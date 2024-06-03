@@ -1,12 +1,14 @@
 import { Request } from "express";
-import { InvalidRequestParamsException, MissingRequestParamsException } from "../../shared/exceptions";
+import {
+  InvalidRequestParamsException,
+  MissingRequestParamsException,
+} from "../../shared/exceptions";
 import { GetPostsParams } from "@dddforum/shared/src/api/posts";
 
 export class GetPostsQuery {
   constructor(public props: GetPostsParams) {}
 
   static fromRequest(query: Request["query"]) {
-
     const { sort } = query;
 
     if (!sort) {
