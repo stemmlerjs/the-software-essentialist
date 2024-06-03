@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "../utils";
 import { CreateUserCommand } from "@dddforum/backend/src/modules/users";
 import { User } from "@dddforum/shared/src/api/users";
+import { Post } from "@dddforum/shared/src/api/posts";
+import { ServerErrorException } from "../exceptions";
 
 export interface UsersPersistence {
   save(user: CreateUserCommand): Promise<User & { password: string }>;
@@ -9,13 +11,19 @@ export interface UsersPersistence {
   findUserByUsername(username: string): Promise<User | null>;
 }
 
+export interface PostsPersistence {
+  findPosts(sort: string): Promise<Post[]>;
+}
+
 export class Database {
   public users: UsersPersistence;
+  public posts: PostsPersistence;
   private connection: PrismaClient;
 
   constructor() {
     this.connection = new PrismaClient();
     this.users = this.buildUsersPersistence();
+    this.posts = this.buildPostsPersistence();
   }
 
   getConnection() {
@@ -60,5 +68,35 @@ export class Database {
 
   private async findUserByUsername(username: string) {
     return this.connection.user.findFirst({ where: { username } });
+  }
+
+  private buildPostsPersistence(): PostsPersistence {
+    return {
+      findPosts: this.findPosts.bind(this),
+    };
+  }
+
+  private async findPosts(_: string): Promise<Post[]> {
+    try {
+      const posts = await this.connection.post.findMany({
+        orderBy: { dateCreated: "desc"},
+      });
+      const formattedPosts = posts.map(this.formatPost);
+
+      return formattedPosts;
+    } catch (error) {
+      throw new ServerErrorException();
+    }
+  }
+
+  private formatPost(post: any): Post {
+    return {
+      id: post.id,
+      memberId: post.memberId,
+      postType: post.postType,
+      title: post.title,
+      content: post.content,
+      dateCreated: post.dateCreated.toISOString(),
+    };
   }
 }

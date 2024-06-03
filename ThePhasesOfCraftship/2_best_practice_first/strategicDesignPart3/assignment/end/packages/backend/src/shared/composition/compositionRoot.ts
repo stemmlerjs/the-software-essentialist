@@ -2,19 +2,23 @@ import { UsersController, UsersService } from "../../modules";
 import { TransactionalEmailAPI } from "../../modules/marketing/transactionalEmailAPI";
 import { MarketingController } from "../../modules/marketing/marketingController";
 import {
-  MarketingErrorHandler,
   marketingErrorHandler,
 } from "../../modules/marketing/marketingErrors";
 import { MarketingService } from "../../modules/marketing/marketingService";
-import { UserErrorHandler, userErrorHandler } from "../../modules/users";
+import {  userErrorHandler } from "../../modules/users";
 import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http/webServer";
 import { ContactListAPI } from "../../modules/marketing/contactListAPI";
+import { ErrorHandler } from "../errors";
+import { postsErrorHandler } from "../../modules/posts/postsErrors";
+import { PostsService } from "../../modules/posts/postsService";
+import { PostsController } from "../../modules/posts/postsController";
 
 type ErrorHandlers = {
-  usersErrorHandler: UserErrorHandler;
-  marketingErrorHandler: MarketingErrorHandler;
+  usersErrorHandler: ErrorHandler;
+  marketingErrorHandler: ErrorHandler;
+  postsErrorHandler: ErrorHandler;
 };
 
 export class CompositionRoot {
@@ -22,6 +26,8 @@ export class CompositionRoot {
   private dbConnection: Database;
   private errorHandlers: ErrorHandlers;
   private usersService: UsersService;
+  private marketingService: MarketingService;
+  private postsService: PostsService;
   private config: Config;
   private transactionalEmailAPI: TransactionalEmailAPI;
   private static instance: CompositionRoot | null = null;
@@ -38,10 +44,13 @@ export class CompositionRoot {
     this.errorHandlers = {
       usersErrorHandler: userErrorHandler,
       marketingErrorHandler: marketingErrorHandler,
+      postsErrorHandler: postsErrorHandler,
     };
     this.dbConnection = this.createDBConnection();
     this.transactionalEmailAPI = this.createTransactionalEmailAPI();
     this.usersService = this.createUserService();
+    this.marketingService = this.createMarketingService();
+    this.postsService = this.createPostsService();
     this.webServer = this.createWebServer();
   }
 
@@ -58,6 +67,10 @@ export class CompositionRoot {
     return new UsersService(dbConnection, this.transactionalEmailAPI);
   }
 
+  private createPostsService() {
+    return new PostsService(this.dbConnection);
+  }
+
   private createTransactionalEmailAPI() {
     return new TransactionalEmailAPI();
   }
@@ -65,10 +78,12 @@ export class CompositionRoot {
   private createControllers() {
     const usersController = this.createUsersController();
     const marketingController = this.createMarketingController();
+    const postsController = this.createPostsController();
 
     return {
       usersController,
       marketingController,
+      postsController,
     };
   }
 
@@ -79,9 +94,12 @@ export class CompositionRoot {
   }
 
   private createMarketingController() {
-    const marketingService = this.createMarketingService();
     const errorHandler = this.getMarketingErrorHandler();
-    return new MarketingController(marketingService, errorHandler);
+    return new MarketingController(this.marketingService, errorHandler);
+  }
+
+  private createPostsController() {
+    return new PostsController(this.postsService, this.errorHandlers.postsErrorHandler);
   }
 
   private getMarketingErrorHandler() {
