@@ -1,6 +1,6 @@
 import { Config } from "../config";
 import { Database } from "../database";
-import { WebServer } from "../http/webServer";
+import { WebServer } from "../http";
 import {
   UsersModule,
   PostsModule,
@@ -55,9 +55,9 @@ export class CompositionRoot {
   }
 
   private mountRoutes() {
-    this.marketingModule.mountRoutes(this.webServer);
-    this.usersModule.mountRoutes(this.webServer);
-    this.postsModule.mountRoutes(this.webServer);
+    this.marketingModule.mountRouter(this.webServer);
+    this.usersModule.mountRouter(this.webServer);
+    this.postsModule.mountRouter(this.webServer);
   }
 
   private createDBConnection() {

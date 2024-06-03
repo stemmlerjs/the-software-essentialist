@@ -1,4 +1,4 @@
-import { CompositionRoot } from "../composition/compositionRoot";
+import { CompositionRoot } from "../compositionRoot";
 import { Config } from "../config";
 
 const config = new Config("start:dev");

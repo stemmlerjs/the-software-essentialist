@@ -33,7 +33,7 @@ export class UsersModule {
     return this.usersController;
   }
 
-  public mountRoutes(webServer: WebServer) {
-    webServer.getApplication().use("/users", this.usersController.getRouter());
+  public mountRouter(webServer: WebServer) {
+    webServer.mountRouter("/users", this.usersController.getRouter());
   }
 }

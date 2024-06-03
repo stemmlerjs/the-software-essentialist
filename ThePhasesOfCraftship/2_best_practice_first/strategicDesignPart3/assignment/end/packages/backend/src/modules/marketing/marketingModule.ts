@@ -38,9 +38,7 @@ export class MarketingModule {
     return this.marketingController;
   }
 
-  public mountRoutes(webServer: WebServer) {
-    webServer
-      .getApplication()
-      .use("/marketing", this.marketingController.getRouter());
+  public mountRouter(webServer: WebServer) {
+    webServer.mountRouter("/marketing", this.marketingController.getRouter());
   }
 }

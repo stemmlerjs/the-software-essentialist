@@ -5,7 +5,7 @@ import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/creat
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { CreateUserParams, CreateUserResponse } from "@dddforum/shared/src/api/users";
 import { createAPIClient } from "@dddforum/shared/src/api";
-import { CompositionRoot } from "@dddforum/backend/src/shared/composition/compositionRoot";
+import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
 import { Config } from "@dddforum/backend/src/shared/config";
 import { Database } from "../../src/shared/database";
