@@ -1,14 +1,14 @@
 import express from "express";
 import { MarketingService } from "./marketingService";
-import { MarketingErrorHandler } from "./marketingErrors";
 import { AddEmailToListResponse } from "@dddforum/shared/src/api/marketing";
+import { ErrorHandler } from "../../shared/errors";
 
 export class MarketingController {
   private router: express.Router;
 
   constructor(
     private marketingService: MarketingService,
-    private errorHandler: MarketingErrorHandler,
+    private errorHandler: ErrorHandler,
   ) {
     this.router = express.Router();
     this.setupRoutes();

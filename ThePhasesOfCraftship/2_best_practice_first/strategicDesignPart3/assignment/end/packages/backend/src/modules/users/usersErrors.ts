@@ -2,13 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { UserResponse } from "@dddforum/shared/src/api/users";
 import { CustomException } from "../../shared/exceptions";
 
-export type UserErrorHandler = (
-  error: CustomException,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Response;
-
 export function userErrorHandler(
   error: CustomException,
   _: Request,

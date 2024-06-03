@@ -5,14 +5,14 @@ import {
   CreateUserResponse,
   GetUserByEmailResponse,
 } from "@dddforum/shared/src/api/users";
-import { UserErrorHandler } from "./usersErrors";
+import { ErrorHandler } from "../../shared/errors";
 
 export class UsersController {
   private router: express.Router;
 
   constructor(
     private usersService: UsersService,
-    private errorHandler: UserErrorHandler,
+    private errorHandler: ErrorHandler
   ) {
     this.router = express.Router();
     this.setupRoutes();

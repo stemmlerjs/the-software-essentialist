@@ -2,13 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { CustomException } from "../../shared/exceptions";
 import { MarketingResponse } from "@dddforum/shared/src/api/marketing";
 
-export type MarketingErrorHandler = (
-  error: CustomException,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Response;
-
 export function marketingErrorHandler(
   error: CustomException,
   _: Request,
