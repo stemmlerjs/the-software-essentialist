@@ -29,7 +29,7 @@ export class PostsModule {
     return this.postsController;
   }
 
-  public mountRoutes(webServer: WebServer) {
-    webServer.getApplication().use("/posts", this.postsController.getRouter());
+  public mountRouter(webServer: WebServer) {
+    webServer.mountRouter("/posts", this.postsController.getRouter());
   }
 }

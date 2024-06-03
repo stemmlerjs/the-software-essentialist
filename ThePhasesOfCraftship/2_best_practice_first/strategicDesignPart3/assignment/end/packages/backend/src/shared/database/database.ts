@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "../utils";
-import { CreateUserCommand } from "@dddforum/backend/src/modules/users";
 import { User } from "@dddforum/shared/src/api/users";
 import { Post } from "@dddforum/shared/src/api/posts";
 import { ServerErrorException } from "../exceptions";
+import { CreateUserCommand } from "../../modules/users/usersCommand";
 
 export interface UsersPersistence {
   save(user: CreateUserCommand): Promise<User & { password: string }>;

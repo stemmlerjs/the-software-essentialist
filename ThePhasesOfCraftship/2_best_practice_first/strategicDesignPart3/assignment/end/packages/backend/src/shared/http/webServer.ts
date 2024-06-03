@@ -29,6 +29,10 @@ export class WebServer {
     this.express.use(express.json());
   }
 
+  public mountRouter(path: string, router: express.Router) {
+    this.express.use(path, router);
+  }
+
   public getApplication() {
     return this.express;
   }
