@@ -54,7 +54,7 @@ export class CompositionRoot {
   }
 
   createPostsModule () {
-    return PostsModule.build(this.dbConnection);;
+    return PostsModule.build(this.dbConnection);
   }
 
   getDBConnection() {
