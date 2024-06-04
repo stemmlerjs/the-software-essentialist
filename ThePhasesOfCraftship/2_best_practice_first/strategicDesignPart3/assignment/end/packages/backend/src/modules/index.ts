@@ -1,4 +1,4 @@
-import { UsersService } from "./users/usersService";
-import { UsersController } from "./users/usersController";
-
-export { UsersService, UsersController };
+export * from "./users";
+export * from "./marketing";
+export * from "./notifications";
+export * from "./posts";
