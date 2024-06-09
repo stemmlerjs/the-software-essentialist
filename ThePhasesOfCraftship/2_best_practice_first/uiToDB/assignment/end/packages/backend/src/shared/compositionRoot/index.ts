@@ -38,22 +38,22 @@ export class CompositionRoot {
     this.mountRoutes();
   }
 
-  createNotificationsModule() {
+  createNotificationsModule () {
     return NotificationsModule.build();
   }
 
-  createMarketingModule() {
+  createMarketingModule () {
     return MarketingModule.build();
   }
 
-  createUsersModule() {
+  createUsersModule () {
     return UsersModule.build(
       this.dbConnection,
       this.notificationsModule.getTransactionalEmailAPI(),
     );
   }
 
-  createPostsModule() {
+  createPostsModule () {
     return PostsModule.build(this.dbConnection);
   }
 
