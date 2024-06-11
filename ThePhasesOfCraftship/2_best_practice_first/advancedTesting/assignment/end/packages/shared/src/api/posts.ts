@@ -1,33 +1,35 @@
+import axios from "axios";
+import { APIResponse, ServerError } from ".";
 
-import axios from 'axios';
-import { APIResponse } from '.';
-
-export type GetPostsQueryOptions = 'recent'
-
-export type GetPostsQuery = {
-  sort: GetPostsQueryOptions
-}
-
-// TODO: Refactor to using dtos
-export type PostsData = {
-  posts: []
+export type GetPostsParams = {
+  sort: string;
 };
 
-export type ServerError = {};
+export type Post = {
+  id: number;
+  memberId: number;
+  postType: string;
+  title: string;
+  content: string;
+  dateCreated: string;
+};
 
-export type GetPostsResponse = PostsData | ServerError;
+export type GetPostErrors = ServerError;
+
+export type GetPostsResponse = APIResponse<Post[], GetPostErrors>;
+
+export type PostsResponse = GetPostsResponse;
 
 export const createPostsAPI = (apiURL: string) => {
   return {
-    getPosts: async (): Promise<APIResponse<GetPostsResponse>> => {
+    getPosts: async (sort: string): Promise<PostsResponse> => {
       try {
-        const successResponse = await axios.get(`${apiURL}/posts?sort=recent`);
-        return successResponse.data as any;
+        const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
+        return successResponse.data as GetPostsResponse;
       } catch (err) {
         //@ts-ignore
-        return err.response.data as APIResponse;
+        return err.response.data as GetPostsResponse;
       }
-    }
-  }
-}
-
+    },
+  };
+};
