@@ -1,5 +1,5 @@
 
-import { PuppeteerPageDriver } from "../driver/puppeteerPageDriver";
+import { PuppeteerPageDriver } from "../driver";
 
 type ElementType = "input" | "button" | "div" | "checkbox";
 

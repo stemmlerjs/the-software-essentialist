@@ -1,7 +1,0 @@
-
-describe("marketingController", () => {
-  it('can', () => {
-    
-  })
-})
-

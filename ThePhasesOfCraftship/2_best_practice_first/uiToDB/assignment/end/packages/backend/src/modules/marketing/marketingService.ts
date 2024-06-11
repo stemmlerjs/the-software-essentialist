@@ -1,17 +1,15 @@
-
-import { ContactListAPI } from "./ports/contactListAPI";
+import { ServerErrorException } from "../../shared/exceptions";
+import { ContactListAPI } from "./contactListAPI";
 
 export class MarketingService {
-  constructor (private contactListAPI: ContactListAPI) {
+  constructor(private contactListAPI: ContactListAPI) {}
 
-  }
-
-  async addEmailToList (email: string): Promise<any> {
+  async addEmailToList(email: string) {
     try {
       const result = await this.contactListAPI.addEmailToList(email);
-      return { error: undefined, data: undefined, success: result };
+      return result;
     } catch (err) {
-      return { error: undefined, data: undefined, success: false }
+      throw new ServerErrorException();
     }
   }
 }

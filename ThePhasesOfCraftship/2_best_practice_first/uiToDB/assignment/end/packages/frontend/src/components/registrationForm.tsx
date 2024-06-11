@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CreateUserCommand } from '@dddforum/shared/src/api/users'
+import { CreateUserParams } from '@dddforum/shared/src/api/users'
 import { appSelectors, toClass } from "../shared/selectors";
 
 interface RegistrationFormProps {
-  onSubmit: (formDetails: CreateUserCommand, allowMarketingEmails: boolean) => void;
+  onSubmit: (formDetails: CreateUserParams, allowMarketingEmails: boolean) => void;
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {

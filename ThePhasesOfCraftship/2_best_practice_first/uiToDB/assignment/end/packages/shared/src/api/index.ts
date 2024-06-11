@@ -1,18 +1,26 @@
+import { createUsersAPI } from "./users";
+import { createMarketingAPI } from "./marketing";
+import { createPostsAPI } from "./posts";
 
-import { createMarketingAPI } from './marketing'
-import { createPostsAPI } from './posts'
-import { createUsersAPI } from './users'
+export type Error<U> = {
+  message?: string;
+  code?: U;
+};
 
 export type APIResponse<T, U> = {
   success: boolean;
   data: T;
-  error?: U;
-}
+  error: Error<U>;
+};
+
+export type ValidationError = "ValidationError";
+export type ServerError = "ServerError";
+export type GenericErrors = ValidationError | ServerError;
 
 export const createAPIClient = (apiURL: string) => {
   return {
-    posts: createPostsAPI(apiURL),
     users: createUsersAPI(apiURL),
-    marketing: createMarketingAPI(apiURL)
-  }
-}
+    marketing: createMarketingAPI(apiURL),
+    posts: createPostsAPI(apiURL),
+  };
+};

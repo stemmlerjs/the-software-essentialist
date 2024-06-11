@@ -9,7 +9,7 @@ export const MainPage = () => {
   const [posts, setPosts] = useState([]);
   const loadPosts = async () => {
     try {
-      const response = await api.posts.getPosts();
+      const response = await api.posts.getPosts('recent');
       // @ts-ignore
       setPosts(response.data.posts)
     } catch (err) {
