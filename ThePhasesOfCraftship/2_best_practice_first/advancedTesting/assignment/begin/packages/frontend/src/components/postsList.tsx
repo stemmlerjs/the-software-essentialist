@@ -1,11 +1,11 @@
 
 import { Link } from "react-router-dom";
-import arrow from "../assets/arrow.svg";
+import arrow from "../shared/assets/arrow.svg";
 import moment from 'moment';
 
 
 type Vote = { id: number, postId: number, voteType: 'Upvote' | 'Downvote' };
-type Comment = object;
+type Comment = {};
 
 type Post = {
   title: string;

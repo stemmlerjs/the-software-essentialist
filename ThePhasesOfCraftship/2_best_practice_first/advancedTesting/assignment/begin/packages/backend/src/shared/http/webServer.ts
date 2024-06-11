@@ -1,16 +1,12 @@
 import express from "express";
 import cors from "cors";
 import { Server } from "http";
+
 import { ProcessService } from "@dddforum/backend/src/shared/processes/processService";
-import { UsersController } from "@dddforum/backend/src/modules/users";
 
 interface WebServerConfig {
   port: number;
   env: string;
-}
-
-interface Controllers {
-  usersController: UsersController;
 }
 
 export class WebServer {
@@ -18,14 +14,10 @@ export class WebServer {
   private state: "stopped" | "started";
   private instance: Server | undefined;
 
-  constructor(
-    private config: WebServerConfig,
-    controllers: Controllers,
-  ) {
+  constructor(private config: WebServerConfig) {
     this.state = "stopped";
     this.express = express();
     this.initializeServer();
-    this.registerRouters(controllers);
   }
 
   private initializeServer() {
@@ -37,9 +29,8 @@ export class WebServer {
     this.express.use(express.json());
   }
 
-  private registerRouters(controllers: Controllers) {
-    const { usersController } = controllers;
-    this.express.use("/", usersController.getRouter());
+  public mountRouter(path: string, router: express.Router) {
+    this.express.use(path, router);
   }
 
   public getApplication() {

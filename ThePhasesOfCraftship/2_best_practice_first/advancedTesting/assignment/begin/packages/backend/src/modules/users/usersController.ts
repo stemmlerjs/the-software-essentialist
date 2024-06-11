@@ -1,7 +1,10 @@
 import express from "express";
 import { UsersService } from "./usersService";
-import { parseUserForResponse } from "../../shared/utils/parser";
 import { CreateUserCommand } from "./usersCommand";
+import {
+  CreateUserResponse,
+  GetUserByEmailResponse,
+} from "@dddforum/shared/src/api/users";
 import { ErrorHandler } from "../../shared/errors";
 
 export class UsersController {
@@ -21,7 +24,8 @@ export class UsersController {
   }
 
   private setupRoutes() {
-    this.router.post("/users/new", this.createUser.bind(this));
+    this.router.post("/new", this.createUser.bind(this));
+    this.router.get("/:email", this.getUserByEmail.bind(this));
   }
 
   private setupErrorHandler() {
@@ -36,11 +40,31 @@ export class UsersController {
     try {
       const command = CreateUserCommand.fromRequest(req.body);
       const user = await this.usersService.createUser(command);
-      return res.status(201).json({
-        error: undefined,
-        data: parseUserForResponse(user),
+      const response: CreateUserResponse = {
         success: true,
-      });
+        data: user,
+        error: {},
+      };
+      return res.status(201).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  private async getUserByEmail(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const email = req.params.email;
+      const user = await this.usersService.getUserByEmail(email);
+      const response: GetUserByEmailResponse = {
+        success: true,
+        data: user,
+        error: {},
+      };
+      return res.status(200).json(response);
     } catch (error) {
       next(error);
     }

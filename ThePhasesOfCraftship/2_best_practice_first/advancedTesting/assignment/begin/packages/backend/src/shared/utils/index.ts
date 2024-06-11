@@ -1,3 +1,1 @@
-import { generateRandomPassword } from "./secret";
-
-export { generateRandomPassword };
+export { generateRandomPassword } from "./secret";
