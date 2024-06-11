@@ -1,23 +1,48 @@
-
-import express from 'express';
-import { Errors } from '../../shared/errors/errors';
-import { Application } from '../../shared/application/applicationInterface'
+import express from "express";
+import { MarketingService } from "./marketingService";
+import { AddEmailToListResponse } from "@dddforum/shared/src/api/marketing";
+import { ErrorHandler } from "../../shared/errors";
 
 export class MarketingController {
+  private router: express.Router;
 
-  constructor (private application: Application) {
+  constructor(
+    private marketingService: MarketingService,
+    private errorHandler: ErrorHandler,
+  ) {
+    this.router = express.Router();
+    this.setupRoutes();
+    this.setupErrorHandler();
   }
 
-  async addToList (req: express.Request, res: express.Response) {
+  getRouter() {
+    return this.router;
+  }
+
+  private setupRoutes() {
+    this.router.post("/new", this.addEmailToList.bind(this));
+  }
+
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
+
+  private async addEmailToList(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
     try {
-      const { email } = req.body;
-      
-      await this.application.marketing.addEmailToList(email);
-  
-      return res.json({ error: undefined, data: undefined, success: true });
+      const email = req.body.email;
+      const result = await this.marketingService.addEmailToList(email);
+      const response: AddEmailToListResponse = {
+        success: true,
+        data: result,
+        error: {},
+      };
+      return res.status(201).json(response);
     } catch (error) {
-      return res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   }
-
 }

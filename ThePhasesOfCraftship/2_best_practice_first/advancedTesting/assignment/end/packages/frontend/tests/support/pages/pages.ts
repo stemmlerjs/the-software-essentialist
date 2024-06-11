@@ -1,4 +1,3 @@
-
 import { PuppeteerPageDriver } from "../driver/puppeteerPageDriver";
 import { RegistrationPage } from "./registrationPage";
 
