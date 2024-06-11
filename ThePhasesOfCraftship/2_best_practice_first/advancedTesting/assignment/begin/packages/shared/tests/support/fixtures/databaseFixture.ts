@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { database } from "@dddforum/backend/src/shared/bootstrap";
 import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { Database } from "@dddforum/backend/src/shared/database";
 
 export class DatabaseFixture {
   private connection: PrismaClient;
   constructor() {
-    this.connection = database.getConnection();
+    this.connection = new Database().getConnection();
   }
 
   async resetDatabase() {
