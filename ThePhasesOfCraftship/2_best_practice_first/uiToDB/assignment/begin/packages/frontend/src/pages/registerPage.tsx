@@ -43,7 +43,7 @@ export const RegisterPage = () => {
 
     try {
       const response = await api.users.register(input);
-
+      
       if (!response.success) {
         switch (response.error.code) {
           case "UsernameAlreadyTaken":
@@ -54,10 +54,13 @@ export const RegisterPage = () => {
             return toast.error('Email already in use', { toastId: `failure-toast` });
           default:
             // Client processing error
-            throw new Error('Client')
+            throw new Error('Unknown error: ' + response.error.code)
         }
       }
       
+      if (addToList) {
+        await api.marketing.addEmailToList(input.email);
+      }
 
       // Save the user details to the cache
       setUser(response.data as any);

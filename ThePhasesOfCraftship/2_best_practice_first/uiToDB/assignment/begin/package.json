@@ -9,7 +9,6 @@
     "node": ">=16.16.0"
   },
   "scripts": {
-    "test:e2e:all": "jest -c jest.config.e2e.ts",
     "test:e2e:front": "npm run test:e2e --workspace=@dddforum/frontend",
     "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
     "clean": "npm run clean --workspaces --if-present",
@@ -27,7 +26,6 @@
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^18.16.19",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
@@ -48,6 +46,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.2"
+    "nodemailer": "^6.9.13"
   }
 }

@@ -1,5 +1,5 @@
 
-import { PuppeteerPageDriver } from "../driver/puppeteerPageDriver";
+import { PuppeteerPageDriver } from "../driver";
 
 export abstract class PageObject {
   protected driver: PuppeteerPageDriver;

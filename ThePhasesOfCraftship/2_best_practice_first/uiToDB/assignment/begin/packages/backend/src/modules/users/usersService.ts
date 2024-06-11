@@ -6,7 +6,7 @@ import {
   UsernameAlreadyTakenException,
 } from "./usersExceptions";
 import { User } from "@dddforum/shared/src/api/users";
-import { TransactionalEmailAPI } from "../marketing/transactionalEmailAPI";
+import { TransactionalEmailAPI } from "../notifications/transactionalEmailAPI";
 
 export class UsersService {
   constructor(

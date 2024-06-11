@@ -1,8 +1,18 @@
+export type Environment = "development" | "production" | "staging" | "ci";
 
-export type Environment = 'development' | 'test' | 'production' | 'staging' | undefined;
+export type Script =
+  | "test:unit"
+  | "test:e2e"
+  | "start:dev"
+  | "start:prod"
+  | "test:infra";
 
-export const config = {
-  context: {
-    env: process.env.NODE_ENV as Environment
+export class Config {
+  env: Environment;
+  script: Script;
+
+  constructor(script: Script) {
+    this.env = (process.env.NODE_ENV as Environment) || "development";
+    this.script = script;
   }
 }
