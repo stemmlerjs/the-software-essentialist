@@ -1,0 +1,1 @@
+export { generateRandomPassword } from "./secret";

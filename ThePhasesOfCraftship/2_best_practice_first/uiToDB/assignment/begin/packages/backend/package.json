@@ -1,0 +1,48 @@
+{
+  "name": "@dddforum/backend",
+  "version": "1.0.0",
+  "description": "The backend for dddforum",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b tsconfig.json && npm run generate",
+    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
+    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
+    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
+    "start:dev": "npm run migrate && npm run generate && npx nodemon",
+    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
+    "lint": "eslint . --ext .ts --fix",
+    "test": "jest",
+    "test:dev": "jest --watchAll",
+    "test:e2e": "jest -c jest.config.e2e.ts",
+    "test:e2e:dev": "jest -c jest.config.e2e.ts --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test && npm run prettier-format && npm run lint"
+    }
+  },
+  "prisma": {
+    "seed": "ts-node ./src/shared/database/prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.17",
+    "@types/nodemailer": "^6.4.15",
+    "@types/supertest": "^6.0.2",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0",
+    "nodemon": "^2.0.19",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "@dddforum/shared": "file:../shared",
+    "@prisma/client": "^4.16.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "prisma": "^4.16.0"
+  }
+}
