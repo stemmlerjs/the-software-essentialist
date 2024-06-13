@@ -1,12 +1,12 @@
-import { Database } from "../../shared/database";
+import { PostsRepository } from "./ports/postsRepository";
 import { GetPostsQuery } from "./postsQuery";
 
 export class PostsService {
-  constructor(private db: Database) {}
+  constructor(private repository: PostsRepository) {}
 
   async getPosts(query: GetPostsQuery) {
     const sort = query.sort;
-    const posts = await this.db.posts.findPosts(sort);
+    const posts = await this.repository.findPosts(sort);
     return posts;
   }
 }
