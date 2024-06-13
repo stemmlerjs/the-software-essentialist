@@ -1,3 +1,4 @@
+import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
 import { WebServer } from "../http";
@@ -38,23 +39,24 @@ export class CompositionRoot {
     this.mountRoutes();
   }
 
-  createNotificationsModule () {
-    return NotificationsModule.build();
+  createNotificationsModule() {
+    return NotificationsModule.build(this.config);
   }
 
-  createMarketingModule () {
-    return MarketingModule.build();
+  createMarketingModule() {
+    return MarketingModule.build(this.config);
   }
 
-  createUsersModule () {
+  createUsersModule() {
     return UsersModule.build(
       this.dbConnection,
       this.notificationsModule.getTransactionalEmailAPI(),
+      this.config,
     );
   }
 
-  createPostsModule () {
-    return PostsModule.build(this.dbConnection);
+  createPostsModule() {
+    return PostsModule.build(this.dbConnection, this.config);
   }
 
   getDBConnection() {
@@ -82,5 +84,13 @@ export class CompositionRoot {
       this.dbConnection = dbConnection;
     }
     return dbConnection;
+  }
+
+  getApplication(): Application {
+    return {
+      users: this.usersModule.getUsersService(),
+      posts: this.postsModule.getPostsService(),
+      marketing: this.marketingModule.getMarketingService(),
+    };
   }
 }
