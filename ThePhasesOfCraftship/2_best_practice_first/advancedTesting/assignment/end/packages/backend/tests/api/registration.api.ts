@@ -6,20 +6,19 @@ import { UserResponseStub } from "@dddforum/shared/tests/support/stubs/userRespo
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CompositionRoot } from "../../src/shared/compositionRoot";
 import { Config } from "../../src/shared/config";
+
 describe("users http API", () => {
-
-
   const client = createAPIClient("http://localhost:3000");
   const config = new Config("test:e2e");
 
   const composition = CompositionRoot.createCompositionRoot(config);
   const server = composition.getWebServer();
 
-    // Create a mock of the Application interface
-    const application = mockDeep<Application>();
+  // Create a mock of the Application interface
+  const application = mockDeep<Application>();
 
-    // Override the getApplication method to return the mock
-    jest.spyOn(composition, 'getApplication').mockReturnValue(application);
+  // Override the getApplication method to return the mock
+  jest.spyOn(composition, 'getApplication').mockReturnValue(application);
   
 
   beforeAll(async () => {
