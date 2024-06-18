@@ -29,15 +29,14 @@ defineFeature(feature, (test) => {
 
 
   beforeAll(async () => {
-      databaseFixture = new DatabaseFixture();
       composition = CompositionRoot.createCompositionRoot(new Config('test:infra'));
+      databaseFixture = new DatabaseFixture(composition);
       application = composition.getApplication();
       transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
       contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
   })
 
   afterEach(async () => {
-      await databaseFixture.resetDatabase();
       transactionalEmailAPISpy.reset();
       contactListAPISpy.reset();
       addEmailToListResponse = undefined;
@@ -160,7 +159,7 @@ defineFeature(feature, (test) => {
         ));
       })
 
-      await databaseFixture.setupWithExistingUsers(commands);
+      await databaseFixture.setupWithExistingUsersFromCommands(commands);
       transactionalEmailAPISpy.reset();
     });
 
@@ -185,21 +184,21 @@ defineFeature(feature, (test) => {
   });
 
   test('Username already taken', ({ given, when, then, and }) => {
-
     given('a set of users have already created their accounts with valid details', async (table) => {
       table.forEach((item: any) => {
         commands.push(CreateUserCommand.fromProps(new CreateUserBuilder()
+          .withUsername(item.username)
           .withFirstName(item.firstName)
           .withLastName(item.lastName)
-          .withUsername(item.username)
           .withEmail(item.email)
           .build()
-        ))
-      });
-      
-      await databaseFixture.setupWithExistingUsers(commands);
+        ));
+      })
+
+      await databaseFixture.setupWithExistingUsersFromCommands(commands);
       transactionalEmailAPISpy.reset();
     });
+
 
     when('new users attempt to register with already taken usernames', async (table) => {
       for (const item of table) {
@@ -210,7 +209,6 @@ defineFeature(feature, (test) => {
 
     then('they see an error notifying them that the username has already been taken', () => {
       for (const response of createUserResponses) {
-
         expect(response).rejects.toThrow(expect.objectContaining({
           type: 'UsernameAlreadyTakenException'
         }));

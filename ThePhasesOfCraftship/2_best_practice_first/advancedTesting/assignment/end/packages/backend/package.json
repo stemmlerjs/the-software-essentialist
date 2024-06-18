@@ -17,7 +17,9 @@
     "test:e2e": "jest -c jest.config.e2e.ts",
     "test:e2e:dev": "jest -c jest.config.e2e.ts --watch",
     "test:infra": "jest -c jest.config.infra.ts",
-    "test:infra:dev": "jest -c jest.config.infra.ts --watch"
+    "test:infra:dev": "jest -c jest.config.infra.ts --watch",
+    "test:unit": "jest -c jest.config.unit.ts",
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
   },
   "husky": {
     "hooks": {

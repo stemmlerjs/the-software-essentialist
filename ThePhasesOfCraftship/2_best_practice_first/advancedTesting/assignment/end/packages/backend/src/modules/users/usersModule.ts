@@ -58,4 +58,8 @@ export class UsersModule extends ApplicationModule {
   public getUsersService() {
     return this.usersService;
   }
+
+  public getUsersRepository() {
+    return this.usersRepository;
+  }
 }

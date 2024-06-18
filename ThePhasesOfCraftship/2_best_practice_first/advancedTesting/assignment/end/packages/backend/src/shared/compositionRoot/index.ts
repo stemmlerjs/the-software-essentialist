@@ -59,7 +59,7 @@ export class CompositionRoot {
     return PostsModule.build(this.dbConnection, this.config);
   }
 
-  getDBConnection() {
+  getDatabase() {
     if (!this.dbConnection) this.createDBConnection();
     return this.dbConnection;
   }
@@ -100,5 +100,12 @@ export class CompositionRoot {
 
   getContactListAPI() {
     return this.marketingModule.getContactListAPI();
+  }
+
+  getRepositories() {
+    return {
+      users: this.usersModule.getUsersRepository(),
+      posts: this.postsModule.getPostsRepository(),
+    };
   }
 }
