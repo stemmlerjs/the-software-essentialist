@@ -54,4 +54,8 @@ export class MarketingModule extends ApplicationModule {
   public getMarketingService() {
     return this.marketingService;
   }
+
+  public getContactListAPI() {
+    return this.contactListAPI;
+  }
 }

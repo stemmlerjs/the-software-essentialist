@@ -32,7 +32,6 @@ export class UsersModule extends ApplicationModule {
 
   private createUsersRepository() {
     if (this.usersRepository) return this.usersRepository;
-
     if (this.shouldBuildFakeRepository) {
       return new InMemoryUserRepositorySpy();
     }

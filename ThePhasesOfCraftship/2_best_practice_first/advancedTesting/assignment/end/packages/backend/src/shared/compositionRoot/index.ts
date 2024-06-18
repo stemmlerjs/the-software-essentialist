@@ -93,4 +93,12 @@ export class CompositionRoot {
       marketing: this.marketingModule.getMarketingService(),
     };
   }
+
+  getTransactionalEmailAPI() {
+    return this.notificationsModule.getTransactionalEmailAPI();
+  }
+
+  getContactListAPI() {
+    return this.marketingModule.getContactListAPI();
+  }
 }

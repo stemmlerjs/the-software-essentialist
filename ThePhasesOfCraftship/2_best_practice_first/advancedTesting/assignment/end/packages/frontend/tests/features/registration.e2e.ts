@@ -97,7 +97,6 @@ defineFeature(feature, (test) => {
 
   test('Account already created with email', ({ given, when, then, and }) => {
     given('a set of users already created accounts', async (table: CreateUserParams[]) => {
-      
       users = table.map((user) => {
         return new CreateUserBuilder()
           .withAllRandomDetails()
@@ -106,8 +105,6 @@ defineFeature(feature, (test) => {
           .withLastName(user.lastName)
           .build();
       });
-      
-
 
       await databaseFixture.setupWithExistingUsers(users);
       await pages.registration.open();

@@ -1,10 +1,10 @@
 
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersCommand";
 import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
 export class CreateUserCommandBuilder {
-  private props: CreateUserParams;
+  private props: CreateUserCommand
 
   constructor() {
     this.props = {

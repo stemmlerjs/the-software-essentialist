@@ -28,7 +28,6 @@ export class UsersService {
     if (existingUserByUsername) {
       throw new UsernameAlreadyTakenException(userData.username);
     }
-
     const { password, ...user } = await this.repository.save(userData);
 
     await this.emailAPI.sendMail({

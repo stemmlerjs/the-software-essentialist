@@ -8,7 +8,7 @@ import { createAPIClient } from "@dddforum/shared/src/api";
 import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
 import { Config } from "@dddforum/backend/src/shared/config";
-import { Database } from "../../src/shared/database";
+import { Database } from "../../../src/shared/database";
 import { AddEmailToListResponse } from "@dddforum/shared/src/api/marketing";
 
 const feature = loadFeature(
@@ -25,6 +25,7 @@ defineFeature(feature, (test) => {
   let createUserResponses: CreateUserResponse[] = [];
   let addEmailToListResponse: AddEmailToListResponse;
   let dbConnection: Database
+
   
 
   beforeAll(async () => {
@@ -166,6 +167,7 @@ defineFeature(feature, (test) => {
           .withFirstName(row.firstName)
           .withLastName(row.lastName)
           .withEmail(row.email)
+          .withUsername(row.username)
           .build();
       });
       await databaseFixture.setupWithExistingUsers(existingUsers);

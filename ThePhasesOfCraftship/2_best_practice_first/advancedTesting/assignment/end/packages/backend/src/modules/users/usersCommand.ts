@@ -1,9 +1,15 @@
-import { InvalidRequestBodyException } from "@dddforum/backend/src/shared/exceptions";
-import { isMissingKeys } from "@dddforum/backend/src/shared/utils/parser";
+import {
+  InvalidParamsException,
+  InvalidRequestBodyException,
+} from "@dddforum/backend/src/shared/exceptions";
+import {
+  isBetweenLength,
+  isMissingKeys,
+} from "@dddforum/backend/src/shared/utils/parser";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 
 export class CreateUserCommand {
-  constructor(public props: CreateUserParams) {}
+  private constructor(public props: CreateUserParams) {}
 
   static fromRequest(body: unknown) {
     const requiredKeys = ["email", "firstName", "lastName", "username"];
@@ -14,7 +20,27 @@ export class CreateUserCommand {
       throw new InvalidRequestBodyException(requiredKeys);
     }
 
-    const { username, email, firstName, lastName } = body as CreateUserParams;
+    const input = body as CreateUserParams;
+
+    return CreateUserCommand.fromProps(input);
+  }
+
+  static fromProps(props: CreateUserParams) {
+    const isEmailValid = props.email.indexOf("@") !== -1;
+    const isFirstNameValid = isBetweenLength(props.firstName, 2, 16);
+    const isLastNameValid = isBetweenLength(props.lastName, 2, 25);
+    const isUsernameValid = isBetweenLength(props.username, 2, 25);
+
+    if (
+      !isEmailValid ||
+      !isFirstNameValid ||
+      !isLastNameValid ||
+      !isUsernameValid
+    ) {
+      throw new InvalidParamsException();
+    }
+
+    const { username, email, firstName, lastName } = props;
 
     return new CreateUserCommand({ email, firstName, lastName, username });
   }
