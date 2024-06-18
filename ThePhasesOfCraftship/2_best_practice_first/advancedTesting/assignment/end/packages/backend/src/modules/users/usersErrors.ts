@@ -9,7 +9,10 @@ export function userErrorHandler(
   _next: NextFunction,
 ): Response<UserResponse> {
   let responseBody: UserResponse;
-  if (error.type === "InvalidRequestBodyException") {
+  if (
+    error.type === "InvalidRequestBodyException" ||
+    error.type === "InvalidParamsException"
+  ) {
     responseBody = {
       success: false,
       data: null,

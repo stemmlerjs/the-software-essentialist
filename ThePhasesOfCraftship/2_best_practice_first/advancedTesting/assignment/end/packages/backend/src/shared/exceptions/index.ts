@@ -15,6 +15,12 @@ class InvalidRequestBodyException extends CustomException {
   }
 }
 
+class InvalidParamsException extends CustomException {
+  constructor() {
+    super("Params are invalid", "InvalidParamsException");
+  }
+}
+
 class MissingRequestParamsException extends CustomException {
   constructor(missingKeys: string[]) {
     super(
@@ -44,4 +50,5 @@ export {
   ServerErrorException,
   InvalidRequestParamsException,
   MissingRequestParamsException,
+  InvalidParamsException,
 };

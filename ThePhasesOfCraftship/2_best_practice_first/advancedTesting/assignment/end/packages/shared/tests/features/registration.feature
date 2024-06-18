@@ -29,14 +29,15 @@ Feature: Registration
   @backend @frontend
   Scenario: Account already created with email
     Given a set of users already created accounts
-      | firstName | lastName | email             |
-      | John      | Doe      | john@example.com  |
-      | Alice     | Smith    | alice@example.com |
-      | David     | Brown    | david@example.com |
+      | firstName | lastName | email             | username |
+      | John      | Doe      | john@example.com  | john     |
+      | Alice     | Smith    | alice@example.com | alice    |
+      | David     | Brown    | david@example.com | david    |
     When new users attempt to register with those emails
     Then they should see an error notifying them that the account already exists
     And they should not have been sent access to account details
 
+  @backend
   Scenario: Username already taken
     Given a set of users have already created their accounts with valid details
       | firstName | lastName | username     | email              |
