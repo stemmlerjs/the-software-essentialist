@@ -14,19 +14,11 @@ export class InMemoryUserRepositorySpy
     this.users = [];
   }
 
-  getUserByEmail(email: string): Promise<User | undefined> {
-    return Promise.resolve(this.users.find((user) => user.email === email));
-  }
-
   save(user: CreateUserCommand): Promise<User & { password: string }> {
     this.addCall("save", [user]);
     const newUser: User = {
-      ...user,
+      ...user.props,
       id: this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1,
-      email: user.email,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
     };
     this.users.push(newUser);
     return Promise.resolve({ ...newUser, password: "password" });
@@ -44,12 +36,6 @@ export class InMemoryUserRepositorySpy
     return Promise.resolve();
   }
 
-  getUserByUsername(username: string): Promise<User | undefined> {
-    return Promise.resolve(
-      this.users.find((user) => user.username === username),
-    );
-  }
-
   async update(
     id: number,
     props: Partial<CreateUserCommand>,
@@ -64,10 +50,19 @@ export class InMemoryUserRepositorySpy
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
-    return this.users.find((user) => user.email === email) || null;
+    return Promise.resolve(
+      this.users.find((user) => user.email === email) || null,
+    );
   }
 
   async findUserByUsername(username: string): Promise<User | null> {
-    return this.users.find((user) => user.username === username) || null;
+    return Promise.resolve(
+      this.users.find((user) => user.username === username) || null,
+    );
+  }
+
+  async reset() {
+    this.calls = [];
+    this.users = [];
   }
 }

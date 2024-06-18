@@ -31,8 +31,8 @@ defineFeature(feature, (test) => {
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot(config);
     server = composition.getWebServer();
-    databaseFixture = new DatabaseFixture();
-    dbConnection = composition.getDBConnection();
+    databaseFixture = new DatabaseFixture(composition);
+    dbConnection = composition.getDatabase();
 
     await server.start();
     await dbConnection.connect();

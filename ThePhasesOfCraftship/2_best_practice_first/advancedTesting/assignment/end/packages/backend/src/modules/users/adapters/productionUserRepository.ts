@@ -48,7 +48,16 @@ export class ProductionUserRepository implements UsersRepository {
   }
 
   async delete(email: string): Promise<void> {
-    await this.prisma.user.delete({ where: { email: email } });
+    const user = await this.prisma.user.findFirst({ where: { email } });
+    if (!user) return;
+    await this.prisma.$transaction([
+      this.prisma.member.delete({
+        where: {
+          userId: user.id,
+        },
+      }),
+      this.prisma.user.delete({ where: { email } }),
+    ]);
   }
 
   async findUserByUsername(username: string): Promise<User | null> {

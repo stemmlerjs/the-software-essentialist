@@ -1,23 +1,22 @@
-import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
-import { Database } from "@dddforum/backend/src/shared/database";
+import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersCommand";
+import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 
 export class DatabaseFixture {
-  private connection: PrismaClient;
-  constructor() {
-    this.connection = new Database().getConnection();
+  constructor(private composition: CompositionRoot) {
   }
 
   async resetDatabase() {
-    const deleteAllComments = this.connection.comment.deleteMany();
-    const deleteAllVotes = this.connection.vote.deleteMany();
-    const deleteAllPosts = this.connection.post.deleteMany();
-    const deleteMembers = this.connection.member.deleteMany();
-    const deleteAllUsers = this.connection.user.deleteMany();
+    const connection = this.composition.getDatabase().getConnection();
+    const deleteAllComments = connection.comment.deleteMany();
+    const deleteAllVotes = connection.vote.deleteMany();
+    const deleteAllPosts = connection.post.deleteMany();
+    const deleteMembers = connection.member.deleteMany();
+    const deleteAllUsers = connection.user.deleteMany();
 
     try {
-      await this.connection.$transaction([
+      await connection.$transaction([
         deleteAllComments,
         deleteAllVotes,
         deleteAllPosts,
@@ -27,14 +26,15 @@ export class DatabaseFixture {
     } catch (error) {
       console.error(error);
     } finally {
-      await this.connection.$disconnect();
+      await connection.$disconnect();
     }
   }
 
   async setupWithExistingUsers(createUserParams: CreateUserParams[]) {
-    await this.connection.$transaction(
+    const connection = this.composition.getDatabase().getConnection();
+    await connection.$transaction(
       createUserParams.map((user) => {
-        return this.connection.user.create({
+        return connection.user.create({
           data: {
             email: user.email,
             firstName: user.firstName,
@@ -45,5 +45,16 @@ export class DatabaseFixture {
         });
       }),
     );
+  }
+
+  async setupWithExistingUsersFromCommands(commands: CreateUserCommand[]) {
+    const application = this.composition.getApplication()
+    for (let command of commands) {
+      await application.users.deleteUser(command.email);
+    }
+
+    for (let command of commands) {
+      await application.users.createUser(command);
+    }
   }
 }

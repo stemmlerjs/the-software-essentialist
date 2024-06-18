@@ -48,4 +48,8 @@ export class UsersService {
     }
     return user;
   }
+
+  async deleteUser(email: string) {
+    await this.repository.delete(email);
+  }
 }

@@ -57,4 +57,8 @@ export class PostsModule extends ApplicationModule {
   public getPostsService() {
     return this.postsService;
   }
+
+  public getPostsRepository() {
+    return this.postsRepository;
+  }
 }

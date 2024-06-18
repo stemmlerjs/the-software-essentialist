@@ -5,7 +5,7 @@ const config = new Config("start:dev");
 
 const composition = CompositionRoot.createCompositionRoot(config);
 const webServer = composition.getWebServer();
-const dbConnection = composition.getDBConnection();
+const dbConnection = composition.getDatabase();
 
 export async function bootstrap() {
   await dbConnection.connect();
