@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SeriesSolver = void 0;
+var SeriesSolver = /** @class */ (function () {
+    function SeriesSolver() {
+        this.solutions = {
+            '1+2+3+...': '-1/12',
+            '1/0!+1/1!+1/2!+...': 'e',
+            '1+1/2+1/4+...': '2',
+        };
+    }
+    SeriesSolver.prototype.solve = function (terms, operator) {
+        var series = terms.join(operator);
+        return this.solutions[series];
+    };
+    SeriesSolver.prototype.add = function (terms, operator, solution) {
+        var series = terms.join(operator);
+        this.solutions[series] = solution;
+    };
+    return SeriesSolver;
+}());
+exports.SeriesSolver = SeriesSolver;
+//# sourceMappingURL=series-solver.js.map

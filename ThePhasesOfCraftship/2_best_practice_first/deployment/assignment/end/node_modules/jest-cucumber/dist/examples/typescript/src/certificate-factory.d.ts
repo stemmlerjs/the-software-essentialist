@@ -1,0 +1,8 @@
+export declare class CertificateFactory {
+    private title;
+    private lastName;
+    private score;
+    private rank;
+    setReceiver(title: string, name: string, score: string): void;
+    printCertificate(): string;
+}

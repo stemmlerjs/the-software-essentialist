@@ -1,0 +1,2 @@
+import { StepDefinitions } from '../../../../src';
+export declare const vendingMachineSteps: StepDefinitions;
