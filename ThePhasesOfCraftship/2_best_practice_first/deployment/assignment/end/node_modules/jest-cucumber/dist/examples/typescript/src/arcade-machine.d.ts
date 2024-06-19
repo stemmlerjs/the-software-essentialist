@@ -1,0 +1,15 @@
+export declare type IssuingNation = 'USA' | 'Canada' | 'Unknown';
+export declare type CoinStatus = 'CoinAccepted' | 'CoinReturned';
+export declare type CoinType = {
+    value: number;
+    issuingNation: IssuingNation;
+};
+export declare const COIN_TYPES: {
+    [coinName: string]: CoinType;
+};
+export declare class ArcadeMachine {
+    acceptedCoinType: CoinType | null;
+    balance: number;
+    requireCoins: boolean;
+    insertCoin(coinType: CoinType): CoinStatus;
+}

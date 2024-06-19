@@ -1,0 +1,5 @@
+export declare class OnlineSales {
+    private listedItems;
+    listItem(name: string): void;
+    sellItem(name: string): number | null;
+}

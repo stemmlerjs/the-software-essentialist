@@ -1,0 +1,71 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var src_1 = require("../../../../src/");
+var calculator_1 = require("../../src/calculator");
+var feature = src_1.loadFeature('./examples/typescript/specs/features/using-latest-gherkin-keywords.feature');
+src_1.defineFeature(feature, function (test) {
+    var calculator;
+    var output;
+    beforeEach(function () {
+        calculator = new calculator_1.Calculator();
+    });
+    var givenIHaveEnteredXAsTheFirstOperand = function (given) {
+        given(/^I have entered "(\d+)" as the first operand$/, function (firstOperand) {
+            calculator.setFirstOperand(parseFloat(firstOperand));
+        });
+    };
+    var andIHaveEnteredXAsTheOperator = function (and) {
+        and(/^I have entered "([+-/*])" as the operator$/, function (operator) {
+            calculator.setCalculatorOperator(operator);
+        });
+    };
+    var andIHaveEnteredXAsTheSecondOperand = function (and) {
+        and(/^I have entered "(\d+)" as the second operand$/, function (secondOperand) {
+            calculator.setSecondOperand(parseFloat(secondOperand));
+        });
+    };
+    var whenIPressTheEnterKey = function (when) {
+        when('I press the equals key', function () {
+            output = calculator.computeOutput();
+        });
+    };
+    var thenTheOutputOfXShouldBeDisplayed = function (then) {
+        then(/^the output of "(\d+)" should be displayed$/, function (expectedOutput) {
+            if (!expectedOutput) {
+                expect(output).toBeFalsy();
+            }
+            else {
+                expect(output).toBe(parseFloat(expectedOutput));
+            }
+        });
+    };
+    test('Subtracting two numbers', function (_a) {
+        var given = _a.given, and = _a.and, when = _a.when, then = _a.then;
+        givenIHaveEnteredXAsTheFirstOperand(given);
+        andIHaveEnteredXAsTheOperator(and);
+        andIHaveEnteredXAsTheSecondOperand(and);
+        whenIPressTheEnterKey(when);
+        thenTheOutputOfXShouldBeDisplayed(then);
+    });
+    test('Attempting to subtract without entering a second number', function (_a) {
+        var given = _a.given, and = _a.and, when = _a.when, then = _a.then;
+        givenIHaveEnteredXAsTheFirstOperand(given);
+        andIHaveEnteredXAsTheOperator(and);
+        and('I have not entered a second operand', function () {
+            // Nothing to do here
+        });
+        whenIPressTheEnterKey(when);
+        then('no output should be displayed', function () {
+            expect(output).toBeFalsy();
+        });
+    });
+    test('Division operations', function (_a) {
+        var given = _a.given, and = _a.and, when = _a.when, then = _a.then;
+        givenIHaveEnteredXAsTheFirstOperand(given);
+        andIHaveEnteredXAsTheOperator(and);
+        andIHaveEnteredXAsTheSecondOperand(and);
+        whenIPressTheEnterKey(when);
+        thenTheOutputOfXShouldBeDisplayed(then);
+    });
+});
+//# sourceMappingURL=using-latest-gherkin-keywords.steps.js.map

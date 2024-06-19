@@ -1,0 +1,1 @@
+export declare const indent: (stringToIndent: string, tabsToIndent: number) => string;

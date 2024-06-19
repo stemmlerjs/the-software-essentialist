@@ -1,0 +1,3 @@
+import { ParsedScenario, ParsedScenarioOutline } from '../models';
+export declare const generateScenarioCode: (scenario: ParsedScenario | ParsedScenarioOutline) => string;
+export declare const generateScenarioCodeWithSeparateStepFunctions: (scenario: ParsedScenario | ParsedScenarioOutline) => string;

@@ -1,0 +1,11 @@
+import { MockStepDefinitions } from '../utils/wire-up-mock-scenario';
+export declare const featureWithSingleScenario = "\nFeature: Test\n\n    @my-tag\n    Scenario: Doing some stuff\n        Given I did some stuff\n        When I do some stuff\n        Then I should have done some stuff\n";
+export declare const featureWithMultipleScenarios = "\nFeature: Test\n\n    Scenario: Doing some stuff\n        Given I did some stuff\n        When I do some stuff\n        Then I should have done some stuff\n\n    Scenario: Doing some more stuff\n        Given I did some stuff\n        When I do some stuff\n        Then I should have done some stuff\n\n";
+export declare const featureWithSteplessScenario = "\nFeature: Test\n\n    Scenario: Doing nothing at all\n";
+export declare const emptyStepDefinitions: MockStepDefinitions;
+export declare const stepsForfeatureWithMultipleScenarios: MockStepDefinitions;
+export declare const stepsWithScenariosOutOfOrder: MockStepDefinitions;
+export declare const stepsWithStepsOutOfOrder: MockStepDefinitions;
+export declare const stepsWithMissingStep: MockStepDefinitions;
+export declare const stepsWithMismatchedSecondStep: MockStepDefinitions;
+export declare const steplessStepDefinitions: MockStepDefinitions;

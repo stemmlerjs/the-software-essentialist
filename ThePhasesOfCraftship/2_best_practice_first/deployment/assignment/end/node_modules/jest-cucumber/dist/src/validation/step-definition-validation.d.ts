@@ -1,0 +1,3 @@
+import { ParsedScenario, ParsedScenarioOutline, ScenarioFromStepDefinitions, Options } from '../models';
+export declare const matchSteps: (stepFromFeatureFile: string, stepMatcher: string | RegExp) => boolean | RegExpMatchArray | null;
+export declare const ensureFeatureFileAndStepDefinitionScenarioHaveSameSteps: (options: Options, parsedScenario: ParsedScenario | ParsedScenarioOutline, scenarioFromStepDefinitions: ScenarioFromStepDefinitions) => void;
