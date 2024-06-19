@@ -1,3 +1,4 @@
+import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersCommand";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtils";
 
@@ -55,5 +56,9 @@ export class CreateUserBuilder {
 
   public build() {
     return this.props;
+  }
+
+  public buildCommand() {
+    return CreateUserCommand.fromProps(this.props);
   }
 }

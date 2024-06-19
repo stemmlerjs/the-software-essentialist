@@ -10,8 +10,8 @@ import { Application } from '../../../src/shared/application/applicationInterfac
 import { InMemoryUserRepositorySpy } from '../../../src/modules/users/adapters/inMemoryUserRepositorySpy';
 import { Config } from '../../../src/shared/config';
 import { CreateUserBuilder } from '@dddforum/shared/tests/support/builders/createUserBuilder';
-import { CreateUserParams } from '@dddforum/shared/src/api/users';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
+import { CreateUserParams } from '@dddforum/shared/src/api/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
 
@@ -50,12 +50,11 @@ defineFeature(feature, (test) => {
     test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
         given('I am a new user', async () => {
-            createUserCommand = CreateUserCommand.fromProps(new CreateUserBuilder()
+            createUserCommand = new CreateUserBuilder()
               .withAllRandomDetails()
               .withFirstName('Khalil')
               .withLastName('Stemmler')
-              .build()
-            );
+              .buildCommand();
         });
 
         when('I register with valid account details accepting marketing emails', async () => {
@@ -95,11 +94,11 @@ defineFeature(feature, (test) => {
 
     test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
         given('I am a new user', () => {
-          createUserCommand = CreateUserCommand.fromProps(new CreateUserBuilder()
+          createUserCommand = new CreateUserBuilder()
             .withAllRandomDetails()
             .withFirstName('Khalil')
             .withLastName('Stemmler')
-            .build())
+            .buildCommand()
         })
     
     
@@ -164,13 +163,13 @@ defineFeature(feature, (test) => {
     test('Username already taken', ({ given, when, then, and }) => {
         given('a set of users have already created their accounts with valid details', async (table) => {
             table.forEach((item: any) => {
-                commands.push(CreateUserCommand.fromProps(new CreateUserBuilder()
+                commands.push(new CreateUserBuilder()
                 .withFirstName(item.firstName)
                 .withLastName(item.lastName)
                 .withUsername(item.username)
                 .withEmail(item.email)
-                .build()
-                ))
+                .buildCommand()
+                )
             });
             await databaseFixture.setupWithExistingUsersFromCommands(commands);
             transactionalEmailAPISpy.reset();
@@ -199,13 +198,13 @@ defineFeature(feature, (test) => {
     test('Account already created with email', ({ given, when, then, and }) => {
         given('a set of users already created accounts', async (table) => {
             table.forEach((item: any) => {
-                commands.push(CreateUserCommand.fromProps(new CreateUserBuilder()
+                commands.push(new CreateUserBuilder()
                 .withUsername(item.username)
                 .withFirstName(item.firstName)
                 .withLastName(item.lastName)
                 .withEmail(item.email)
-                .build()
-                ));
+                .buildCommand()
+                );
             })
             await databaseFixture.setupWithExistingUsersFromCommands(commands);
             transactionalEmailAPISpy.reset();
