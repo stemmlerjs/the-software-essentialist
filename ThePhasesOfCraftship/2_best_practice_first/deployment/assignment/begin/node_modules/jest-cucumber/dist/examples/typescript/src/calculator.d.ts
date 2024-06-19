@@ -1,0 +1,10 @@
+export declare type CalculatorOperator = '+' | '-' | '*' | '/';
+export declare class Calculator {
+    private firstOperand;
+    private secondOperand;
+    private operator;
+    setFirstOperand(operand: number): void;
+    setSecondOperand(operand: number): void;
+    setCalculatorOperator(operator: CalculatorOperator): void;
+    computeOutput(): number | undefined;
+}

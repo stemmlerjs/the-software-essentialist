@@ -1,0 +1,2 @@
+import { ParsedFeature } from './models';
+export declare const applyTagFilters: (parsedFeature: ParsedFeature) => ParsedFeature;

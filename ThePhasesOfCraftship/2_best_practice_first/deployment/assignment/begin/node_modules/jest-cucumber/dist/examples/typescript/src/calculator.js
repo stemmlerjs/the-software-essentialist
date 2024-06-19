@@ -1,0 +1,37 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Calculator = void 0;
+var Calculator = /** @class */ (function () {
+    function Calculator() {
+        this.firstOperand = null;
+        this.secondOperand = null;
+        this.operator = null;
+    }
+    Calculator.prototype.setFirstOperand = function (operand) {
+        this.firstOperand = operand;
+    };
+    Calculator.prototype.setSecondOperand = function (operand) {
+        this.secondOperand = operand;
+    };
+    Calculator.prototype.setCalculatorOperator = function (operator) {
+        this.operator = operator;
+    };
+    Calculator.prototype.computeOutput = function () {
+        if (!this.firstOperand || !this.secondOperand || !this.operator) {
+            return;
+        }
+        switch (this.operator) {
+            case '+':
+                return this.firstOperand + this.secondOperand;
+            case '-':
+                return this.firstOperand - this.secondOperand;
+            case '*':
+                return this.firstOperand * this.secondOperand;
+            case '/':
+                return this.firstOperand / this.secondOperand;
+        }
+    };
+    return Calculator;
+}());
+exports.Calculator = Calculator;
+//# sourceMappingURL=calculator.js.map

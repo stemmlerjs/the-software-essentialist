@@ -1,0 +1,9 @@
+export declare class VendingMachine {
+    balance: number;
+    items: {
+        [itemName: string]: number;
+    };
+    stockItem(itemName: string, count: number): void;
+    insertMoney(amount: number): void;
+    dispenseItem(itemName: string): void;
+}

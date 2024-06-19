@@ -1,0 +1,2 @@
+import { FeatureFromStepDefinitions, ParsedFeature } from '../models';
+export declare const checkThatFeatureFileAndStepDefinitionsHaveSameScenarios: (parsedFeature: ParsedFeature, featureFromStepDefinitions: FeatureFromStepDefinitions) => void;

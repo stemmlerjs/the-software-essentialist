@@ -1,0 +1,47 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var src_1 = require("../../../../src");
+var series_solver_1 = require("../../src/series-solver");
+var feature = src_1.loadFeature('./examples/typescript/specs/features/more-scenario-outlines.feature');
+src_1.defineFeature(feature, function (test) {
+    var solver;
+    var solution;
+    var terms;
+    var operator;
+    beforeEach(function () {
+        solver = new series_solver_1.SeriesSolver();
+    });
+    var whenISolveTheSeries = function (when) {
+        when(/^I solve the series$/, function () {
+            solution = solver.solve(terms, operator);
+        });
+    };
+    var thenIShouldGetXAsTheAnswer = function (then) {
+        then(/^I should get (.*) as the answer$/, function (expectedSolution) {
+            expect(solution).toBe(expectedSolution);
+        });
+    };
+    test('Solving series', function (_a) {
+        var given = _a.given, when = _a.when, then = _a.then;
+        given(/^I have a series (.*) (.*) (.*) (.*) (.*) (.*) (.*)$/, function (firstTerm, firstOperator, secondTerm, secondOperator, thirdTerm, thirdOperator, forthTerm) {
+            expect(firstOperator).toEqual(secondOperator);
+            expect(firstOperator).toEqual(thirdOperator);
+            operator = firstOperator;
+            terms = [firstTerm, secondTerm, thirdTerm, forthTerm];
+        });
+        whenISolveTheSeries(when);
+        thenIShouldGetXAsTheAnswer(then);
+    });
+    test('Adding series', function (_a) {
+        var given = _a.given, when = _a.when, then = _a.then;
+        given(/^I add the following series:$/, function (table) {
+            var row = table[0];
+            terms = row.Series.split(" " + row.Operator + " ");
+            operator = row.Operator;
+            solver.add(terms, operator, row.Solution);
+        });
+        whenISolveTheSeries(when);
+        thenIShouldGetXAsTheAnswer(then);
+    });
+});
+//# sourceMappingURL=more-scenario-outlines.steps.js.map
