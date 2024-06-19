@@ -1,7 +1,5 @@
 
-import { mockDeep } from "jest-mock-extended";
 import { createAPIClient } from "@dddforum/shared/src/api";
-import { Application } from "../../src/shared/application/applicationInterface";
 import { UserResponseStub } from "@dddforum/shared/tests/support/stubs/userResponseStub";
 import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CompositionRoot } from "../../src/shared/compositionRoot";
@@ -14,15 +12,17 @@ describe("users http API", () => {
   const composition = CompositionRoot.createCompositionRoot(config);
   const server = composition.getWebServer();
 
-  // Create a mock of the Application interface
-  const application = mockDeep<Application>();
+  const application = composition.getApplication();
 
-  // Override the getApplication method to return the mock
-  jest.spyOn(composition, 'getApplication').mockReturnValue(application);
-  
+  let createUserSpy: jest.SpyInstance;
 
   beforeAll(async () => {
     await server.start();
+    createUserSpy = jest.spyOn(application.users, 'createUser');
+  });
+
+  afterEach(() => {
+    createUserSpy.mockClear();
   });
 
   afterAll(async () => {
@@ -40,11 +40,7 @@ describe("users http API", () => {
       .fromParams(createUserParams)
       .build();
 
-    application.users.createUser.mockReturnValue(
-      new Promise((resolve) =>
-        resolve(createUserResponseStub),
-      ),
-    );
+      createUserSpy.mockResolvedValue(createUserResponseStub);
 
     // Act
     // Use the client library to make the api call (pass through as much
