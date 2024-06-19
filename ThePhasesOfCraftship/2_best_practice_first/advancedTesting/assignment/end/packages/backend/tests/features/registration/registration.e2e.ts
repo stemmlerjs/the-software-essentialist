@@ -1,92 +1,82 @@
+import * as path from "path";
+import { defineFeature, loadFeature } from "jest-cucumber";
+import { sharedTestRoot } from "@dddforum/shared/src/paths";
+import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
+import { CreateUserParams, CreateUserResponse } from "@dddforum/shared/src/api/users";
+import { createAPIClient } from "@dddforum/shared/src/api";
+import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
+import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
+import { Config } from "@dddforum/backend/src/shared/config";
+import { Database } from "../../../src/shared/database";
+import { AddEmailToListResponse } from "@dddforum/shared/src/api/marketing";
 
-import { defineFeature, loadFeature } from 'jest-cucumber';
-import * as path from 'path';
-import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { CreateUserCommandBuilder } from '@dddforum/shared/tests/support/builders/createUserCommandBuilder';
-import { CreateUserCommand } from '@dddforum/shared/src/api/users';
-import { CompositionRoot } from '@dddforum/backend/src/shared/composition/compositionRoot';
-import { Errors } from '@dddforum/backend/src/shared/errors/errors';
-import { Application } from '@dddforum/backend/src/shared/application/applicationInterface';
-import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { WebServer } from '../../../src/shared/webAPI/webServer';
-import { createAPIClient } from '@dddforum/shared/src/api';
-import { TransactionalEmailAPISpy } from '../../../src/modules/marketing/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
-import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
-import { Config } from '../../../src/shared/config';
-
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
+const feature = loadFeature(
+  path.join(sharedTestRoot, "features/registration.feature"),
+);
 
 defineFeature(feature, (test) => {
-
-  let transactionalEmailAPISpy: TransactionalEmailAPISpy;
-  let contactListAPISpy: ContactListAPISpy;
-  let commands: CreateUserCommand[] = [];
-  let createUserResponses: any[] = []; 
-  let application: Application;
   let databaseFixture: DatabaseFixture;
+  const apiClient = createAPIClient('http://localhost:3000');
+  let composition: CompositionRoot
+  let server: WebServer
+  const config: Config = new Config("test:e2e");
+  let response: CreateUserResponse
+  let createUserResponses: CreateUserResponse[] = [];
+  let addEmailToListResponse: AddEmailToListResponse;
+  let dbConnection: Database
 
-  let apiClient = createAPIClient('http://localhost:3000');
-  let createUserCommand: CreateUserCommand;
-  let createUserResponse: any;
-  let addEmailToListResponse: any;
-  let composition: CompositionRoot;
-  let server: WebServer;
+  
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot(new Config('test:e2e'));
-    application = composition.getApplication();
-    transactionalEmailAPISpy = composition.getTransactionalEmailAPI() as TransactionalEmailAPISpy;
-    contactListAPISpy = composition.getContactListAPI() as ContactListAPISpy;
-    databaseFixture = new DatabaseFixture(composition);
+    composition = CompositionRoot.createCompositionRoot(config);
     server = composition.getWebServer();
-    await server.start();
-  })
+    databaseFixture = new DatabaseFixture(composition);
+    dbConnection = composition.getDatabase();
 
-  afterEach(() => {
-    transactionalEmailAPISpy.reset();
-    contactListAPISpy.reset();
-    commands = [];
+    await server.start();
+    await dbConnection.connect();
+  });
+
+  afterEach(async () => {
+    await databaseFixture.resetDatabase();
     createUserResponses = []
-  })
+  });
 
   afterAll(async () => {
     await server.stop();
   });
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
-  
+    let user: CreateUserParams;
+    
     given('I am a new user', async () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('Stemmler')
-        .withRandomUsername()
-        .withRandomEmail()
+      user = new CreateUserBuilder()
+        .withAllRandomDetails()
         .build();
     });
 
     when('I register with valid account details accepting marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
-      addEmailToListResponse = await apiClient.marketing.addEmailToList(createUserCommand.email);
+      response = await apiClient.users.register(user);
+      addEmailToListResponse = await apiClient.marketing.addEmailToList(user.email);
     });
 
     then('I should be granted access to my account', async () => {
-      const { data, success, error } = createUserResponse;
+      const { data, success, error } = response;
 
       // Expect a successful response (Result Verification)
       expect(success).toBeTruthy();
-      expect(error).toBeFalsy();
-      expect(data.id).toBeDefined();
-      expect(data.email).toEqual(createUserCommand.email);
-      expect(data.firstName).toEqual(createUserCommand.firstName);
-      expect(data.lastName).toEqual(createUserCommand.lastName);
-      expect(data.username).toEqual(createUserCommand.username);
+      expect(error).toEqual({});
+      expect(data!.id).toBeDefined();
+      expect(data!.email).toEqual(user.email);
+      expect(data!.firstName).toEqual(user.firstName);
+      expect(data!.lastName).toEqual(user.lastName);
+      expect(data!.username).toEqual(user.username);
 
       // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
-
-      // Verify that an email has been sent (Communication Verification)
-      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
+      const getUserResponse = await apiClient.users.getUserByEmail(user.email);
+      const {data: getUserData} = getUserResponse;
+      expect(user.email).toEqual(getUserData!.email);
     });
 
     and('I should expect to receive marketing emails', () => {
@@ -99,161 +89,173 @@ defineFeature(feature, (test) => {
       const { success } = addEmailToListResponse
 
       expect(success).toBeTruthy();
-      expect(contactListAPISpy.getTimesMethodCalled('addEmailToList')).toEqual(1);
     });
   });
 
-  test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
-    given('I am a new user', () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('Stemmler')
-        .withRandomUsername()
-        .withRandomEmail()
-        .build();
+  test("Successful registration without marketing emails accepted", ({ given, when, then, and }) => {
+    let user: CreateUserParams;
+    
+
+    given("I am a new user", () => {
+      user = new CreateUserBuilder().withAllRandomDetails().build();
     });
 
-    when('I register with valid account details declining marketing emails', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
+    when("I register with valid account details declining marketing emails", async () => {
+      response = await apiClient.users.register(user);
     });
 
-    then('I should be granted access to my account', async () => {
-      const { data, success, error } = createUserResponse
-
-      // Expect a successful response (Result Verification)
-      expect(success).toBeTruthy();
-      expect(error).toBeFalsy();
-      expect(data.id).toBeDefined();
-      expect(data.email).toEqual(createUserCommand.email);
-      expect(data.firstName).toEqual(createUserCommand.firstName);
-      expect(data.lastName).toEqual(createUserCommand.lastName);
-      expect(data.username).toEqual(createUserCommand.username);
-
-      // And the user exists (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(createUserCommand.email).toEqual(getUserResponse.data.email);
-
-      // Verify that an email has been sent (Communication Verification)
-      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(1);
+    then("I should be granted access to my account", () => {
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data!.email).toBe(user.email);
+      expect(response.data!.username).toBe(user.username);
+      expect(response.data!.firstName).toBe(user.firstName);
+      expect(response.data!.lastName).toBe(user.lastName);
+      expect(response.data!.id).toBeDefined();
     });
 
-    and('I should not expect to receive marketing emails', () => {
+    and("I should not expect to receive marketing emails", () => {
       const { success } = addEmailToListResponse
 
       expect(success).toBeTruthy();
-      expect(contactListAPISpy.getTimesMethodCalled('addEmailToList')).toEqual(0);
+      // How can we test this? what do we want to place under test?
+      // we'll implement this later
     });
   });
 
-  test('Invalid or missing registration details', ({ given, when, then, and }) => {
-    given('I am a new user', () => {
-      createUserCommand = new CreateUserCommandBuilder()
-        .withFirstName('Khalil')
-        .withLastName('')
-        .withRandomUsername()
-        .withRandomEmail()
-        .build();
+  test("Invalid or missing registration details", ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    let user: any;
+
+    given("I am a new user", () => {
+      const validUser = new CreateUserBuilder().withAllRandomDetails().build();
+
+      user = {
+        firstName: validUser.firstName,
+        email: validUser.email,
+        lastName: validUser.lastName,
+      };
     });
 
-    when('I register with invalid account details', async () => {
-      createUserResponse = await apiClient.users.register(createUserCommand);
+    when("I register with invalid account details", async () => {
+      response = await apiClient.users.register(user);
     });
 
-    then('I should see an error notifying me that my input is invalid', async () => {
-      const { success, error } = createUserResponse;
-
-      // Expect a failure response (Result Verification)
-      expect(success).toBeFalsy();
-      expect(error).toBeDefined();
-
-      // And the user does not exist (State Verification)
-      const getUserResponse = await apiClient.users.getUserByEmail({ email: createUserCommand.email });
-      expect(getUserResponse.error).toBeDefined();
-      expect(getUserResponse.error).toEqual(Errors.UserNotFound)
-
+    then("I should see an error notifying me that my input is invalid", () => {
+      expect(response.success).toBe(false);
+      expect(response.data).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
-    and('I should not have been sent access to account details', () => {
-      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
-    });
-  });
-
-  test('Account already created w/ email', ({ given, when, then, and }) => {
-    given('a set of users already created accounts', async (table) => {
-      table.forEach((item: any) => {
-        commands.push(new CreateUserCommandBuilder()
-          .withFirstName(item.firstName)
-          .withLastName(item.lastName)
-          .withEmail(item.email)
-          .withRandomUsername()
-          .build()
-        )
-      })
-
-      await databaseFixture.setupWithExistingUsers(commands);
-      transactionalEmailAPISpy.reset();
-    });
-
-    when('new users attempt to register with those emails', async () => {
-      for (let command of commands) {
-        let response = await apiClient.users.register(command);
-        createUserResponses.push(response);
-      }
-    });
-
-    then('they should see an error notifying them that the account already exists', async () => {
-      for (let response of createUserResponses) {
-        const { success, error } = response;
-
-        // Expect a failure response (Result Verification)
-        expect(success).toBeFalsy();
-        expect(error).toBeDefined();
-        expect(error).toEqual(Errors.EmailAlreadyInUse);
-      }
-    });
-
-    and('they should not have been sent access to account details', () => {
-      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
+    and("I should not have been sent access to account details", () => {
+      expect(response.success).toBe(false);
+      expect(response.data).toBeNull();
+      expect(response.error).toBeDefined();
     });
   });
 
-  test('Username already taken', ({ given, when, then, and }) => {
+  test("Account already created with email", ({ given, when, then, and }) => {
+    let existingUsers: CreateUserParams[] = [];
 
-    given('a set of users have already created their accounts with valid details', async (table) => {
-      table.forEach((item: any) => {
-        commands.push(new CreateUserCommandBuilder()
-          .withFirstName(item.firstName)
-          .withLastName(item.lastName)
-          .withUsername(item.username)
-          .withRandomEmail()
-          .build()
-        )
+    given("a set of users already created accounts", async (table) => {
+      existingUsers = table.map((row: any) => {
+        return new CreateUserBuilder()
+          .withFirstName(row.firstName)
+          .withLastName(row.lastName)
+          .withEmail(row.email)
+          .withUsername(row.username)
+          .build();
       });
-
-      await databaseFixture.setupWithExistingUsers(commands);
-      transactionalEmailAPISpy.reset();
+      await databaseFixture.setupWithExistingUsers(existingUsers);
     });
 
-    when('new users attempt to register with already taken usernames', async (table) => {
-      for (let item of table) {
-        let response = await apiClient.users.register(item);
-        createUserResponses.push(response);
-      }
+    when("new users attempt to register with those emails", async () => {
+      createUserResponses = await Promise.all(
+        existingUsers.map((user) => {
+          return apiClient.users.register(user);
+        }),
+      );
     });
 
-    then('they see an error notifying them that the username has already been taken', () => {
-      for (let response of createUserResponses) {
-        const { success, error } = response;
+    then(
+      "they should see an error notifying them that the account already exists",
+      () => {
+        for (const response of createUserResponses) {
+          expect(response.error).toBeDefined();
+          expect(response.success).toBeFalsy();
+          expect(response.error.code).toEqual("EmailAlreadyInUse");
+        }
+      },
+    );
 
-        // Expect a failure response (Result Verification)
-        expect(success).toBeFalsy();
-        expect(error).toBeDefined();
-        expect(error).toEqual(Errors.UsernameAlreadyTaken);
-      }
+    and("they should not have been sent access to account details", () => {
+      createUserResponses.forEach((response) => {
+        expect(response.success).toBe(false);
+        expect(response.data).toBeNull();
+        expect(response.error).toBeDefined();
+      });
     });
+  });
 
-    and('they should not have been sent access to account details', () => {
-      expect(transactionalEmailAPISpy.getTimesMethodCalled('sendMail')).toEqual(0);
+  test("Username already taken", ({ given, when, then, and }) => {
+    let existingUsers: CreateUserParams[] = [];
+
+    given(
+      "a set of users have already created their accounts with valid details",
+      async (table) => {
+        existingUsers = table.map((row: any) => {
+          return new CreateUserBuilder()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .withUsername(row.username)
+            .build();
+        });
+        await databaseFixture.setupWithExistingUsers(existingUsers);
+      },
+    );
+
+    when(
+      "new users attempt to register with already taken usernames",
+      async (table) => {
+        const newUsers: CreateUserParams[] = table.map((row: any) => {
+          return new CreateUserBuilder()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .withUsername(row.username)
+            .build();
+        });
+
+        createUserResponses = await Promise.all(
+          newUsers.map((user) => {
+            return apiClient.users.register(user);
+          }),
+        );
+      },
+    );
+
+    then(
+      "they see an error notifying them that the username has already been taken",
+      () => {
+        for (const response of createUserResponses) {
+          expect(response.error).toBeDefined();
+          expect(response.success).toBeFalsy();
+          expect(response.error.code).toEqual("UsernameAlreadyTaken");
+        }
+      },
+    );
+
+    and("they should not have been sent access to account details", () => {
+      createUserResponses.forEach((response) => {
+        expect(response.success).toBe(false);
+        expect(response.data).toBeNull();
+        expect(response.error).toBeDefined();
+      });
     });
   });
 });

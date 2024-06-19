@@ -1,10 +1,9 @@
-
-import { MarketingService } from "../../modules/marketing/marketingService"
-import { PostService } from "../../modules/posts/postService"
-import { UserService } from "../../modules/users/usersService"
+import { MarketingService } from "../../modules/marketing/marketingService";
+import { PostsService } from "../../modules/posts/postsService";
+import { UsersService } from "../../modules/users/usersService";
 
 export interface Application {
-  user: UserService;
-  posts: PostService;
+  users: UsersService;
+  posts: PostsService;
   marketing: MarketingService;
 }

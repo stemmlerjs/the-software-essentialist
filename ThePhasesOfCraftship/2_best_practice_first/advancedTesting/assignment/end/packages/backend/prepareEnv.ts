@@ -12,20 +12,20 @@
  */
 
 import { execSync } from 'child_process';
-import path from 'path';
+import * as path from 'path';
 
 export const prepareEnv = (): void => {
-  let env = process.env.NODE_ENV || 'development';
+  const env = process.env.NODE_ENV || 'development';
   const packageRoot = path.resolve(__dirname);
   const execParams = {
     cwd: packageRoot,
     stdio: 'inherit',
   } as const;
 
-  let script = process.argv.splice(2).join(' ');
+  const script = process.argv.splice(2).join(' ');
 
   if (env === 'development') {
-    let devEnvFile = '.env.development'
+    const devEnvFile = '.env.development'
     console.log(`Preparing dev environment using ${devEnvFile}`);
     execSync(`dotenv -e ${devEnvFile} -- ${script}`, execParams);
     return;

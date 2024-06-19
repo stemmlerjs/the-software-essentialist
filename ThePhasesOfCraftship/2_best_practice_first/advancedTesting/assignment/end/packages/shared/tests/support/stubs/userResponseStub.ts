@@ -1,11 +1,10 @@
 
-import { UserDTO } from "@dddforum/backend/src/modules/users/userDTO";
-import { CreateUserCommand } from "@dddforum/shared/src/api/users";
+import { CreateUserParams, User } from "@dddforum/shared/src/api/users";
 import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
 export class UserResponseStub {
-  private props: UserDTO;
+  private props: User;
 
   constructor() {
     this.props = {
@@ -17,7 +16,7 @@ export class UserResponseStub {
     };
   }
 
-  public fromCommand (command: CreateUserCommand) {
+  public fromParams (command: CreateUserParams) {
     this.props.firstName = command.firstName;
     this.props.lastName = command.lastName;
     this.props.username = command.username;
