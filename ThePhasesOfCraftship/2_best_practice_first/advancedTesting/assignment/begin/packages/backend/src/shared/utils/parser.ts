@@ -4,9 +4,3 @@ export function isMissingKeys(data: any, keysToCheckFor: string[]) {
   }
   return false;
 }
-
-export function parseUserForResponse(user: any) {
-  const returnData = JSON.parse(JSON.stringify(user));
-  delete returnData.password;
-  return returnData;
-}

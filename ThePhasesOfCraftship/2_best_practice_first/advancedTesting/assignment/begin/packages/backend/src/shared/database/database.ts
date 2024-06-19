@@ -1,26 +1,29 @@
 import { PrismaClient } from "@prisma/client";
 import { generateRandomPassword } from "../utils";
+import { User } from "@dddforum/shared/src/api/users";
+import { Post } from "@dddforum/shared/src/api/posts";
+import { ServerErrorException } from "../exceptions";
+import { CreateUserCommand } from "../../modules/users/usersCommand";
 
 export interface UsersPersistence {
-  save(user: NewUser): any;
-  findUserByEmail(email: string): any;
-  findUserByUsername(username: string): any;
+  save(user: CreateUserCommand): Promise<User & { password: string }>;
+  findUserByEmail(email: string): Promise<User | null>;
+  findUserByUsername(username: string): Promise<User | null>;
 }
 
-type NewUser = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-};
+export interface PostsPersistence {
+  findPosts(sort: string): Promise<Post[]>;
+}
 
 export class Database {
   public users: UsersPersistence;
+  public posts: PostsPersistence;
   private connection: PrismaClient;
 
   constructor() {
     this.connection = new PrismaClient();
     this.users = this.buildUsersPersistence();
+    this.posts = this.buildPostsPersistence();
   }
 
   getConnection() {
@@ -39,7 +42,7 @@ export class Database {
     };
   }
 
-  private async saveUser(user: NewUser) {
+  private async saveUser(user: CreateUserCommand) {
     const { email, firstName, lastName, username } = user;
     return await this.connection.$transaction(async () => {
       const user = await this.connection.user.create({
@@ -51,11 +54,11 @@ export class Database {
           password: generateRandomPassword(10),
         },
       });
-
-      const member = await this.connection.member.create({
+      await this.connection.member.create({
         data: { userId: user.id },
       });
-      return { user, member };
+
+      return user;
     });
   }
 
@@ -65,5 +68,35 @@ export class Database {
 
   private async findUserByUsername(username: string) {
     return this.connection.user.findFirst({ where: { username } });
+  }
+
+  private buildPostsPersistence(): PostsPersistence {
+    return {
+      findPosts: this.findPosts.bind(this),
+    };
+  }
+
+  private async findPosts(_: string): Promise<Post[]> {
+    try {
+      const posts = await this.connection.post.findMany({
+        orderBy: { dateCreated: "desc" },
+      });
+      const formattedPosts = posts.map(this.formatPost);
+
+      return formattedPosts;
+    } catch (error) {
+      throw new ServerErrorException();
+    }
+  }
+
+  private formatPost(post: any): Post {
+    return {
+      id: post.id,
+      memberId: post.memberId,
+      postType: post.postType,
+      title: post.title,
+      content: post.content,
+      dateCreated: post.dateCreated.toISOString(),
+    };
   }
 }

@@ -1,25 +1,28 @@
 
-import { mockDeep } from "jest-mock-extended";
 import { createAPIClient } from "@dddforum/shared/src/api";
-import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 import { UserResponseStub } from "@dddforum/shared/tests/support/stubs/userResponseStub";
-import { Application } from "../../src/shared/application/applicationInterface";
-import { WebServer } from "../../src/shared/webAPI/webServer";
+import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { CompositionRoot } from "../../src/shared/compositionRoot";
+import { Config } from "../../src/shared/config";
 
 describe("users http API", () => {
+  const client = createAPIClient("http://localhost:3000");
+  const config = new Config("test:e2e");
 
-  /**
-   * For these, you don't need to use the composition root. You're cleanly
-   * starting up the web server and testing only the webserver to use case
-   * connection.
-   */
+  const composition = CompositionRoot.createCompositionRoot(config);
+  const server = composition.getWebServer();
 
-  let client = createAPIClient("http://localhost:3000");
-  let application = mockDeep<Application>();
-  let server = new WebServer({ port: 3000, application });
+  const application = composition.getApplication();
+
+  let createUserSpy: jest.SpyInstance;
 
   beforeAll(async () => {
     await server.start();
+    createUserSpy = jest.spyOn(application.users, 'createUser');
+  });
+
+  afterEach(() => {
+    createUserSpy.mockClear();
   });
 
   afterAll(async () => {
@@ -27,29 +30,24 @@ describe("users http API", () => {
   });
 
   it("can create users", async () => {
-    let createUserCommand = new CreateUserCommandBuilder()
+    const createUserParams = new CreateUserBuilder()
+      .withAllRandomDetails()
       .withFirstName("Khalil")
       .withLastName("Stemmler")
-      .withRandomUsername()
-      .withRandomEmail()
       .build();
 
-    let createUserResponseStub = new UserResponseStub()
-      .fromCommand(createUserCommand)
+    const createUserResponseStub = new UserResponseStub()
+      .fromParams(createUserParams)
       .build();
 
-    application.user.createUser.mockReturnValue(
-      new Promise((resolve) =>
-        resolve({ error: undefined, data: createUserResponseStub, success: true }),
-      ),
-    );
+      createUserSpy.mockResolvedValue(createUserResponseStub);
 
     // Act
     // Use the client library to make the api call (pass through as much
     // uncertainty as possible)
-    await client.users.register(createUserCommand);
+    await client.users.register(createUserParams);
 
     // Communication: Expect it to have called the correct use case
-    expect(application.user.createUser).toHaveBeenCalledTimes(1);
+    expect(application.users.createUser).toHaveBeenCalledTimes(1);
   });
 });

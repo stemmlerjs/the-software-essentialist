@@ -15,23 +15,33 @@ class InvalidRequestBodyException extends CustomException {
   }
 }
 
-class EmailAlreadyInUseException extends CustomException {
-  constructor(email: string) {
-    super(`Email ${email} is already in use`, "EmailAlreadyInUseException");
+class MissingRequestParamsException extends CustomException {
+  constructor(missingKeys: string[]) {
+    super(
+      "Params is missing required key: " + missingKeys.join(", "),
+      "InvalidRequestParamsException",
+    );
   }
 }
 
-class UsernameAlreadyTakenException extends CustomException {
-  constructor(username: string) {
+class InvalidRequestParamsException extends CustomException {
+  constructor(invalidKeys: string[]) {
     super(
-      `Username ${username} is already taken`,
-      "UsernameAlreadyTakenException",
+      "Params has invalid key: " + invalidKeys.join(", "),
+      "InvalidRequestParamsException",
     );
+  }
+}
+
+class ServerErrorException extends CustomException {
+  constructor() {
+    super("An error occurred", "ServerErrorException");
   }
 }
 
 export {
   InvalidRequestBodyException,
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
+  ServerErrorException,
+  InvalidRequestParamsException,
+  MissingRequestParamsException,
 };
