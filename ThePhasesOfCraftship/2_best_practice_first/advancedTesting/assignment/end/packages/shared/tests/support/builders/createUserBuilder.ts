@@ -1,6 +1,6 @@
 import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersCommand";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
-import { TextUtil } from "@dddforum/shared/src/utils/textUtils";
+import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 
 export class CreateUserBuilder {
   private props: CreateUserParams;
