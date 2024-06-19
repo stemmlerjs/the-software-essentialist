@@ -1,0 +1,5 @@
+export declare class PasswordValidator {
+    private password;
+    setPassword(password: string): void;
+    validatePassword(claimedPassword: string): boolean;
+}

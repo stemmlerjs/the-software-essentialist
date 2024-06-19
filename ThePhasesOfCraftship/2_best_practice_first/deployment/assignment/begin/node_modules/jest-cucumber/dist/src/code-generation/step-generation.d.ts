@@ -1,0 +1,4 @@
+import { ParsedStep } from '../models';
+export declare const getStepKeyword: (steps: ParsedStep[], stepPosition: number) => string;
+export declare const generateStepCode: (steps: ParsedStep[], stepPosition: number, generateWrapperFunction?: boolean) => string;
+export declare const generateStepFunctionCall: (steps: ParsedStep[], stepPosition: number) => string;

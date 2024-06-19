@@ -1,0 +1,94 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var src_1 = require("../../../../src/");
+var password_validator_1 = require("../../src/password-validator");
+var online_sales_1 = require("../../src/online-sales");
+var bank_account_1 = require("../../src/bank-account");
+var todo_list_1 = require("../../src/todo-list");
+var feature = src_1.loadFeature('./examples/typescript/specs/features/language.feature');
+src_1.defineFeature(feature, function (test) {
+    describe('basic-scenarios', function () {
+        var passwordValidator = new password_validator_1.PasswordValidator();
+        var accessGranted = false;
+        beforeEach(function () {
+            passwordValidator = new password_validator_1.PasswordValidator();
+        });
+        test('Invullen van een correct wachtwoord', function (_a) {
+            var given = _a.given, when = _a.when, then = _a.then;
+            given('ik heb voorheen een wachtwoord aangemaakt', function () {
+                passwordValidator.setPassword('1234');
+            });
+            when('ik het correcte wachtwoord invoer', function () {
+                accessGranted = passwordValidator.validatePassword('1234');
+            });
+            then('krijg ik toegang', function () {
+                expect(accessGranted).toBe(true);
+            });
+        });
+    });
+    describe('scenario-outlines', function () {
+        test('Verkoop <Artikel> voor €<Bedrag>', function (_a) {
+            var given = _a.given, when = _a.when, then = _a.then;
+            var onlineSales = new online_sales_1.OnlineSales();
+            var salesPrice;
+            given(/^ik heb een (.*)$/, function (item) {
+                onlineSales.listItem(item);
+            });
+            when(/^ik (.*) verkoop$/, function (item) {
+                salesPrice = onlineSales.sellItem(item);
+            });
+            then(/^zou ik €(\d+) ontvangen$/, function (expectedSalesPrice) {
+                expect(salesPrice).toBe(parseInt(expectedSalesPrice, 10));
+            });
+        });
+    });
+    describe('using-dynamic-values', function () {
+        var myAccount;
+        beforeEach(function () {
+            myAccount = new bank_account_1.BankAccount();
+        });
+        test('Mijn salaris storten', function (_a) {
+            var given = _a.given, when = _a.when, then = _a.then, pending = _a.pending;
+            given(/^mijn account balans is \€(\d+)$/, function (balance) {
+                myAccount.deposit(parseInt(balance, 10));
+            });
+            when(/^ik \€(\d+) krijg betaald voor het schrijven van geweldige code$/, function (paycheck) {
+                myAccount.deposit(parseInt(paycheck, 10));
+            });
+            then(/^zou mijn account balans \€(\d+) zijn$/, function (expectedBalance) {
+                expect(myAccount.balance).toBe(parseInt(expectedBalance, 10));
+            });
+        });
+    });
+    describe('using-gherkin-tables', function () {
+        var todoList;
+        beforeEach(function () {
+            todoList = new todo_list_1.TodoList();
+        });
+        test('een artikel toevoegen aan mijn takenlijst', function (_a) {
+            var given = _a.given, when = _a.when, then = _a.then;
+            given('mijn ziet mijn takenlijst er zo uit:', function (table) {
+                table.forEach(function (row) {
+                    todoList.add({
+                        name: row.TaakNaam,
+                        priority: row.Prioriteit,
+                    });
+                });
+            });
+            when('ik de volgende taken toevoeg:', function (table) {
+                todoList.add({
+                    name: table[0].TaakNaam,
+                    priority: table[0].Prioriteit,
+                });
+            });
+            then('zou ik de volgende takenlijst zien:', function (table) {
+                expect(todoList.items.length).toBe(table.length);
+                table.forEach(function (row, index) {
+                    expect(todoList.items[index].name).toBe(table[index].TaakNaam);
+                    expect(todoList.items[index].priority).toBe(table[index].Prioriteit);
+                });
+            });
+        });
+    });
+});
+//# sourceMappingURL=language.steps.js.map

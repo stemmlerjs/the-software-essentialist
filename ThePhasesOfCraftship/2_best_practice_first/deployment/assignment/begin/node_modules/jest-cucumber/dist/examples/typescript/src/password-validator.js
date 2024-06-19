@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PasswordValidator = void 0;
+var PasswordValidator = /** @class */ (function () {
+    function PasswordValidator() {
+        this.password = null;
+    }
+    PasswordValidator.prototype.setPassword = function (password) {
+        this.password = password;
+    };
+    PasswordValidator.prototype.validatePassword = function (claimedPassword) {
+        return this.password === claimedPassword;
+    };
+    return PasswordValidator;
+}());
+exports.PasswordValidator = PasswordValidator;
+//# sourceMappingURL=password-validator.js.map

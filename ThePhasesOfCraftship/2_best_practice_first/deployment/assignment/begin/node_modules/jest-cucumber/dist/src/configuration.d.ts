@@ -1,0 +1,8 @@
+import { Options } from './models';
+export declare const getJestCucumberConfiguration: (options?: Options | undefined) => {
+    loadRelativePath?: boolean | undefined;
+    tagFilter?: string | undefined;
+    errors?: boolean | import("./models").ErrorOptions | undefined;
+    scenarioNameTemplate?: ((vars: import("./models").ScenarioNameTemplateVars) => string) | undefined;
+};
+export declare const setJestCucumberConfiguration: (options: Options) => void;

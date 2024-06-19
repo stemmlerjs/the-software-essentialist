@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.indent = void 0;
+exports.indent = function (stringToIndent, tabsToIndent) {
+    var tabs = '';
+    for (var i = 0; i < tabsToIndent; i++) {
+        tabs = tabs + '\t';
+    }
+    return stringToIndent.split('\n').map(function (line) {
+        if (line !== '') {
+            return "" + tabs + line + "\n";
+        }
+        else {
+            return '\n';
+        }
+    }).join('');
+};
+//# sourceMappingURL=utils.js.map

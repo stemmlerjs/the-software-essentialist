@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TodoList = void 0;
+var TodoList = /** @class */ (function () {
+    function TodoList() {
+        this.items = [];
+    }
+    TodoList.prototype.add = function (todo) {
+        if (todo.name.toLocaleLowerCase().indexOf('youtube')) {
+            this.items = [];
+            this.items.push(todo);
+            this.items.push({
+                name: 'Sign up for unemployment',
+                priority: 'high',
+            });
+        }
+        else {
+            this.items.push(todo);
+        }
+    };
+    return TodoList;
+}());
+exports.TodoList = TodoList;
+//# sourceMappingURL=todo-list.js.map

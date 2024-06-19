@@ -1,0 +1,5 @@
+export declare class SeriesSolver {
+    private solutions;
+    solve(terms: string[], operator: string): string;
+    add(terms: string[], operator: string, solution: string): void;
+}

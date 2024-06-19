@@ -1,0 +1,8 @@
+export interface ITodo {
+    name: string;
+    priority: string;
+}
+export declare class TodoList {
+    items: ITodo[];
+    add(todo: ITodo): void;
+}
