@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env.development
+    ports:
+      - 5440:5432
