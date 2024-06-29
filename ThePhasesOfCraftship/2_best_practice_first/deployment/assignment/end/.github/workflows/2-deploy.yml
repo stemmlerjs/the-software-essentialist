@@ -1,4 +1,4 @@
-name: Automatically Deploy to Staging
+name: Automatically Deploy to Staging and Production
 
 on:
   workflow_run:
@@ -13,6 +13,44 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        
+      - name: Deploy to Frontend Staging on Netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_STAGING_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+        with:
+          args: deploy --dir=frontend-build --alias=staging 
+        
+      - name: Trigger Render Deployment Webhook 
+        run: |
+          curl -X GET https://api.render.com/deploy/srv-cijkadtph6euh7k6e49g?key=DXxdTMsFGOQ
+
+      - name: Wait for Render Deployment
+        uses: bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_STAGING_API_KEY }}
+          github-token: ${{ secrets.REPO_STAGING_TOKEN }}
+          service-id: srv-cijkadtph6euh7k6e49g
+          retries: 20
+          wait: 16000
+          sleep: 30000
+  
+  deploy-production:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: npm ci
 
       - name: Build
         run: npm run build
