@@ -3,7 +3,7 @@ name: Automatically Deploy to Staging and Production
 on:
   push:
     branches:
-      - main # or specify your desired branch
+      - bp-first-assignments-deployment # or specify your desired branch
 
 jobs:
   ci:

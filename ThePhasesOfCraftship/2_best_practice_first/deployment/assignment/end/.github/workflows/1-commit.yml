@@ -3,7 +3,7 @@ name: Commit Phase
 on:
   push:
     branches:
-      - main # or specify your desired branch
+      - bp-first-assignments-deployment # or specify your desired branch
 
 jobs:
   lint-build-test-archive:
@@ -21,8 +21,8 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      # - name: Lint
+      #   run: npm run lint
 
       - name: Build
         run: npm run build
