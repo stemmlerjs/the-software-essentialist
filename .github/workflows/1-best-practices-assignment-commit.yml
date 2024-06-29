@@ -1,0 +1,49 @@
+name: Best Practices Assignment - Commit Phase
+
+on:
+  push:
+    paths:
+      - 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**'
+    branches:
+      - bp-first-assignments-deployment # or specify your desired branch
+
+env:
+  PROJECT_PATH: 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end'
+
+jobs:
+  lint-build-test-archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.16
+
+      - name: Install
+        run: npm ci
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      # - name: Lint
+      #   run: npm run lint
+
+      - name: Build
+        run: npm run build
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      - name: Test (core unit tests)
+        run: npm run test:unit
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      - name: Archive Frontend
+        id: frontend-build
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-build-latest
+          path: ./packages/frontend/dist
+          # Customize Artifact Retention Period
+          retention-days: 2
+        working-directory: ${{ env.PROJECT_PATH }}

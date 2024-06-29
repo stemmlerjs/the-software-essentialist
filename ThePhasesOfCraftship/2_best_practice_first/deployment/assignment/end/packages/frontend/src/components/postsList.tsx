@@ -5,7 +5,9 @@ import moment from 'moment';
 
 
 type Vote = { id: number, postId: number, voteType: 'Upvote' | 'Downvote' };
-type Comment = {};
+type Comment = {
+  content: string
+};
 
 type Post = {
   title: string;

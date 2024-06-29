@@ -2,6 +2,7 @@
 import logo from "../shared/assets/dddforumlogo.png";
 import { Link, useLocation } from "react-router-dom";
 import { UserData, useUser } from "../contexts/userContext";
+import { appSelectors, toClass } from "../shared/selectors";
 
 const Logo = () => (
   <div id="app-logo">
@@ -20,7 +21,7 @@ const HeaderActionButton = ({ user }: { user: UserData | null }) => (
   <div id="header-action-button">
     {user ? (
       <div>
-        <div className="header username">{user.username}</div>
+        <div className={toClass(appSelectors.header.selector)}>{user.username}</div>
         <u>
           <div>logout</div>
         </u>

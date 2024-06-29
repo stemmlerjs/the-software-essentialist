@@ -8,13 +8,10 @@
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
-    "types": ["node", "jest", "../../node_modules/.prisma/client"],
+    "types": ["node","jest", "../../node_modules/.prisma/client"],
     "skipLibCheck": true,
     "resolveJsonModule": true,
   },
-  
-  "include": [
-    "src/**/*",
-  ],
+  "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts"]
 }

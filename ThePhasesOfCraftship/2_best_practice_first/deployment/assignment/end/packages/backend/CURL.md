@@ -1,16 +1,15 @@
 curl -X POST -H "Content-Type: application/json" -d '{
-  "email": "example@example.com",
+  "email": "example1@example.com",
   "firstName": "John",
   "lastName": "Doe",
-  "username": "johndoe"
+  "username": "johndoe2"
 }' http://localhost:3000/users/new
 
-# 
 
 curl -X POST -H "Content-Type: application/json" -d '{
   "firstName": "Johnathan",
   "lastName": "Doel"
-}' http://localhost:3000/users/edit/1
+}' http://localhost:3000/users/edit/7
 
 
 
