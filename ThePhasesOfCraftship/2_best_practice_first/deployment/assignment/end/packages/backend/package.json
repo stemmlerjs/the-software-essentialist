@@ -11,7 +11,7 @@
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
     "start:dev": "ts-node -r tsconfig-paths/register prepareDevCli.ts .env.development && dotenv -e .env.development -- nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
-    "start:ci": "dotenv -e .env.staging -- npm run migrate && dotenv -e .env.staging -- node dist/index.js",
+    "start:ci": "node dist/index.js",
     "migrate:deploy": "npx prisma migrate deploy --schema src/shared/database/prisma/schema.prisma",
     "lint": "eslint . --ext .ts --fix",
     "test": "jest",
