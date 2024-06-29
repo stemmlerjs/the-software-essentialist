@@ -1,1 +1,0 @@
-export { generateRandomPassword } from "./secret";

@@ -1,5 +1,0 @@
-export declare class BankAccount {
-    balance: number;
-    deposit(amount: number): void;
-    withdraw(amount: number): void;
-}
