@@ -43,7 +43,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: frontend-build-latest
-          path: ./packages/frontend/dist
+          path: ./ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/packages/frontend/dist
           # Customize Artifact Retention Period
           retention-days: 2
-        working-directory: ${{ env.PROJECT_PATH }}
