@@ -5,7 +5,7 @@ on:
     paths:
       - 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**'
     branches:
-      - bp-first-assignments-deployment # or specify your desired branch
+      - main # or specify your desired branch
 
 env:
   PROJECT_PATH: 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end'

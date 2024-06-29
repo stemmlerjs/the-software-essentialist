@@ -1,11 +1,15 @@
-name: Automatically Deploy to Staging and Production
+name: Best Practices Assignment - Automatically Deploy to Staging and Production
 
 on:
+  workflow_run:
+    workflows: ["Best Practices Assignment - Commit Phase"]
+    types:
+      - completed
   push:
     paths:
       - 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**'
     branches:
-      - bp-first-assignments-deployment # or specify your desired branch
+      - main # or specify your desired branch
 
 jobs:
   ci:
@@ -15,7 +19,7 @@ jobs:
 
       - name: Deploy
         # Only run this step if the branch is main
-        if: github.ref == 'refs/heads/bp-first-assignments-deployment'
+        if: github.ref == 'refs/heads/main'
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
