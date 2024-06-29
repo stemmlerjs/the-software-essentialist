@@ -1,0 +1,22 @@
+name: Automatically Deploy to Staging and Production
+
+on:
+  push:
+    paths:
+      - 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**'
+    branches:
+      - bp-first-assignments-deployment # or specify your desired branch
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy
+        # Only run this step if the branch is main
+        if: github.ref == 'refs/heads/bp-first-assignments-deployment'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
