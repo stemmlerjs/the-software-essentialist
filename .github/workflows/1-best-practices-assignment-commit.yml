@@ -1,6 +1,7 @@
 name: Best Practices Assignment - Commit Phase
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**'
