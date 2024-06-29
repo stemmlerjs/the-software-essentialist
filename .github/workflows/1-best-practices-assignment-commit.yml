@@ -38,12 +38,3 @@ jobs:
       - name: Test (core unit tests)
         run: npm run test:unit
         working-directory: ${{ env.PROJECT_PATH }}
-
-      - name: Archive Frontend
-        id: frontend-build
-        uses: actions/upload-artifact@v2
-        with:
-          name: frontend-build-latest
-          path: ./ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/packages/frontend/dist
-          # Customize Artifact Retention Period
-          retention-days: 2
