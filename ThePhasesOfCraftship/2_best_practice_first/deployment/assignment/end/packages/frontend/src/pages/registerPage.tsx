@@ -8,7 +8,7 @@ import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useSpinner } from "../contexts/spinnerContext";
 import { OverlaySpinner } from "../components/overlaySpinner";
-import { CreateUserCommand } from "@dddforum/shared/src/api/users";
+import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { api } from "../App";
 
 type ValidationResult = {
@@ -16,7 +16,7 @@ type ValidationResult = {
   errorMessage?: string;
 }
 
-function validateForm (input: CreateUserCommand): ValidationResult {
+function validateForm (input: CreateUserParams): ValidationResult {
   if (input.email.indexOf('@') === -1) return { success: false, errorMessage: "Email invalid" };
   if (input.username.length < 2) return { success: false, errorMessage: "Username invalid" };
   return { success: true }
@@ -27,7 +27,7 @@ export const RegisterPage = () => {
   const navigate = useNavigate()
   const spinner = useSpinner();
 
-  const handleSubmitRegistrationForm = async (input: CreateUserCommand, addToList: boolean) => {
+  const handleSubmitRegistrationForm = async (input: CreateUserParams, addToList: boolean) => {
     // Validate the form
     const validationResult = validateForm(input);
 
@@ -39,19 +39,31 @@ export const RegisterPage = () => {
       });
     }
 
-    // If the form is valid
-    // Start loading spinner
     spinner.activate();
+
     try {
-      // Make API call
       const response = await api.users.register(input);
+      
+      if (!response.success) {
+        switch (response.error.code) {
+          case "UsernameAlreadyTaken":
+            spinner.deactivate();
+            return toast.error('Account already exists', { toastId: `failure-toast` });
+          case "EmailAlreadyInUse":
+            spinner.deactivate();
+            return toast.error('Email already in use', { toastId: `failure-toast` });
+          default:
+            // Client processing error
+            throw new Error('Unknown error: ' + response.error.code)
+        }
+      }
       
       if (addToList) {
         await api.marketing.addEmailToList(input.email);
       }
 
       // Save the user details to the cache
-      setUser(response.data);
+      setUser(response.data as any);
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
@@ -77,7 +89,7 @@ export const RegisterPage = () => {
       <ToastContainer/>
       <div>Create Account</div>
       <RegistrationForm
-        onSubmit={(input: CreateUserCommand, allowMarketingEmails: boolean) =>
+        onSubmit={(input: CreateUserParams, allowMarketingEmails: boolean) =>
           handleSubmitRegistrationForm(input, allowMarketingEmails)
         }
       />

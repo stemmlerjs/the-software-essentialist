@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
@@ -14,5 +14,5 @@ export default async (): Promise<JestConfigWithTsJest> => ({
     prefix: path.resolve(__dirname, '../../'),
   }),
   maxWorkers: 1,
-  globalSetup: './tests/support/globalDevEnvTestSetup.ts'
+  globalSetup: './tests/support/globalDevEnvTestSetup.ts',
 });

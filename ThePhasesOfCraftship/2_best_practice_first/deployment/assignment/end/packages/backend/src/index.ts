@@ -1,3 +1,3 @@
-import { bootstrap } from "./shared/bootstrap";
+import { bootstrap } from "./shared";
 
 bootstrap();
