@@ -5,8 +5,10 @@
  */
 
 const replacements = [
-  // We use only @dddforum/shared in the production code, so no need to include @dddforum/backend, @dddforum/frontend, etc.
   ['@dddforum/shared/src', '@dddforum/shared/dist'],
+  ['@dddforum/backend/src', '@dddforum/backend/dist'],
+  ['@dddforum/frontend/src', '@dddforum/frontend/dist'],
+  
 ];
 
 /**

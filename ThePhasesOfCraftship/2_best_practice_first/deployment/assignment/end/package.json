@@ -9,16 +9,22 @@
     "node": ">=16.16.0"
   },
   "scripts": {
-    "test:e2e:front": "npm run test:e2e --workspace=@dddforum/frontend",
-    "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
+    "test:e2e:frontend": "npm run test:e2e --workspace=@dddforum/frontend",
+    "test:e2e:backend": "npm run test:e2e --workspace=@dddforum/backend",
     "test:infra:all": "npm run test:infra --workspaces --if-present",
-    "test:infra:back": "npm run test:infra --workspace=@dddforum/backend",
-    "test:unit:back": "npm run test:unit --workspace=@dddforum/backend",
+    "test:infra:backend": "npm run test:infra --workspace=@dddforum/backend",
+    "test:unit:backend": "npm run test:unit --workspace=@dddforum/backend",
+    "test:unit": "npm run test:unit --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
+    "build:ci:backend": "npm run build --workspace @dddforum/shared && npm run build --workspace @dddforum/backend",
+    "build:ci:frontend": "npm run build --workspace @dddforum/shared && npm run build --workspace @dddforum/frontend",
+    "start:dev:backend": "npm run start:dev --workspace=@dddforum/backend",
+    "start:dev:frontend": "npm run start:dev --workspace=@dddforum/frontend",
+    "start:ci:backend": "npm run generate:database && npm run migrate:deploy && npm run start:ci --workspace @dddforum/backend",
+    "generate:database": "npm run generate --workspace=@dddforum/backend",
+    "migrate:deploy": "npm run migrate:deploy --workspace=@dddforum/backend",
     "lint": "npm run lint --workspaces --if-present",
-    "start:dev:back": "npm run start:dev --workspace=@dddforum/backend",
-    "start:dev:front": "npm run start:dev --workspace=@dddforum/frontend",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./**/src/**/*.ts\" --write",
     "prettier-format:darwin:linux": "prettier --config .prettierrc './**/src/**/*.ts' --write",
@@ -50,6 +56,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "tsconfig-paths": "^4.2.0"
   }
 }
