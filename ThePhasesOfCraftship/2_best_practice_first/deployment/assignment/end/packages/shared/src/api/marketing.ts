@@ -18,7 +18,7 @@ export const createMarketingAPI = (apiURL: string) => {
         });
         return successResponse.data as AddEmailToListResponse;
       } catch (err) {
-        //@ts-ignore
+        //@ts-expect-error
         return err.response.data as APIResponse;
       }
     },
