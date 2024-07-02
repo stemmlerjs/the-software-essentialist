@@ -11,7 +11,6 @@ import { useSpinner } from "../contexts/spinnerContext";
 import { OverlaySpinner } from "../components/overlaySpinner";
 import { api } from "../api";
 
-
 type ValidationResult = {
   success: boolean;
   errorMessage?: string;
@@ -37,6 +36,7 @@ export const RegisterPage = () => {
       // Show an error toast (for invalid input)
       return toast.error(validationResult.errorMessage);
     }
+    
 
     // If the form is valid
     // Start loading spinner
@@ -44,15 +44,30 @@ export const RegisterPage = () => {
     try {
       // Make API call
       const response = await api.users.register(input);
+
+      if (!response.success) {
+        switch (response.error.code) {
+          case "UsernameAlreadyTaken":
+            spinner.deactivate();
+            return toast.error('Account already exists', { toastId: `failure-toast` });
+          case "EmailAlreadyInUse":
+            spinner.deactivate();
+            return toast.error('Email already in use', { toastId: `failure-toast` });
+          default:
+            // Client processing error
+            throw new Error('Unknown error: ' + response.error.code)
+        }
+      } 
+
       // Save the user details to the cache
       setUser(response.data);
-      console.log('setting data', response.data)
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
       toast('Success! Redirecting home.')
       // In 3 seconds, redirect to the main page
       setTimeout(() => { navigate('/') }, 3000)
+      
     } catch (err) {
       // If the call failed
       // Stop the spinner
@@ -60,7 +75,6 @@ export const RegisterPage = () => {
       // Show the toast (for unknown error)
       return toast.error('Some backend error occurred');
     }
-
   };
 
   return (

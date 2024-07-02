@@ -20,7 +20,6 @@ export type GenericErrors = ValidationError | ServerError;
 export const createAPIClient = (apiURL: string) => {
   return {
     users: createUsersAPI(apiURL),
-    marketing: createMarketingAPI(apiURL),
     posts: createPostsAPI(apiURL),
   };
 };
