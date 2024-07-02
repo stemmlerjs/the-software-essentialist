@@ -1,6 +1,7 @@
 import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
+import { FakeDatabase, PrismaDatabase } from "../database/database";
 import { WebServer } from "../http";
 import {
   UsersModule,
@@ -79,7 +80,10 @@ export class CompositionRoot {
   }
 
   private createDBConnection() {
-    const dbConnection = new Database();
+    if(this.shouldBuildFakeRepository()) {
+      return new FakeDatabase();
+    }
+    const dbConnection = new PrismaDatabase();
     if (!this.dbConnection) {
       this.dbConnection = dbConnection;
     }
@@ -107,5 +111,12 @@ export class CompositionRoot {
       users: this.usersModule.getUsersRepository(),
       posts: this.postsModule.getPostsRepository(),
     };
+  }
+
+  private shouldBuildFakeRepository() {
+    return (
+      this.config.getScript() === "test:unit" ||
+      this.config.getEnvironment() === "development"
+    );
   }
 }
