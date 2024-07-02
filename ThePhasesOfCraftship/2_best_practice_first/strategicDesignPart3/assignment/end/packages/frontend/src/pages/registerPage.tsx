@@ -5,11 +5,11 @@ import {
   RegistrationInput,
 } from "../components/registrationForm";
 import { ToastContainer, toast } from 'react-toastify';
-import { api } from "../api";
 import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useSpinner } from "../contexts/spinnerContext";
 import { OverlaySpinner } from "../components/overlaySpinner";
+import { api } from "../api";
 
 
 type ValidationResult = {
@@ -43,10 +43,10 @@ export const RegisterPage = () => {
     spinner.activate();
     try {
       // Make API call
-      const response = await api.register(input);
+      const response = await api.users.register(input);
       // Save the user details to the cache
-      setUser(response.data.data);
-      console.log('setting data', response.data.data)
+      setUser(response.data);
+      console.log('setting data', response.data)
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
