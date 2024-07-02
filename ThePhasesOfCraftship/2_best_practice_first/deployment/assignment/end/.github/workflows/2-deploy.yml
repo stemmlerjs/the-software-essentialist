@@ -1,9 +1,10 @@
 name: Automatically Deploy to Staging and Production
 
 on:
-  push:
-    branches:
-      - bp-first-assignments-deployment # or specify your desired branch
+  workflow_run:
+    workflows: ["Commit Phase"]
+    types:
+      - completed
 
 jobs:
   ci:

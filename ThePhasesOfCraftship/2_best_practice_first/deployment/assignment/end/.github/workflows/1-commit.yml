@@ -3,7 +3,7 @@ name: Commit Phase
 on:
   push:
     branches:
-      - bp-first-assignments-deployment # or specify your desired branch
+      - main # or specify your desired branch
 
 jobs:
   lint-build-test-archive:
@@ -19,7 +19,7 @@ jobs:
           node-version: 16.16
 
       - name: Install
-        run: npm ci
+        run: npm i
 
       # - name: Lint
       #   run: npm run lint
@@ -29,12 +29,3 @@ jobs:
 
       - name: Test (core unit tests)
         run: npm run test:unit
-
-      - name: Archive Frontend
-        id: frontend-build
-        uses: actions/upload-artifact@v2
-        with:
-          name: frontend-build-latest
-          path: ./packages/frontend/dist
-          # Customize Artifact Retention Period
-          retention-days: 2
