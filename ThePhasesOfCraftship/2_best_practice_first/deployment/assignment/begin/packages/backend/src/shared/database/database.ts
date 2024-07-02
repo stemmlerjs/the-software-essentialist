@@ -13,7 +13,12 @@ export interface PostsPersistence {
   findPosts(sort: string): Promise<Post[]>;
 }
 
-export class Database {
+export interface Database {
+  getConnection(): PrismaClient
+  connect(): Promise<void>;
+}
+
+export class PrismaDatabase implements Database {
   private connection: PrismaClient;
 
   constructor() {
@@ -26,5 +31,17 @@ export class Database {
 
   async connect() {
     await this.connection.$connect();
+  }
+}
+
+export class FakeDatabase implements Database {
+  constructor() {}
+
+  getConnection() {
+    return {} as PrismaClient;
+  }
+
+  async connect() {
+    return Promise.resolve();
   }
 }
