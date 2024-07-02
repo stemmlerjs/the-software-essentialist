@@ -92,11 +92,6 @@ class ClassRoomBuilder {
     return this;
   }
 
-  withAssignmentsSubmitted () {
-    this.shouldSubmitAssignments = true;
-    return this;
-  }
-
   withAssignmentsAssignedToAllStudentsThenSubmitted(
     assignmentBuilders: AssignmentBuilder[]
   ) {
