@@ -1,4 +1,4 @@
-name: Automatically Deploy to Staging and Production
+name: Automatically Deploy to Staging
 
 on:
   workflow_run:
@@ -7,15 +7,16 @@ on:
       - completed
 
 jobs:
-  ci:
+  staging:
+    name: Wait for Deploy to stage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Deploy
-        # Only run this step if the branch is main
-        if: github.ref == 'refs/heads/main'
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: |
-          curl "$deploy_url"
+      - name: Wait for Render Deployment
+        uses: bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          service-id: srv-cpvcjehu0jms73apojq0
+          retries: 20
+          wait: 16000
+          sleep: 30000

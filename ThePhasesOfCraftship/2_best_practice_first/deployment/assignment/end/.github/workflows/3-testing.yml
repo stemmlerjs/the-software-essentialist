@@ -1,9 +1,13 @@
-name: Commit Phase
+name: Testing on Staging
 
 on:
-  push:
-    branches:
-      - main # or specify your desired branch
+  workflow_run:
+    workflows: ["Automatically Deploy to Staging"]
+    types:
+      - completed
+
+env:
+  NODE_ENV: staging
 
 jobs:
   lint-build-test-archive:
@@ -21,11 +25,8 @@ jobs:
       - name: Install
         run: npm i
 
-      - name: Lint
-        run: npm run lint
-
       - name: Build
         run: npm run build
 
-      - name: Test (core unit tests)
-        run: npm run test:unit
+      - name: Test (core e2e tests)
+        run: npm run test:e2e:backend
