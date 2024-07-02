@@ -21,5 +21,6 @@ export const createAPIClient = (apiURL: string) => {
   return {
     users: createUsersAPI(apiURL),
     posts: createPostsAPI(apiURL),
+    marketing: createMarketingAPI(apiURL)
   };
 };
