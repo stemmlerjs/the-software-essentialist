@@ -1,14 +1,16 @@
-name: Best Practices Assignment - Commit Phase
+name: Best Practices Assignment - Testing on Staging
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - "ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end/**"
-    branches:
-      - main # or specify your desired branch
+  workflow_run:
+    workflows:
+      [
+        "Best Practices Assignment - Automatically Deploy to Staging and Production",
+      ]
+    types:
+      - completed
 
 env:
+  NODE_ENV: staging
   PROJECT_PATH: "ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end"
 
 jobs:
@@ -28,13 +30,10 @@ jobs:
         run: npm i
         working-directory: ${{ env.PROJECT_PATH }}
 
-      - name: Lint
-        run: npm run lint
-
       - name: Build
         run: npm run build
         working-directory: ${{ env.PROJECT_PATH }}
 
-      - name: Test (core unit tests)
-        run: npm run test:unit
+      - name: Test (core e2e tests)
+        run: npm run test:e2e:backend
         working-directory: ${{ env.PROJECT_PATH }}
