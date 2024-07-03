@@ -15,6 +15,7 @@
     "test:infra:backend": "npm run test:infra --workspace=@dddforum/backend",
     "test:unit:backend": "npm run test:unit --workspace=@dddforum/backend",
     "test:unit": "npm run test:unit --workspaces --if-present",
+    "test:staging": "npm run test:staging --workspace=@dddforum/backend",
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "build:ci:backend": "npm run build --workspace @dddforum/shared && npm run build --workspace @dddforum/backend",
