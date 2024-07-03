@@ -12,6 +12,7 @@ on:
 env:
   NODE_ENV: staging
   PROJECT_PATH: "ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end"
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   lint-build-test-archive:
