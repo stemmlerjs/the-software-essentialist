@@ -10,7 +10,7 @@
     "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
     "start:dev": "ts-node -r tsconfig-paths/register prepareDevCli.ts .env.development && dotenv -e .env.development -- nodemon",
-    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
+    "start:dev:no-watch": "npm run generate && npm run migrate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start:ci": "node dist/index.js",
     "migrate:deploy": "npx prisma migrate deploy --schema src/shared/database/prisma/schema.prisma",
     "lint": "eslint . --ext .ts --fix",
@@ -21,7 +21,8 @@
     "test:infra": "jest -c jest.config.infra.ts",
     "test:infra:dev": "jest -c jest.config.infra.ts --watch",
     "test:unit": "jest -c jest.config.unit.ts",
-    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll",
+    "test:staging": "npm run generate && npm run migrate && npm run test:e2e"
   },
   "husky": {
     "hooks": {
