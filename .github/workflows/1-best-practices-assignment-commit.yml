@@ -30,6 +30,7 @@ jobs:
 
       - name: Lint
         run: npm run lint
+        working-directory: ${{ env.PROJECT_PATH }}
 
       - name: Build
         run: npm run build
