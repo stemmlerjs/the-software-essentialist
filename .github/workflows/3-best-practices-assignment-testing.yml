@@ -31,9 +31,9 @@ jobs:
         run: npm i
         working-directory: ${{ env.PROJECT_PATH }}
 
-      # - name: Wait for 300 seconds
-      #   run: sleep 300s
-      #   shell: bash
+      - name: Wait for 300 seconds
+        run: sleep 300s
+        shell: bash
 
       - name: Test (core e2e tests)
         run: npm run test:staging
