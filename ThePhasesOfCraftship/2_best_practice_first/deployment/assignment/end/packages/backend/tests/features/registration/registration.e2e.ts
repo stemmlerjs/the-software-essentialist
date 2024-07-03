@@ -42,7 +42,7 @@ defineFeature(feature, (test) => {
   afterEach(async () => {
     await databaseFixture.resetDatabase();
     createUserResponses = []
-  });
+  }, 10000);
 
   afterAll(async () => {
     await server.stop();
