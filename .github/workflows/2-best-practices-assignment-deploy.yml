@@ -7,16 +7,12 @@ on:
       - completed
 
 jobs:
-  staging:
-    name: Wait for Deploy to stage
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for Render Deployment
-        uses: bounceapp/render-action@0.6.0
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          render-token: ${{ secrets.RENDER_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           service-id: srv-cpvcjehu0jms73apojq0
-          retries: 20
-          wait: 16000
-          sleep: 30000
+          api-key: ${{ secrets.RENDER_TOKEN }}
+          wait-for-success: true
