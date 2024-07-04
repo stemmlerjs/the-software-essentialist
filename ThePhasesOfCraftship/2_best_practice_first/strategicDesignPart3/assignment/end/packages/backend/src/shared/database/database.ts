@@ -97,6 +97,17 @@ export class Database {
       title: post.title,
       content: post.content,
       dateCreated: post.dateCreated.toISOString(),
+      memberPostedBy: {
+        user: {
+          id: post.member.id,
+          email: post.member.user.email,
+          username: post.member.user.username,
+          firstName: post.member.user.firstName,
+          lastName: post.member.user.lastName
+        }
+      },
+      votes: post.votes,
+      comments: post.comments,
     };
   }
 }
