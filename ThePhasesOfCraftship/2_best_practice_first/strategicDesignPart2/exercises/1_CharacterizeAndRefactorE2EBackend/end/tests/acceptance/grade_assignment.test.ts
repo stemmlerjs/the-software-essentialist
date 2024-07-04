@@ -27,20 +27,18 @@ defineFeature(feature, (test) => {
   let assignment: Assignment;
   let studentBuilder: StudentBuilder;
 
-  beforeEach(async () => {
-    studentBuilder = new StudentBuilder();
-    ({
-      students: [student],
-      assignments: [assignment],
-    } = await new ClassRoomBuilder()
-      .withStudent(studentBuilder)
-      .withAssignmentAssignedToAllStudents(new AssignmentBuilder())
-      .build());
-  });
 
   test("Successfully grade an assignment", ({ given, when, then }) => {
+
     given("An student submited an assignment", async () => {
-      await studentBuilder.submitAssignment(assignment.id);
+      studentBuilder = new StudentBuilder();
+      ({
+        students: [student],
+        assignments: [assignment],
+      } = await new ClassRoomBuilder()
+        .withStudent(studentBuilder)
+        .withAssignmentsAssignedToAllStudentsThenSubmitted([new AssignmentBuilder()])
+        .build());
     });
 
     when("I grade the assignment", async () => {
@@ -62,9 +60,20 @@ defineFeature(feature, (test) => {
   });
 
   test("Fail to grade an assignment when it is not submitted", ({
+    given,
     when,
     then,
   }) => {
+    given("A student hasn't yet submitted his assignment", async () => {
+      studentBuilder = new StudentBuilder();
+      ({
+        students: [student],
+        assignments: [assignment],
+      } = await new ClassRoomBuilder()
+        .withStudent(studentBuilder)
+        .withAssignmentAssignedToAllStudents(new AssignmentBuilder())
+        .build());
+    })
     when("I try to grade his assignment before he submits it", async () => {
       requestBody = {
         studentId: student.id,
