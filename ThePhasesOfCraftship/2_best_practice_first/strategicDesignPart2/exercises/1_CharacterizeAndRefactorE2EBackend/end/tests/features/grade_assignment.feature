@@ -10,5 +10,6 @@ Feature: Grade an assignment
         Then It should be marked as graded
 
     Scenario: Fail to grade an assignment when it is not submitted
+        Given A student hasn't yet submitted his assignment
         When I try to grade his assignment before he submits it
         Then It should not be marked as graded
