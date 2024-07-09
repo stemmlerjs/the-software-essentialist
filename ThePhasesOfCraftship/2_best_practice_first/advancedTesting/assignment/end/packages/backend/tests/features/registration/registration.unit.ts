@@ -9,7 +9,7 @@ import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/conta
 import { Application } from '../../../src/shared/application/applicationInterface';
 import { InMemoryUserRepositorySpy } from '../../../src/modules/users/adapters/inMemoryUserRepositorySpy';
 import { Config } from '../../../src/shared/config';
-import { CreateUserBuilder } from '@dddforum/shared/tests/support/builders/createUserBuilder';
+import { UserBuilder } from "@dddforum/shared/tests/support/builders/users";
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 import { CreateUserParams } from '@dddforum/shared/src/api/users';
 
@@ -49,7 +49,7 @@ defineFeature(feature, (test) => {
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
     given('I am a new user', async () => {
-      createUserCommand = new CreateUserBuilder()
+      createUserCommand = new UserBuilder().makeCreateUserCommandBuilder()
         .withAllRandomDetails()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
@@ -86,7 +86,7 @@ defineFeature(feature, (test) => {
 
   test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
     given('I am a new user', () => {
-      createUserCommand = new CreateUserBuilder()
+      createUserCommand = new UserBuilder().makeCreateUserCommandBuilder()
         .withAllRandomDetails()
         .withFirstName('Khalil')
         .withLastName('Stemmler')
@@ -126,7 +126,7 @@ defineFeature(feature, (test) => {
       let params: CreateUserParams; 
       let error: any; 
       given('I am a new user', () => {
-        params = new CreateUserBuilder()
+        params = new UserBuilder().makeCreateUserCommandBuilder()
           .withAllRandomDetails()
           .withLastName('')
           .build();
@@ -154,7 +154,7 @@ defineFeature(feature, (test) => {
   test('Username already taken', ({ given, when, then, and }) => {
     given('a set of users have already created their accounts with valid details', async (table) => {
       table.forEach((item: any) => {
-          commands.push(new CreateUserBuilder()
+          commands.push(new UserBuilder().makeCreateUserCommandBuilder()
           .withFirstName(item.firstName)
           .withLastName(item.lastName)
           .withUsername(item.username)
@@ -189,7 +189,7 @@ defineFeature(feature, (test) => {
   test('Account already created with email', ({ given, when, then, and }) => {
     given('a set of users already created accounts', async (table) => {
       table.forEach((item: any) => {
-        commands.push(new CreateUserBuilder()
+        commands.push(new UserBuilder().makeCreateUserCommandBuilder()
           .withUsername(item.username)
           .withFirstName(item.firstName)
           .withLastName(item.lastName)

@@ -5,15 +5,13 @@ import { CompositionRoot } from '../../../src/shared/compositionRoot';
 import { TransactionalEmailAPISpy } from '../../../src/modules/notifications/adapters/transactionalEmailAPI/mailjetTransactionalEmailAPI';
 import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
 import { Config } from '../../../src/shared/config';
-import { CreateUserBuilder } from '@dddforum/shared/tests/support/builders/createUserBuilder';
+import { UserBuilder } from '@dddforum/shared/tests/support/builders/users';
 import { Application } from '../../../src/shared/application/applicationInterface';
 import { CreateUserCommand } from '../../../src/modules/users/usersCommand';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
 import { CreateUserParams } from '@dddforum/shared/src/api/users';
 
-
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@backend' });
-
 
 defineFeature(feature, (test) => {
   let createUserCommand: CreateUserCommand;
@@ -46,7 +44,8 @@ defineFeature(feature, (test) => {
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
       given('I am a new user', async () => {
-          createUserCommand = new CreateUserBuilder()
+          createUserCommand = new UserBuilder()
+            .makeCreateUserCommandBuilder()
             .withAllRandomDetails()
             .buildCommand()
       })
@@ -88,7 +87,7 @@ defineFeature(feature, (test) => {
 
   test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
       given('I am a new user', () => {
-        createUserCommand = new CreateUserBuilder().withAllRandomDetails().buildCommand()
+        createUserCommand = new UserBuilder().makeCreateUserCommandBuilder().withAllRandomDetails().buildCommand()
       });
   
       when('I register with valid account details declining marketing emails', async () => {
@@ -122,7 +121,7 @@ defineFeature(feature, (test) => {
     let params: CreateUserParams; 
     let error: any; 
     given('I am a new user', () => {
-        params = new CreateUserBuilder()
+        params = new UserBuilder().makeCreateUserCommandBuilder()
           .withAllRandomDetails()
           .withLastName('')
           .build();
@@ -150,7 +149,7 @@ defineFeature(feature, (test) => {
   test('Account already created with email', ({ given, when, then, and }) => {
     given('a set of users already created accounts', async (table) => {
       table.forEach((item: any) => {
-        commands.push(new CreateUserBuilder()
+        commands.push(new UserBuilder().makeCreateUserCommandBuilder()
           .withAllRandomDetails()
           .withFirstName(item.firstName)
           .withLastName(item.lastName)
@@ -186,7 +185,7 @@ defineFeature(feature, (test) => {
   test('Username already taken', ({ given, when, then, and }) => {
     given('a set of users have already created their accounts with valid details', async (table) => {
       table.forEach((item: any) => {
-        commands.push(new CreateUserBuilder()
+        commands.push(new UserBuilder().makeCreateUserCommandBuilder()
           .withUsername(item.username)
           .withFirstName(item.firstName)
           .withLastName(item.lastName)

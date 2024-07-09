@@ -1,7 +1,8 @@
-import { User } from "@dddforum/shared/src/api/users";
+import { ValidatedUser } from "@dddforum/shared/src/api/users";
 import { Spy } from "../../../shared/testDoubles/spy";
 import { UsersRepository } from "../ports/usersRepository";
 import { CreateUserCommand } from "../usersCommand";
+import { User } from "@prisma/client";
 
 export class InMemoryUserRepositorySpy
   extends Spy<UsersRepository>
@@ -14,11 +15,12 @@ export class InMemoryUserRepositorySpy
     this.users = [];
   }
 
-  save(user: CreateUserCommand): Promise<User & { password: string }> {
+  save(user: ValidatedUser): Promise<User> {
     this.addCall("save", [user]);
-    const newUser: User = {
-      ...user.props,
+    const newUser = {
+      ...user,
       id: this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1,
+      password: '',
     };
     this.users.push(newUser);
     return Promise.resolve({ ...newUser, password: "password" });
