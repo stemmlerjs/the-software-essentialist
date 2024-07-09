@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+
+import { PrismaClient, User } from "@prisma/client";
 import { UsersRepository } from "../ports/usersRepository";
-import { User } from "@dddforum/shared/src/api/users";
-import { CreateUserCommand } from "../usersCommand";
 import { generateRandomPassword } from "../../../shared/utils";
+import { ValidatedUser } from "@dddforum/shared/src/api/users";
 
 export class ProductionUserRepository implements UsersRepository {
   constructor(private prisma: PrismaClient) {}
@@ -27,7 +27,7 @@ export class ProductionUserRepository implements UsersRepository {
     }
   }
 
-  async save(userData: CreateUserCommand) {
+  async save(userData: ValidatedUser) {
     const { email, firstName, lastName, username } = userData;
     return await this.prisma.$transaction(async () => {
       const user = await this.prisma.user.create({
@@ -74,7 +74,7 @@ export class ProductionUserRepository implements UsersRepository {
 
   async update(
     id: number,
-    props: Partial<CreateUserCommand>,
+    props: Partial<ValidatedUser>,
   ): Promise<User | null> {
     const prismaUser = await this.prisma.user.update({
       where: { id },
