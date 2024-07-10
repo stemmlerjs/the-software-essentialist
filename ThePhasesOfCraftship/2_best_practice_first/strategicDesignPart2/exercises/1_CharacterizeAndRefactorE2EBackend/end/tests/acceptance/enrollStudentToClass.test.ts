@@ -7,7 +7,7 @@ import { resetDatabase } from "../fixtures/reset";
 import { ClassRoomBuilder, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/enroll_student_to_class.feature")
+  path.join(__dirname, "../features/enrollStudentToClass.feature")
 );
 
 defineFeature(feature, (test) => {

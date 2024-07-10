@@ -6,7 +6,7 @@ import { resetDatabase } from "../fixtures/reset";
 import { Student, StudentBuilder } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/retrieve_students.feature")
+  path.join(__dirname, "../features/retrieveStudents.feature")
 );
 
 defineFeature(feature, (test) => {
