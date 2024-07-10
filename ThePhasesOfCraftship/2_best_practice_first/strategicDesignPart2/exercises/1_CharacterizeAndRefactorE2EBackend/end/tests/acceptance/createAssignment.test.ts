@@ -8,7 +8,7 @@ import { ClassRoomBuilder } from "../fixtures/classRoomBuilder";
 import { ClassRoom } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/create_assignment.feature")
+  path.join(__dirname, "../features/createAssignment.feature")
 );
 
 defineFeature(feature, (test) => {

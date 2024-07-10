@@ -6,7 +6,7 @@ import { resetDatabase } from "../fixtures/reset";
 import { Assignment, AssignmentBuilder, ClassRoomBuilder } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/retrieve_assignment.feature")
+  path.join(__dirname, "../features/retrieveAssignment.feature")
 );
 
 defineFeature(feature, (test) => {

@@ -6,7 +6,7 @@ import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/create_class_room.feature")
+  path.join(__dirname, "../features/createClassRoom.feature")
 );
 
 defineFeature(feature, (test) => {
