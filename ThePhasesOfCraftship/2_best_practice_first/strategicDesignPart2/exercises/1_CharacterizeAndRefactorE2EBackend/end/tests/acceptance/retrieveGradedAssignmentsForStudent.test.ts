@@ -8,14 +8,14 @@ import {
   AssignmentBuilder,
   StudentBuilder,
   Student,
-  ClassRoom,
   Assignment,
+  ClassRoom,
 } from "../fixtures";
 
 const feature = loadFeature(
   path.join(
     __dirname,
-    "../features/retrieve_submitted_assignments_for_student.feature"
+    "../features/retrieveGradedAssignmentsForStudent.feature"
   )
 );
 
@@ -24,37 +24,37 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test("Successfully retrieving submitted assignments for a student", ({
+  test("Successfully retrieving graded assignments for a student", ({
     given,
     when,
     then,
   }) => {
     let student: Student;
-    let response: any = {};
-    let classRoom: ClassRoom;
     let assignments: Assignment[] = [];
+    let response: any;
+    let classRoom: ClassRoom;
 
-    given("I have a student with submitted assignments", async () => {
+    given("I have a student with graded assignments", async () => {
       ({
-        classRoom: classRoom,
         students: [student],
+        classRoom: classRoom,
         assignments: assignments,
       } = await new ClassRoomBuilder()
         .withStudent(new StudentBuilder())
-        .withAssignmentsAssignedToAllStudentsThenSubmitted([
+        .withAssignmentAssignmentToAllStudentsThenSubmittedAndGraded([
           new AssignmentBuilder(),
           new AssignmentBuilder(),
         ])
         .build());
     });
 
-    when("I request all submitted assignments for this student", async () => {
-      response = await request(app).get(`/student/${student.id}/assignments`);
+    when("I request all graded assignments for this student", async () => {
+      response = await request(app).get(`/student/${student.id}/grades`);
     });
 
-    then("I should receive all submitted assignments for that student", () => {
+    then("I should receive all graded assignments for that student", () => {
       expect(response.status).toBe(200);
-      expect(response.body.data.length).toBe(2);
+      expect(response.body.data.length).toBe(assignments.length);
       assignments.forEach((assignment: any) => {
         expect(
           response.body.data.some(
@@ -65,17 +65,17 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve submitted assignments for a non-existent student", ({
+  test("Attempt to retrieve graded assignments for a non-existent student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
     when(
-      "I request submitted assignments for a non-existent student",
+      "I request graded assignments for a non-existent student",
       async () => {
         response = await request(app).get(
-          "/student/aec6817e-66b4-4ce5-8a25-f3ec459e40df/assignments"
+          "/student/aec6817e-66b4-4ce5-8a25-f3ec459e40df/grades"
         );
       }
     );
@@ -85,14 +85,14 @@ defineFeature(feature, (test) => {
     });
   });
 
-  test("Attempt to retrieve submitted assignments for an invalid student", ({
+  test("Attempt to retrieve graded assignments for an invalid student", ({
     when,
     then,
   }) => {
     let response: any = {};
 
-    when("I request submitted assignments for an invalid student", async () => {
-      response = await request(app).get("/student/123/assignments");
+    when("I request graded assignments for an invalid student", async () => {
+      response = await request(app).get("/student/123/grades");
     });
 
     then("I should receive an error", () => {
