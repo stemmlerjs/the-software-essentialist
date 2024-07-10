@@ -25,6 +25,10 @@ jobs:
       - name: Install
         run: npm i
 
+      - name: Wait for 300 seconds
+        run: sleep 300s
+        shell: bash
+
       - name: Build
         run: npm run build
 
