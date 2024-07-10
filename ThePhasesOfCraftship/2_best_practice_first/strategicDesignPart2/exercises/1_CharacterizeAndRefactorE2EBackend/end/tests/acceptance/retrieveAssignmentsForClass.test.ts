@@ -11,7 +11,7 @@ import {
 } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/retrieve_assignments_for_class.feature")
+  path.join(__dirname, "../features/retrieveAssignmentsForClass.feature")
 );
 
 defineFeature(feature, (test) => {

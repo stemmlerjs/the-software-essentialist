@@ -13,7 +13,7 @@ import {
 } from "../fixtures";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/submit_assignment.feature")
+  path.join(__dirname, "../features/submitAssignment.feature")
 );
 
 defineFeature(feature, (test) => {

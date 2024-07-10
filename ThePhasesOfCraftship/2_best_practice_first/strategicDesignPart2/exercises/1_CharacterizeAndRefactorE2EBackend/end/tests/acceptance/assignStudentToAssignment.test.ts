@@ -12,7 +12,7 @@ import {
 import { Assignment, ClassRoom, Student } from "../fixtures/types";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/assign_student_to_assignment.feature")
+  path.join(__dirname, "../features/assignStudentToAssignment.feature")
 );
 
 defineFeature(feature, (test) => {

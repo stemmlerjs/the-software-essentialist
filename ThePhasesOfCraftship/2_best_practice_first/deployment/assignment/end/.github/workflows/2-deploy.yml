@@ -15,4 +15,3 @@ jobs:
         with:
           service-id: srv-cpvcjehu0jms73apojq0
           api-key: ${{ secrets.RENDER_TOKEN }}
-          wait-for-success: true
