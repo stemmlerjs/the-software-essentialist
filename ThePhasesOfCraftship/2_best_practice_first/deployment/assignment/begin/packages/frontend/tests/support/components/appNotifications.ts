@@ -8,7 +8,7 @@ export class AppNotifications extends Component {
   }
 
   async getErrorNotificationText() {
-    let usernameElement = await this.driver.page
+    const usernameElement = await this.driver.page
       .waitForSelector(appSelectors.notifications.failure, { timeout: 2000 })
       .then((el) => {
         return el?.evaluate((e) => e.textContent);

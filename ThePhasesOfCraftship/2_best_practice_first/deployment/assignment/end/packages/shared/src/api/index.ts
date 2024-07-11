@@ -1,7 +1,6 @@
 import { createUsersAPI } from "./users";
 import { createMarketingAPI } from "./marketing";
 import { createPostsAPI } from "./posts";
-import { Config } from "@dddforum/backend/src/shared/config";
 
 export type Error<U> = {
   message?: string;
@@ -18,10 +17,7 @@ export type ValidationError = "ValidationError";
 export type ServerError = "ServerError";
 export type GenericErrors = ValidationError | ServerError;
 
-export const createAPIClient = (config: Config) => {
-  console.log('Creating API client with config', config)
-  const apiURL = config.apiURL
-
+export const createAPIClient = (apiURL: string) => {
   return {
     users: createUsersAPI(apiURL),
     marketing: createMarketingAPI(apiURL),
