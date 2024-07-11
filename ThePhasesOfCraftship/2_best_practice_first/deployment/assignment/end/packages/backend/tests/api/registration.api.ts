@@ -7,7 +7,7 @@ import { Config } from "../../src/shared/config";
 
 describe("users http API", () => {
   const config: Config = new Config("test:infra");
-  const client = createAPIClient(config);
+  const client = createAPIClient(config.getAPIURL());
 
   const composition = CompositionRoot.createCompositionRoot(config);
   const server = composition.getWebServer();
