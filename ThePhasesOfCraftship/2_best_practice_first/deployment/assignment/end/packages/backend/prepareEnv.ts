@@ -16,7 +16,6 @@ import * as path from 'path';
 
 export const prepareEnv = (): void => {
   const env = process.env.NODE_ENV || 'development';
-  console.log(env)
   const packageRoot = path.resolve(__dirname);
   const execParams = {
     cwd: packageRoot,

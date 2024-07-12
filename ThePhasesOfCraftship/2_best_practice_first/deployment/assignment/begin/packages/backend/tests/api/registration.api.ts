@@ -6,8 +6,8 @@ import { CompositionRoot } from "../../src/shared/compositionRoot";
 import { Config } from "../../src/shared/config";
 
 describe("users http API", () => {
-  const client = createAPIClient("http://localhost:3000");
-  const config = new Config("test:e2e");
+  const config: Config = new Config("test:infra");
+  const client = createAPIClient(config.getAPIURL());
 
   const composition = CompositionRoot.createCompositionRoot(config);
   const server = composition.getWebServer();

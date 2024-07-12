@@ -43,7 +43,7 @@ export const createUsersAPI = (apiURL: string) => {
         });
         return successResponse.data as CreateUserResponse;
       } catch (err) {
-        //@ts-ignore
+        //@ts-expect-error
         return err.response.data as CreateUserResponse;
       }
     },
@@ -52,7 +52,7 @@ export const createUsersAPI = (apiURL: string) => {
         const successResponse = await axios.get(`${apiURL}/users/${email}`);
         return successResponse.data as GetUserByEmailResponse;
       } catch (err) {
-        //@ts-ignore
+        //@ts-expect-error
         return err.response.data as GetUserByEmailResponse;
       }
     },

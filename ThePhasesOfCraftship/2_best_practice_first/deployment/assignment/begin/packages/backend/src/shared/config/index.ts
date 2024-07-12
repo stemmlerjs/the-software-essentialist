@@ -10,10 +10,12 @@ export type Script =
 export class Config {
   env: Environment;
   script: Script;
+  apiURL: string;
 
   constructor(script: Script) {
     this.env = (process.env.NODE_ENV as Environment) || "development";
     this.script = script;
+    this.apiURL = this.getAPIURL();
   }
 
   getEnvironment() {
@@ -22,5 +24,18 @@ export class Config {
 
   getScript() {
     return this.script;
+  }
+
+  getAPIURL() {
+    const fallback = "http://localhost:3000";
+    if (this.isStaging()) {
+      return process.env.API_URL_STAGING || fallback
+    }
+
+    return fallback
+  }
+
+  isStaging() {
+    return this.env === "staging";
   }
 }

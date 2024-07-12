@@ -9,19 +9,14 @@ export class DatabaseFixture {
 
   async resetDatabase() {
     const connection = this.composition.getDatabase().getConnection();
-    const deleteAllComments = connection.comment.deleteMany();
-    const deleteAllVotes = connection.vote.deleteMany();
-    const deleteAllPosts = connection.post.deleteMany();
-    const deleteMembers = connection.member.deleteMany();
-    const deleteAllUsers = connection.user.deleteMany();
 
     try {
       await connection.$transaction([
-        deleteAllComments,
-        deleteAllVotes,
-        deleteAllPosts,
-        deleteMembers,
-        deleteAllUsers,
+        connection.comment.deleteMany(),
+        connection.vote.deleteMany(),
+        connection.post.deleteMany(),
+        connection.member.deleteMany(),
+        connection.user.deleteMany(),
       ]);
     } catch (error) {
       console.error(error);
