@@ -17,10 +17,11 @@ const feature = loadFeature(
 
 defineFeature(feature, (test) => {
   let databaseFixture: DatabaseFixture;
-  const apiClient = createAPIClient('http://localhost:3000');
   let composition: CompositionRoot
   let server: WebServer
   const config: Config = new Config("test:e2e");
+  const apiClient = createAPIClient(config.getAPIURL());
+
   let response: CreateUserResponse
   let createUserResponses: CreateUserResponse[] = [];
   let addEmailToListResponse: AddEmailToListResponse;
@@ -41,7 +42,7 @@ defineFeature(feature, (test) => {
   afterEach(async () => {
     await databaseFixture.resetDatabase();
     createUserResponses = []
-  });
+  }, 10000);
 
   afterAll(async () => {
     await server.stop();

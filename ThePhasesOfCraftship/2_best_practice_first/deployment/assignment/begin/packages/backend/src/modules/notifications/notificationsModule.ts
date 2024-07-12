@@ -1,7 +1,6 @@
 import { Config } from "../../shared/config";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { TransactionalEmailAPISpy } from "./adapters/transactionalEmailAPI/mailjetTransactionalEmailAPI";
-import { MailjetTransactionalEmail } from "./adapters/transactionalEmailAPI/transactionalEmailAPISpy";
+import { TransactionalEmailAPISpy } from "./adapters/transactionalEmailAPI/transactionalEmailAPISpy";
 import { TransactionalEmailAPI } from "./ports/transactionalEmailAPI";
 
 export class NotificationsModule extends ApplicationModule {
@@ -22,7 +21,7 @@ export class NotificationsModule extends ApplicationModule {
 
   private createTransactionalEmailAPI() {
     if (this.getEnvironment() === "production") {
-      return new MailjetTransactionalEmail();
+      return new TransactionalEmailAPISpy();
     }
 
     /**

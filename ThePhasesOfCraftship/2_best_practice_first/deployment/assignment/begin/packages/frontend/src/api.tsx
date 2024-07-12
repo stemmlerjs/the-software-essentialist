@@ -1,6 +1,6 @@
 
 // api.tsx
-import { RegistrationInput } from "./components/registrationForm";
+import { CreateUserParams } from '@dddforum/shared/src/api/users'
 import axios from 'axios'
 
 export const api = {
@@ -9,7 +9,7 @@ export const api = {
       return axios.get('http://localhost:3000/posts?sort=recent')
     }
   },
-  register: (input: RegistrationInput) => {
+  register: (input: CreateUserParams) => {
     return axios.post('http://localhost:3000/users/new', {
       ...input
     })

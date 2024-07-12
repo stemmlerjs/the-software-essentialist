@@ -20,7 +20,7 @@ defineFeature(feature, (test) => {
   let composition: CompositionRoot
   let server: WebServer
   const config: Config = new Config("test:e2e");
-  const apiClient = createAPIClient(config);
+  const apiClient = createAPIClient(config.getAPIURL());
 
   let response: CreateUserResponse
   let createUserResponses: CreateUserResponse[] = [];
