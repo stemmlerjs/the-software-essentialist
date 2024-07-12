@@ -15,7 +15,7 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
-  lint-build-test-archive:
+  test-acceptance:
     runs-on: ubuntu-latest
 
     steps:

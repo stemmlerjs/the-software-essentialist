@@ -12,7 +12,7 @@ env:
   PROJECT_PATH: "ThePhasesOfCraftship/2_best_practice_first/deployment/assignment/end"
 
 jobs:
-  lint-build-test-archive:
+  lint-build-test:
     runs-on: ubuntu-latest
 
     steps:
