@@ -1,9 +1,12 @@
 import * as path from "path";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
-import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { UserBuilder } from "@dddforum/shared/tests/support/builders/users";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
-import { CreateUserParams, CreateUserResponse } from "@dddforum/shared/src/api/users";
+import {
+  CreateUserParams,
+  CreateUserResponse,
+} from "@dddforum/shared/src/api/users";
 import { createAPIClient } from "@dddforum/shared/src/api";
 import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 import { WebServer } from "@dddforum/backend/src/shared/http/webServer";
@@ -17,17 +20,14 @@ const feature = loadFeature(
 
 defineFeature(feature, (test) => {
   let databaseFixture: DatabaseFixture;
-  let composition: CompositionRoot
-  let server: WebServer
+  const apiClient = createAPIClient("http://localhost:3000");
+  let composition: CompositionRoot;
+  let server: WebServer;
   const config: Config = new Config("test:e2e");
-  const apiClient = createAPIClient(config.getAPIURL());
-
-  let response: CreateUserResponse
+  let response: CreateUserResponse;
   let createUserResponses: CreateUserResponse[] = [];
   let addEmailToListResponse: AddEmailToListResponse;
-  let dbConnection: Database
-
-  
+  let dbConnection: Database;
 
   beforeAll(async () => {
     composition = CompositionRoot.createCompositionRoot(config);
@@ -41,28 +41,39 @@ defineFeature(feature, (test) => {
 
   afterEach(async () => {
     await databaseFixture.resetDatabase();
-    createUserResponses = []
-  }, 10000);
+    createUserResponses = [];
+  });
 
   afterAll(async () => {
     await server.stop();
   });
 
-  test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
+  test("Successful registration with marketing emails accepted", ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
     let user: CreateUserParams;
-    
-    given('I am a new user', async () => {
-      user = new CreateUserBuilder()
+
+    given("I am a new user", async () => {
+      user = new UserBuilder()
+        .makeCreateUserCommandBuilder()
         .withAllRandomDetails()
         .build();
     });
 
-    when('I register with valid account details accepting marketing emails', async () => {
-      response = await apiClient.users.register(user);
-      addEmailToListResponse = await apiClient.marketing.addEmailToList(user.email);
-    });
+    when(
+      "I register with valid account details accepting marketing emails",
+      async () => {
+        response = await apiClient.users.register(user);
+        addEmailToListResponse = await apiClient.marketing.addEmailToList(
+          user.email,
+        );
+      },
+    );
 
-    then('I should be granted access to my account', async () => {
+    then("I should be granted access to my account", async () => {
       const { data, success, error } = response;
 
       // Expect a successful response (Result Verification)
@@ -76,34 +87,44 @@ defineFeature(feature, (test) => {
 
       // And the user exists (State Verification)
       const getUserResponse = await apiClient.users.getUserByEmail(user.email);
-      const {data: getUserData} = getUserResponse;
+      const { data: getUserData } = getUserResponse;
       expect(user.email).toEqual(getUserData!.email);
     });
 
-    and('I should expect to receive marketing emails', () => {
+    and("I should expect to receive marketing emails", () => {
       // How can we test this? what do we want to place under test?
       // Well, what's the tool they'll use? mailchimp?
       // And do we want to expect that mailchimp is going to get called to add
-      // a new contact to a list? Yes, we do. But we're not going to worry 
+      // a new contact to a list? Yes, we do. But we're not going to worry
       // about this yet because we need to learn how to validate this without
-      // filling up a production Mailchimp account with test data. 
-      const { success } = addEmailToListResponse
+      // filling up a production Mailchimp account with test data.
+      const { success } = addEmailToListResponse;
 
       expect(success).toBeTruthy();
     });
   });
 
-  test("Successful registration without marketing emails accepted", ({ given, when, then, and }) => {
+  test("Successful registration without marketing emails accepted", ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
     let user: CreateUserParams;
-    
 
     given("I am a new user", () => {
-      user = new CreateUserBuilder().withAllRandomDetails().build();
+      user = new UserBuilder()
+        .makeCreateUserCommandBuilder()
+        .withAllRandomDetails()
+        .build();
     });
 
-    when("I register with valid account details declining marketing emails", async () => {
-      response = await apiClient.users.register(user);
-    });
+    when(
+      "I register with valid account details declining marketing emails",
+      async () => {
+        response = await apiClient.users.register(user);
+      },
+    );
 
     then("I should be granted access to my account", () => {
       expect(response.success).toBe(true);
@@ -116,7 +137,7 @@ defineFeature(feature, (test) => {
     });
 
     and("I should not expect to receive marketing emails", () => {
-      const { success } = addEmailToListResponse
+      const { success } = addEmailToListResponse;
 
       expect(success).toBeTruthy();
       // How can we test this? what do we want to place under test?
@@ -133,7 +154,10 @@ defineFeature(feature, (test) => {
     let user: any;
 
     given("I am a new user", () => {
-      const validUser = new CreateUserBuilder().withAllRandomDetails().build();
+      const validUser = new UserBuilder()
+        .makeCreateUserCommandBuilder()
+        .withAllRandomDetails()
+        .build();
 
       user = {
         firstName: validUser.firstName,
@@ -164,7 +188,8 @@ defineFeature(feature, (test) => {
 
     given("a set of users already created accounts", async (table) => {
       existingUsers = table.map((row: any) => {
-        return new CreateUserBuilder()
+        return new UserBuilder()
+          .makeCreateUserCommandBuilder()
           .withFirstName(row.firstName)
           .withLastName(row.lastName)
           .withEmail(row.email)
@@ -209,7 +234,8 @@ defineFeature(feature, (test) => {
       "a set of users have already created their accounts with valid details",
       async (table) => {
         existingUsers = table.map((row: any) => {
-          return new CreateUserBuilder()
+          return new UserBuilder()
+            .makeCreateUserCommandBuilder()
             .withFirstName(row.firstName)
             .withLastName(row.lastName)
             .withEmail(row.email)
@@ -224,7 +250,8 @@ defineFeature(feature, (test) => {
       "new users attempt to register with already taken usernames",
       async (table) => {
         const newUsers: CreateUserParams[] = table.map((row: any) => {
-          return new CreateUserBuilder()
+          return new UserBuilder()
+            .makeCreateUserCommandBuilder()
             .withFirstName(row.firstName)
             .withLastName(row.lastName)
             .withEmail(row.email)

@@ -19,7 +19,6 @@
     "build": "npm run build --workspaces --if-present",
     "start:dev:backend": "npm run start:dev --workspace=@dddforum/backend",
     "start:dev:frontend": "npm run start:dev --workspace=@dddforum/frontend",
-    "generate:database": "npm run generate --workspace=@dddforum/backend",
     "lint": "npm run lint --workspaces --if-present",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./**/src/**/*.ts\" --write",

@@ -4,7 +4,7 @@ import * as path from 'path';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CreateUserCommand } from '../../../src/modules/users/usersCommand';
 import { CompositionRoot } from '../../../src/shared/compositionRoot';
-import { TransactionalEmailAPISpy } from '../../../src/modules/notifications/adapters/transactionalEmailAPI/mailjetTransactionalEmailAPI';
+import { TransactionalEmailAPISpy } from '../../../src/modules/notifications/adapters/transactionalEmailAPI/transactionalEmailAPISpy';
 import { ContactListAPISpy } from '../../../src/modules/marketing/adapters/contactListAPI/contactListSpy';
 import { Application } from '../../../src/shared/application/applicationInterface';
 import { InMemoryUserRepositorySpy } from '../../../src/modules/users/adapters/inMemoryUserRepositorySpy';
