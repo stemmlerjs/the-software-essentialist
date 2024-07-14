@@ -4,15 +4,13 @@
   "description": "The backend for dddforum",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json -r ../../tsAliasReplacer.js",
+    "build": "tsc -b tsconfig.json && npm run generate",
     "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
     "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
-    "start:dev": "ts-node -r tsconfig-paths/register prepareDevCli.ts .env.development && dotenv -e .env.development -- nodemon",
-    "start:dev:no-watch": "npm run generate && npm run migrate && ts-node prepareEnv.ts ts-node src/index.ts",
-    "start:ci": "node dist/index.js",
-    "migrate:deploy": "npx prisma migrate deploy --schema src/shared/database/prisma/schema.prisma",
+    "start:dev": "npm run migrate && npm run generate && npx nodemon",
+    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "lint": "eslint . --ext .ts --fix",
     "test": "jest",
     "test:dev": "jest --watchAll",
@@ -21,13 +19,15 @@
     "test:infra": "jest -c jest.config.infra.ts",
     "test:infra:dev": "jest -c jest.config.infra.ts --watch",
     "test:unit": "jest -c jest.config.unit.ts",
-    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll",
-    "test:staging": "npm run generate && npm run migrate && npm run test:e2e"
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run test && npm run prettier-format && npm run lint"
     }
+  },
+  "prisma": {
+    "seed": "ts-node ./src/shared/database/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

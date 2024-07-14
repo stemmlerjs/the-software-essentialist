@@ -1,13 +1,12 @@
 
 import { createAPIClient } from "@dddforum/shared/src/api";
-import { UserResponseStub } from "@dddforum/shared/tests/support/stubs/userResponseStub";
-import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { UserBuilder } from "@dddforum/shared/tests/support/builders/users";
 import { CompositionRoot } from "../../src/shared/compositionRoot";
 import { Config } from "../../src/shared/config";
 
 describe("users http API", () => {
-  const config: Config = new Config("test:infra");
-  const client = createAPIClient(config.getAPIURL());
+  const client = createAPIClient("http://localhost:3000");
+  const config = new Config("test:infra");
 
   const composition = CompositionRoot.createCompositionRoot(config);
   const server = composition.getWebServer();
@@ -30,14 +29,19 @@ describe("users http API", () => {
   });
 
   it("can create users", async () => {
-    const createUserParams = new CreateUserBuilder()
+    const createUserParams = new UserBuilder()
+      .makeCreateUserCommandBuilder()
       .withAllRandomDetails()
       .withFirstName("Khalil")
       .withLastName("Stemmler")
       .build();
 
-    const createUserResponseStub = new UserResponseStub()
-      .fromParams(createUserParams)
+    const createUserResponseStub = new UserBuilder()
+      .makeValidatedUserBuilder()
+      .withEmail(createUserParams.email)
+      .withFirstName(createUserParams.firstName)
+      .withLastName(createUserParams.lastName)
+      .withUsername(createUserParams.username)
       .build();
 
       createUserSpy.mockResolvedValue(createUserResponseStub);
