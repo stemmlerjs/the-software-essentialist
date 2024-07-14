@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-
 export interface Database {
   getConnection(): PrismaClient
   connect(): Promise<void>;
