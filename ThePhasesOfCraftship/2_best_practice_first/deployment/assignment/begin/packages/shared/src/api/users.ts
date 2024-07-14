@@ -1,6 +1,15 @@
 import axios from "axios";
 import { APIResponse, GenericErrors, ServerError } from ".";
 
+export type ValidatedUser = {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
 export type CreateUserParams = {
   firstName: string;
   lastName: string;
@@ -8,7 +17,7 @@ export type CreateUserParams = {
   username: string;
 };
 
-export type User = {
+export type UserDTO = {
   id: number;
   email: string;
   firstName: string;
@@ -22,11 +31,11 @@ export type CreateUserErrors =
   | GenericErrors
   | EmailAlreadyInUseError
   | UsernameAlreadyTakenError;
-export type CreateUserResponse = APIResponse<User, CreateUserErrors>;
+export type CreateUserResponse = APIResponse<UserDTO, CreateUserErrors>;
 
 export type UserNotFoundError = "UserNotFound";
 export type GetUserByEmailErrors = ServerError | UserNotFoundError;
-export type GetUserByEmailResponse = APIResponse<User, GetUserByEmailErrors>;
+export type GetUserByEmailResponse = APIResponse<UserDTO, GetUserByEmailErrors>;
 export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;
 
 export type UserResponse = APIResponse<
@@ -43,7 +52,7 @@ export const createUsersAPI = (apiURL: string) => {
         });
         return successResponse.data as CreateUserResponse;
       } catch (err) {
-        //@ts-expect-error
+        //@ts-ignore
         return err.response.data as CreateUserResponse;
       }
     },
@@ -52,7 +61,7 @@ export const createUsersAPI = (apiURL: string) => {
         const successResponse = await axios.get(`${apiURL}/users/${email}`);
         return successResponse.data as GetUserByEmailResponse;
       } catch (err) {
-        //@ts-expect-error
+        //@ts-ignore
         return err.response.data as GetUserByEmailResponse;
       }
     },

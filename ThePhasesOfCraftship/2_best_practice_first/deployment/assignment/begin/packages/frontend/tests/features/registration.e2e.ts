@@ -9,8 +9,6 @@ import * as path from 'path';
 import { PuppeteerPageDriver } from '../support/driver';
 import { App, createAppObject } from '../support/pages';
 import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databaseFixture';
-import { Config } from "@dddforum/backend/src/shared/config";
-import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@frontend' });
 
@@ -22,12 +20,10 @@ defineFeature(feature, (test) => {
   let user: CreateUserParams;
   let users: CreateUserParams[];
   let databaseFixture: DatabaseFixture
-  let composition: CompositionRoot
-  const config: Config = new Config("test:e2e");
+
 
   beforeAll(async () => {
-    composition = CompositionRoot.createCompositionRoot(config);
-    databaseFixture = new DatabaseFixture(composition);
+    databaseFixture = new DatabaseFixture();
     puppeteerPageDriver = await PuppeteerPageDriver.create({ 
       headless: false,
       slowMo: 50,

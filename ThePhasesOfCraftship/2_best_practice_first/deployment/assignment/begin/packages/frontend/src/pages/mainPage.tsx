@@ -10,7 +10,7 @@ export const MainPage = () => {
   const loadPosts = async () => {
     try {
       const response = await api.posts.getPosts('recent');
-      // @ts-expect-error - we know the response has a posts field
+      // @ts-ignore
       setPosts(response.data.posts)
     } catch (err) {
       console.log(err);
