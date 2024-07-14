@@ -27,15 +27,7 @@ export class Config {
   }
 
   getAPIURL() {
-    const fallback = "http://localhost:3000";
-    if (this.isStaging()) {
-      return process.env.API_URL_STAGING || fallback
-    }
-
-    return fallback
+    return "http://localhost:3000";
   }
 
-  isStaging() {
-    return this.env === "staging";
-  }
 }
