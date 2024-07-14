@@ -1,7 +1,7 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { UserBuilder } from "@dddforum/shared/tests/support/builders/users";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { Pages } from '../support/pages/pages';
 
@@ -50,7 +50,8 @@ defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
 
     given('I am a new user', async () => {
-      user = new CreateUserBuilder()
+      user = new UserBuilder()
+        .makeCreateUserCommandBuilder()
         .withAllRandomDetails()
         .build();
       
@@ -75,7 +76,8 @@ defineFeature(feature, (test) => {
 
   test('Invalid or missing registration details', ({ given, when, then, and }) => {
     given('I am a new user', async () => {
-      user = new CreateUserBuilder()
+      user = new UserBuilder()
+        .makeCreateUserCommandBuilder()
         .withAllRandomDetails()
         .withEmail('skj')
         .build();
@@ -102,7 +104,8 @@ defineFeature(feature, (test) => {
   test('Account already created with email', ({ given, when, then, and }) => {
     given('a set of users already created accounts', async (table: CreateUserParams[]) => {
       users = table.map((user) => {
-        return new CreateUserBuilder()
+        return new UserBuilder()
+          .makeCreateUserCommandBuilder()
           .withAllRandomDetails()
           .withEmail(user.email)
           .withFirstName(user.firstName)

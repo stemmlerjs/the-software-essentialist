@@ -14,8 +14,8 @@ export class HeaderComponent extends Component {
   }
 
   async getUsernameFromHeader () {
-    const usernameElement = await this.elements.get('header');
-    return usernameElement?.evaluate((e) => e.textContent);
+    const usernameElement = await this.elements.get('header') as any;
+    return usernameElement?.evaluate((e: any) => e.textContent);
   }
   
 }

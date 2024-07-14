@@ -6,7 +6,7 @@
     "lib": ["es6"],
     "strict": true,
     "esModuleInterop": true,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "resolveJsonModule": true,
     "paths": {
       "@dddforum/backend/*": ["./packages/backend/*"],
