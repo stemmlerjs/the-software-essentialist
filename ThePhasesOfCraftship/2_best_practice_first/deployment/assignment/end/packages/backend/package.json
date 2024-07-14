@@ -4,7 +4,7 @@
   "description": "The backend for dddforum",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -b tsconfig.json && npm run generate",
+    "build": "npm run generate && tsc -b tsconfig.json",
     "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
     "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
     "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
