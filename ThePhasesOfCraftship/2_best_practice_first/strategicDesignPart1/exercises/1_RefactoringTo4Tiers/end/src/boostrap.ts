@@ -1,4 +1,4 @@
-import Application from "./application";
+import Server from "./server";
 import Database from "./database";
 import {
   AssignmentsController,
@@ -30,11 +30,11 @@ const assignmentsController = new AssignmentsController(
   assignmentsService,
   errorHandler
 );
-const application = new Application(
+const server = new Server(
   studentsController,
   classesController,
   assignmentsController
 );
 
-export default application;
+export default server;
 
