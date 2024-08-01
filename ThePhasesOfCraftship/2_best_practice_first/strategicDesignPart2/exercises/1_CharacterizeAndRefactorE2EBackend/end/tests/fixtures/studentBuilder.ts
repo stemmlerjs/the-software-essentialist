@@ -1,22 +1,40 @@
 import { prisma } from "../../src/database";
 import { faker } from "@faker-js/faker";
 import { Student, StudentAssignment } from "./types";
+import { ClassRoomBuilder } from "./classRoomBuilder";
 
 class StudentBuilder {
   private student: Student;
   private assignments: StudentAssignment[];
+  private classRoomBuilder: ClassRoomBuilder;
 
   constructor() {
-    this.student = this.emptyStudent();
+    this.classRoomBuilder = new ClassRoomBuilder();
+    this.student = {
+      id: "",
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+    };
     this.assignments = [];
   }
 
+  from (classRoomBuilder: ClassRoomBuilder) {
+    this.classRoomBuilder = classRoomBuilder;
+    this.classRoomBuilder.withStudent(this);
+    return this;
+  }
+
+  withRandomDetails () {
+    this.student.email = faker.internet.email();
+    this.student.name = faker.person.fullName();
+    return this;
+  }
+
   async build() {
+    let classRoom = await this.classRoomBuilder.build();
+    
     this.student = await prisma.student.create({
-      data: {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-      },
+      data: this.student
     });
 
     return this.student;
@@ -102,14 +120,6 @@ class StudentBuilder {
 
   getAssignments() {
     return this.assignments;
-  }
-
-  emptyStudent(): Student {
-    return {
-      id: "",
-      name: "",
-      email: "",
-    };
   }
 }
 
