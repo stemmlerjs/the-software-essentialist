@@ -8,7 +8,7 @@ class ClassRoomBuilder {
   private studentsBuilders: StudentBuilder[];
   private assignmentsBuilders: AssignmentBuilder[];
 
-  private classRoom: ClassRoom;
+  private classRoom: Partial<ClassRoom>;
   private enrolledStudents: EnrolledStudent[];
 
   private students: Student[];
@@ -22,8 +22,7 @@ class ClassRoomBuilder {
     this.studentsBuilders = [];
     this.assignmentsBuilders = [];
     this.classRoom = {
-      id: "",
-      name: "",
+      name: faker.word.noun(),
     };
     this.enrolledStudents = [];
     this.shouldAssignAssignments = false;
@@ -31,10 +30,6 @@ class ClassRoomBuilder {
     this.shouldGradeAssignments = false;
     this.students = [];
     this.assignments = []
-  }
-
-  with(assignmentBuilder: AssignmentBuilder) {
-    return this;
   }
 
   withClassName (className: string) {
@@ -155,10 +150,10 @@ class ClassRoomBuilder {
 
     let classRoom = await prisma.class.create({
       data: {
-        name: this.classRoom.name
+        name: this.classRoom.name as string
       },
     });
-    
+
     return classRoom;
 
 
@@ -198,21 +193,21 @@ class ClassRoomBuilder {
   //   );
   // }
 
-  private async enrollStudents() {
-    const students = this.studentsBuilders.map((builder) =>
-      builder.getStudent()
-    );
-    const studentPromises = students.map((student) => {
-      return prisma.classEnrollment.create({
-        data: {
-          classId: this.classRoom.id,
-          studentId: student.id,
-        },
-      });
-    });
+  // private async enrollStudents() {
+  //   const students = this.studentsBuilders.map((builder) =>
+  //     builder.getStudent()
+  //   );
+  //   const studentPromises = students.map((student) => {
+  //     return prisma.classEnrollment.create({
+  //       data: {
+  //         classId: this.classRoom.id,
+  //         studentId: student.id,
+  //       },
+  //     });
+  //   });
 
-    this.enrolledStudents = await Promise.all(studentPromises);
-  }
+  //   this.enrolledStudents = await Promise.all(studentPromises);
+  // }
 
   // private async assignAssignments() {
   //   if (!this.shouldAssignAssignments) {

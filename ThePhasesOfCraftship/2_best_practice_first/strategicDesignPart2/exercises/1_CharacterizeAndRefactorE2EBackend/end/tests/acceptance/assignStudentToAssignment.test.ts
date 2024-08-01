@@ -8,10 +8,7 @@ import {
   aClassRoom,
   anAssignment,
   anEnrolledStudent,
-  AssignmentBuilder,
   aStudent,
-  ClassRoomBuilder,
-  StudentBuilder,
 } from "../fixtures";
 import { Assignment, Student } from "../fixtures/types";
 
@@ -24,12 +21,13 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  test.only("Assign a student to an assignment", ({
+  test("Assign a student to an assignment", ({
     given,
     when,
     and,
     then,
   }) => {
+    
     let requestBody: any = {};
     let response: any = {};
     let student: Student;
@@ -83,16 +81,14 @@ defineFeature(feature, (test) => {
   }) => {
     let requestBody: any = {};
     let response: any = {};
-    let assignment: any = null;
-    let student: any = null;
-    let classBuilder: ClassRoomBuilder = new ClassRoomBuilder();
+    let assignment: Assignment;
+    let student: Student;
 
     given("A student is not enrolled to my class", async () => {
-      // ({
-      //   assignments: [assignment],
-      // } = await classBuilder.withAssignment(new AssignmentBuilder()).build());
-
-      student = await new StudentBuilder().build();
+      student = await aStudent().build();
+      assignment = await anAssignment()
+        .from(aClassRoom().withClassName("Math"))
+        .build();
     });
 
     when("I assign him to the assignment", async () => {

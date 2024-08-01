@@ -21,7 +21,7 @@
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "test:e2e": "jest --verbose tests/acceptance/ --runInBand",
-    "test:math": "jest -i tests/acceptance/assignStudentToAssignment.test.ts"
+    "test:e2e:declarative-builder": "jest -i tests/acceptance/assignStudentToAssignment.test.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
