@@ -27,7 +27,7 @@ defineFeature(feature, (test) => {
     and,
     then,
   }) => {
-    
+
     let requestBody: any = {};
     let response: any = {};
     let student: Student;
@@ -77,6 +77,7 @@ defineFeature(feature, (test) => {
   test("Fail to assign a student to an assignment when the student is not enrolled to the class", ({
     given,
     when,
+    and,
     then,
   }) => {
     let requestBody: any = {};
@@ -84,12 +85,16 @@ defineFeature(feature, (test) => {
     let assignment: Assignment;
     let student: Student;
 
-    given("A student is not enrolled to my class", async () => {
+    given("A student is not enrolled to a class", async () => {
       student = await aStudent().build();
+      
+    });
+
+    and ('an assignment exists for the class', async () => {
       assignment = await anAssignment()
         .from(aClassRoom().withClassName("Math"))
         .build();
-    });
+    })
 
     when("I assign him to the assignment", async () => {
       requestBody = {
