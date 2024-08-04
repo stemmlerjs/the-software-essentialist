@@ -1,6 +1,5 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 
-import { ErrorHandler } from "../shared/errors";
 import {
   AssignStudentDTO,
   CreateAssignmentDTO,
@@ -9,13 +8,13 @@ import {
 } from "../dtos/assignments";
 import { parseForResponse } from "../shared/utils";
 import AssignmentsService from "../services/assignments";
+import { ErrorExceptionHandler } from "../shared/errorsExceptionHandler";
 
 class AssignmentsController {
   private router: express.Router;
 
   constructor(
-    private assignmentsService: AssignmentsService,
-    private errorHandler: ErrorHandler
+    private assignmentsService: AssignmentsService
   ) {
     this.router = express.Router();
     this.routes();
@@ -27,7 +26,7 @@ class AssignmentsController {
   }
 
   private setupErrorHandler() {
-    this.router.use(this.errorHandler);
+    this.router.use(ErrorExceptionHandler.handle);
   }
 
   private routes() {

@@ -10,7 +10,7 @@ import {
   ClassesService,
   StudentsService,
 } from "./services";
-import { errorHandler } from "./shared/errors";
+import { errorHandler } from "./shared/errorsExceptionHandler";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

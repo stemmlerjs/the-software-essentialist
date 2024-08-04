@@ -3,7 +3,7 @@ import express from "express";
 import { parseForResponse } from "../shared/utils";
 import { ClassId, CreateClassDTO, EnrollStudentDTO } from "../dtos/classes";
 import ClassesService from "../services/classes";
-import { ErrorHandler } from "../shared/errors";
+import { ErrorHandler } from "../shared/errorsExceptionHandler";
 
 class ClassesController {
   private router: express.Router;

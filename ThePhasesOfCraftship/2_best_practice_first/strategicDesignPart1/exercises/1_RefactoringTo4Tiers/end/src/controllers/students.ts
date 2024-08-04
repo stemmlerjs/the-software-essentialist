@@ -4,7 +4,7 @@ import { parseForResponse } from "../shared/utils";
 import Errors from "../shared/constants";
 import { CreateStudentDTO, StudentID } from "../dtos/students";
 import StudentService from "../services/students";
-import { ErrorHandler } from "../shared/errors";
+import { ErrorHandler } from "../shared/errorsExceptionHandler";
 
 class StudentsController {
   private router: express.Router;
