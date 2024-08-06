@@ -3,8 +3,7 @@ export type Environment = "development" | "production" | "staging" | "ci";
 export type Script =
   | "test:unit"
   | "test:e2e"
-  | "start:dev"
-  | "start:prod"
+  | "start"
   | "test:infra";
 
 export class Config {
