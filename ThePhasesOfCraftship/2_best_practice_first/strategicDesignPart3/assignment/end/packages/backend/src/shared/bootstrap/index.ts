@@ -1,7 +1,7 @@
 import { CompositionRoot } from "../compositionRoot";
 import { Config } from "../config";
 
-const config = new Config("start:dev");
+const config = new Config("start");
 
 const composition = CompositionRoot.createCompositionRoot(config);
 const webServer = composition.getWebServer();
