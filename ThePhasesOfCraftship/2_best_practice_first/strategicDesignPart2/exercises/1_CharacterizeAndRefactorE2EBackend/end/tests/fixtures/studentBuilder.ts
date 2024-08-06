@@ -1,7 +1,7 @@
 import { prisma } from "../../src/database";
 import { faker } from "@faker-js/faker";
-import { Student } from "./types";
 import { ClassRoomBuilder } from "./classRoomBuilder";
+import { Student } from "@prisma/client";
 
 class StudentBuilder {
   private student: Partial<Student>;
@@ -9,10 +9,7 @@ class StudentBuilder {
 
   constructor() {
     this.classRoomBuilder = new ClassRoomBuilder();
-    this.student = {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-    };
+    this.student = {};
   }
 
   from (classRoomBuilder: ClassRoomBuilder) {

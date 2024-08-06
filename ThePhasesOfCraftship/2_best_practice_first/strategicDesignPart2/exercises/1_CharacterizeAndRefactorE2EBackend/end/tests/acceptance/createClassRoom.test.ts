@@ -52,4 +52,26 @@ defineFeature(feature, (test) => {
       expect(response.body.error).toBe("ValidationError");
     });
   });
+
+  test("Classroom already exists", ({ given, when, then }) => {
+    let classroomName = "Science";
+    let requestBody: any = {
+      name: classroomName
+    };
+    let response: any = {};
+
+    given("a classroom already exists", () => {
+      // ??
+    });
+
+    when("I send a request to create a class room of the same name", async () => {
+      response = await request(app).post("/classes").send(requestBody);
+    });
+
+    then("the class room should not be created", () => {
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.error).toBe("ServerError");
+    });
+  });
 });

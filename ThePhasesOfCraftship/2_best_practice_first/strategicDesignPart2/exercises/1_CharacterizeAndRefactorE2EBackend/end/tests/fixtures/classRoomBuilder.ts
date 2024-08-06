@@ -1,10 +1,38 @@
 import { prisma } from "../../src/database";
-import { faker } from "@faker-js/faker";
 import { StudentBuilder } from "./studentBuilder";
 import { AssignmentBuilder } from "./assignmentBuilder";
-import { Assignment, ClassRoom, EnrolledStudent, Student } from "./types";
+import { Class } from "@prisma/client";
 
-class ClassRoomBuilder {
+export class ClassroomBuilder {
+  private classRoom: Partial<Class>;
+
+  constructor() {
+    this.classRoom = {}
+  }
+
+  withName (name: string) {
+    this.classRoom.name = name; 
+    return this;
+  }
+
+  async build() {    
+    let classroom = await prisma.class.upsert({
+      create: {
+        name: this.classRoom.name as string
+      },
+      update: {
+        name: this.classRoom.name as string
+      },
+      where: {
+        name: this.classRoom.name as string
+      } 
+    });
+
+    return classroom;
+  }
+}
+
+class ClassRoomBuilder___ {
   private studentsBuilders: StudentBuilder[];
   private assignmentsBuilders: AssignmentBuilder[];
 

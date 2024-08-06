@@ -8,7 +8,7 @@ import {
   Student,
   StudentAssignment,
 } from "./types";
-import { EnrolledStudentBuilder } from "./enrolledStudentBuilder";
+import { StudentEnrollmentBuilder } from "./enrolledStudentBuilder";
 
 function aStudent() {
   return new StudentBuilder();
@@ -23,7 +23,7 @@ function anAssignment () {
 }
 
 function anEnrolledStudent () {
-  return new EnrolledStudentBuilder();
+  return new StudentEnrollmentBuilder();
 }
 
 export {

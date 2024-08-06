@@ -1,9 +1,8 @@
 import { prisma } from "../../src/database";
 import { ClassRoomBuilder } from "./classRoomBuilder";
 import { StudentBuilder } from "./studentBuilder";
-import { ClassEnrollment } from "@prisma/client";
 
-export class EnrolledStudentBuilder {
+export class StudentEnrollmentBuilder {
   private classRoomBuilder: ClassRoomBuilder;
   private studentBuilder: StudentBuilder;
 
