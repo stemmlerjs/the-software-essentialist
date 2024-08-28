@@ -56,6 +56,7 @@ describe("fizzbuzz", () => {
             [102],     
             [-12],        
             [0],        
+            [101],        
             ['ImNotNumber' as unknown as number]  
         ])('For input %s it should throw an error', (input) => {
             expect(() => fizzBuzz(input)).toThrow();
