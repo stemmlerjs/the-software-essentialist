@@ -4,15 +4,7 @@ const throwValidationError = ()=>{
 
 export const fizzBuzz = (value: number ) => {
 
-    if(typeof value !== 'number'){
-        return throwValidationError();
-    }
-
-    if(value > 100){
-        return throwValidationError();
-    }
-
-    if(value < 1){
+    if(typeof value !== 'number' || value > 100 || value < 1){
         return throwValidationError();
     }
 
