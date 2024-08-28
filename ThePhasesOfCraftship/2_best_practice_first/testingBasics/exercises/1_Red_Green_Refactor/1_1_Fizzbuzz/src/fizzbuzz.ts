@@ -8,7 +8,7 @@ export const fizzBuzz = (value: number ) => {
         return throwValidationError();
     }
 
-    if(value === 102){
+    if(value > 100){
         return throwValidationError();
     }
 
