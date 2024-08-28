@@ -40,17 +40,13 @@ describe("fizzbuzz", () => {
 
     describe('For multiples of five it returns “Buzz”', ()=>{
 
-        test('5 returns "Buzz"', ()=>{
-            expect(fizzBuzz(5)).toBe('Buzz');        
-        })
-
-        test('10 returns "Buzz"', ()=>{
-            expect(fizzBuzz(10)).toBe('Buzz');        
-        })
-
-        test('25 returns "Buzz"', ()=>{
-            expect(fizzBuzz(25)).toBe('Buzz');        
-        })
+        test.each([
+            [5, "Buzz"],
+            [10, "Buzz"],
+            [25, "Buzz"]
+        ])('For %i it should return %s', (input, expected) => {
+            expect(fizzBuzz(input)).toBe(expected);
+        });
 
     })
 
