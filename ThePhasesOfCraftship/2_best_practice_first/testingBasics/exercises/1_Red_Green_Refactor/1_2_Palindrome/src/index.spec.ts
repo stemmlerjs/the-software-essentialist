@@ -17,7 +17,8 @@ describe('palindrome checker', () => {
     ["Never Odd or Even", true], // Another phrase with spaces and mixed casing
 
     // Non-palindromes
-    ["bill", false]          // Simple non-palindrome
+    ["bill", false],          // Simple non-palindrome
+    ["Momx", false],          // Simple non-palindrome
     ] as const;
 
     it.each(testCases)(
