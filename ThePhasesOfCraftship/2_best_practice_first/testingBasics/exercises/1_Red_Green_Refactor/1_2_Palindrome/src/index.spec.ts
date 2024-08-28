@@ -13,4 +13,8 @@ describe('palindrome checker', () => {
     it('should return true for the word "mom"', () => {
         expect(isPalindrome("mom")).toBe(true);
     });
+
+    it('should return false for the word "bill"', () => {
+        expect(isPalindrome("bill")).toBe(false);
+    });
 })
