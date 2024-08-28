@@ -8,5 +8,9 @@ export const fizzBuzz = (value: number ) => {
         return 'Buzz';
     }
 
-    return 'Fizz';
+    if(value === 3){
+        return 'Fizz';
+    }
+
+    return String(value);
 }
