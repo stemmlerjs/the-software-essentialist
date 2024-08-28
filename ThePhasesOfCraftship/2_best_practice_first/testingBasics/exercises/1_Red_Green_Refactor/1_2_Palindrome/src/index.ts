@@ -1,3 +1,3 @@
 export const isPalindrome = (str: string): boolean =>{
-    return str === "";
+    return str.length <= 1;
   }
