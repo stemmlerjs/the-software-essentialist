@@ -38,8 +38,12 @@ describe("fizzbuzz", () => {
     
     })
 
-    test('5 returns "Buzz"', ()=>{
-        expect(fizzBuzz(5)).toBe('Buzz');        
+    describe('For multiples of five it returns “Buzz”', ()=>{
+
+        test('5 returns "Buzz"', ()=>{
+            expect(fizzBuzz(5)).toBe('Buzz');        
+        })
+
     })
 
 });
