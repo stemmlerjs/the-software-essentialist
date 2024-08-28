@@ -14,6 +14,7 @@ describe('palindrome checker', () => {
     ["mom", true],            // Simple palindrome
     ["MoM", true],
     ["xMomx", true],
+    ["1Never Odd or Even1", true],
     ["Was It A Rat I Saw", true], // Phrase with spaces and mixed casing
     ["Never Odd or Even", true], // Another phrase with spaces and mixed casing
 
