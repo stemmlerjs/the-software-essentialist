@@ -1,15 +1,19 @@
+const throwValidationError = ()=>{
+    throw new Error('The input must be a number between 1 and 100.');
+}
+
 export const fizzBuzz = (value: number ) => {
 
     if(typeof value !== 'number'){
-        throw new Error('The input must be a number between 1 and 100.')
+        return throwValidationError();
     }
 
     if(value === 102){
-        throw new Error('The input must be a number between 1 and 100.')
+        return throwValidationError();
     }
 
     if(value < 0){
-        throw new Error('The input must be a number between 1 and 100.')
+        return throwValidationError();
     }
 
     if(value % 3 === 0 && value % 5 === 0){
