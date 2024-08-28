@@ -62,6 +62,10 @@ describe("fizzbuzz", () => {
             expect(() => fizzBuzz(input)).toThrow();
         });
 
+        test('1 should return "1"', () => {
+            expect(fizzBuzz(1)).toBe("1");
+        });
+
     })
 
 });
