@@ -20,6 +20,7 @@ describe('palindrome checker', () => {
     // Non-palindromes
     ["bill", false],          // Simple non-palindrome
     ["Momx", false],          // Simple non-palindrome
+    ["Never Odd or Even1", false],          // Simple non-palindrome
     ] as const;
 
     it.each(testCases)(
