@@ -20,12 +20,16 @@ describe("fizzbuzz", () => {
             expect(fizzBuzz(15)).toBe('FizzBuzz');        
         })
         
+        test('30 returns "FizzBuzz"', ()=>{
+            expect(fizzBuzz(30)).toBe('FizzBuzz');        
+        })
+        
         test('45 returns "FizzBuzz"', ()=>{
             expect(fizzBuzz(45)).toBe('FizzBuzz');        
         })
         
     })
-    
+
     describe('For multiples of three it returns “Fizz”', () => {
     
         test.each([
