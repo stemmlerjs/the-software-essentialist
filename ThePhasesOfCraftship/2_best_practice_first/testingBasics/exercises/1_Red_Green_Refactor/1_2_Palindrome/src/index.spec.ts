@@ -25,4 +25,8 @@ describe('palindrome checker', () => {
     it('should ignore whitespaces', () => {
         expect(isPalindrome("  m o  m ")).toBe(true);
     });
+
+    it('should return true for the phrase "Was It A Rat I Saw"', () => {
+        expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
+    });
 })
