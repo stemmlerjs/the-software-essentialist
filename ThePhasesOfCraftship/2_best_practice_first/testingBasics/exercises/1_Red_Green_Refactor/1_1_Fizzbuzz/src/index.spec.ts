@@ -55,6 +55,7 @@ describe("fizzbuzz", () => {
         test.each([
             [102],     
             [-12],        
+            [0],        
             ['ImNotNumber' as unknown as number]  
         ])('For input %s it should throw an error', (input) => {
             expect(() => fizzBuzz(input)).toThrow();
