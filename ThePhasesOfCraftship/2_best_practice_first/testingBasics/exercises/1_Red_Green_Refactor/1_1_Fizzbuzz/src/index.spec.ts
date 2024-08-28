@@ -59,6 +59,10 @@ describe("fizzbuzz", () => {
         test('-12 should throw an error', ()=>{
             expect(()=>fizzBuzz(-12)).toThrow();        
         })
+        
+        test('Non-numeric values should throw an error', ()=>{
+            expect(()=>fizzBuzz('ImNotNumber' as unknown as number)).toThrow();        
+        })
 
     })
 
