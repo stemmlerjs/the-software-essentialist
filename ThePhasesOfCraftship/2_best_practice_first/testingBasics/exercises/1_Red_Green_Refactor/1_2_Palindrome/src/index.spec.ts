@@ -2,31 +2,27 @@ import { isPalindrome } from ".";
 
 describe('palindrome checker', () => {
     
-    it('should return true for an empty string', () => {
-        expect(isPalindrome("")).toBe(true);
-    });
+    const testCases = [
     
-    it('should return true for a single letter', () => {
-        expect(isPalindrome("a")).toBe(true);
-    });
+    // Special cases
+    ["", true],               // Empty string
+    ["a", true],              // Single letter
+    ["Mom", true],            // Casing should be ignored
+    ["  m o  m ", true],     // Whitespace should be ignored
 
-    it('should return true for the word "mom"', () => {
-        expect(isPalindrome("mom")).toBe(true);
-    });
+    // Palindromes
+    ["mom", true],            // Simple palindrome
+    ["Was It A Rat I Saw", true], // Phrase with spaces and mixed casing
+    ["Never Odd or Even", true], // Another phrase with spaces and mixed casing
 
-    it('should return false for the word "bill"', () => {
-        expect(isPalindrome("bill")).toBe(false);
-    });
+    // Non-palindromes
+    ["bill", false]          // Simple non-palindrome
+    ] as const;
 
-    it('should ignore casing, and return true for the word "Mom"', () => {
-        expect(isPalindrome("Mom")).toBe(true);
-    });
-
-    it('should ignore whitespaces', () => {
-        expect(isPalindrome("  m o  m ")).toBe(true);
-    });
-
-    it('should return true for the phrase "Was It A Rat I Saw"', () => {
-        expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
-    });
+    it.each(testCases)(
+    'should return %p for the string %p',
+    (input, expected) => {
+        expect(isPalindrome(input)).toBe(expected);
+    }
+    );
 })
