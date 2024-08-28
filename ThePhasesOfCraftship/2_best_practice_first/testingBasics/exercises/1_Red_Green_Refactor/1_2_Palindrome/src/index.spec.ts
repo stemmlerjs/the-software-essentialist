@@ -21,4 +21,8 @@ describe('palindrome checker', () => {
     it('should ignore casing, and return true for the word "Mom"', () => {
         expect(isPalindrome("Mom")).toBe(true);
     });
+
+    it('should ignore whitespaces', () => {
+        expect(isPalindrome("  m o  m ")).toBe(true);
+    });
 })
