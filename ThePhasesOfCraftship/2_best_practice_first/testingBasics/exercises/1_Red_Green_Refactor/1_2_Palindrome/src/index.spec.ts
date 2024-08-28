@@ -17,4 +17,8 @@ describe('palindrome checker', () => {
     it('should return false for the word "bill"', () => {
         expect(isPalindrome("bill")).toBe(false);
     });
+
+    it('should ignore casing, and return true for the word "Mom"', () => {
+        expect(isPalindrome("Mom")).toBe(true);
+    });
 })
