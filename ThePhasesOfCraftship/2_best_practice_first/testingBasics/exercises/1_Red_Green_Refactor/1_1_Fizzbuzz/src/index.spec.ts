@@ -14,16 +14,20 @@ describe("fizzbuzz", () => {
     
     })
 
+    describe('For numbers that are multiples of both three and five, it returns “FizzBuzz.”', ()=>{
+        
+        test('15 returns "FizzBuzz"', ()=>{
+            expect(fizzBuzz(15)).toBe('FizzBuzz');        
+        })
+        
+    })
+
     test('3 returns "Fizz"', ()=>{
         expect(fizzBuzz(3)).toBe('Fizz');        
     })
 
     test('5 returns "Buzz"', ()=>{
         expect(fizzBuzz(5)).toBe('Buzz');        
-    })
-
-    test('15 returns "FizzBuzz"', ()=>{
-        expect(fizzBuzz(15)).toBe('FizzBuzz');        
     })
 
 });
