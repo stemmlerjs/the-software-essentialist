@@ -1,6 +1,6 @@
 export const fizzBuzz = (value: number ) => {
 
-    if(value === 15){
+    if(value % 3 === 0 && value % 5 === 0){
         return 'FizzBuzz';
     }
 
