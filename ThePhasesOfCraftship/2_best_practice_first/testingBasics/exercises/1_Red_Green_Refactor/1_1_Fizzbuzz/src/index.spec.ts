@@ -66,6 +66,9 @@ describe("fizzbuzz", () => {
             expect(fizzBuzz(1)).toBe("1");
         });
 
+        test('100 should return "Buzz"', () => {
+            expect(fizzBuzz(100)).toBe("Buzz");
+        });
     })
 
 });
