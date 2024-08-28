@@ -6,4 +6,8 @@ describe("fizzbuzz", () => {
         expect(typeof fizzBuzz(10)).toBe('string');
     })
 
+    test('3 returns "Fizz"', ()=>{
+        expect(fizzBuzz(3)).toBe('Fizz');        
+    })
+
 });
