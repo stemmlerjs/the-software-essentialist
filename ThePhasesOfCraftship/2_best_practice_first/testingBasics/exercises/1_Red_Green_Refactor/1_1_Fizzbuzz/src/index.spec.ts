@@ -52,17 +52,13 @@ describe("fizzbuzz", () => {
 
     describe('Should take numbers from 1 to 100', ()=>{
         
-        test('102 should throw an error', ()=>{
-            expect(()=>fizzBuzz(102)).toThrow();        
-        })
-        
-        test('-12 should throw an error', ()=>{
-            expect(()=>fizzBuzz(-12)).toThrow();        
-        })
-        
-        test('Non-numeric values should throw an error', ()=>{
-            expect(()=>fizzBuzz('ImNotNumber' as unknown as number)).toThrow();        
-        })
+        test.each([
+            [102],     
+            [-12],        
+            ['ImNotNumber' as unknown as number]  
+        ])('For input %s it should throw an error', (input) => {
+            expect(() => fizzBuzz(input)).toThrow();
+        });
 
     })
 
