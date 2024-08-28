@@ -55,6 +55,10 @@ describe("fizzbuzz", () => {
         test('102 should throw an error', ()=>{
             expect(()=>fizzBuzz(102)).toThrow();        
         })
+        
+        test('-12 should throw an error', ()=>{
+            expect(()=>fizzBuzz(-12)).toThrow();        
+        })
 
     })
 
