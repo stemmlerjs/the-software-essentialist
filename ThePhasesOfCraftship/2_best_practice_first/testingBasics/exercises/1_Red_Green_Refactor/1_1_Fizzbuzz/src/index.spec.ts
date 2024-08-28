@@ -2,12 +2,16 @@ import { fizzBuzz } from "./fizzbuzz";
 
 describe("fizzbuzz", () => {
 
-    it('Should always return a string', ()=> {
-        expect(typeof fizzBuzz(10)).toBe('string');
-    })
+    describe('Should return the numbers as strings', ()=>{
 
-    test('43 returns "43"', ()=>{
-        expect(fizzBuzz(43)).toBe('43');        
+        test('It should always return a string', ()=> {
+            expect(typeof fizzBuzz(10)).toBe('string');
+        })
+    
+        test('43 returns "43"', ()=>{
+            expect(fizzBuzz(43)).toBe('43');        
+        })
+    
     })
 
     test('3 returns "Fizz"', ()=>{
