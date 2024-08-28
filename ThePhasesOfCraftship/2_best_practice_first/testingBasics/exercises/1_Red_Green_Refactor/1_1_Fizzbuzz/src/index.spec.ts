@@ -50,4 +50,12 @@ describe("fizzbuzz", () => {
 
     })
 
+    describe('Should take numbers from 1 to 100', ()=>{
+        
+        test('102 should throw an error', ()=>{
+            expect(()=>fizzBuzz(102)).toThrow();        
+        })
+
+    })
+
 });
