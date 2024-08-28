@@ -11,17 +11,17 @@ describe('palindrome checker', () => {
     ["  m o  m ", true],     // Whitespace should be ignored
 
     // Palindromes
-    ["mom", true],            // Simple palindrome
+    ["mom", true],           
     ["MoM", true],
     ["xMomx", true],
     ["1Never Odd or Even1", true],
-    ["Was It A Rat I Saw", true], // Phrase with spaces and mixed casing
-    ["Never Odd or Even", true], // Another phrase with spaces and mixed casing
+    ["Was It A Rat I Saw", true], 
+    ["Never Odd or Even", true], 
 
     // Non-palindromes
-    ["bill", false],          // Simple non-palindrome
-    ["Momx", false],          // Simple non-palindrome
-    ["Never Odd or Even1", false],          // Simple non-palindrome
+    ["bill", false],
+    ["Momx", false],
+    ["Never Odd or Even1", false],
     ] as const;
 
     it.each(testCases)(
