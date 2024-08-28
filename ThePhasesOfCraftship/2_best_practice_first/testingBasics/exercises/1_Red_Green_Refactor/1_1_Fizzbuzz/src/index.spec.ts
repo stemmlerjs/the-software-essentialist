@@ -30,6 +30,10 @@ describe("fizzbuzz", () => {
 
         test('3 returns "Fizz"', ()=>{
             expect(fizzBuzz(3)).toBe('Fizz');        
+        })    
+
+        test('9 returns "Fizz"', ()=>{
+            expect(fizzBuzz(9)).toBe('Fizz');        
         })
     
     })
