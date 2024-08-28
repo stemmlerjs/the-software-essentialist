@@ -8,16 +8,15 @@ export const fizzBuzz = (value: number ) => {
         return throwValidationError();
     }
 
-    if(value % 3 === 0 && value % 5 === 0){
-        return 'FizzBuzz';
-    }
-
-    if(value % 5 === 0){
-        return 'Buzz';
-    }
-
-    if(value % 3 === 0){
+    if (value % 3 === 0) {
+        if (value % 5 === 0) {
+            return 'FizzBuzz';
+        }
         return 'Fizz';
+    }
+    
+    if (value % 5 === 0) {
+        return 'Buzz';
     }
 
     return String(value);
