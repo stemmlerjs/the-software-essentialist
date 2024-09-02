@@ -25,7 +25,10 @@ describe("fizzbuzz", () => {
     expect(fizzbuzz(15)).toBe("fizzbuzz");
   });
 
-  it("should return number for 2", () => {
-    expect(fizzbuzz(2)).toBe(2);
-  });
+  it.each([2, 4, 7, 11, 13, 17, 19, 28, 32, 49, 58, 68, 79, 89, 98])(
+    "should return number for any number (%i) that's not multiplication of 3 or 5",
+    (number) => {
+      expect(fizzbuzz(number)).toBe(number);
+    }
+  );
 });
