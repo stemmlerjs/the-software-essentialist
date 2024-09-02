@@ -25,7 +25,7 @@ describe("fizzbuzz", () => {
     expect(fizzbuzz(15)).toBe("fizzbuzz");
   });
 
-  it('should return number for 2', () => {
-    expect(fizzbuzz(2)).toBe(2)
-  })
+  it("should return number for 2", () => {
+    expect(fizzbuzz(2)).toBe(2);
+  });
 });
