@@ -64,20 +64,15 @@ describe('stats calculator', () => {
     describe('calculates statistics', () => {
     
         test.each([
-            [[2, 4, 21, -8, 53, 40], -8, 53, 6],
-            [[1, 2, 3, 4, 5], 1, 5, 5],
-            [[-5, -1, 0, 1, 5], -5, 5, 5]
-        ])('calculates the minimum, maximum values, and number of elements for %p', (sequence, expectedMin, expectedMax, expectedCount) => {
+            [[2, 4, 21, -8, 53, 40], -8, 53, 6, 18.666666666666668],
+            [[1, 2, 3, 4, 5], 1, 5, 5, 3],
+            [[-5, -1, 0, 1, 5], -5, 5, 5, 0]
+        ])('calculates the minimum, maximum values, number of elements, and average for %p', (sequence, expectedMin, expectedMax, expectedCount, expectedAverage) => {
             const result = calculateStats(sequence);
             expect(result.min).toBe(expectedMin);
             expect(result.max).toBe(expectedMax);
             expect(result.count).toBe(expectedCount);
-        });
-    
-        it('calculates the average value of the sequence', () => {
-            const sequence = [2, 4, 21, -8, 53, 40];
-            const result = calculateStats(sequence);
-            expect(result.average).toBe(18.666666666666668);
+            expect(result.average).toBe(expectedAverage);
         });
     });
    
