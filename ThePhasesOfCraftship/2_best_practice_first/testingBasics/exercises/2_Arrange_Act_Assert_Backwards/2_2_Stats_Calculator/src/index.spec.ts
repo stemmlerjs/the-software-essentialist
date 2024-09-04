@@ -69,5 +69,16 @@ describe('stats calculator', () => {
         });
     })
 
+    it('calculates the minimum value', () => {
+        // arrange
+        const sequence = [2, 4, 21, -8, 53, 40];
+    
+        // act
+        const result = calculateStats(sequence);
+    
+        // assert
+        expect(result.min).toBe(-8);
+    });
+
    
 })
