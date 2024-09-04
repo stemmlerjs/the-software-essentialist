@@ -72,10 +72,13 @@ describe('stats calculator', () => {
             expect(result.min).toBe(expectedMin);
         });
     
-        it('calculates the maximum value', () => {
-            const sequence = [2, 4, 21, -8, 53, 40];
+        test.each([
+            [[2, 4, 21, -8, 53, 40], 53],
+            [[1, 2, 3, 4, 5], 5],
+            [[-5, -1, 0, 1, 5], 5]
+        ])('calculates the maximum value for %p', (sequence, expectedMax) => {
             const result = calculateStats(sequence);
-            expect(result.max).toBe(53);
+            expect(result.max).toBe(expectedMax);
         });
     
         it('calculates the number of elements in the sequence', () => {
