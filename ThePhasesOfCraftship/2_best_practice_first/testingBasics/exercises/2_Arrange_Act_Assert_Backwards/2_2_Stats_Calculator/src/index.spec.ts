@@ -11,9 +11,14 @@ describe('stats calculator', () => {
             expect(result).toBeDefined();
         });
     
-        it('throws an error when the sequence contains non-integer values', () => {
-            const invalidSequence = [2, 4, 21, "hello", -8, 53.5] as number[];
-            expect(() => calculateStats(invalidSequence)).toThrowError("Sequence must contain only integers.");
+        test.each([
+            [[2, "hello"], "Sequence must contain only integers."],   
+            [[2, 3.14], "Sequence must contain only integers."],      
+            [[2, NaN], "Sequence must contain only integers."],       
+            [[2, undefined], "Sequence must contain only integers."], 
+            [[2, null], "Sequence must contain only integers."]       
+        ])('throws an error when the sequence contains %p', (invalidSequence, expectedError) => {
+            expect(() => calculateStats(invalidSequence as number[])).toThrowError(expectedError);
         });
     });
     
