@@ -47,23 +47,27 @@ describe('stats calculator', () => {
         expect(result.average).toBe(18.666666666667);
     })
 
-    it('accepts a sequence of integers', () => {
-        // arrange
-        const sequence = [2, 4, 21, -8, 53, 40];
-        
-        // act
-        const result = calculateStats(sequence);
-        
-        // assert
-        expect(result).toBeDefined();
-    });
+    describe('accepts a sequence of integers', () => {
 
-    it('throws an error when the sequence contains non-integer values', () => {
-        // arrange
-        const invalidSequence = [2, 4, 21, "hello", -8, 53.5] as number[];
+        it('returns a result if the sequence contains integers only', () => {
+            // arrange
+            const sequence = [2, 4, 21, -8, 53, 40];
+            
+            // act
+            const result = calculateStats(sequence);
+            
+            // assert
+            expect(result).toBeDefined();
+        });
     
-        // act & assert
-        expect(() => calculateStats(invalidSequence)).toThrowError("Sequence must contain only integers.");
-    });
+        it('throws an error when the sequence contains non-integer values', () => {
+            // arrange
+            const invalidSequence = [2, 4, 21, "hello", -8, 53.5] as number[];
+        
+            // act & assert
+            expect(() => calculateStats(invalidSequence)).toThrowError("Sequence must contain only integers.");
+        });
+    })
 
+   
 })
