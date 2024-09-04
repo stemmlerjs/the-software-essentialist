@@ -80,5 +80,15 @@ describe('stats calculator', () => {
         expect(result.min).toBe(-8);
     });
 
+    it('calculates the maximum value', () => {
+        // arrange
+        const sequence = [2, 4, 21, -8, 53, 40];
+    
+        // act
+        const result = calculateStats(sequence);
+    
+        // assert
+        expect(result.max).toBe(53);
+    });
    
 })
