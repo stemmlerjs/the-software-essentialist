@@ -58,4 +58,12 @@ describe('stats calculator', () => {
         expect(result).toBeDefined();
     });
 
+    it('throws an error when the sequence contains non-integer values', () => {
+        // arrange
+        const invalidSequence = [2, 4, 21, "hello", -8, 53.5] as number[];
+    
+        // act & assert
+        expect(() => calculateStats(invalidSequence)).toThrowError("Sequence must contain only integers.");
+    });
+
 })
