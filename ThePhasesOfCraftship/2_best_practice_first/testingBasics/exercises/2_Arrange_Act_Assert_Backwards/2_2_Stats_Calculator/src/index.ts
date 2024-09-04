@@ -1,6 +1,7 @@
 type Stats = {
     min: number,
-    max: number
+    max: number,
+    count: number
 }
 
 export function calculateStats(sequence: number[]): Stats {
@@ -12,6 +13,7 @@ export function calculateStats(sequence: number[]): Stats {
 
     return {
         min: sortedSequence[0],
-        max: sortedSequence[sortedSequence.length - 1]
+        max: sortedSequence[sortedSequence.length - 1],
+        count: sequence.length
     };
 }

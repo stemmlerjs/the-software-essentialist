@@ -90,5 +90,16 @@ describe('stats calculator', () => {
         // assert
         expect(result.max).toBe(53);
     });
+
+    it('calculates the number of elements in the sequence', () => {
+        // arrange
+        const sequence = [2, 4, 21, -8, 53, 40];
+    
+        // act
+        const result = calculateStats(sequence);
+    
+        // assert
+        expect(result.count).toBe(6);
+    });
    
 })
