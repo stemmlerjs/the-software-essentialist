@@ -22,6 +22,8 @@ Result
 
 */
 
+import { calculateStats } from ".";
+
 
 describe('stats calculator', () => {
 
@@ -44,5 +46,16 @@ describe('stats calculator', () => {
         expect(result.count).toBe(6);
         expect(result.average).toBe(18.666666666667);
     })
+
+    it('accepts a sequence of integers', () => {
+        // arrange
+        const sequence = [2, 4, 21, -8, 53, 40];
+        
+        // act
+        const result = calculateStats(sequence);
+        
+        // assert
+        expect(result).toBeDefined();
+    });
 
 })
