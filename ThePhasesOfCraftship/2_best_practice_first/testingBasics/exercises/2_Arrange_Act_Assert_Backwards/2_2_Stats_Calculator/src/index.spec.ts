@@ -50,56 +50,45 @@ describe('stats calculator', () => {
     describe('accepts a sequence of integers', () => {
 
         it('returns a result if the sequence contains integers only', () => {
-            // arrange
             const sequence = [2, 4, 21, -8, 53, 40];
-            
-            // act
             const result = calculateStats(sequence);
-            
-            // assert
             expect(result).toBeDefined();
         });
     
         it('throws an error when the sequence contains non-integer values', () => {
-            // arrange
             const invalidSequence = [2, 4, 21, "hello", -8, 53.5] as number[];
-        
-            // act & assert
             expect(() => calculateStats(invalidSequence)).toThrowError("Sequence must contain only integers.");
         });
-    })
-
-    it('calculates the minimum value', () => {
-        // arrange
-        const sequence = [2, 4, 21, -8, 53, 40];
-    
-        // act
-        const result = calculateStats(sequence);
-    
-        // assert
-        expect(result.min).toBe(-8);
     });
-
-    it('calculates the maximum value', () => {
-        // arrange
-        const sequence = [2, 4, 21, -8, 53, 40];
     
-        // act
-        const result = calculateStats(sequence);
+    describe('calculates statistics', () => {
     
-        // assert
-        expect(result.max).toBe(53);
-    });
-
-    it('calculates the number of elements in the sequence', () => {
-        // arrange
-        const sequence = [2, 4, 21, -8, 53, 40];
+        test.each([
+            [[2, 4, 21, -8, 53, 40], -8],
+            [[1, 2, 3, 4, 5], 1],
+            [[-5, -1, 0, 1, 5], -5]
+        ])('calculates the minimum value for %p', (sequence, expectedMin) => {
+            const result = calculateStats(sequence);
+            expect(result.min).toBe(expectedMin);
+        });
     
-        // act
-        const result = calculateStats(sequence);
+        it('calculates the maximum value', () => {
+            const sequence = [2, 4, 21, -8, 53, 40];
+            const result = calculateStats(sequence);
+            expect(result.max).toBe(53);
+        });
     
-        // assert
-        expect(result.count).toBe(6);
+        it('calculates the number of elements in the sequence', () => {
+            const sequence = [2, 4, 21, -8, 53, 40];
+            const result = calculateStats(sequence);
+            expect(result.count).toBe(6);
+        });
+    
+        it('calculates the average value of the sequence', () => {
+            const sequence = [2, 4, 21, -8, 53, 40];
+            const result = calculateStats(sequence);
+            expect(result.average).toBe(18.666666666666668);
+        });
     });
    
 })
