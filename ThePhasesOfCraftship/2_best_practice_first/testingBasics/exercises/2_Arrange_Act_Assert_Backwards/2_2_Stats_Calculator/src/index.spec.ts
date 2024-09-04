@@ -62,7 +62,7 @@ describe('stats calculator', () => {
     });
     
     test.each([
-        [[2, 4, 21, -8, 53, 40], { min: -8, max: 53, count: 6, average: 18.666666666666668 }],
+        [[2, 4, 21, -8, 53, 40], { min: -8, max: 53, count: 6, average: 18.666666666667 }],
         [[1, 2, 3, 4, 5], { min: 1, max: 5, count: 5, average: 3 }],
         [[-5, -1, 0, 1, 5], { min: -5, max: 5, count: 5, average: 0 }]
     ])('calculates statistics for %p', (sequence, expectedStats) => {

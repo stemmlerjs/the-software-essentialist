@@ -18,6 +18,6 @@ export function calculateStats(sequence: number[]): Stats {
         min: sortedSequence[0],
         max: sortedSequence[sortedSequence.length - 1],
         count: sequence.length,
-        average: average
+        average: parseFloat(average.toFixed(12)) // Round average to 12 decimal places
     };
 }
