@@ -10,6 +10,15 @@ export function calculateStats(sequence: number[]): Stats {
         throw new Error("Sequence must contain only integers.");
     }
 
+    if (sequence.length === 0) {
+        return {
+            min: NaN,
+            max: NaN,
+            count: 0,
+            average: NaN
+        };
+    }
+    
     const sortedSequence = sequence.sort((a, b) => a - b);
     const sum = sequence.reduce((acc, num) => acc + num, 0);
     const average = sum / sequence.length;

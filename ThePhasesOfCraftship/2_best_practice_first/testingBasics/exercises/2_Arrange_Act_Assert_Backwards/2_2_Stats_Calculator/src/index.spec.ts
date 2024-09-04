@@ -28,5 +28,14 @@ describe('stats calculator', () => {
         expect(result.count).toBe(expectedStats.count);
         expect(result.average).toBe(expectedStats.average);
     });
+
+    it('returns NaN and zero values for an empty sequence', () => {
+        const sequence: number[] = [];
+        const result = calculateStats(sequence);
+        expect(result.min).toBeNaN();
+        expect(result.max).toBeNaN();
+        expect(result.count).toBe(0);
+        expect(result.average).toBeNaN();
+    });
    
 })
