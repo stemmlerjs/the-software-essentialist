@@ -35,7 +35,9 @@ describe("fizzbuzz", () => {
   it.each([-1, -10])(
     "should throw an error when number (%i) negative",
     (number) => {
-      expect(fizzbuzz(number)).toThrowError("Provide number in range 1 to 100");
+      expect(() => fizzbuzz(number)).toThrow(
+        "Provide number in range 1 to 100"
+      );
     }
   );
 });
