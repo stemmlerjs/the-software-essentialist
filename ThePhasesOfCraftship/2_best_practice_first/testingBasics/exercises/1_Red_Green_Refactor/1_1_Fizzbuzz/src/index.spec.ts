@@ -40,4 +40,13 @@ describe("fizzbuzz", () => {
       );
     }
   );
+
+  it.each([101, 9999])(
+    "should throw an error when number (%i) over 100",
+    (number) => {
+      expect(() => fizzbuzz(number)).toThrow(
+        "Provide number in range 1 to 100"
+      );
+    }
+  );
 });
