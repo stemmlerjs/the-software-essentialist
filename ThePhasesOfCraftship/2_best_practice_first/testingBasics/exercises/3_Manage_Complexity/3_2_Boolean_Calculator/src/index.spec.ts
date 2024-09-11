@@ -2,7 +2,7 @@ import { BooleanCalculator } from "./BooleanCalculator";
 
 describe('boolean calculator', () => {
 
-    describe('Evaluateing simple values', () => {
+    describe('Evaluating simple values', () => {
         it.each([
             { input: 'TRUE', expected: true },
             { input: 'FALSE', expected: false },
