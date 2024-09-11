@@ -49,4 +49,13 @@ describe("fizzbuzz", () => {
       );
     }
   );
+
+  it.each([true, "123", [], {}])(
+    "should throw an error when given argument (%i) is not an number",
+    (arg) => {
+      expect(() => fizzbuzz(arg as any)).toThrow(
+        "Provide argument is not type of number"
+      );
+    }
+  );
 });
