@@ -18,7 +18,16 @@ const ResolutionTable = {
 } as const;
 
 export class BooleanCalculator {
+
     public static Evaluate(booleanStr: string): boolean {
+
+        const matches = booleanStr.match(/\(.*\)/g);
+        if(matches) {
+           matches.forEach(match => {
+               booleanStr = booleanStr.replace(match, match.slice(1, -1));
+           })
+        }
+        
         Object.entries(ResolutionTable).forEach(([type, resolutions]) => {
             let prevLength = 0;
             while (booleanStr.includes(type) && prevLength !== booleanStr.length) {

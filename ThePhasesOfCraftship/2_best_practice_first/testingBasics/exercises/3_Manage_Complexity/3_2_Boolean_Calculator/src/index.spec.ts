@@ -73,6 +73,20 @@ describe('boolean calculator', () => {
         })
     })
 
+    describe('Evaluating complex expressions with parentheses.', () => {
+        it.each([
+            { input: '(TRUE)', expected: true },
+            { input: 'TRUE AND (TRUE OR FALSE)', expected: true },
+            { input: 'TRUE AND NOT (TRUE OR FALSE)', expected: false },
+        ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
+            // act
+            const result = BooleanCalculator.Evaluate(input);
+    
+            // assert
+            expect(result).toBe(expected);
+        })
+    })
+
     describe('Handling invalid expressions', () => {
         it.each([
             { input: '', expected: 'Invalid boolean expression.' },
