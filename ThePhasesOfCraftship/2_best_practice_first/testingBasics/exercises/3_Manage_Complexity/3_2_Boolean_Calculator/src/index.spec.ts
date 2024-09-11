@@ -76,7 +76,19 @@ describe('boolean calculator', () => {
     describe('Handling invalid expressions', () => {
         it.each([
             { input: '', expected: 'Invalid boolean expression.' },
+            { input: 'something', expected: 'Invalid boolean expression.' },
+            { input: 'something else', expected: 'Invalid boolean expression.' },
             { input: 'NOT', expected: 'Invalid boolean expression.' },
+            { input: 'OR', expected: 'Invalid boolean expression.' },
+            { input: 'AND', expected: 'Invalid boolean expression.' },
+            { input: 'OR TRUE', expected: 'Invalid boolean expression.' },
+            { input: 'AND TRUE', expected: 'Invalid boolean expression.' },
+            { input: 'TRUE OR', expected: 'Invalid boolean expression.' },
+            { input: 'TRUE AND', expected: 'Invalid boolean expression.' },
+            { input: 'TRUE OR AND TRUE', expected: 'Invalid boolean expression.' },
+            { input: 'TRUE AND OR TRUE', expected: 'Invalid boolean expression.' },
+            { input: 'NOT AND TRUE', expected: 'Invalid boolean expression.' },
+            { input: 'NOT OR TRUE', expected: 'Invalid boolean expression.' },
         ])('Should throw an error for "$input"', ({ input, expected }) => {
             // act & assert
             expect(() => BooleanCalculator.Evaluate(input)).toThrow(expected);
