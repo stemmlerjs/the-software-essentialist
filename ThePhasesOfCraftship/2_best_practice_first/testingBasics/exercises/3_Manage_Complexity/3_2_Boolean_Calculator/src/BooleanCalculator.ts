@@ -19,13 +19,18 @@ const ResolutionTable = {
 
 export class BooleanCalculator {
 
-    public static Evaluate(booleanStr: string): boolean {
+    private static ResolveExpressions(booleanStr: string): string {
+        booleanStr = booleanStr.slice();
+        
+        // matches all groups of parentheses that doesn't have nested parentheses
+        const regExp = /\([^()]*\)/g;
+        let matches = booleanStr.match(regExp);
 
-        const matches = booleanStr.match(/\([^()]*\)/g);
-        if(matches) {
+        while(matches) {
            matches.forEach(match => {
-               booleanStr = booleanStr.replace(match, match.slice(1, -1));
+               booleanStr = booleanStr.replace(match, this.ResolveExpressions(match.slice(1, -1)));
            })
+           matches = booleanStr.match(regExp);
         }
         
         Object.entries(ResolutionTable).forEach(([type, resolutions]) => {
@@ -39,6 +44,12 @@ export class BooleanCalculator {
                 });
             }
         });
+        return booleanStr;
+    }
+
+    public static Evaluate(booleanStr: string): boolean {
+
+        booleanStr = this.ResolveExpressions(booleanStr);
 
         if(booleanStr === 'TRUE') {
             return true;

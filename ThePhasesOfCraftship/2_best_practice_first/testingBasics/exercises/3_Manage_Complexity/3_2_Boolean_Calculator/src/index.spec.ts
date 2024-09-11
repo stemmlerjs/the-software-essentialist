@@ -27,7 +27,6 @@ describe('boolean calculator', () => {
             expect(result).toBe(expected);
         })
     })
-
     
     describe('Evaluating AND', () => {
         it.each([
@@ -43,7 +42,6 @@ describe('boolean calculator', () => {
             expect(result).toBe(expected);
         })
     })
-
     
     describe('Evaluating OR', () => {
         it.each([
@@ -79,6 +77,8 @@ describe('boolean calculator', () => {
             { input: '(TRUE) OR (FALSE)', expected: true },
             { input: 'TRUE AND (TRUE OR FALSE)', expected: true },
             { input: 'TRUE AND NOT (TRUE OR FALSE)', expected: false },
+            { input: 'NOT (TRUE OR (TRUE OR (TRUE)))', expected: false },
+            { input: '(TRUE OR (TRUE OR (TRUE OR TRUE)))', expected: true },
         ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
             // act
             const result = BooleanCalculator.Evaluate(input);
