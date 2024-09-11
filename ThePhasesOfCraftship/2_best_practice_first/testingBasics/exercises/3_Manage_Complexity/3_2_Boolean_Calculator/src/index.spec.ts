@@ -44,6 +44,22 @@ describe('boolean calculator', () => {
         })
     })
 
+    
+    describe('Evaluating OR', () => {
+        it.each([
+            { input: 'TRUE OR TRUE', expected: true },
+            { input: 'TRUE OR FALSE', expected: true },
+            { input: 'FALSE OR TRUE', expected: true },
+            { input: 'FALSE OR FALSE', expected: false },
+        ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
+            // act
+            const result = BooleanCalculator.Evaluate(input);
+    
+            // assert
+            expect(result).toBe(expected);
+        })
+    })
+
     describe('Handling invalid expressions', () => {
         it.each([
             { input: '', expected: 'Invalid boolean expression.' },

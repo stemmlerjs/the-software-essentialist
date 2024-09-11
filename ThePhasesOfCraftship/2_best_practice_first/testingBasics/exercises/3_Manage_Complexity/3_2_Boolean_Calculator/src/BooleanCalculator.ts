@@ -7,6 +7,10 @@ const resolutions = {
     'TRUE AND FALSE': false,
     'FALSE AND TRUE': false,
     'FALSE AND FALSE': false,
+    'TRUE OR TRUE': true,
+    'TRUE OR FALSE': true,
+    'FALSE OR TRUE': true,
+    'FALSE OR FALSE': false
 } as const;
 
 export class BooleanCalculator {
