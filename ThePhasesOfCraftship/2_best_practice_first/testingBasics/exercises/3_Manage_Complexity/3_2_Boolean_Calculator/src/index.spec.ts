@@ -2,25 +2,19 @@ import { BooleanCalculator } from "./BooleanCalculator";
 
 describe('boolean calculator', () => {
 
-    it('Should evaluate "TRUE" as true', () => {
-        // arrange
-        const booleanStr = 'TRUE';
-
-        // act
-        const result = BooleanCalculator.Evaluate(booleanStr);
-
-        // assert
-        expect(result).toBe(true);
-    })
-
-    it('Should evaluate "FALSE" as false', () => {
-        // arrange
-        const booleanStr = 'FALSE';
-
-        // act
-        const result = BooleanCalculator.Evaluate(booleanStr);
-
-        // assert
-        expect(result).toBe(false);
+    describe('Evaluate simple values', () => {
+        it.each([
+            { input: 'TRUE', expected: true },
+            { input: 'FALSE', expected: false },
+        ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
+            // arrange
+            const booleanStr = input;
+    
+            // act
+            const result = BooleanCalculator.Evaluate(booleanStr);
+    
+            // assert
+            expect(result).toBe(expected);
+        })
     })
 })
