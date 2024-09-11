@@ -7,11 +7,8 @@ describe('boolean calculator', () => {
             { input: 'TRUE', expected: true },
             { input: 'FALSE', expected: false },
         ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
-            // arrange
-            const booleanStr = input;
-    
             // act
-            const result = BooleanCalculator.Evaluate(booleanStr);
+            const result = BooleanCalculator.Evaluate(input);
     
             // assert
             expect(result).toBe(expected);
@@ -23,11 +20,8 @@ describe('boolean calculator', () => {
             { input: 'NOT TRUE', expected: false },
             { input: 'NOT FALSE', expected: true },
         ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
-            // arrange
-            const booleanStr = input;
-    
             // act
-            const result = BooleanCalculator.Evaluate(booleanStr);
+            const result = BooleanCalculator.Evaluate(input);
     
             // assert
             expect(result).toBe(expected);
@@ -42,11 +36,8 @@ describe('boolean calculator', () => {
             { input: 'FALSE AND TRUE', expected: false },
             { input: 'FALSE AND FALSE', expected: false },
         ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
-            // arrange
-            const booleanStr = input;
-    
             // act
-            const result = BooleanCalculator.Evaluate(booleanStr);
+            const result = BooleanCalculator.Evaluate(input);
     
             // assert
             expect(result).toBe(expected);
@@ -58,11 +49,8 @@ describe('boolean calculator', () => {
             { input: '', expected: 'Invalid boolean expression.' },
             { input: 'NOT', expected: 'Invalid boolean expression.' },
         ])('Should throw an error for "$input"', ({ input, expected }) => {
-            // arrange
-            const booleanStr = input;
-    
             // act & assert
-            expect(() => BooleanCalculator.Evaluate(booleanStr)).toThrow(expected);
+            expect(() => BooleanCalculator.Evaluate(input)).toThrow(expected);
         })
     })
 })
