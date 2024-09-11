@@ -60,6 +60,19 @@ describe('boolean calculator', () => {
         })
     })
 
+    describe('Evaluating complex expressions', () => {
+        it.each([
+            { input: 'NOT NOT NOT NOT TRUE', expected: true },
+            { input: 'TRUE AND NOT TRUE AND TRUE OR NOT NOT FALSE OR TRUE OR TRUE AND TRUE', expected: true },
+        ])('Should evaluate "$input" as $expected', ({ input, expected }) => {
+            // act
+            const result = BooleanCalculator.Evaluate(input);
+    
+            // assert
+            expect(result).toBe(expected);
+        })
+    })
+
     describe('Handling invalid expressions', () => {
         it.each([
             { input: '', expected: 'Invalid boolean expression.' },

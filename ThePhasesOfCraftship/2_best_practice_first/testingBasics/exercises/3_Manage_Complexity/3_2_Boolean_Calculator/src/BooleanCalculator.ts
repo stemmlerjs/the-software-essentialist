@@ -1,25 +1,44 @@
-const resolutions = {
-    'TRUE': true,
-    'FALSE': false,
-    'NOT TRUE': false,
-    'NOT FALSE': true,
-    'TRUE AND TRUE': true,
-    'TRUE AND FALSE': false,
-    'FALSE AND TRUE': false,
-    'FALSE AND FALSE': false,
-    'TRUE OR TRUE': true,
-    'TRUE OR FALSE': true,
-    'FALSE OR TRUE': true,
-    'FALSE OR FALSE': false
+const ResolutionTable = {
+    NOT: {
+        'NOT TRUE': 'FALSE',
+        'NOT FALSE': 'TRUE',
+    },
+    AND: {
+        'TRUE AND TRUE': 'TRUE',
+        'TRUE AND FALSE': 'FALSE',
+        'FALSE AND TRUE': 'FALSE',
+        'FALSE AND FALSE': 'FALSE',
+    },
+    OR: {
+        'TRUE OR TRUE': 'TRUE',
+        'TRUE OR FALSE': 'TRUE',
+        'FALSE OR TRUE': 'TRUE',
+        'FALSE OR FALSE': 'FALSE',
+    }
 } as const;
 
 export class BooleanCalculator {
-
     public static Evaluate(booleanStr: string): boolean {
-        if(!Object.keys(resolutions).includes(booleanStr)) {
-            throw new Error('Invalid boolean expression.');
+        Object.entries(ResolutionTable).forEach(([type, resolutions]) => {
+            let prevLength = 0;
+            while (booleanStr.includes(type) && prevLength !== booleanStr.length) {
+                prevLength = booleanStr.length;
+                Object.entries(resolutions).forEach(([key, value]) => {
+                    while(booleanStr.includes(key)) {
+                        booleanStr = booleanStr.replace(key, value);
+                    }
+                });
+            }
+        });
+
+        if(booleanStr === 'TRUE') {
+            return true;
+        } 
+        if(booleanStr === 'FALSE') {
+            return false;
         }
-        return resolutions[booleanStr as unknown as keyof typeof resolutions];
+    
+        throw new Error('Invalid boolean expression.');
     }
 
 }
