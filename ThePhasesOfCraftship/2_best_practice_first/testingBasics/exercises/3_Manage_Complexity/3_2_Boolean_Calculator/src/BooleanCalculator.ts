@@ -21,7 +21,7 @@ export class BooleanCalculator {
 
     public static Evaluate(booleanStr: string): boolean {
 
-        const matches = booleanStr.match(/\(.*\)/g);
+        const matches = booleanStr.match(/\([^()]*\)/g);
         if(matches) {
            matches.forEach(match => {
                booleanStr = booleanStr.replace(match, match.slice(1, -1));
