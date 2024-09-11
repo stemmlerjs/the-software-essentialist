@@ -33,4 +33,17 @@ describe('boolean calculator', () => {
             expect(result).toBe(expected);
         })
     })
+
+    describe('Handling invalid expressions', () => {
+        it.each([
+            { input: '', expected: 'Invalid boolean expression.' },
+            { input: 'NOT', expected: 'Invalid boolean expression.' },
+        ])('Should throw an error for "$input"', ({ input, expected }) => {
+            // arrange
+            const booleanStr = input;
+    
+            // act & assert
+            expect(() => BooleanCalculator.Evaluate(booleanStr)).toThrow(expected);
+        })
+    })
 })
