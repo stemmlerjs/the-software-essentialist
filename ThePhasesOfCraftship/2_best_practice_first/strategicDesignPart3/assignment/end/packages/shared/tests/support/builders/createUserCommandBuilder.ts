@@ -1,8 +1,8 @@
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtils";
 
-export class CreateUserBuilder {
-  private props: CreateUserParams;
+export class CreateUserCommandBuilder {
+  private props: Partial<CreateUserParams>;
 
   constructor() {
     this.props = {

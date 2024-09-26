@@ -44,9 +44,23 @@ export const RegisterPage = () => {
     try {
       // Make API call
       const response = await api.users.register(input);
-      // Save the user details to the cache
+      if (!response.success) {
+        switch (response.error.code){
+          case 'EmailAlreadyInUse':
+            return toast.error('This email is already in use. Perhaps you want to log in?');
+          case 'UsernameAlreadyTaken':
+            return toast.error('Please try a different username, this one is already taken.');
+          case 'ValidationError':
+            // We could further improve this with more refined types to specify which 
+            // form field was invalid.
+            return toast.error(response.error.message);
+          case "ServerError":
+          default:
+            return toast.error('Some backend error occurred');
+        }
+      }
+
       setUser(response.data);
-      console.log('setting data', response.data)
       // Stop the loading spinner
       spinner.deactivate();
       // Show the toast
@@ -60,7 +74,6 @@ export const RegisterPage = () => {
       // Show the toast (for unknown error)
       return toast.error('Some backend error occurred');
     }
-
   };
 
   return (
