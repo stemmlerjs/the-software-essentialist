@@ -1,7 +1,7 @@
 import axios from "axios";
 import { APIResponse, GenericErrors, ServerError } from ".";
 
-export type CreateUserParams = {
+export type CreateUserInput = {
   firstName: string;
   lastName: string;
   email: string;
@@ -36,7 +36,7 @@ export type UserResponse = APIResponse<
 
 export const createUsersAPI = (apiURL: string) => {
   return {
-    register: async (input: CreateUserParams): Promise<CreateUserResponse> => {
+    register: async (input: CreateUserInput): Promise<CreateUserResponse> => {
       try {
         const successResponse = await axios.post(`${apiURL}/users/new`, {
           ...input,

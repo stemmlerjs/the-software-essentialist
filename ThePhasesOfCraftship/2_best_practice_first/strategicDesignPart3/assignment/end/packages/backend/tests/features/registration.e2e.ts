@@ -1,7 +1,7 @@
 import * as path from "path";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { sharedTestRoot } from "@dddforum/shared/src/paths";
-import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
+import { CreateUserCommandBuilder } from "@dddforum/shared/tests/support/builders/createUserCommandBuilder";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { CreateUserParams, CreateUserResponse } from "@dddforum/shared/src/api/users";
 import { createAPIClient } from "@dddforum/shared/src/api";
@@ -50,7 +50,12 @@ defineFeature(feature, (test) => {
     let user: CreateUserParams;
     
     given('I am a new user', async () => {
-      user = new CreateUserBuilder()
+      new CommandBuilder('users')
+        .createUserCommandBuilder()
+        .withAllRandomDetails();
+        .build();
+      
+      user = new CreateUserCommandBuilder()
         .withAllRandomDetails()
         .build();
     });
