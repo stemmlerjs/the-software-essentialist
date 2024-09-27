@@ -6,8 +6,10 @@ import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
   aClassRoom,
+  anAssignment,
   anAssignmentSubmission,
   anEnrolledStudent,
+  aStudent,
   aStudentAssigment,
 } from "../fixtures";
 import { AssignmentSubmission, StudentAssignment } from "@prisma/client";
@@ -31,7 +33,17 @@ defineFeature(feature, (test) => {
     });
 
     given("I was assigned an assignment", async () => {
+      let classroomBuilder = aClassRoom();
       studentAssignment = await aStudentAssigment()
+        .from(
+          anAssignment()
+            .from(classroomBuilder)
+        )
+        .and(
+          anEnrolledStudent()
+            .and(aStudent())
+            .from(classroomBuilder)
+        )
         .build()
     });
 
@@ -62,8 +74,20 @@ defineFeature(feature, (test) => {
     });
 
     given("I have already submitted my assignment", async () => {
+      const classroomBuilder = aClassRoom();
       const response = await anAssignmentSubmission()
-        .from(aStudentAssigment().from(anEnrolledStudent().from(aClassRoom().withName('Math'))))
+        .from(
+          aStudentAssigment()
+            .and(
+              anEnrolledStudent()
+                .and(aStudent())
+                .from(classroomBuilder)
+            )
+            .from(
+              anAssignment()
+                .from(classroomBuilder)
+            )
+        )
         .build()
 
       assignmentSubmission = response.assignmentSubmission;

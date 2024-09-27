@@ -30,8 +30,15 @@ class StudentBuilder {
 
   async build() {    
 
-    let student = await prisma.student.create({
-      data: {
+    let student = await prisma.student.upsert({
+      where: {
+        email: this.student.email as string,
+      },
+      create: {
+        name: this.student.name as string,
+        email: this.student.email as string
+      },
+      update: {
         name: this.student.name as string,
         email: this.student.email as string
       }

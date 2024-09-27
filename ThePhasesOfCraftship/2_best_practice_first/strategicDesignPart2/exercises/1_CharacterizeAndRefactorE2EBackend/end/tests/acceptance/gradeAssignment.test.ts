@@ -10,12 +10,8 @@ import {
   anAssignment,
   anAssignmentSubmission,
   anEnrolledStudent,
-  Assignment,
-  AssignmentBuilder,
+  aStudent,
   aStudentAssigment,
-  EnrolledStudent,
-  Student,
-  StudentBuilder,
 } from "../fixtures";
 import { AssignmentSubmission, StudentAssignment } from "@prisma/client";
 
@@ -36,7 +32,10 @@ defineFeature(feature, (test) => {
     let studentAssignment: StudentAssignment;
 
     given("An student submited an assignment", async () => {
-      const response = await anAssignmentSubmission().build();
+      const classroomBuilder = aClassRoom()
+      const response = await anAssignmentSubmission()
+        .from(aStudentAssigment().from(anAssignment().from(classroomBuilder)).and(anEnrolledStudent().and(aStudent()).from(classroomBuilder)))
+        .build();
       assignmentSubmission = response.assignmentSubmission;
       studentAssignment = response.studentAssignment
     });
@@ -67,11 +66,14 @@ defineFeature(feature, (test) => {
 
     let requestBody: any = {};
     let response: any = {};
-    let assignment: Assignment;
     let studentAssignment: StudentAssignment;
 
     given("A student hasn't yet submitted his assignment", async () => {
-      studentAssignment = await aStudentAssigment().build();
+      const classroomBuilder = aClassRoom();
+      studentAssignment = await aStudentAssigment()
+        .from(anAssignment().from(classroomBuilder))
+        .and(anEnrolledStudent().from(classroomBuilder).and(aStudent()))
+        .build()
     })
     
     when("I try to grade his assignment before he submits it", async () => {
@@ -102,11 +104,20 @@ defineFeature(feature, (test) => {
       let classRoomBuilder = await aClassRoom().withName('Math');
 
       let builderResult = await aGradedAssignment()
-        .from(anAssignmentSubmission()
-        .from(aStudentAssigment()
-          .from(anAssignment().from(classRoomBuilder))
-          .and(anEnrolledStudent().from(classRoomBuilder))))
-        .build();
+      .from(
+        anAssignmentSubmission()
+          .from(
+            aStudentAssigment()
+              .from(anAssignment().from(classRoomBuilder))
+              .and(
+                anEnrolledStudent()
+                  .from(classRoomBuilder)
+                  .and(aStudent())
+              )
+          )
+      )
+      .withGrade('A')
+      .build()
       
         studentId = builderResult.submission.studentAssignment.studentId;
         assignmentId = builderResult.submission.studentAssignment.assignmentId;

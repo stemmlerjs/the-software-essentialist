@@ -3,7 +3,8 @@ import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { anAssignment, Assignment, AssignmentBuilder } from "../fixtures";
+import { aClassRoom, anAssignment } from "../fixtures";
+import { Assignment } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieveAssignment.feature")
@@ -19,7 +20,10 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have a valid assignment", async () => {
-      assignment = await anAssignment().build();
+      let builderResult = await anAssignment()
+        .from(aClassRoom())
+        .build();
+      assignment = builderResult.assignment;
     });
 
     when("I request the assignment", async () => {

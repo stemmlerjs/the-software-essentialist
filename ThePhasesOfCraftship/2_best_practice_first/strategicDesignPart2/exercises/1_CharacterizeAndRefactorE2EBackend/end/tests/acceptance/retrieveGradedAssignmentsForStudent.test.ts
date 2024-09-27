@@ -38,7 +38,6 @@ defineFeature(feature, (test) => {
     then,
   }) => {
     let studentId: string;
-    let assignments: Assignment[] = [];
     let response: any;
     let gradedAssignments: GradedAssignment[] = []
 
@@ -48,37 +47,31 @@ defineFeature(feature, (test) => {
       let enrolledStudentBuilder = anEnrolledStudent()
         .from(classroomBuilder)
         .and(aStudent().withName('Khalil').withEmail('khalil@essentialist.dev'))
-
+      let assignmentBuilder = anAssignment().from(classroomBuilder).withTitle('Calculus Refresher')
+      
       let gradedAssignmentResponseOne = await aGradedAssignment()
         .from(anAssignmentSubmission()
-          .from(
-              aStudentAssigment()
-                .from(anAssignment().from(classroomBuilder))
-                .and(enrolledStudentBuilder)
-            ))
+        .from(aStudentAssigment()
+        .from(assignmentBuilder)
+        .and(enrolledStudentBuilder)))
         .withGrade('A')
+        .build();
+
+      let gradedAssignmentResponseTwo = await aGradedAssignment()
+        .from(anAssignmentSubmission()
+        .from(aStudentAssigment()
+        .from(assignmentBuilder)
+        .and(enrolledStudentBuilder)))
+        .withGrade('B')
         .build();
    
 
-        // let gradedAssignmentResponseTwo = await aGradedAssignment()
-        // .from(anAssignmentSubmission()
-        //   .from(
-        //       aStudentAssigment()
-        //         .from(anAssignment()
-        //             .from(classroomBuilder))
-        //         .and(enrolledStudentBuilder)
-        //     ))
-        // .withGrade('B')
-        // .build();
-
       gradedAssignments = [
         gradedAssignmentResponseOne.gradedAssignment, 
-        // gradedAssignmentResponseTwo.gradedAssignment
+        gradedAssignmentResponseTwo.gradedAssignment
       ];
+
       studentId = gradedAssignmentResponseOne.submission.studentAssignment.studentId
-      console.log( gradedAssignmentResponseOne.submission.studentAssignment.studentId,  
-        // gradedAssignmentResponseTwo.submission.studentAssignment.studentId
-      )
     });
 
     when("I request all graded assignments for this student", async () => {
@@ -87,15 +80,7 @@ defineFeature(feature, (test) => {
 
     then("I should receive all graded assignments for that student", () => {
       expect(response.status).toBe(200);
-      console.log(JSON.stringify(response.body, null, 2))
-      expect(response.body.data.length).toBe(assignments.length);
-      assignments.forEach((assignment: any) => {
-        expect(
-          response.body.data.some(
-            (a: any) => a.assignment.title === assignment.title
-          )
-        ).toBeTruthy();
-      });
+      expect(response.body.data.length).toBe(gradedAssignments.length);
     });
   });
 

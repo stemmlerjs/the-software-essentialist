@@ -14,23 +14,28 @@ export class EnrolledStudentBuilder {
 
   and (studentBuilder: StudentBuilder) {
     this.studentBuilder = studentBuilder;
-    console.log('just set the student builder on enrolled student builder')
-    console.log(this)
     return this;
   }
 
   async build() {
-    const studentBuilderExists = this.studentBuilder === undefined;
-    console.log('student builder exists?', studentBuilderExists,)
-
     if (!this.studentBuilder) throw new Error('You must define the student builder');
     if (!this.classRoomBuilder) throw new Error('You must define the classroom builder');
 
     let classRoom = await this.classRoomBuilder.build();
     let student = await this.studentBuilder.build();
     
-    const enrolledStudent = await prisma.classEnrollment.create({
-      data: {
+    const enrolledStudent = await prisma.classEnrollment.upsert({
+      where: {
+        studentId_classId: {
+          studentId: student.id,
+          classId: classRoom.id
+        }
+      },
+      create: {
+        studentId: student.id,
+        classId: classRoom.id
+      },
+      update: {
         studentId: student.id,
         classId: classRoom.id
       }

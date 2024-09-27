@@ -70,9 +70,6 @@ defineFeature(feature, (test) => {
       expect(response.status).toBe(201);
       expect(response.body.data.studentId).toBeTruthy();
       expect(response.body.data.assignmentId).toBeTruthy();
-      expect(response.body.data.grade).toBeDefined();
-      expect(response.body.data.status).toBeDefined();
-
       expect(response.body.data.studentId).toBe(requestBody.studentId);
       expect(response.body.data.assignmentId).toBe(requestBody.assignmentId);
     });

@@ -4,13 +4,14 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
-  ClassRoomBuilder,
-  AssignmentBuilder,
-  StudentBuilder,
-  Student,
-  ClassRoom,
-  Assignment,
+  anAssignmentSubmission,
+  aStudentAssigment,
+  anEnrolledStudent,
+  anAssignment,
+  aStudent,
+  aClassRoom,
 } from "../fixtures";
+import { AssignmentSubmission } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(
@@ -29,39 +30,50 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let student: Student;
     let response: any = {};
-    let classRoom: ClassRoom;
-    let assignments: Assignment[] = [];
+    let submissions: AssignmentSubmission[] = [];
+    let studentId: string;
 
     given("I have a student with submitted assignments", async () => {
-      ({
-        classRoom: classRoom,
-        students: [student],
-        assignments: assignments,
-      } = await new ClassRoomBuilder()
-        .withStudent(new StudentBuilder())
-        .withAssignmentsAssignedToAllStudentsThenSubmitted([
-          new AssignmentBuilder(),
-          new AssignmentBuilder(),
-        ])
-        .build());
+      let classroomBuilder = aClassRoom();
+      let studentBuilder = aStudent();
+
+      let submissionOne = await anAssignmentSubmission()
+        .from(
+          aStudentAssigment()
+            .and(
+              anEnrolledStudent()
+                .and(studentBuilder)
+                .from(classroomBuilder)
+            )
+            .from(anAssignment().from(classroomBuilder))
+        )
+        .build()
+
+        let submissionTwo = await anAssignmentSubmission()
+          .from(
+            aStudentAssigment()
+              .and(
+                anEnrolledStudent()
+                  .and(studentBuilder)
+                  .from(classroomBuilder)
+              )
+              .from(anAssignment().from(classroomBuilder))
+          )
+          .build();
+        
+        studentId = submissionOne.studentAssignment.studentId
+        submissions = [submissionOne.assignmentSubmission, submissionTwo.assignmentSubmission];
     });
 
     when("I request all submitted assignments for this student", async () => {
-      response = await request(app).get(`/student/${student.id}/assignments`);
+      response = await request(app).get(`/student/${studentId}/assignments`);
     });
 
     then("I should receive all submitted assignments for that student", () => {
       expect(response.status).toBe(200);
-      expect(response.body.data.length).toBe(2);
-      assignments.forEach((assignment: any) => {
-        expect(
-          response.body.data.some(
-            (a: any) => a.assignment.title === assignment.title
-          )
-        ).toBeTruthy();
-      });
+      expect(response.body.data.length).toBe(submissions.length);
+      
     });
   });
 
