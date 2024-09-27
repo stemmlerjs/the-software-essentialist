@@ -3,7 +3,7 @@ import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { Assignment, AssignmentBuilder, ClassRoomBuilder } from "../fixtures";
+import { anAssignment, Assignment, AssignmentBuilder } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/retrieveAssignment.feature")
@@ -19,11 +19,7 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have a valid assignment", async () => {
-      ({
-        assignments: [assignment],
-      } = await new ClassRoomBuilder()
-        .withAssignment(new AssignmentBuilder())
-        .build());
+      assignment = await anAssignment().build();
     });
 
     when("I request the assignment", async () => {
@@ -34,7 +30,7 @@ defineFeature(feature, (test) => {
       expect(response.status).toBe(200);
       expect(response.body.data.title).toBe(assignment.title);
       expect(response.body.data.class).toBeDefined();
-      expect(response.body.data.studentTasks).toBeDefined();
+      expect(response.body.data.studentAssignments).toBeDefined();
     });
   });
 

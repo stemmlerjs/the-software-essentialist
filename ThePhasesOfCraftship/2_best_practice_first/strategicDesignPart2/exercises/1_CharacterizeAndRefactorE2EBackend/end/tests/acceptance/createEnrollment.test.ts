@@ -4,10 +4,11 @@ import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassRoomBuilder, StudentBuilder } from "../fixtures";
+import { aClassRoom, anEnrolledStudent, aStudent, EnrolledStudent } from "../fixtures";
+import { Class, Student } from "@prisma/client";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/enrollStudentToClass.feature")
+  path.join(__dirname, "../features/createEnrollment.feature")
 );
 
 defineFeature(feature, (test) => {
@@ -15,17 +16,20 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
+  let student: Student;
+  let classroom: Class;
+
   test("Successfully enroll a student to a class", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
 
     given("there is a class and a student", async () => {
-      const { classRoom } = await new ClassRoomBuilder().build();
-      const student = await new StudentBuilder().build();
+      classroom = await aClassRoom().build();
+      student = await aStudent().build();
 
       requestBody = {
         studentId: student.id,
-        classId: classRoom.id,
+        classId: classroom.id,
       };
     });
 
@@ -51,7 +55,8 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("there is a student", async () => {
-      const student = await new StudentBuilder().build();
+      student = await aStudent().build();
+
       requestBody = {
         studentId: student.id,
         ...requestBody,
@@ -72,6 +77,38 @@ defineFeature(feature, (test) => {
     then("the student should not be enrolled to the class", () => {
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("ClassNotFound");
+    });
+  });
+
+  test('Already enrolled', ({ given, when, then }) => {
+    let requestBody: any = {};
+    let response: any = {};
+    let enrolledStudent: EnrolledStudent;
+    let classroom: Class;
+
+    given('a student is already enrolled to a class', async () => {
+      let builderResult = await anEnrolledStudent()
+        .from(aClassRoom().withName('Math'))
+        .and(aStudent().withEmail('khalil@essentialist.dev').withName('Khalil'))
+        .build();
+      enrolledStudent = builderResult.enrolledStudent;
+      classroom = builderResult.classRoom;
+    });
+
+    when('I enroll the student to the class again', async () => {
+      requestBody = {
+        classId: classroom.id,
+        studentId: enrolledStudent.studentId
+      };
+
+      response = await request(app)
+        .post("/class-enrollments")
+        .send(requestBody);
+    });
+
+    then('I should see an error message', () => {
+      expect(response.status).toBe(409);
+      expect(response.body.error).toBe("StudentAlreadyEnrolled");
     });
   });
 });

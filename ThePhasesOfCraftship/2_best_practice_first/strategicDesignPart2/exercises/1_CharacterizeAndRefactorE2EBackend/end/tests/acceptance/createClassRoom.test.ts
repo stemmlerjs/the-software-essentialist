@@ -4,6 +4,7 @@ import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
+import { aClassRoom } from "../fixtures";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassRoom.feature")
@@ -50,6 +51,30 @@ defineFeature(feature, (test) => {
       expect(response.status).toBe(400);
       expect(response.body.success).toBeFalsy();
       expect(response.body.error).toBe("ValidationError");
+    });
+  });
+  
+
+  test("Classroom already exists", ({ given, when, then }) => {
+    let classroomName = "Science";
+    let requestBody: any = {
+      name: classroomName
+    };
+    let response: any = {};
+
+    given('I want to create a class room that already exists', async () => {
+      await aClassRoom().withName(classroomName).build()
+    });
+
+    when('I send a request to create a class room', async () => {
+      response = await request(app).post("/classes").send(requestBody);
+    });
+
+    then("the class room should not be created", () => {
+      console.log(response.body)
+      expect(response.status).toBe(409);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.error).toBe("ClassAlreadyExists");
     });
   });
 });

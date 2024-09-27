@@ -5,12 +5,19 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
+  aClassRoom,
+  aGradedAssignment,
+  anAssignment,
+  anAssignmentSubmission,
+  anEnrolledStudent,
   Assignment,
   AssignmentBuilder,
-  ClassRoomBuilder,
+  aStudentAssigment,
+  EnrolledStudent,
   Student,
   StudentBuilder,
 } from "../fixtures";
+import { AssignmentSubmission, StudentAssignment } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/gradeAssignment.feature")
@@ -21,30 +28,23 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
 
-  let requestBody: any = {};
-  let response: any = {};
-  let student: Student;
-  let assignment: Assignment;
-  let studentBuilder: StudentBuilder;
-
-
   test("Successfully grade an assignment", ({ given, when, then }) => {
 
+    let requestBody: any = {};
+    let response: any = {};
+    let assignmentSubmission: AssignmentSubmission;
+    let studentAssignment: StudentAssignment;
+
     given("An student submited an assignment", async () => {
-      studentBuilder = new StudentBuilder();
-      ({
-        students: [student],
-        assignments: [assignment],
-      } = await new ClassRoomBuilder()
-        .withStudent(studentBuilder)
-        .withAssignmentsAssignedToAllStudentsThenSubmitted([new AssignmentBuilder()])
-        .build());
+      const response = await anAssignmentSubmission().build();
+      assignmentSubmission = response.assignmentSubmission;
+      studentAssignment = response.studentAssignment
     });
 
     when("I grade the assignment", async () => {
       requestBody = {
-        studentId: student.id,
-        assignmentId: assignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId,
         grade: "A",
       };
 
@@ -64,20 +64,20 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+
+    let requestBody: any = {};
+    let response: any = {};
+    let assignment: Assignment;
+    let studentAssignment: StudentAssignment;
+
     given("A student hasn't yet submitted his assignment", async () => {
-      studentBuilder = new StudentBuilder();
-      ({
-        students: [student],
-        assignments: [assignment],
-      } = await new ClassRoomBuilder()
-        .withStudent(studentBuilder)
-        .withAssignmentAssignedToAllStudents(new AssignmentBuilder())
-        .build());
+      studentAssignment = await aStudentAssigment().build();
     })
+    
     when("I try to grade his assignment before he submits it", async () => {
       requestBody = {
-        studentId: student.id,
-        assignmentId: assignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId,
         grade: "A",
       };
 
@@ -89,6 +89,44 @@ defineFeature(feature, (test) => {
     then("It should not be marked as graded", async () => {
       expect(response.status).toBe(400);
       expect(response.body.error).toBe("NotSubmittedError");
+    });
+  });
+
+  test('Should fail to re-grade an already graded assignment', ({ given, when, then }) => {
+    let requestBody: any = {};
+    let response: any = {};
+    let studentId: string;
+    let assignmentId: string;
+    
+    given('a submitted assignment has already been graded', async () => {
+      let classRoomBuilder = await aClassRoom().withName('Math');
+
+      let builderResult = await aGradedAssignment()
+        .from(anAssignmentSubmission()
+        .from(aStudentAssigment()
+          .from(anAssignment().from(classRoomBuilder))
+          .and(anEnrolledStudent().from(classRoomBuilder))))
+        .build();
+      
+        studentId = builderResult.submission.studentAssignment.studentId;
+        assignmentId = builderResult.submission.studentAssignment.assignmentId;
+    });
+
+    when('I try to re-grade the assignment', async () => {
+      requestBody = {
+        studentId: studentId,
+        assignmentId: assignmentId,
+        grade: "F",
+      };
+
+      response = await request(app)
+        .post(`/student-assignments/grade`)
+        .send(requestBody);
+    });
+
+    then('it should fail', () => {
+      expect(response.status).toBe(409);
+      expect(response.body.error).toBe("AlreadyGradedAssignment");
     });
   });
 });
