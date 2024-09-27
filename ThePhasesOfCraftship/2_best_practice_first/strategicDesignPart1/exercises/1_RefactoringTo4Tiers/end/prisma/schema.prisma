@@ -17,7 +17,7 @@ model Student {
 
 model Class {
     id               String            @id @default(uuid())
-    name             String
+    name             String            @unique
     students         ClassEnrollment[]
     assignments      Assignment[]
     classGradeReport ClassGradeReport?
