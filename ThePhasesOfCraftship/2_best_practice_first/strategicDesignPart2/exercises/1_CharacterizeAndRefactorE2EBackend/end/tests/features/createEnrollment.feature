@@ -13,3 +13,8 @@ Feature: Enroll a student to a class
         Given there is a student
         When I enroll the student to a class that doesn't exist
         Then the student should not be enrolled to the class
+    
+    Scenario: Already enrolled
+        Given a student is already enrolled to a class
+        When I enroll the student to the class again
+        Then I should see an error message

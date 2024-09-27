@@ -4,8 +4,8 @@ import { app } from "../../src/index";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassRoomBuilder } from "../fixtures/classRoomBuilder";
-import { ClassRoom } from "../fixtures";
+import { aClassRoom } from "../fixtures";
+import { Class } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createAssignment.feature")
@@ -19,13 +19,13 @@ defineFeature(feature, (test) => {
   test("Successfully create an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let classRoom: ClassRoom;
+    let classRoom: Class;
 
-    given("I give a class", async () => {
-      ({ classRoom } = await new ClassRoomBuilder().build());
+    given("a class exists", async () => {
+      classRoom = await aClassRoom().build();
     });
 
-    when("I create an assignment to the class", async () => {
+    when("I create an assignment for the class", async () => {
       requestBody = {
         title: "Assignment 1",
         classId: classRoom.id,

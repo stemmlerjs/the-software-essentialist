@@ -13,3 +13,8 @@ Feature: Grade an assignment
         Given A student hasn't yet submitted his assignment
         When I try to grade his assignment before he submits it
         Then It should not be marked as graded
+
+    Scenario: Should fail to re-grade an already graded assignment
+        Given a submitted assignment has already been graded 
+        When I try to re-grade the assignment 
+        Then it should fail

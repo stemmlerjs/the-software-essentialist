@@ -10,6 +10,7 @@ const Errors = {
   ValidationError: "ValidationError",
   StudentNotFound: "StudentNotFound",
   ClassNotFound: "ClassNotFound",
+  ClassAlreadyExists: "ClassAlreadyExists",
   AssignmentNotFound: "AssignmentNotFound",
   ServerError: "ServerError",
   ClientError: "ClientError",
@@ -17,6 +18,8 @@ const Errors = {
   StudentNotEnrolled: "StudentNotEnrolled",
   AssignmentAlreadySubmitted: "AssignmentAlreadySubmitted",
   NotSubmittedError: "NotSubmittedError",
+  AlreadyAssignedAssignmentToStudent: 'AlreadyAssignedAssignmentToStudent',
+  AlreadyGradedAssignment: 'AlreadyGradedAssignment'
 };
 
 function isMissingKeys(data: any, keysToCheckFor: string[]) {
@@ -83,6 +86,14 @@ app.post("/classes", async (req: Request, res: Response) => {
 
     const { name } = req.body;
 
+    const classroomExists = await prisma.class.findUnique({ where: { name }})
+
+    if (classroomExists) {
+      return res
+      .status(409)
+      .json({ error: Errors.ClassAlreadyExists, data: undefined, success: false });
+    }
+
     const cls = await prisma.class.create({
       data: {
         name,
@@ -143,7 +154,7 @@ app.post("/class-enrollments", async (req: Request, res: Response) => {
     });
 
     if (duplicatedClassEnrollment) {
-      return res.status(400).json({
+      return res.status(409).json({
         error: Errors.StudentAlreadyEnrolled,
         data: undefined,
         success: false,
@@ -265,6 +276,21 @@ app.post("/student-assignments", async (req: Request, res: Response) => {
       });
     }
 
+    const alreadyAssignedAssignment = await prisma.studentAssignment.findFirst({ 
+      where: {
+        studentId: studentId,
+        assignmentId: assignmentId
+      }
+    });
+
+    if (alreadyAssignedAssignment) {
+      return res.status(409).json({
+        error: Errors.AlreadyAssignedAssignmentToStudent,
+        data: undefined,
+        success: false,
+      });
+    }
+
     const studentAssignment = await prisma.studentAssignment.create({
       data: {
         studentId,
@@ -315,25 +341,26 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
       });
     }
 
-    if (studentAssignment.status === "submitted") {
-      return res.status(400).json({
+    // Check if assignment submission exists
+    const assignmentSubmission = await prisma.assignmentSubmission.findFirst({
+      where: {
+        studentAssignmentId: studentAssignment.id
+      }
+    });
+
+    if (assignmentSubmission) {
+      return res.status(409).json({
         error: Errors.AssignmentAlreadySubmitted,
         data: undefined,
         success: false,
       });
     }
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-      where: {
-        studentId_assignmentId: {
-          assignmentId,
-          studentId,
-        },
-      },
+    const studentAssignmentUpdated = await prisma.assignmentSubmission.create({
       data: {
-        status: "submitted",
-      },
-    });
+        studentAssignmentId: studentAssignment.id
+      }
+    },);
 
     res.status(201).json({
       error: undefined,
@@ -361,7 +388,7 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
     const { studentId, assignmentId, grade } = req.body;
 
     // validate grade
-    if (!["A", "B", "C", "D"].includes(grade)) {
+    if (!["A", "A+", "B", "C", "D", "F"].includes(grade)) {
       return res.status(400).json({
         error: Errors.ValidationError,
         data: undefined,
@@ -387,7 +414,14 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
       });
     }
 
-    if (studentAssignment.status !== "submitted") {
+    // Check if student assignment submitted
+    const studentAssignmentSubmission = await prisma.assignmentSubmission.findFirst({
+      where: {
+        studentAssignmentId: studentAssignment.id
+      }
+    })
+
+    if (!studentAssignmentSubmission) {
       return res.status(400).json({
         error: Errors.NotSubmittedError,
         data: undefined,
@@ -395,21 +429,34 @@ app.post("/student-assignments/grade", async (req: Request, res: Response) => {
       });
     }
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
+    const alreadyGradedAssignment = await prisma.gradedAssignment.findFirst({
       where: {
-        studentId_assignmentId: {
-          assignmentId,
-          studentId,
-        },
-      },
+        assignmentSubmission: {
+          studentAssignment: {
+            assignmentId: assignmentId
+          }
+        }
+      }
+    });
+
+    if (alreadyGradedAssignment) {
+      return res.status(409).json({
+        error: Errors.AlreadyGradedAssignment,
+        data: undefined,
+        success: false,
+      });
+    }
+
+    const studentAssignmentGrade = await prisma.gradedAssignment.create({
       data: {
         grade,
-      },
+        assignmentSubmissionId: studentAssignmentSubmission?.id as string
+      }
     });
 
     res.status(201).json({
       error: undefined,
-      data: parseForResponse(studentAssignmentUpdated),
+      data: parseForResponse(studentAssignmentGrade),
       success: true,
     });
   } catch (error) {
@@ -500,7 +547,7 @@ app.get("/assignments/:id", async (req: Request, res: Response) => {
     const assignment = await prisma.assignment.findUnique({
       include: {
         class: true,
-        studentTasks: true,
+        studentAssignments: true,
       },
       where: {
         id,
@@ -558,7 +605,7 @@ app.get("/classes/:id/assignments", async (req: Request, res: Response) => {
       },
       include: {
         class: true,
-        studentTasks: true,
+        studentAssignments: true,
       },
     });
 
@@ -603,8 +650,7 @@ app.get("/student/:id/assignments", async (req: Request, res: Response) => {
 
     const studentAssignments = await prisma.studentAssignment.findMany({
       where: {
-        studentId: id,
-        status: "submitted",
+        studentId: id
       },
       include: {
         assignment: true,
@@ -650,22 +696,26 @@ app.get("/student/:id/grades", async (req: Request, res: Response) => {
       });
     }
 
-    const studentAssignments = await prisma.studentAssignment.findMany({
+    const gradedAssignments = await prisma.gradedAssignment.findMany({
       where: {
-        studentId: id,
-        status: "submitted",
-        grade: {
-          not: null,
-        },
+        assignmentSubmission: {
+          studentAssignment: {
+            studentId: id
+          }
+        }
       },
       include: {
-        assignment: true,
+        assignmentSubmission: {
+          include: {
+            studentAssignment: true
+          }
+        },
       },
     });
 
     res.status(200).json({
       error: undefined,
-      data: parseForResponse(studentAssignments),
+      data: parseForResponse(gradedAssignments),
       success: true,
     });
   } catch (error) {

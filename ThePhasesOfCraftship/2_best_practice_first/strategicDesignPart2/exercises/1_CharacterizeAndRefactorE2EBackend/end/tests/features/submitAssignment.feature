@@ -5,11 +5,11 @@ Feature: Submit an assignment
     So that I can get a grade
 
     Scenario: Successfully submit an assignment
-        Given I was assigned to an assignment
-        When I submit the assignment
-        Then It should be marked as submitted
+        Given I was assigned an assignment
+        When I submit my assignment
+        Then it should be successfully submitted
 
-    Scenario: Fail to submit an assignment twice
-        And I submitted the assignment
-        When I submit the assignment again
+    Scenario: Submitting assignments multiple times
+        Given I have already submitted my assignment
+        When I submit my assignment again 
         Then I should see an error message

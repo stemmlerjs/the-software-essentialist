@@ -1,116 +1,45 @@
 import { prisma } from "../../src/database";
 import { faker } from "@faker-js/faker";
-import { Student, StudentAssignment } from "./types";
+import { Student } from "@prisma/client";
 
 class StudentBuilder {
-  private student: Student;
-  private assignments: StudentAssignment[];
+  private student: Partial<Student>;
 
   constructor() {
-    this.student = this.emptyStudent();
-    this.assignments = [];
-  }
-
-  async build() {
-    this.student = await prisma.student.create({
-      data: {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-      },
-    });
-
-    return this.student;
-  }
-
-  async assignAssignments(assignments: any[]) {
-    this.assignments = await Promise.all(
-      assignments.map((assignment) => {
-        return prisma.studentAssignment.create({
-          data: {
-            studentId: this.student.id,
-            assignmentId: assignment.id,
-          },
-        });
-      })
-    );
-
-    return this.assignments;
-  }
-
-  async assignAssignment(assignmentId: string) {
-    const assignment = await prisma.studentAssignment.create({
-      data: {
-        assignmentId,
-        studentId: this.student.id,
-      },
-    });
-
-    this.assignments.push(assignment);
-    return this.assignments;
-  }
-
-  async submitAssignments(assignments: any[]) {
-    this.assignments = await Promise.all(
-      assignments.map((assignment) => {
-        return prisma.studentAssignment.create({
-          data: {
-            assignmentId: assignment.id,
-            studentId: this.student.id,
-            status: "submitted",
-          },
-        });
-      })
-    );
-
-    return this.assignments;
-  }
-
-  async submitAssignment(assignmentId: string) {
-    return prisma.studentAssignment.update({
-      where: {
-        studentId_assignmentId: {
-          assignmentId,
-          studentId: this.student.id,
-        },
-      },
-      data: {
-        status: "submitted",
-      },
-    });
-  }
-
-  async gradeAssignments(assignments: any[]) {
-    this.assignments = await Promise.all(
-      assignments.map((assignment) => {
-        return prisma.studentAssignment.create({
-          data: {
-            assignmentId: assignment.id,
-            studentId: this.student.id,
-            status: "submitted",
-            grade: "A",
-          },
-        });
-      })
-    );
-
-    return this.assignments;
-  }
-
-  getStudent() {
-    return this.student;
-  }
-
-  getAssignments() {
-    return this.assignments;
-  }
-
-  emptyStudent(): Student {
-    return {
-      id: "",
-      name: "",
-      email: "",
+    this.student = {
+      name: faker.person.fullName(),
+      email: faker.internet.email()
     };
   }
+
+  withRandomDetails () {
+    this.student.email = faker.internet.email();
+    this.student.name = faker.person.fullName();
+    return this;
+  }
+
+  withName(name: string) {
+    this.student.name = name;
+    return this;
+  }
+
+  withEmail (email: string) {
+    this.student.email = email;
+    return this;
+  }
+
+  async build() {    
+
+    let student = await prisma.student.create({
+      data: {
+        name: this.student.name as string,
+        email: this.student.email as string
+      }
+    });
+
+    return student as Student;
+  }
+
 }
 
 export { StudentBuilder };

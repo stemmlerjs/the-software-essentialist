@@ -4,9 +4,10 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
+  aClassRoom,
+  anAssignment,
   Assignment,
   AssignmentBuilder,
-  ClassRoomBuilder,
   ClassRoom,
 } from "../fixtures";
 
@@ -29,10 +30,9 @@ defineFeature(feature, (test) => {
     let response: any = {};
 
     given("I have a class room with assignments", async () => {
-      ({ classRoom: classRoom, assignments: assignments } =
-        await new ClassRoomBuilder()
-          .withAssignments([new AssignmentBuilder(), new AssignmentBuilder()])
-          .build());
+      await anAssignment().from(aClassRoom().withName('Math')).build();
+      response = await anAssignment().from(aClassRoom().withName('Math')).build();
+      classRoom = response.classRoom;
     });
 
     when("I request all assignments for this class room", async () => {
@@ -41,7 +41,7 @@ defineFeature(feature, (test) => {
 
     then("I should receive all assignments for that class room", () => {
       expect(response.status).toBe(200);
-      expect(response.body.data.length).toBe(assignments.length);
+      expect(response.body.data.length).toBe(2);
       assignments.forEach((assignment: any) => {
         expect(
           response.body.data.some((a: any) => a.title === assignment.title)

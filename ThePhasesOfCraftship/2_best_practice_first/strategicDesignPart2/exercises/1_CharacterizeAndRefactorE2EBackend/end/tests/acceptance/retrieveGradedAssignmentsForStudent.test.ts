@@ -4,13 +4,21 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
-  ClassRoomBuilder,
   AssignmentBuilder,
   StudentBuilder,
   Student,
   Assignment,
   ClassRoom,
+  aStudent,
+  aGradedAssignment,
+  aStudentAssigment,
+  anAssignmentSubmission,
+  anEnrolledStudent,
+  EnrolledStudent,
+  anAssignment,
+  aClassRoom,
 } from "../fixtures";
+import { GradedAssignment } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(
@@ -29,31 +37,57 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    let student: Student;
+    let studentId: string;
     let assignments: Assignment[] = [];
     let response: any;
-    let classRoom: ClassRoom;
+    let gradedAssignments: GradedAssignment[] = []
 
     given("I have a student with graded assignments", async () => {
-      ({
-        students: [student],
-        classRoom: classRoom,
-        assignments: assignments,
-      } = await new ClassRoomBuilder()
-        .withStudent(new StudentBuilder())
-        .withAssignmentAssignmentToAllStudentsThenSubmittedAndGraded([
-          new AssignmentBuilder(),
-          new AssignmentBuilder(),
-        ])
-        .build());
+      // Common
+      let classroomBuilder = aClassRoom().withName('Math')
+      let enrolledStudentBuilder = anEnrolledStudent()
+        .from(classroomBuilder)
+        .and(aStudent().withName('Khalil').withEmail('khalil@essentialist.dev'))
+
+      let gradedAssignmentResponseOne = await aGradedAssignment()
+        .from(anAssignmentSubmission()
+          .from(
+              aStudentAssigment()
+                .from(anAssignment().from(classroomBuilder))
+                .and(enrolledStudentBuilder)
+            ))
+        .withGrade('A')
+        .build();
+   
+
+        // let gradedAssignmentResponseTwo = await aGradedAssignment()
+        // .from(anAssignmentSubmission()
+        //   .from(
+        //       aStudentAssigment()
+        //         .from(anAssignment()
+        //             .from(classroomBuilder))
+        //         .and(enrolledStudentBuilder)
+        //     ))
+        // .withGrade('B')
+        // .build();
+
+      gradedAssignments = [
+        gradedAssignmentResponseOne.gradedAssignment, 
+        // gradedAssignmentResponseTwo.gradedAssignment
+      ];
+      studentId = gradedAssignmentResponseOne.submission.studentAssignment.studentId
+      console.log( gradedAssignmentResponseOne.submission.studentAssignment.studentId,  
+        // gradedAssignmentResponseTwo.submission.studentAssignment.studentId
+      )
     });
 
     when("I request all graded assignments for this student", async () => {
-      response = await request(app).get(`/student/${student.id}/grades`);
+      response = await request(app).get(`/student/${studentId}/grades`);
     });
 
     then("I should receive all graded assignments for that student", () => {
       expect(response.status).toBe(200);
+      console.log(JSON.stringify(response.body, null, 2))
       expect(response.body.data.length).toBe(assignments.length);
       assignments.forEach((assignment: any) => {
         expect(

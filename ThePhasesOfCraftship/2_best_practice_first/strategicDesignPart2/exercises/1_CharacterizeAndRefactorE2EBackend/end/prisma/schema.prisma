@@ -1,65 +1,80 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:../dev.db" // Replace with your SQLite file path
+  provider = "sqlite"
+  url      = "file:../dev.db" // Replace with your SQLite file path
 }
 
 model Student {
-    id          String              @id @default(uuid())
-    name        String
-    email       String              @unique
-    classes     ClassEnrollment[]
-    assignments StudentAssignment[]
-    reportCards ReportCard[]
+  id          String              @id @default(uuid())
+  name        String
+  email       String              @unique
+  classes     ClassEnrollment[]
+  assignments StudentAssignment[]
+  reportCards ReportCard[]
 }
 
 model Class {
-    id               String            @id @default(uuid())
-    name             String            @unique
-    students         ClassEnrollment[]
-    assignments      Assignment[]
-    classGradeReport ClassGradeReport?
+  id               String            @id @default(uuid())
+  name             String            @unique
+  students         ClassEnrollment[]
+  assignments      Assignment[]
+  classGradeReport ClassGradeReport?
 }
 
 model ClassEnrollment {
-    studentId String
-    classId   String
-    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-    class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  studentId String
+  classId   String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
 
-    @@id([studentId, classId])
+  @@id([studentId, classId])
 }
 
 model Assignment {
-    id           String              @id @default(uuid())
-    classId      String
-    title        String
-    class        Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
-    studentTasks StudentAssignment[]
+  id                 String              @id @default(uuid())
+  classId            String
+  title              String
+  class              Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
+  studentAssignments StudentAssignment[]
 }
 
 model StudentAssignment {
-    studentId    String
-    assignmentId String
-    grade        String?
-    status       String     @default("NOT_STARTED")
-    student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
-    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  id                   String                 @id @default(uuid()) // Add an id for relation
+  studentId            String
+  assignmentId         String
+  student              Student                @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignment           Assignment             @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  AssignmentSubmission AssignmentSubmission[]
 
-    @@id([studentId, assignmentId])
+  @@unique([studentId, assignmentId]) // Ensure uniqueness for student and assignment
+}
+
+model AssignmentSubmission {
+  id                  String            @id @default(uuid()) 
+  studentAssignmentId String
+  submissionContent   String? 
+  studentAssignment   StudentAssignment @relation(fields: [studentAssignmentId], references: [id], onDelete: Cascade)
+  gradedAssignment    GradedAssignment?
+}
+
+model GradedAssignment {
+  id                     String               @id @default(uuid()) 
+  assignmentSubmissionId String               @unique
+  grade                  String?
+  assignmentSubmission   AssignmentSubmission @relation(fields: [assignmentSubmissionId], references: [id], onDelete: Cascade)
 }
 
 model ReportCard {
-    id        String  @id @default(uuid())
-    studentId String
-    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  id        String  @id @default(uuid())
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model ClassGradeReport {
-    id      String @id @default(uuid())
-    classId String @unique
-    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  classId String @unique
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 }

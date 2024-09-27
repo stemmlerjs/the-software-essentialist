@@ -5,7 +5,7 @@ Feature: Create an assignment
     So that I can assign it to students
 
     Scenario: Successfully create an assignment
-        Given I give a class
-        When I create an assignment to the class
+        Given a class exists
+        When I create an assignment for the class
         Then the assignment should be created successfully
 

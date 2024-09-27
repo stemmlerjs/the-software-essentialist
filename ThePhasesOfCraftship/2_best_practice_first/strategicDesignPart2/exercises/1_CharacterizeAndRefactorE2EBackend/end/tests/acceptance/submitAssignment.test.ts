@@ -5,12 +5,12 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import path from "path";
 import { resetDatabase } from "../fixtures/reset";
 import {
-  ClassRoomBuilder,
-  AssignmentBuilder,
-  StudentBuilder,
-  Student,
-  Assignment,
+  aClassRoom,
+  anAssignmentSubmission,
+  anEnrolledStudent,
+  aStudentAssigment,
 } from "../fixtures";
+import { AssignmentSubmission, StudentAssignment } from "@prisma/client";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submitAssignment.feature")
@@ -24,29 +24,21 @@ defineFeature(feature, (test) => {
   test("Successfully submit an assignment", ({ given, when, then }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: Student;
-    let assignment: Assignment;
-    let studentBuilder: StudentBuilder;
+    let studentAssignment: StudentAssignment;
 
-    beforeAll(async () => {
-      studentBuilder = new StudentBuilder();
-      ({
-        students: [student],
-        assignments: [assignment],
-      } = await new ClassRoomBuilder()
-        .withStudent(studentBuilder)
-        .withAssignment(new AssignmentBuilder())
-        .build());
+    beforeEach(async () => {
+      await resetDatabase();
     });
 
-    given("I was assigned to an assignment", async () => {
-      await studentBuilder.assignAssignment(assignment.id);
+    given("I was assigned an assignment", async () => {
+      studentAssignment = await aStudentAssigment()
+        .build()
     });
 
-    when("I submit the assignment", async () => {
+    when("I submit my assignment", async () => {
       requestBody = {
-        studentId: student.id,
-        assignmentId: assignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId
       };
 
       response = await request(app)
@@ -54,39 +46,34 @@ defineFeature(feature, (test) => {
         .send(requestBody);
     });
 
-    then("It should be marked as submitted", async () => {
+    then("it should be successfully submitted", async () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.status).toBe("submitted");
     });
   });
 
-  test("Fail to submit an assignment twice", ({ given, when, then, and }) => {
+  test("Submitting assignments multiple times", ({ given, when, then, and }) => {
     let requestBody: any = {};
     let response: any = {};
-    let student: Student;
-    let assignment: Assignment;
-    let studentBuilder: StudentBuilder;
+    let assignmentSubmission: AssignmentSubmission;
+    let studentAssignment: StudentAssignment;
 
     beforeEach(async () => {
-      studentBuilder = new StudentBuilder();
-      ({
-        students: [student],
-        assignments: [assignment],
-      } = await new ClassRoomBuilder()
-        .withStudent(studentBuilder)
-        .withAssignment(new AssignmentBuilder())
-        .withAssignedAssignments()
-        .build());
+      await resetDatabase();
     });
 
-    given("I submitted the assignment", async () => {
-      await studentBuilder.submitAssignment(assignment.id);
+    given("I have already submitted my assignment", async () => {
+      const response = await anAssignmentSubmission()
+        .from(aStudentAssigment().from(anEnrolledStudent().from(aClassRoom().withName('Math'))))
+        .build()
+
+      assignmentSubmission = response.assignmentSubmission;
+      studentAssignment = response.studentAssignment;
     });
 
-    when("I submit the assignment again", async () => {
+    when("I submit my assignment again", async () => {
       requestBody = {
-        studentId: student.id,
-        assignmentId: assignment.id,
+        studentId: studentAssignment.studentId,
+        assignmentId: studentAssignment.assignmentId,
       };
 
       response = await request(app)
@@ -95,7 +82,7 @@ defineFeature(feature, (test) => {
     });
 
     then("I should see an error message", async () => {
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(409);
       expect(response.body.error).toBe("AssignmentAlreadySubmitted");
     });
   });
