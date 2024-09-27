@@ -359,7 +359,7 @@ app.post("/student-assignments/submit", async (req: Request, res: Response) => {
     const studentAssignmentUpdated = await prisma.assignmentSubmission.create({
       data: {
         studentAssignmentId: studentAssignment.id
-      }
+      },
     },);
 
     res.status(201).json({

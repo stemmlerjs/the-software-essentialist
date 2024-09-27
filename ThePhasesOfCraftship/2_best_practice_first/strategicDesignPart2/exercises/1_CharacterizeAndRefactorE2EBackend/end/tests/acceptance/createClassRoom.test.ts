@@ -71,7 +71,6 @@ defineFeature(feature, (test) => {
     });
 
     then("the class room should not be created", () => {
-      console.log(response.body)
       expect(response.status).toBe(409);
       expect(response.body.success).toBeFalsy();
       expect(response.body.error).toBe("ClassAlreadyExists");

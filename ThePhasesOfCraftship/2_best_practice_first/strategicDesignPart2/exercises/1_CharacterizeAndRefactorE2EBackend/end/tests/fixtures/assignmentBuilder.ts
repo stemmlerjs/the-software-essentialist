@@ -19,6 +19,11 @@ class AssignmentBuilder {
     return this;
   }
 
+  withTitle (title: string) {
+    this.assignment.title = title;
+    return this;
+  }
+
   async build() {
     if (this.classRoomBuilder === undefined) throw new Error('classroomBuilder not defined')
     const classRoom = await this.classRoomBuilder.build();
