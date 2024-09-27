@@ -49,7 +49,7 @@ async function seed() {
         data: {
           studentId: students[i].id,
           assignmentId: assignments[j].id,
-          grade: ["A", "B", "C", "D"][Math.floor(Math.random() * 4)], // Randomly assign grades
+          // grade: ["A", "B", "C", "D"][Math.floor(Math.random() * 4)], // Randomly assign grades
         },
       });
     }
