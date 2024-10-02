@@ -5,19 +5,18 @@ describe("fizzbuzz", () => {
     expect(typeof fizzbuzz(5)).toBe("string");
   });
 
-  it("should return fizz for 3", () => {
-    expect(fizzbuzz(3)).toBe("fizz");
-  });
+  it.each([3, 6, 9, 12])(
+    "should return fizz for (%i) which is multiplication of 3",
+    (number) => {
+      expect(fizzbuzz(number)).toBe("fizz");
+    }
+  );
 
   it("should return buzz for 5", () => {
     expect(fizzbuzz(5)).toBe("buzz");
   });
 
-  it("should return fizz for multiplication 3", () => {
-    expect(fizzbuzz(6)).toBe("fizz");
-  });
-
-  it("should return fizz for multiplication 5", () => {
+  it("should return buzz for multiplication 5", () => {
     expect(fizzbuzz(10)).toBe("buzz");
   });
 
