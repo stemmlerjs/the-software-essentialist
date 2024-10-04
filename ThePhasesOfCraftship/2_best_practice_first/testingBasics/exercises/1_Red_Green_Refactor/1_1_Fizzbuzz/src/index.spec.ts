@@ -12,13 +12,12 @@ describe("fizzbuzz", () => {
     }
   );
 
-  it("should return buzz for 5", () => {
-    expect(fizzbuzz(5)).toBe("buzz");
-  });
-
-  it("should return buzz for multiplication 5", () => {
-    expect(fizzbuzz(10)).toBe("buzz");
-  });
+  it.each([5, 10, 20])(
+    "should return fizz for (%i) which is multiplication of 5",
+    (number) => {
+      expect(fizzbuzz(number)).toBe("buzz");
+    }
+  );
 
   it("should return fizzbuzz for 15", () => {
     expect(fizzbuzz(15)).toBe("fizzbuzz");
