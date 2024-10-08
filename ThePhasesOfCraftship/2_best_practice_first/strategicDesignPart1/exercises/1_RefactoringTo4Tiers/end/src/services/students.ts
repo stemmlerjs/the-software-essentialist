@@ -22,6 +22,8 @@ class StudentsService {
   async getStudent  (dto: StudentID) {
     const { id } = dto
     const response = await this.db.students.getById(id);
+
+    if (!response) throw new StudentNotFoundException();
     return response;
   };
 
