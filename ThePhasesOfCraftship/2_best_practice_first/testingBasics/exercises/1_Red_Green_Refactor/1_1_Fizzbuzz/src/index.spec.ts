@@ -1,30 +1,29 @@
 import { fizzbuzz } from "./fizzbuzz";
 
 describe("fizzbuzz", () => {
-  it("should return string", () => {
-    expect(typeof fizzbuzz(5)).toBe("string");
-  });
-
   it.each([3, 6, 9, 12])(
-    "should return fizz for (%i) which is multiplication of 3",
+    "should return Fizz for multiples of 3 (%i)",
     (number) => {
       expect(fizzbuzz(number)).toBe("fizz");
     }
   );
 
   it.each([5, 10, 20])(
-    "should return fizz for (%i) which is multiplication of 5",
+    "should return buzz for multiples of 5 (%i)",
     (number) => {
       expect(fizzbuzz(number)).toBe("buzz");
     }
   );
 
-  it("should return fizzbuzz for 15", () => {
-    expect(fizzbuzz(15)).toBe("fizzbuzz");
-  });
+  it.each([15, 30, 45])(
+    "should return fizzbuzz for multiples of 15 (%i)",
+    (number) => {
+      expect(fizzbuzz(number)).toBe("fizzbuzz");
+    }
+  );
 
   it.each([2, 4, 7, 11, 13, 17, 19, 28, 32, 43, 49, 58, 68, 79, 89, 98])(
-    "should return number for any number (%i) that's not multiplication of 3 or 5",
+    "should return number for any number (%i) that's not multiple of 3,5 nor 15`",
     (number) => {
       expect(fizzbuzz(number)).toBe(number);
     }
