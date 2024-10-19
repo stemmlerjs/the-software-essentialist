@@ -5,11 +5,10 @@ describe("palindrome checker", () => {
     expect(isPalindrome("mom")).toBeTruthy();
   });
 
-  test("should validate 'Mom' as palindrome", () => {
-    expect(isPalindrome("Mom")).toBeTruthy();
-  });
-
-  test("should validate 'MoM as palindrome", () => {
-    expect(isPalindrome("MoM")).toBeTruthy();
-  });
+  test.each(["Mom", "MOM"])(
+    "should validate uppercase single word as palindrome",
+    (val) => {
+      expect(isPalindrome(val)).toBeTruthy();
+    }
+  );
 });
