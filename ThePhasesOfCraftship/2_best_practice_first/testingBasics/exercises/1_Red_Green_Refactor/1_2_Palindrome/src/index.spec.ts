@@ -12,7 +12,10 @@ describe("palindrome checker", () => {
     }
   );
 
-  test("should not confirm 'Momx' as palindrome", () => {
-    expect(isPalindrome("Momx")).toBeFalsy();
-  });
+  test.each(["Momx", "rocket", "JohnDeep"])(
+    "should not confirm %s as palindrome",
+    (val) => {
+      expect(isPalindrome(val)).toBe(false);
+    }
+  );
 });
