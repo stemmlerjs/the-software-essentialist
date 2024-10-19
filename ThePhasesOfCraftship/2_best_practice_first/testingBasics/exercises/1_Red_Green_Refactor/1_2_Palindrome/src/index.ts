@@ -1,5 +1,6 @@
 export const isPalindrome = (val: string) => {
-  if (val.toLowerCase() === "momx") return false;
-  if (val.toLowerCase() === "mom") return true;
-  return undefined;
+  const lowerCaseVal = val.toLowerCase();
+  const reversedVal = lowerCaseVal.split("").reverse().join("");
+  if (lowerCaseVal === reversedVal) return true;
+  return false;
 };
