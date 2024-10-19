@@ -11,4 +11,8 @@ describe("palindrome checker", () => {
       expect(isPalindrome(val)).toBeTruthy();
     }
   );
+
+  test("should not confirm 'Momx' as palindrome", () => {
+    expect(isPalindrome("Momx")).toBeFalsy();
+  });
 });
