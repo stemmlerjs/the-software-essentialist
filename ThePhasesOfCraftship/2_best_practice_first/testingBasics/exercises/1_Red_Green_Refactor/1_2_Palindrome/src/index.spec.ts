@@ -8,4 +8,8 @@ describe("palindrome checker", () => {
   test("should validate 'Mom' as palindrome", () => {
     expect(isPalindrome("Mom")).toBeTruthy();
   });
+
+  test("should validate 'MoM as palindrome", () => {
+    expect(isPalindrome("MoM")).toBeTruthy();
+  });
 });
