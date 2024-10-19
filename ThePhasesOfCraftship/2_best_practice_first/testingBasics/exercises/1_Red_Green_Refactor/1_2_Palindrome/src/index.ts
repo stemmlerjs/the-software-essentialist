@@ -1,3 +1,3 @@
 export const isPalindrome = (val: string) => {
-  if (val === "mom") return true;
+  if (val.toLowerCase() === "mom") return true;
 };
