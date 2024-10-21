@@ -15,21 +15,21 @@ describe("palindrome checker", () => {
   test.each(["Momx", "rocket", "JohnDeep"])(
     "should not confirm %s as palindrome",
     (val) => {
-      expect(isPalindrome(val)).toBe(false);
+      expect(isPalindrome(val)).toBeFalsy();
     }
   );
 
   test.each(["Was It A Rat I Saw", "Never Odd or Even", "1Never Odd or Even1"])(
     "should confirm phrase (%s) as palindrome ",
     (val) => {
-      expect(isPalindrome(val)).toBe(true);
+      expect(isPalindrome(val)).toBeTruthy();
     }
   );
 
   test.each(["That's not a palindrome", "Never Odd or Even1"])(
     "should not confirm phrase (%s) as palindrome ",
     (val) => {
-      expect(isPalindrome(val)).not.toBe(true);
+      expect(isPalindrome(val)).toBeFalsy();
     }
   );
 });
