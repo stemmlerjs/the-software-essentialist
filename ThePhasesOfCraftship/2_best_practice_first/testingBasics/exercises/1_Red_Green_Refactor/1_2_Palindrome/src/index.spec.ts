@@ -19,7 +19,10 @@ describe("palindrome checker", () => {
     }
   );
 
-  test("should confirm phrase as phrase", () => {
-    expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
-  })
+  test.each(["Was It A Rat I Saw", "Never Odd or Even", "1Never Odd or Even1"])(
+    "should confirm phrase (%s) as palindrome ",
+    (val) => {
+      expect(isPalindrome(val)).toBe(true);
+    }
+  );
 });
