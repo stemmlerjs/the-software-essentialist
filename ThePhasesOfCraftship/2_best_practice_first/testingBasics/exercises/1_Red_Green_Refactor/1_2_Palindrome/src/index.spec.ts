@@ -25,4 +25,11 @@ describe("palindrome checker", () => {
       expect(isPalindrome(val)).toBe(true);
     }
   );
+
+  test.each(["That's not a palindrome", "Never Odd or Even1"])(
+    "should not confirm phrase (%s) as palindrome ",
+    (val) => {
+      expect(isPalindrome(val)).not.toBe(true);
+    }
+  );
 });
