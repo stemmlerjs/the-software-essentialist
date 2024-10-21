@@ -18,4 +18,8 @@ describe("palindrome checker", () => {
       expect(isPalindrome(val)).toBe(false);
     }
   );
+
+  test("should confirm phrase as phrase", () => {
+    expect(isPalindrome("Was It A Rat I Saw")).toBe(true);
+  })
 });
