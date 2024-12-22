@@ -19,14 +19,16 @@ describe('Password validator', () => {
 
   })
 
-  test('fails verification if password is not between 5 and 15 characters long', ()=>{
-    const password= "1234"
-    const output = validatePassword(password);
+  test('fails verification if password is under 5 characters long or over 15 characters long', ()=>{
+    const passwords= ["1234", "234324sdfasdf23443432"]
 
-    expect(output.result).toBe(false);
-    expect(output.errors).toHaveLength(1);
-    expect(output.errors[0].type).toBe("length");
+    for(const password of passwords){
+      const output = validatePassword(password);
 
+      expect(output.result).toBe(false);
+      expect(output.errors).toHaveLength(1);
+      expect(output.errors[0].type).toBe("length");
+    }
   })
 })
 
