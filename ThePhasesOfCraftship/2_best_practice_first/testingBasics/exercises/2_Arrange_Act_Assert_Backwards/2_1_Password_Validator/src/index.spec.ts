@@ -31,9 +31,9 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBe(false);
-      expect(output.errors).toBeDefined();
-      expect(hasErrorType(output.errors, PasswordValidationErrorType.LENGTH)).toBe(true);
+      expect(output.result).toBeFalsy();
+      expect(output.errors.length > 0).toBeTruthy();
+      expect(hasErrorType(output.errors, PasswordValidationErrorType.LENGTH)).toBeTruthy();
     }
   })
 
@@ -43,9 +43,21 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBe(false);
-      expect(output.errors).toBeDefined();
+      expect(output.result).toBeFalsy();
+      expect(output.errors.length > 0).toBeTruthy();
       expect(hasErrorType(output.errors, PasswordValidationErrorType.DIGIT)).toBe(true);
+    }
+  })
+
+  test('fails verification if password does not contain at least one uppercase letter', ()=>{
+    const passwords = ["asdf", "asdfasdf", "asdfasdfasdfasdf"]
+
+    for(const password of passwords){
+      const output = validatePassword(password);
+
+      expect(output.result).toBe(false);
+      expect(output.errors).toBeTruthy()
+      expect(hasErrorType(output.errors, PasswordValidationErrorType.UPPERCASE)).toBeTruthy()
     }
   })
 })

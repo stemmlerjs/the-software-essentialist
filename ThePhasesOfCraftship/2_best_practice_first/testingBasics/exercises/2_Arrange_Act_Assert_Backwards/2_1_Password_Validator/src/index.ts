@@ -23,6 +23,11 @@ export default function validatePassword(password: string) {
         errors.push({type: PasswordValidationErrorType.DIGIT, message: "Password must contain at least one digit"});
     }
 
+    if(!password.match(/[A-Z]/)){
+        isValid=false;
+        errors.push({type: PasswordValidationErrorType.UPPERCASE, message: "Password must contain at least one uppercase letter"});
+    }
+
     return {
         result: isValid,
         errors: errors
