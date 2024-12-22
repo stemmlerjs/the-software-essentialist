@@ -45,7 +45,7 @@ describe('Password validator', () => {
 
       expect(output.result).toBeFalsy();
       expect(output.errors.length > 0).toBeTruthy();
-      expect(hasErrorType(output.errors, PasswordValidationErrorType.DIGIT)).toBe(true);
+      expect(hasErrorType(output.errors, PasswordValidationErrorType.DIGIT)).toBeTruthy();
     }
   })
 
@@ -55,8 +55,8 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBe(false);
-      expect(output.errors).toBeTruthy()
+      expect(output.result).toBeFalsy();
+      expect(output.errors.length > 0).toBeTruthy();
       expect(hasErrorType(output.errors, PasswordValidationErrorType.UPPERCASE)).toBeTruthy()
     }
   })
