@@ -31,7 +31,7 @@ describe('Password validator', () => {
   })
 
   test('fails verification if password is under 5 characters long or over 15 characters long', ()=>{
-    const passwords= ["1234", "234324sdfasdf23443432"]
+    const passwords= ["1234", "thePhysical1234567"]
 
     for(const password of passwords){
       const output = validatePassword(password);
@@ -42,7 +42,7 @@ describe('Password validator', () => {
   })
 
   test('fails verification if password does not contain at least one digit', ()=>{
-    const passwords = ["asdf", "asdfasdf", "asdfasdfasdfasDSFdf"]
+    const passwords = ["asdf", "maxwellTheBe", "asdfasdfasdfasDSFdf"]
 
     for(const password of passwords){
       const output = validatePassword(password);
@@ -53,7 +53,7 @@ describe('Password validator', () => {
   })
 
   test('fails verification if password does not contain at least one uppercase letter', ()=>{
-    const passwords = ["asdf", "asdfasdf", "asdfasdfasdfasdf"]
+    const passwords = ["asdf", "maxwell1_c", "asdfasdfasdfasdf"]
 
     for(const password of passwords){
       const output = validatePassword(password);
