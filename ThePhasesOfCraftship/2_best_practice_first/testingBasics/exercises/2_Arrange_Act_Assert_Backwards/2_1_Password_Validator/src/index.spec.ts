@@ -1,4 +1,10 @@
 import validatePassword from "./index";
+import type { PasswordValidationError } from "./index";
+import { PasswordValidationErrorType } from "./index";
+
+const hasErrorType = (errors: PasswordValidationError[], type: PasswordValidationErrorType) => {
+  return errors.some(error => error.type === type);
+}
 
 describe('Password validator', () => {
 
@@ -26,10 +32,21 @@ describe('Password validator', () => {
       const output = validatePassword(password);
 
       expect(output.result).toBe(false);
-      expect(output.errors).toHaveLength(1);
-      expect(output.errors[0].type).toBe("length");
+      expect(output.errors).toBeDefined();
+      expect(hasErrorType(output.errors, PasswordValidationErrorType.LENGTH)).toBe(true);
+    }
+  })
+
+  test('fails verification if password does not contain at least one digit', ()=>{
+    const passwords = ["asdf", "asdfasdf", "asdfasdfasdfasDSFdf"]
+
+    for(const password of passwords){
+      const output = validatePassword(password);
+
+      expect(output.result).toBe(false);
+      expect(output.errors).toBeDefined();
+      expect(hasErrorType(output.errors, PasswordValidationErrorType.DIGIT)).toBe(true);
     }
   })
 })
-
 
