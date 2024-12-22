@@ -60,5 +60,14 @@ describe('Password validator', () => {
       expect(hasErrorType(output.errors, PasswordValidationErrorType.UPPERCASE)).toBeTruthy()
     }
   })
+
+  test('passes verification if password is valid', ()=>{
+    const password = "123qweRTY90"
+
+    const output = validatePassword(password);
+
+    expect(output.result).toBeTruthy();
+    expect(output.errors.length > 0).toBeFalsy();
+  })
 })
 
