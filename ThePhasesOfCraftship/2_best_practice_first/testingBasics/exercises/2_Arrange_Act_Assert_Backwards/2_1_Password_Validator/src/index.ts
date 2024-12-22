@@ -9,7 +9,12 @@ export interface PasswordValidationError {
     message: string;
 }
 
-export default function validatePassword(password: string) {
+export type PasswordValidationResult = { 
+    result: boolean;
+    errors: PasswordValidationError[];
+}
+
+export default function validatePassword(password: string) : PasswordValidationResult {
     let isValid=true;
     let errors: PasswordValidationError[] = [];
 

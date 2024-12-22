@@ -1,9 +1,14 @@
 import validatePassword from "./index";
-import type { PasswordValidationError } from "./index";
+import type { PasswordValidationError, PasswordValidationResult } from "./index";
 import { PasswordValidationErrorType } from "./index";
 
 const hasErrorType = (errors: PasswordValidationError[], type: PasswordValidationErrorType) => {
   return errors.some(error => error.type === type);
+}
+
+const expectInvalidResult = (output: PasswordValidationResult) => {
+  expect(output.result).toBeFalsy();
+  expect(output.errors.length > 0).toBeTruthy();
 }
 
 describe('Password validator', () => {
@@ -31,8 +36,7 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBeFalsy();
-      expect(output.errors.length > 0).toBeTruthy();
+      expectInvalidResult(output);
       expect(hasErrorType(output.errors, PasswordValidationErrorType.LENGTH)).toBeTruthy();
     }
   })
@@ -43,8 +47,7 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBeFalsy();
-      expect(output.errors.length > 0).toBeTruthy();
+      expectInvalidResult(output);
       expect(hasErrorType(output.errors, PasswordValidationErrorType.DIGIT)).toBeTruthy();
     }
   })
@@ -55,8 +58,7 @@ describe('Password validator', () => {
     for(const password of passwords){
       const output = validatePassword(password);
 
-      expect(output.result).toBeFalsy();
-      expect(output.errors.length > 0).toBeTruthy();
+      expectInvalidResult(output);
       expect(hasErrorType(output.errors, PasswordValidationErrorType.UPPERCASE)).toBeTruthy()
     }
   })
