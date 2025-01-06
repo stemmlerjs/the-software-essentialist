@@ -3,6 +3,7 @@ import { fizzbuzz } from "./fizzbuzz";
 describe("fizzbuzz", () => {
     const greaterThanZeroErrorMessage = "number should be greater than zero";
     const lowerOrEqualTo100ErrorMessage = "number should be lower or equal to 100";
+    const nonNumberErrorMessage = "input should be a number";
 
     const happyCases = [
         ["Fizz", 3],
@@ -28,5 +29,10 @@ describe("fizzbuzz", () => {
 
     test.each(unHappyCases)("should throw error message %s if it get %s", (expected, n) => {
         expect(()=> fizzbuzz(Number(n))).toThrow(String(expected))
+    })
+
+    it('should throw an error message "input should be a number" if it get null', () => {
+        // @ts-ignore
+        expect(() => fizzbuzz(null)).toThrow(nonNumberErrorMessage)
     })
 });
