@@ -25,4 +25,8 @@ describe("fizzbuzz", () => {
     it('should throw error if it get 0', () => {
         expect(() => fizzbuzz(0)).toThrow()
     })
+
+    it('should throw if it get -10', () => {
+        expect(() => fizzbuzz(-10)).toThrow()
+    })
 });
