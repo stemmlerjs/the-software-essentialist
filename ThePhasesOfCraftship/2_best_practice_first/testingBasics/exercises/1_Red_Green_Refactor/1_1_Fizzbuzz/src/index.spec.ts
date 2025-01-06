@@ -31,8 +31,15 @@ describe("fizzbuzz", () => {
         expect(()=> fizzbuzz(Number(n))).toThrow(String(expected))
     })
 
-    it('should throw an error message "input should be a number" if it get null', () => {
+    const nonNumberCases = [
+        [nonNumberErrorMessage, null],
+        [nonNumberErrorMessage, "Fizz"],
+        [nonNumberErrorMessage, undefined]
+    ]
+
+    // @ts-ignore
+    test.each(nonNumberCases)('should throw an error message %s if it get %s', (expected, n) => {
         // @ts-ignore
-        expect(() => fizzbuzz(null)).toThrow(nonNumberErrorMessage)
+        expect(() => fizzbuzz(n)).toThrow(expected)
     })
 });
