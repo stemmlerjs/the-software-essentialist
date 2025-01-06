@@ -9,4 +9,8 @@ describe("fizzbuzz", () => {
     it('should return "Fizz" if it get 3', () => {
         expect(fizzbuzz(3)).toBe("Fizz")
     })
+
+    it('should return "Buzz" if it get a 5', () => {
+        expect(fizzbuzz(5)).toBe("Buzz")
+    })
 });
