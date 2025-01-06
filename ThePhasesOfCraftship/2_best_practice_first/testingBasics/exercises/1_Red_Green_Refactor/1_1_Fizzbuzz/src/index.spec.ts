@@ -1,6 +1,7 @@
 import { fizzbuzz } from "./fizzbuzz";
 
 describe("fizzbuzz", () => {
+    const greaterThanZeroErrorMessage = "number should be greater than zero";
 
     it('should compile',  () => {
         expect(true).toBeTruthy();
@@ -23,10 +24,10 @@ describe("fizzbuzz", () => {
     })
 
     it('should throw error message "number should be greater than zero" if it get 0', () => {
-        expect(() => fizzbuzz(0)).toThrow("number should be greater than zero")
+        expect(() => fizzbuzz(0)).toThrow(greaterThanZeroErrorMessage)
     })
 
     it('should throw error message "number should be greater than zero" if it get -10', () => {
-        expect(() => fizzbuzz(-10)).toThrow("number should be greater than zero")
+        expect(() => fizzbuzz(-10)).toThrow(greaterThanZeroErrorMessage)
     })
 });
