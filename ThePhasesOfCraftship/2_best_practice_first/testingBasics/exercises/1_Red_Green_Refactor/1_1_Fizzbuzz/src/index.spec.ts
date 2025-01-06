@@ -1,3 +1,4 @@
+import { fizzbuzz } from "./fizzbuzz";
 
 describe("fizzbuzz", () => {
 
