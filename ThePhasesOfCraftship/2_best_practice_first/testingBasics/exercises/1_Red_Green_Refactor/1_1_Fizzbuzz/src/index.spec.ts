@@ -6,7 +6,7 @@ describe("fizzbuzz", () => {
         expect(true).toBeTruthy();
     })
 
-    it('should returns "Fizz" if it gets 3', () => {
+    it('should return "Fizz" if it get 3', () => {
         expect(fizzbuzz(3)).toBe("Fizz")
     })
 });
