@@ -19,8 +19,24 @@ describe("fizzbuzz", () => {
         expect(fizzbuzz(15)).toBe("FizzBuzz")
     })
 
+    it('should return "Fizz" if it get 9', () => {
+        expect(fizzbuzz(9)).toBe("Fizz")
+    })
+
     it('should return "1" if it get 1', () => {
         expect(fizzbuzz(1)).toBe("1")
+    })
+
+    it('should return "Fizz" if it get 42', () => {
+        expect(fizzbuzz(42)).toBe("Fizz")
+    })
+
+    it('should return "FizzBuzz" if it get a 45', () => {
+        expect(fizzbuzz(45)).toBe("FizzBuzz")
+    })
+
+    it('should return "43" if it get 43', () => {
+        expect(fizzbuzz(43)).toBe("43")
     })
 
     it('should throw error message "number should be greater than zero" if it get 0', () => {
