@@ -22,11 +22,11 @@ describe("fizzbuzz", () => {
         expect(fizzbuzz(1)).toBe("1")
     })
 
-    it('should throw error if it get 0', () => {
-        expect(() => fizzbuzz(0)).toThrow()
+    it('should throw error message "number should be greater than zero" if it get 0', () => {
+        expect(() => fizzbuzz(0)).toThrow("number should be greater than zero")
     })
 
-    it('should throw if it get -10', () => {
-        expect(() => fizzbuzz(-10)).toThrow()
+    it('should throw error message "number should be greater than zero" if it get -10', () => {
+        expect(() => fizzbuzz(-10)).toThrow("number should be greater than zero")
     })
 });
