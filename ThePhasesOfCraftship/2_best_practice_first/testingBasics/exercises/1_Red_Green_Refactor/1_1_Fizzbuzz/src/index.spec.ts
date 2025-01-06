@@ -46,4 +46,8 @@ describe("fizzbuzz", () => {
     it('should throw error message "number should be greater than zero" if it get -10', () => {
         expect(() => fizzbuzz(-10)).toThrow(greaterThanZeroErrorMessage)
     })
+
+    it('should throw error message "number should be lower or equal to 100" if it get 102', () => {
+        expect(() => fizzbuzz(102)).toThrow("number should be lower or equal to 100")
+    })
 });
