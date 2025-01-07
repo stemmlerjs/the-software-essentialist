@@ -1,18 +1,22 @@
 import { fizzbuzz } from "./fizzbuzz";
 
 describe("fizzbuzz", () => {
+    const fizz = "Fizz";
+    const buzz = "Buzz";
+    const fizzBuzz = "FizzBuzz";
+    
     const greaterThanZeroErrorMessage = "number should be greater than zero";
     const lowerOrEqualTo100ErrorMessage = "number should be lower or equal to 100";
     const nonNumberErrorMessage = "input should be a number";
 
     const happyCases = [
-        ["Fizz", 3],
-        ["Buzz", 5],
-        ["FizzBuzz", 15],
-        ["Fizz", 9],
+        [fizz, 3],
+        [buzz, 5],
+        [fizzBuzz, 15],
+        [fizz, 9],
         ["1", 1],
-        ["Fizz", 42],
-        ["FizzBuzz", 45],
+        [fizz, 42],
+        [fizzBuzz, 45],
         ["43", 43],
 
     ]
@@ -33,7 +37,7 @@ describe("fizzbuzz", () => {
 
     const nonNumberCases = [
         [nonNumberErrorMessage, null],
-        [nonNumberErrorMessage, "Fizz"],
+        [nonNumberErrorMessage, fizz],
         [nonNumberErrorMessage, undefined]
     ]
 
