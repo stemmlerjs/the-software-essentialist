@@ -12,6 +12,19 @@ describe('password validator', () => {
     expect(result).toHaveProperty('errors')
     expect(result.result).toBeFalsy()
   })
+
+  it('should know that "abcde" is valid regarding to length policy', () => {
+
+    const password = 'abcde';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.result).toBeTruthy()
+  })
+
+
 })
 
 
