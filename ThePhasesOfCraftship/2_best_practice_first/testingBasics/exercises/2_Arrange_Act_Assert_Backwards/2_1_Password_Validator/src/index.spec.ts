@@ -75,6 +75,16 @@ describe('password validator', () => {
     expect(result.errors).toContainEqual(uppercaseRestrictionError)
     expect(result.result).toBeFalsy()
   })
+
+  it('should know that "1bcdE" is valid regarding to uppercase policy', () => {
+
+    const password = '1bcdE';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result.result).toBeTruthy()
+  })
 })
 
 
