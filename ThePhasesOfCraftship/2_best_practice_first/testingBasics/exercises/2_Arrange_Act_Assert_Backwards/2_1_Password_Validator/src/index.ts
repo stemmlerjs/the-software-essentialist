@@ -36,10 +36,10 @@ export class PasswordValidator {
         if(this.isNotBetween5And15(password)) {
             errors.push(lengthRestrictionError)
         }
-        if(!/\d/.test(password)) {
+        if(this.hasNoDigits(password)) {
             errors.push(numberRestrictionError)
         }
-        if(!/[A-Z]/.test(password)) {
+        if(this.hasNoUppercase(password)) {
             errors.push(uppercaseRestrictionError)
         }
         if (errors.length) {
@@ -52,8 +52,16 @@ export class PasswordValidator {
             result: true
         }
     }
-
+    
     private static isNotBetween5And15(password: string) {
         return password.length < 5 || password.length > 15;
+    }
+
+    private static hasNoDigits(password: string) {
+        return !/\d/.test(password);
+    }
+
+    private static hasNoUppercase(password: string) {
+        return !/[A-Z]/.test(password);
     }
 }
