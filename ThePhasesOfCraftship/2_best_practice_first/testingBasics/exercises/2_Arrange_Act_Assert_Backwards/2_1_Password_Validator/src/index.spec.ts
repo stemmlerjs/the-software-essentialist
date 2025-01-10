@@ -2,124 +2,46 @@ import {
   Checked,
   lengthRestrictionError,
   numberRestrictionError,
-  PasswordValidator,
+  PasswordValidator, PasswordValidatorError,
   uppercaseRestrictionError
 } from "./index";
 
+
+const length = 'length';
+const number = 'number';
+const uppercase = 'uppercase';
+
 describe('password validator', () => {
 
-  it('should know that "aA1" is not valid due to length policy', () => {
+  const falsyCases: [string, string, PasswordValidatorError][] = [
+      ['aA1', length, lengthRestrictionError],
+      ['abcdefFGhi12345678', length, lengthRestrictionError],
+      ['abCde', number, numberRestrictionError],
+      ['1bcde', uppercase, uppercaseRestrictionError],
+      ['maxwell1_c', uppercase, uppercaseRestrictionError],
+      ['maxwellTheBe', number, numberRestrictionError],
+      ['thePhysical1234567', length, lengthRestrictionError],
+  ]
 
-    const password = 'aA1';
-
-    const result: Checked = PasswordValidator.check(password);
-
+  test.each(falsyCases)('should know that \"%s\" is not valid regarding to %s policy', (input, policy, error) => {
+    const result = PasswordValidator.check(input);
     expect(result).toHaveProperty('result')
     expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(lengthRestrictionError)
+    expect(result.errors).toContainEqual(error)
     expect(result.result).toBeFalsy()
   })
 
-  it('should know that "abc1E" is valid regarding to length policy', () => {
+  const truthyCases: [string, string][] = [
+      ['abc1E', length ],
+      ['abc1E', number ],
+      ['1bcdE', uppercase]
+  ]
 
-    const password = 'abc1E';
-
-    const result: Checked = PasswordValidator.check(password);
-
+  test.each(truthyCases)('should know that \"%s\" is valid regarding to %s policy', (password, policy) => {
+    const result = PasswordValidator.check(password);
     expect(result).toHaveProperty('result')
+    expect(result.errors).toBe(undefined)
     expect(result.result).toBeTruthy()
-  })
-
-  it('should know that "abcdefFGhi12345678" is not valid due to length policy', () => {
-
-    const password = 'abcdefFGhi12345678';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(lengthRestrictionError)
-    expect(result.result).toBeFalsy()
-  })
-
-  it('should know that "abcde" is not valid due to number policy', () => {
-
-    const password = 'abcde';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(numberRestrictionError)
-    expect(result.result).toBeFalsy()
-  })
-
-  it('should know that "abc1E" is valid regarding to number policy', () => {
-
-    const password = 'abc1E';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result.result).toBeTruthy()
-  })
-
-  it('should know that "1bcde" is not valid due to uppercase policy', () => {
-
-    const password = '1bcde';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(uppercaseRestrictionError)
-    expect(result.result).toBeFalsy()
-  })
-
-  it('should know that "1bcdE" is valid regarding to uppercase policy', () => {
-
-    const password = '1bcdE';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result.result).toBeTruthy()
-  })
-
-  it('should know that "maxwell1_c" is not valid due to uppercase policy', () => {
-
-    const password = 'maxwell1_c';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(uppercaseRestrictionError)
-    expect(result.result).toBeFalsy()
-  })
-
-  it('should know that "maxwellTheBe" is not valid due to number policy', () => {
-
-    const password = 'maxwellTheBe';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(numberRestrictionError)
-    expect(result.result).toBeFalsy()
-  })
-
-  it('should know that "thePhysical1234567" is not valid due to length policy', () => {
-
-    const password = 'thePhysical1234567';
-
-    const result: Checked = PasswordValidator.check(password);
-
-    expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual(lengthRestrictionError)
-    expect(result.result).toBeFalsy()
   })
 })
 
