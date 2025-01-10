@@ -47,6 +47,16 @@ describe('password validator', () => {
     expect(result.errors).toContainEqual(numberRestrictionError)
     expect(result.result).toBeFalsy()
   })
+
+  it('should know that "abc1E" is valid regarding to number policy', () => {
+
+    const password = 'abc1E';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result.result).toBeTruthy()
+  })
 })
 
 
