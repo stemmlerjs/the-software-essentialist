@@ -43,6 +43,14 @@ describe('password validator', () => {
     expect(result.errors).toBe(undefined)
     expect(result.result).toBeTruthy()
   })
+
+  it('should show three errors for \"abc\" password', () => {
+      const result = PasswordValidator.check('abc');
+      expect(result).toHaveProperty('result')
+      expect(result).toHaveProperty('errors')
+      expect(result.errors).toHaveLength(3)
+      expect(result.result).toBeFalsy()
+  })
 })
 
 
