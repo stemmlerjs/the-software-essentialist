@@ -85,6 +85,42 @@ describe('password validator', () => {
     expect(result).toHaveProperty('result')
     expect(result.result).toBeTruthy()
   })
+
+  it('should know that "maxwell1_c" is not valid due to uppercase policy', () => {
+
+    const password = 'maxwell1_c';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual(uppercaseRestrictionError)
+    expect(result.result).toBeFalsy()
+  })
+
+  it('should know that "maxwellTheBe" is not valid due to number policy', () => {
+
+    const password = 'maxwellTheBe';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual(numberRestrictionError)
+    expect(result.result).toBeFalsy()
+  })
+
+  it('should know that "thePhysical1234567" is not valid due to length policy', () => {
+
+    const password = 'thePhysical1234567';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual(lengthRestrictionError)
+    expect(result.result).toBeFalsy()
+  })
 })
 
 
