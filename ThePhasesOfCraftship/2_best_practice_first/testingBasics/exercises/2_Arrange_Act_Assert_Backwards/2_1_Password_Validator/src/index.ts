@@ -1,6 +1,6 @@
 export type Checked = {
     result: boolean,
-    errors: PasswordValidatorError[]
+    errors?: PasswordValidatorError[]
 };
 
 export type PasswordValidatorError = {
@@ -14,11 +14,18 @@ export type PasswordErrorMessage = 'Should be in between 5 and 15 characters lon
 
 export class PasswordValidator {
     static check(password: string): Checked {
+        let errors: PasswordValidatorError[] = [];
+        if(password.length < 5 || password.length > 15) {
+            errors.push({type: "numberOfCharacters", message: "Should be in between 5 and 15 characters long"})
+        }
+        if (errors.length) {
+            return {
+                result: false,
+                errors
+            }
+        }
         return {
-            result: false,
-            errors: [
-                {type: "numberOfCharacters", message: "Should be in between 5 and 15 characters long"}
-            ]
+            result: true
         }
     }
 }

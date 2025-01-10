@@ -20,7 +20,6 @@ describe('password validator', () => {
     const result: Checked = PasswordValidator.check(password);
 
     expect(result).toHaveProperty('result')
-    expect(result).toHaveProperty('errors')
     expect(result.result).toBeTruthy()
   })
 
