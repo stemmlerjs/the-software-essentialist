@@ -1,12 +1,16 @@
 export type Checked = {
     result: boolean,
     errors: PasswordValidatorError[]
-}
+};
 
 export type PasswordValidatorError = {
-    type: string,
-    message: string
-}
+    type: PasswordErrorType,
+    message: PasswordErrorMessage
+};
+
+export type PasswordErrorType = 'numberOfCharacters';
+
+export type PasswordErrorMessage = 'Should be in between 5 and 15 characters long'
 
 export class PasswordValidator {
     static check(password: string): Checked {
