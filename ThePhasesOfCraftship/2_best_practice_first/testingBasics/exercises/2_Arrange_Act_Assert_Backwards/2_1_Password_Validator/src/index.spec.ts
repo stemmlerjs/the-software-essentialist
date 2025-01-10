@@ -1,4 +1,4 @@
-import {Checked, PasswordValidator} from "./index";
+import {Checked, lengthRestrictionError, PasswordValidator} from "./index";
 
 describe('password validator', () => {
 
@@ -10,6 +10,7 @@ describe('password validator', () => {
 
     expect(result).toHaveProperty('result')
     expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual(lengthRestrictionError)
     expect(result.result).toBeFalsy()
   })
 
@@ -23,7 +24,17 @@ describe('password validator', () => {
     expect(result.result).toBeTruthy()
   })
 
+  it('should know that "abcdefghi12345678" is not valid due to length policy', () => {
 
+    const password = 'abcdefghi12345678';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual(lengthRestrictionError)
+    expect(result.result).toBeFalsy()
+  })
 })
 
 
