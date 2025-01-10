@@ -1,3 +1,4 @@
+import {Checked, PasswordValidator} from "./index";
 
 describe('password validator', () => {
 
@@ -5,8 +6,8 @@ describe('password validator', () => {
 
     const password = 'abc';
 
-    const result = PasswordValidator.check(password);
-    
+    const result: Checked = PasswordValidator.check(password);
+
     expect(result).toHaveProperty('result')
     expect(result).toHaveProperty('errors')
     expect(result.result).toBeFalsy()
