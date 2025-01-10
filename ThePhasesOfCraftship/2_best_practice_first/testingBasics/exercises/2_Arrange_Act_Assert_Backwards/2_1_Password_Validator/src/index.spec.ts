@@ -2,9 +2,9 @@ import {Checked, lengthRestrictionError, PasswordValidator} from "./index";
 
 describe('password validator', () => {
 
-  it('should know that "abc" is not valid due to length policy', () => {
+  it('should know that "aA1" is not valid due to length policy', () => {
 
-    const password = 'abc';
+    const password = 'aA1';
 
     const result: Checked = PasswordValidator.check(password);
 
@@ -14,9 +14,9 @@ describe('password validator', () => {
     expect(result.result).toBeFalsy()
   })
 
-  it('should know that "abcde" is valid regarding to length policy', () => {
+  it('should know that "abc1E" is valid regarding to length policy', () => {
 
-    const password = 'abcde';
+    const password = 'abc1E';
 
     const result: Checked = PasswordValidator.check(password);
 
@@ -24,9 +24,9 @@ describe('password validator', () => {
     expect(result.result).toBeTruthy()
   })
 
-  it('should know that "abcdefghi12345678" is not valid due to length policy', () => {
+  it('should know that "abcdefFGhi12345678" is not valid due to length policy', () => {
 
-    const password = 'abcdefghi12345678';
+    const password = 'abcdefFGhi12345678';
 
     const result: Checked = PasswordValidator.check(password);
 
