@@ -33,7 +33,7 @@ export type PasswordValidatorError = {
 export class PasswordValidator {
     static check(password: string): Checked {
         let errors: PasswordValidatorError[] = [];
-        if(password.length < 5 || password.length > 15) {
+        if(this.isNotBetween5And15(password)) {
             errors.push(lengthRestrictionError)
         }
         if(!/\d/.test(password)) {
@@ -51,5 +51,9 @@ export class PasswordValidator {
         return {
             result: true
         }
+    }
+
+    private static isNotBetween5And15(password: string) {
+        return password.length < 5 || password.length > 15;
     }
 }
