@@ -1,8 +1,15 @@
 
 describe('password validator', () => {
 
-  test('hello', () => {
-    expect("between 5 and 15").toContain('5 and 15')
+  it('should know that "abc" is not valid due to length policy', () => {
+
+    const password = 'abc';
+
+    const result = PasswordValidator.check(password);
+    
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.result).toBeFalsy()
   })
 })
 
