@@ -1,4 +1,4 @@
-import {Checked, lengthRestrictionError, PasswordValidator} from "./index";
+import {Checked, lengthRestrictionError, numberRestrictionError, PasswordValidator} from "./index";
 
 describe('password validator', () => {
 
@@ -44,10 +44,7 @@ describe('password validator', () => {
 
     expect(result).toHaveProperty('result')
     expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual({
-      type: 'missingNumber',
-      message: 'Should contain at least one numeric character'
-    })
+    expect(result.errors).toContainEqual(numberRestrictionError)
     expect(result.result).toBeFalsy()
   })
 })
