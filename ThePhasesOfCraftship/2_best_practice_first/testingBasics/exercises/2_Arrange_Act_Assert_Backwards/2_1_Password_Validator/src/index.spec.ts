@@ -35,6 +35,21 @@ describe('password validator', () => {
     expect(result.errors).toContainEqual(lengthRestrictionError)
     expect(result.result).toBeFalsy()
   })
+
+  it('should know that "abcde" is not valid due to number policy', () => {
+
+    const password = 'abcde';
+
+    const result: Checked = PasswordValidator.check(password);
+
+    expect(result).toHaveProperty('result')
+    expect(result).toHaveProperty('errors')
+    expect(result.errors).toContainEqual({
+      type: 'missingNumber',
+      message: 'Should contain at least one numeric character'
+    })
+    expect(result.result).toBeFalsy()
+  })
 })
 
 
