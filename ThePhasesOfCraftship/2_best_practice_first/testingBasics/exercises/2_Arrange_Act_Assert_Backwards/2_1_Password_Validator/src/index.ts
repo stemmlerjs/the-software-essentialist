@@ -3,29 +3,32 @@ export type Checked = {
     errors?: PasswordValidatorError[]
 };
 
+export const PasswordErrors = {
+    numberOfCharacters: {
+        type: 'numberOfCharacters',
+        message: 'Should be in between 5 and 15 characters long',
+    },
+    missingNumber: {
+        type: 'missingNumber',
+        message: 'Should contain at least one numeric character',
+    },
+    missingUppercase: {
+        type: 'missingUppercase',
+        message: 'Should contain at least one uppercase letter',
+    },
+} as const;
+
+export type PasswordErrorType = keyof typeof PasswordErrors;
+export type PasswordErrorMessage = typeof PasswordErrors[PasswordErrorType]['message'];
+
+export const lengthRestrictionError = PasswordErrors.numberOfCharacters;
+export const numberRestrictionError = PasswordErrors.missingNumber;
+export const uppercaseRestrictionError = PasswordErrors.missingUppercase;
+
 export type PasswordValidatorError = {
-    type: PasswordErrorType,
-    message: PasswordErrorMessage
+    type: PasswordErrorType;
+    message: PasswordErrorMessage;
 };
-
-export type PasswordErrorType = 'numberOfCharacters' | 'missingNumber' | 'missingUppercase';
-
-export type PasswordErrorMessage = 'Should be in between 5 and 15 characters long' | 'Should contain at least one numeric character' | 'Should contain at least one uppercase letter';
-
-export const lengthRestrictionError: PasswordValidatorError = {
-    type: "numberOfCharacters",
-    message: "Should be in between 5 and 15 characters long"
-}
-
-export const numberRestrictionError: PasswordValidatorError = {
-    type: 'missingNumber',
-    message: 'Should contain at least one numeric character'
-};
-
-export const uppercaseRestrictionError: PasswordValidatorError = {
-    type: 'missingUppercase',
-    message: 'Should contain at least one uppercase letter'
-}
 
 export class PasswordValidator {
     static check(password: string): Checked {
