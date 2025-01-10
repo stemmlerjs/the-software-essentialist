@@ -8,9 +8,9 @@ export type PasswordValidatorError = {
     message: PasswordErrorMessage
 };
 
-export type PasswordErrorType = 'numberOfCharacters' | 'missingNumber';
+export type PasswordErrorType = 'numberOfCharacters' | 'missingNumber' | 'missingUppercase';
 
-export type PasswordErrorMessage = 'Should be in between 5 and 15 characters long' | 'Should contain at least one numeric character';
+export type PasswordErrorMessage = 'Should be in between 5 and 15 characters long' | 'Should contain at least one numeric character' | 'Should contain at least one uppercase letter';
 
 export const lengthRestrictionError: PasswordValidatorError = {
     type: "numberOfCharacters",
@@ -22,6 +22,11 @@ export const numberRestrictionError: PasswordValidatorError = {
     message: 'Should contain at least one numeric character'
 };
 
+export const uppercaseRestrictionError: PasswordValidatorError = {
+    type: 'missingUppercase',
+    message: 'Should contain at least one uppercase letter'
+}
+
 export class PasswordValidator {
     static check(password: string): Checked {
         let errors: PasswordValidatorError[] = [];
@@ -29,7 +34,10 @@ export class PasswordValidator {
             errors.push(lengthRestrictionError)
         }
         if(!/\d/.test(password)) {
-            errors.push((numberRestrictionError))
+            errors.push(numberRestrictionError)
+        }
+        if(!/[A-Z]/.test(password)) {
+            errors.push(uppercaseRestrictionError)
         }
         if (errors.length) {
             return {

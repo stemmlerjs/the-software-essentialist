@@ -1,4 +1,10 @@
-import {Checked, lengthRestrictionError, numberRestrictionError, PasswordValidator} from "./index";
+import {
+  Checked,
+  lengthRestrictionError,
+  numberRestrictionError,
+  PasswordValidator,
+  uppercaseRestrictionError
+} from "./index";
 
 describe('password validator', () => {
 
@@ -66,10 +72,7 @@ describe('password validator', () => {
 
     expect(result).toHaveProperty('result')
     expect(result).toHaveProperty('errors')
-    expect(result.errors).toContainEqual({
-      type: 'missingUppercase',
-      message: 'Should contain at least one uppercase letter'
-    })
+    expect(result.errors).toContainEqual(uppercaseRestrictionError)
     expect(result.result).toBeFalsy()
   })
 })
