@@ -21,7 +21,7 @@ export class PasswordValidator {
     static check(password: string): Checked {
         let errors: PasswordValidatorError[] = [];
         if(password.length < 5 || password.length > 15) {
-            errors.push({type: "numberOfCharacters", message: "Should be in between 5 and 15 characters long"})
+            errors.push(lengthRestrictionError)
         }
         if (errors.length) {
             return {
