@@ -1,23 +1,39 @@
-import {StatsCalculator} from "./index";
+import {Statistics, StatsCalculator} from "./index";
 
 describe('stats calculator', () => {
     it('should know that for the numbers 1, 2 and 3, the minimum is 1', () => {
-        expect(StatsCalculator.run()).toHaveProperty('min')
-        expect(StatsCalculator.run().min).toBe(1)
+        const numbers: number[] = [1, 2, 3];
+        expect(StatsCalculator.run(numbers)).toHaveProperty('min')
+        expect(StatsCalculator.run(numbers).min).toBe(1)
     })
 
     it('should know that for the numbers 1, 2 and 3, the maximum is 3', () => {
-        expect(StatsCalculator.run()).toHaveProperty('max')
-        expect(StatsCalculator.run().max).toBe(3)
+        const numbers: number[] = [1, 2, 3];
+        expect(StatsCalculator.run(numbers)).toHaveProperty('max')
+        expect(StatsCalculator.run(numbers).max).toBe(3)
     })
 
     it('should know that for the numbers 1, 2 and 3, the number of elements is 3', () => {
-        expect(StatsCalculator.run()).toHaveProperty('numberOfElements')
-        expect(StatsCalculator.run().numberOfElements).toBe(3)
+        const numbers: number[] = [1, 2, 3];
+        expect(StatsCalculator.run(numbers)).toHaveProperty('numberOfElements')
+        expect(StatsCalculator.run(numbers).numberOfElements).toBe(3)
     })
 
     it('should know that for the numbers 1, 2 and 3, the average is 2', () => {
-        expect(StatsCalculator.run()).toHaveProperty('average')
-        expect(StatsCalculator.run().average).toBe(2)
+        const numbers: number[] = [1, 2, 3];
+        expect(StatsCalculator.run(numbers)).toHaveProperty('average')
+        expect(StatsCalculator.run(numbers).average).toBe(2)
+    })
+
+    it('should know that for the numbers 2, 3, 1 and 6 the minimum is 1, the maximum is 6, the number of elements is 4 and the average is 3', () => {
+        const numbers: number[] = [2, 3, 1, 6];
+
+        const expected: Statistics = {
+            min:1,
+            max: 6,
+            numberOfElements: 4,
+            average: 3
+        }
+        expect(StatsCalculator.run(numbers)).toEqual(expected);
     })
 })

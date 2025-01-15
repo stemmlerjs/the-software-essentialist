@@ -6,12 +6,17 @@ export type Statistics = {
 }
 
 export class StatsCalculator {
-    static run(): Statistics {
+    static run(numbers: number[]): Statistics {
+        const min = numbers.reduce((min, current) => current < min ? current : min);
+        const max = numbers.reduce((max, current) => current > max ? current : max);
+        const numberOfElements = numbers.length;
+        const sum = numbers.reduce((total, current) => total + current, 0);
+        const average = sum / numberOfElements;
         return {
-            min: 1,
-            max: 3,
-            numberOfElements: 3,
-            average: 2
+            min,
+            max,
+            numberOfElements,
+            average
         }
     }
 }
