@@ -15,4 +15,9 @@ describe('stats calculator', () => {
         expect(StatsCalculator.run()).toHaveProperty('numberOfElements')
         expect(StatsCalculator.run().numberOfElements).toBe(3)
     })
+
+    it('should know that for the numbers 1, 2 and 3, the average is 2', () => {
+        expect(StatsCalculator.run()).toHaveProperty('average')
+        expect(StatsCalculator.run().average).toBe(2)
+    })
 })
