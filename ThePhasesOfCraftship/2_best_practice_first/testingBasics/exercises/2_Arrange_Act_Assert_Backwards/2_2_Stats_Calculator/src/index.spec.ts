@@ -48,4 +48,16 @@ describe('stats calculator', () => {
         }
         expect(StatsCalculator.run(numbers)).toEqual(expected);
     })
+
+    it('should know that for the numbers 0, 0 and 0 the minimum is 0, the maximum is 0, the number of elements is 3 and the average is 0', () => {
+        const numbers: number[] = [0, 0, 0];
+
+        const expected: Statistics = {
+            min: 0,
+            max: 0,
+            numberOfElements: 3,
+            average: 0
+        }
+        expect(StatsCalculator.run(numbers)).toEqual(expected);
+    })
 })
