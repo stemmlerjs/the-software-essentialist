@@ -7,8 +7,8 @@ export type Statistics = {
 
 export class StatsCalculator {
     static run(numbers: number[]): Statistics {
-        if(numbers.includes(Number("NaN"))) {
-            throw new Error()
+        if(numbers.some(num => typeof num !== "number" || isNaN(num))) {
+            throw new Error("Input contains invalid numbers (e.g., NaN or non-numeric values).")
         }
 
         const min = this.minOf(numbers);

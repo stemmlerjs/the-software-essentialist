@@ -61,9 +61,9 @@ describe('stats calculator', () => {
         expect(StatsCalculator.run(numbers)).toEqual(expected);
     })
 
-    it('should throw an error if the list contains a non number', () => {
+    it('should throw an error message \"Input contains invalid numbers (e.g., NaN or non-numeric values).\" if the list contains a non number', () => {
         const numbers: number[] = [0, 0, Number("d")];
 
-        expect(() => StatsCalculator.run(numbers)).toThrow();
+        expect(() => StatsCalculator.run(numbers)).toThrowError("Input contains invalid numbers (e.g., NaN or non-numeric values).");
     })
 })
