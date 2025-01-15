@@ -29,10 +29,22 @@ describe('stats calculator', () => {
         const numbers: number[] = [2, 3, 1, 6];
 
         const expected: Statistics = {
-            min:1,
+            min: 1,
             max: 6,
             numberOfElements: 4,
             average: 3
+        }
+        expect(StatsCalculator.run(numbers)).toEqual(expected);
+    })
+
+    it('should know that for the numbers 2, 4, 21, -8, 53 and 40 the minimum is -8, the maximum is 53, the number of elements is 6 and the average is 18.666666666667', () => {
+        const numbers: number[] = [2, 4, 21, -8, 53, 40];
+
+        const expected: Statistics = {
+            min: -8,
+            max: 53,
+            numberOfElements: 6,
+            average: 18.666666666666668
         }
         expect(StatsCalculator.run(numbers)).toEqual(expected);
     })
