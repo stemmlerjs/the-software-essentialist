@@ -62,14 +62,25 @@ describe('stats calculator', () => {
     })
 
     it('should throw an error message \"Input contains invalid numbers (e.g., NaN or non-numeric values).\" if the list contains a non number', () => {
-        const numbers: number[] = [0, 0, Number("d")];
+        const numbers = [0, 0, "d"];
 
+        // @ts-ignore
         expect(() => StatsCalculator.run(numbers)).toThrowError("Input contains invalid numbers (e.g., NaN or non-numeric values).");
     })
 
     it('should throw an error message \"Input must be a non-empty array of numbers.\" if the list is empty', () => {
         const numbers: number[] = [];
 
+        expect(() => StatsCalculator.run(numbers)).toThrowError("Input must be a non-empty array of numbers.");
+    })
+
+    it('should throw an error message \"Input must be a non-empty array of numbers.\" if the input is an object', () => {
+        const numbers= {
+            a: 1,
+            b: 2
+        };
+
+        // @ts-ignore
         expect(() => StatsCalculator.run(numbers)).toThrowError("Input must be a non-empty array of numbers.");
     })
 })
