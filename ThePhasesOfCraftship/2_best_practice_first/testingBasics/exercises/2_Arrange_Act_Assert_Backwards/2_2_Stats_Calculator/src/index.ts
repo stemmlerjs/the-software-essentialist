@@ -11,6 +11,10 @@ export class StatsCalculator {
             throw new Error("Input contains invalid numbers (e.g., NaN or non-numeric values).")
         }
 
+        if(numbers.length === 0 || !Array.isArray(numbers)) {
+            throw new Error("Input must be a non-empty array of numbers.")
+        }
+
         const min = this.minOf(numbers);
         const max = this.maxOf(numbers);
         const numberOfElements = this.numberOfElementsOf(numbers);

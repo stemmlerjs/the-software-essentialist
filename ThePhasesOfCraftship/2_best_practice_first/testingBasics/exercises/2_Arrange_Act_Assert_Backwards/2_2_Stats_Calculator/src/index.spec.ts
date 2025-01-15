@@ -66,4 +66,10 @@ describe('stats calculator', () => {
 
         expect(() => StatsCalculator.run(numbers)).toThrowError("Input contains invalid numbers (e.g., NaN or non-numeric values).");
     })
+
+    it('should throw an error message \"Input must be a non-empty array of numbers.\" if the list is empty', () => {
+        const numbers: number[] = [];
+
+        expect(() => StatsCalculator.run(numbers)).toThrowError("Input must be a non-empty array of numbers.");
+    })
 })
