@@ -7,11 +7,10 @@ export type Statistics = {
 
 export class StatsCalculator {
     static run(numbers: number[]): Statistics {
-        const min = this.getMin(numbers);
-        const max = this.getMax(numbers);
-        const numberOfElements = numbers.length;
-        const sum = this.getSum(numbers);
-        const average = sum / numberOfElements;
+        const min = this.minOf(numbers);
+        const max = this.maxOf(numbers);
+        const numberOfElements = this.numberOfElementsOf(numbers);
+        const average = this.averageOf(numbers);
 
         return {
             min,
@@ -21,15 +20,23 @@ export class StatsCalculator {
         }
     }
 
-    private static getMin(numbers: number[]) {
+    private static minOf(numbers: number[]) {
         return numbers.reduce((min, current) => current < min ? current : min);
     }
 
-    private static getMax(numbers: number[]) {
+    private static maxOf(numbers: number[]) {
         return numbers.reduce((max, current) => current > max ? current : max);
     }
 
-    private static getSum(numbers: number[]) {
+    private static numberOfElementsOf(numbers: number[]) {
+        return numbers.length;
+    }
+
+    private static averageOf(numbers: number[]) {
+        return this.sumOf(numbers) / numbers.length;
+    }
+
+    private static sumOf(numbers: number[]) {
         return numbers.reduce((total, current) => total + current, 0);
     }
 }
