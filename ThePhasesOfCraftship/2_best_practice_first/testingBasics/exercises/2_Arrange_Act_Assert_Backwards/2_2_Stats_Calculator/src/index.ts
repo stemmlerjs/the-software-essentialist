@@ -7,6 +7,10 @@ export type Statistics = {
 
 export class StatsCalculator {
     static run(numbers: number[]): Statistics {
+        if(numbers.includes(Number("NaN"))) {
+            throw new Error()
+        }
+
         const min = this.minOf(numbers);
         const max = this.maxOf(numbers);
         const numberOfElements = this.numberOfElementsOf(numbers);
