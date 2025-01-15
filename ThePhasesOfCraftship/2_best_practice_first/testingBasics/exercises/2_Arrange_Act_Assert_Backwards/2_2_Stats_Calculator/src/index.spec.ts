@@ -5,4 +5,9 @@ describe('stats calculator', () => {
         expect(StatsCalculator.run()).toHaveProperty('min')
         expect(StatsCalculator.run().min).toBe(1)
     })
+
+    it('should know that for the numbers 1, 2 and 3, the maximum is 3', () => {
+        expect(StatsCalculator.run()).toHaveProperty('max')
+        expect(StatsCalculator.run().max).toBe(3)
+    })
 })
