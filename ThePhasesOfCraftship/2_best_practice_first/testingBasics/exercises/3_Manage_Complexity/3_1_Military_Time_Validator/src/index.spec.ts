@@ -16,6 +16,11 @@ describe('military time validator', () => {
         expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
     })
 
+    it('should know that the time "01.12 - 12.32" is not valid', () => {
+        const time: Time = "01.12 - 14.32";
+        expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
+    })
+
     it('should throw an error when giving a non string', () => {
         expect(() => MilitaryTimeValidator.validate(undefined as any)).toThrow("the input time should be a string");
         expect(() => MilitaryTimeValidator.validate(null as any)).toThrow("the input time should be a string");
