@@ -3,21 +3,21 @@ export type Result = true | false;
 
 export class MilitaryTimeValidator {
     static validate(times: Time): Result {
-        this.validateType(times);
-        this.validateEmptiness(times);
-        return this.validateFormat(times) && this.validateTimes(times);
+        return  this.validateType(times) && this.validateEmptiness(times) && this.validateFormat(times) && this.validateTimes(times);
     }
 
     private static validateType(times: Time) {
         if (times === null || times === undefined || typeof times !== "string") {
             throw new Error("the input time should be a string")
         }
+        return true;
     }
 
     private static validateEmptiness(times: Time) {
         if (times.length === 0) {
             throw new Error("the input time should not be an empty string")
         }
+        return true;
     }
 
     private static validateFormat(times: Time) {
