@@ -15,4 +15,12 @@ describe('military time validator', () => {
         const time: Time = "13:72 - 14:15";
         expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
     })
+
+    it('should throw an error when giving a non string', () => {
+        expect(() => MilitaryTimeValidator.validate(undefined as any)).toThrow("the input time should be a string");
+        expect(() => MilitaryTimeValidator.validate(null as any)).toThrow("the input time should be a string");
+        expect(() => MilitaryTimeValidator.validate(true as any)).toThrow("the input time should be a string");
+        expect(() => MilitaryTimeValidator.validate({} as any)).toThrow("the input time should be a string");
+        expect(() => MilitaryTimeValidator.validate([] as any)).toThrow("the input time should be a string");
+    })
 })

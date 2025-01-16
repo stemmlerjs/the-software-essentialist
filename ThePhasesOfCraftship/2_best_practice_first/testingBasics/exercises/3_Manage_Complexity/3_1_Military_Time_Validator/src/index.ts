@@ -3,6 +3,9 @@ export type Result = true | false;
 
 export class MilitaryTimeValidator {
     static validate(times: Time): Result {
+        if(times === null || times === undefined || typeof times !== "string") {
+            throw new Error("the input time should be a string")
+        }
         const [timeFrom, timeTo] = times.split(' - ');
         return (this.validateTime(timeFrom) && this.validateTime(timeTo));
     }
