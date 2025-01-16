@@ -1,26 +1,19 @@
 import {MilitaryTimeValidator, Time} from "./index";
 
 describe('military time validator', () => {
-    it('should know that the time "01:12 - 14:32" is valid', () => {
-        const time: Time = "01:12 - 14:32";
-        expect(MilitaryTimeValidator.validate(time)).toBeTruthy();
-    })
+    const is = "is";
+    const isNot = 'is not';
 
-    it('should know that the time "25:00 - 12:23" is not valid', () => {
-        const time: Time = "25:00 - 12:23";
-        expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
+    const cases: [string, string, boolean][] = [
+        ["01:12 - 14:32", is, true],
+        ["25:00 - 12:23", isNot, false],
+        ["13:72 - 14:15", isNot, false],
+        ["01.12 - 14.32", isNot, false]
+    ]
+    it.each(cases)('should know that the time %s %s valid', (time: Time, str: string, expected: boolean) => {
+        expect(MilitaryTimeValidator.validate(time)).toBe(expected)
     })
-
-    it('should know that the time "13:72 - 14:15" is not valid', () => {
-        const time: Time = "13:72 - 14:15";
-        expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
-    })
-
-    it('should know that the time "01.12 - 12.32" is not valid', () => {
-        const time: Time = "01.12 - 14.32";
-        expect(MilitaryTimeValidator.validate(time)).toBeFalsy();
-    })
-
+    
     it('should throw an error when giving a non string', () => {
         expect(() => MilitaryTimeValidator.validate(undefined as any)).toThrow("the input time should be a string");
         expect(() => MilitaryTimeValidator.validate(null as any)).toThrow("the input time should be a string");
