@@ -3,14 +3,22 @@ export type Result = true | false;
 
 export class MilitaryTimeValidator {
     static validate(times: Time): Result {
-        if(times === null || times === undefined || typeof times !== "string") {
-            throw new Error("the input time should be a string")
-        }
-        if(times.length === 0) {
-            throw new Error("the input time should not be an empty string")
-        }
+        this.validateType(times);
+        this.validateEmptyness(times);
         const [timeFrom, timeTo] = times.split(' - ');
         return (this.validateTime(timeFrom) && this.validateTime(timeTo));
+    }
+
+    private static validateEmptyness(times: string) {
+        if (times.length === 0) {
+            throw new Error("the input time should not be an empty string")
+        }
+    }
+
+    private static validateType(times: string) {
+        if (times === null || times === undefined || typeof times !== "string") {
+            throw new Error("the input time should be a string")
+        }
     }
 
     private static validateTime(time: Time): Result {
