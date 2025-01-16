@@ -5,11 +5,7 @@ export class MilitaryTimeValidator {
     static validate(times: Time): Result {
         this.validateType(times);
         this.validateEmptiness(times);
-        const formatRegex = /^([01]\d|2[0-3]):([0-5]\d) - ([01]\d|2[0-3]):([0-5]\d)$/;
-        if (this.validateFormat(formatRegex, times)) {
-            return false;
-        }
-        return this.validateTimes(times);
+        return this.validateFormat(times) && this.validateTimes(times);
     }
 
     private static validateType(times: Time) {
@@ -24,8 +20,9 @@ export class MilitaryTimeValidator {
         }
     }
 
-    private static validateFormat(formatRegex: RegExp, times: Time) {
-        return !formatRegex.test(times);
+    private static validateFormat(times: Time) {
+        const validMilitaryTimeFormatRegularExpression = /^([01]\d|2[0-3]):([0-5]\d) - ([01]\d|2[0-3]):([0-5]\d)$/;
+        return validMilitaryTimeFormatRegularExpression.test(times);
     }
 
     private static validateTimes(times: Time) {
