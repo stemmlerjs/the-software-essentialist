@@ -23,4 +23,8 @@ describe('military time validator', () => {
         expect(() => MilitaryTimeValidator.validate({} as any)).toThrow("the input time should be a string");
         expect(() => MilitaryTimeValidator.validate([] as any)).toThrow("the input time should be a string");
     })
+
+    it('should throw an error when giving an empty string', () => {
+        expect(() => MilitaryTimeValidator.validate('')).toThrow("the input time should not be an empty string");
+    })
 })

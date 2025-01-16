@@ -6,6 +6,9 @@ export class MilitaryTimeValidator {
         if(times === null || times === undefined || typeof times !== "string") {
             throw new Error("the input time should be a string")
         }
+        if(times.length === 0) {
+            throw new Error("the input time should not be an empty string")
+        }
         const [timeFrom, timeTo] = times.split(' - ');
         return (this.validateTime(timeFrom) && this.validateTime(timeTo));
     }
