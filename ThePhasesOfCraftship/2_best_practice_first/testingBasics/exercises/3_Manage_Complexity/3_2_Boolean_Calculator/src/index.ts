@@ -3,7 +3,7 @@ export type Result = boolean;
 
 export class BooleanCalculator {
     static run(expression: Expression): Result {
-        if(expression === 'FALSE') {
+        if(expression === 'FALSE' || expression === 'NOT TRUE') {
             return false;
         }
         return true;
