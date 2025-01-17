@@ -31,5 +31,10 @@ describe('boolean calculator', () => {
             const expression = 'TRUE AND FALSE';
             expect(BooleanCalculator.run(expression)).toBeFalsy();
         });
+
+        it('should know that the result for "TRUE AND TRUE" is true', () => {
+            const expression = 'TRUE AND TRUE';
+            expect(BooleanCalculator.run(expression)).toBeTruthy();
+        });
     })
 })
