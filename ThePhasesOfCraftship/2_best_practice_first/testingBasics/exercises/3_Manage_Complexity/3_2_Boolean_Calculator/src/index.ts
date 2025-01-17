@@ -3,6 +3,9 @@ export type Result = boolean;
 
 export class BooleanCalculator {
     static run(expression: Expression): Result {
-        return true
+        if(expression === 'FALSE') {
+            return false;
+        }
+        return true;
     }
 }
