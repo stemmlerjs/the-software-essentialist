@@ -18,6 +18,11 @@ describe('boolean calculator', () => {
         it('should know that the result for "NOT TRUE" is false', () => {
             const expression = 'NOT TRUE';
             expect(BooleanCalculator.run(expression)).toBeFalsy();
-        })
+        });
+
+        it('should know that the result for "NOT FALSE" is true', () => {
+            const expression = 'NOT FALSE';
+            expect(BooleanCalculator.run(expression)).toBeTruthy();
+        });
     })
 })
