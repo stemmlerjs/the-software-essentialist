@@ -15,25 +15,32 @@ describe('boolean calculator', () => {
     })
 
     describe('NOT operator', () => {
-        it('should know that the result for "NOT TRUE" is false', () => {
-            const expression = 'NOT TRUE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
-
         it('should know that the result for "NOT FALSE" is true', () => {
             const expression = 'NOT FALSE';
             expect(BooleanCalculator.run(expression)).toBeTruthy();
         });
+
+        it('should know that the result for "NOT TRUE" is false', () => {
+            const expression = 'NOT TRUE';
+            expect(BooleanCalculator.run(expression)).toBeFalsy();
+        });
     })
 
     describe('AND operator', () => {
+        it('should know that the result for "TRUE AND TRUE" is true', () => {
+            const expression = 'TRUE AND TRUE';
+            expect(BooleanCalculator.run(expression)).toBeTruthy();
+        });
+
         it('should know that the result for "TRUE AND FALSE" is false', () => {
             const expression = 'TRUE AND FALSE';
             expect(BooleanCalculator.run(expression)).toBeFalsy();
         });
+    })
 
-        it('should know that the result for "TRUE AND TRUE" is true', () => {
-            const expression = 'TRUE AND TRUE';
+    describe('OR operator', () => {
+        it('should know that the result for "TRUE OR FALSE" is true', () => {
+            const expression = 'TRUE OR FALSE';
             expect(BooleanCalculator.run(expression)).toBeTruthy();
         });
     })
