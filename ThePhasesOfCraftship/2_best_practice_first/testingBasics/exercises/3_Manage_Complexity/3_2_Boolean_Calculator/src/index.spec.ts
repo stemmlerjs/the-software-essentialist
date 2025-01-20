@@ -1,74 +1,56 @@
-import {BooleanCalculator} from "./index";
+import {BooleanCalculator, Expression, Result} from "./index";
 
 describe('boolean calculator', () => {
 
     describe('single values', () => {
-        it('should know that the result for "TRUE" is true',  () => {
-            const expression = 'TRUE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy();
-        });
-
-        it('should know that the result for "FALSE" is false',  () => {
-            const expression = 'FALSE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
+        const cases: [Expression, boolean][] = [
+            ['TRUE', true],
+            ['FALSE', false]
+            ];
+        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+            expect(BooleanCalculator.run(expression)).toBe(expected);
+        })
     })
 
     describe('NOT operator', () => {
-        it('should know that the result for "NOT FALSE" is true', () => {
-            const expression = 'NOT FALSE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy();
-        });
-
-        it('should know that the result for "NOT TRUE" is false', () => {
-            const expression = 'NOT TRUE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
+        const cases: [Expression, boolean][] = [
+            ['NOT FALSE', true],
+            ['NOT TRUE', false]
+        ];
+        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+            expect(BooleanCalculator.run(expression)).toBe(expected);
+        })
     })
 
     describe('AND operator', () => {
-        it('should know that the result for "TRUE AND TRUE" is true', () => {
-            const expression = 'TRUE AND TRUE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy();
-        });
-
-        it('should know that the result for "TRUE AND FALSE" is false', () => {
-            const expression = 'TRUE AND FALSE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
+        const cases: [Expression, boolean][] = [
+            ['TRUE AND TRUE', true],
+            ['TRUE AND FALSE', false]
+        ];
+        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+            expect(BooleanCalculator.run(expression)).toBe(expected);
+        })
     })
 
     describe('OR operator', () => {
-        it('should know that the result for "TRUE OR FALSE" is true', () => {
-            const expression = 'TRUE OR FALSE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy();
-        });
-
-        it('should know that the result for "FALSE OR FALSE" is false', () => {
-            const expression = 'FALSE OR FALSE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
+        const cases: [Expression, boolean][] = [
+            ['TRUE OR FALSE', true],
+            ['FALSE OR FALSE', false]
+        ];
+        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+            expect(BooleanCalculator.run(expression)).toBe(expected);
+        })
     })
 
     describe('combination of operations and precedence', () => {
-        it('should know that the result for "TRUE OR TRUE OR TRUE AND FALSE" is true', () => {
-            const expression = 'TRUE OR TRUE OR TRUE AND FALSE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy();
-        });
-
-        it('should know that the result for "TRUE OR FALSE AND NOT FALSE" is true', () => {
-            const expression = 'TRUE OR FALSE AND NOT FALSE';
-            expect(BooleanCalculator.run(expression)).toBeTruthy()
-        });
-
-        it('should know that the result for "(TRUE OR TRUE OR TRUE) AND FALSE" is false', () => {
-            const expression = '(TRUE OR TRUE OR TRUE) AND FALSE';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
-
-        it('should know that the result for "NOT (TRUE AND TRUE)" is false', () => {
-            const expression = 'NOT (TRUE AND TRUE)';
-            expect(BooleanCalculator.run(expression)).toBeFalsy();
-        });
+        const cases: [Expression, boolean][] = [
+            ['TRUE OR TRUE OR TRUE AND FALSE', true],
+            ['TRUE OR FALSE AND NOT FALSE', true],
+            ['(TRUE OR TRUE OR TRUE) AND FALSE', false],
+            ['NOT (TRUE AND TRUE)', false]
+        ]
+        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+            expect(BooleanCalculator.run(expression)).toBe(expected);
+        })
     })
 })
