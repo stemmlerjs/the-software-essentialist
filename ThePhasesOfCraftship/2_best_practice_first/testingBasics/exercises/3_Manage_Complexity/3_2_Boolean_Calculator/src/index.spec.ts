@@ -60,5 +60,10 @@ describe('boolean calculator', () => {
             const expression = 'TRUE OR FALSE AND NOT FALSE';
             expect(BooleanCalculator.run(expression)).toBeTruthy()
         });
+
+        it('should know that the result for "(TRUE OR TRUE OR TRUE) AND FALSE" is false', () => {
+            const expression = '(TRUE OR TRUE OR TRUE) AND FALSE';
+            expect(BooleanCalculator.run(expression)).toBeFalsy();
+        });
     })
 })
