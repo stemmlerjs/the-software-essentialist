@@ -21,48 +21,44 @@ export class BooleanCalculator {
     }
 
     private static parseOr(tokens: string[]): { value: boolean; rest: string[] } {
-        let { value: leftValue, rest: restTokens } = this.parseAnd(tokens);
-        while (restTokens[0] === 'OR') {
-            const nextRest = restTokens.slice(1);
-            const { value: rightValue, rest } = this.parseAnd(nextRest);
-            leftValue = leftValue || rightValue;
-            restTokens = rest;
+        let { value: left, rest } = this.parseAnd(tokens)
+        while (rest[0] === 'OR') {
+            const partial = this.parseAnd(rest.slice(1))
+            left = left || partial.value
+            rest = partial.rest
         }
-        return { value: leftValue, rest: restTokens };
+        return { value: left, rest }
     }
 
     private static parseAnd(tokens: string[]): { value: boolean; rest: string[] } {
-        let { value: leftValue, rest: restTokens } = this.parseNot(tokens);
-        while (restTokens[0] === 'AND') {
-            const nextRest = restTokens.slice(1);
-            const { value: rightValue, rest } = this.parseNot(nextRest);
-            leftValue = leftValue && rightValue;
-            restTokens = rest;
+        let { value: left, rest } = this.parseNot(tokens)
+        while (rest[0] === 'AND') {
+            const partial = this.parseNot(rest.slice(1))
+            left = left && partial.value
+            rest = partial.rest
         }
-        return { value: leftValue, rest: restTokens };
+        return { value: left, rest }
     }
 
     private static parseNot(tokens: string[]): { value: boolean; rest: string[] } {
         if (tokens[0] === 'NOT') {
-            const nextRest = tokens.slice(1);
-            const { value, rest } = this.parseNot(nextRest);
-            return { value: !value, rest };
+            const partial = this.parseNot(tokens.slice(1))
+            return { value: !partial.value, rest: partial.rest }
         }
-        return this.parsePrimary(tokens);
+        return this.parsePrimary(tokens)
     }
 
     private static parsePrimary(tokens: string[]): { value: boolean; rest: string[] } {
         if (tokens[0] === '(') {
-            const nextRest = tokens.slice(1);
-            const { value, rest } = this.parseExpression(nextRest);
-            return { value, rest: rest.slice(1) };
+            const partial = this.parseExpression(tokens.slice(1))
+            return { value: partial.value, rest: partial.rest.slice(1) }
         }
         if (tokens[0] === 'TRUE') {
-            return { value: true, rest: tokens.slice(1) };
+            return { value: true, rest: tokens.slice(1) }
         }
         if (tokens[0] === 'FALSE') {
-            return { value: false, rest: tokens.slice(1) };
+            return { value: false, rest: tokens.slice(1) }
         }
-        throw new Error(`Unexpected token: ${tokens[0]}`);
+        throw new Error(`Unexpected token: ${tokens[0]}`)
     }
 }
