@@ -1,13 +1,14 @@
 import {BooleanCalculator, Expression, Result} from "./index";
 
 describe('boolean calculator', () => {
+    const testMessage = 'should know that the result for %s is %s';
 
     describe('single values', () => {
         const cases: [Expression, boolean][] = [
             ['TRUE', true],
             ['FALSE', false]
             ];
-        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+        it.each(cases)(testMessage, (expression: Expression, expected: boolean) => {
             expect(BooleanCalculator.run(expression)).toBe(expected);
         })
     })
@@ -17,7 +18,7 @@ describe('boolean calculator', () => {
             ['NOT FALSE', true],
             ['NOT TRUE', false]
         ];
-        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+        it.each(cases)(testMessage, (expression: Expression, expected: boolean) => {
             expect(BooleanCalculator.run(expression)).toBe(expected);
         })
     })
@@ -27,7 +28,7 @@ describe('boolean calculator', () => {
             ['TRUE AND TRUE', true],
             ['TRUE AND FALSE', false]
         ];
-        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+        it.each(cases)(testMessage, (expression: Expression, expected: boolean) => {
             expect(BooleanCalculator.run(expression)).toBe(expected);
         })
     })
@@ -37,7 +38,7 @@ describe('boolean calculator', () => {
             ['TRUE OR FALSE', true],
             ['FALSE OR FALSE', false]
         ];
-        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+        it.each(cases)(testMessage, (expression: Expression, expected: boolean) => {
             expect(BooleanCalculator.run(expression)).toBe(expected);
         })
     })
@@ -49,7 +50,7 @@ describe('boolean calculator', () => {
             ['(TRUE OR TRUE OR TRUE) AND FALSE', false],
             ['NOT (TRUE AND TRUE)', false]
         ]
-        it.each(cases)('should know that the result for %s is %s', (expression: Expression, expected: boolean) => {
+        it.each(cases)(testMessage, (expression: Expression, expected: boolean) => {
             expect(BooleanCalculator.run(expression)).toBe(expected);
         })
     })
