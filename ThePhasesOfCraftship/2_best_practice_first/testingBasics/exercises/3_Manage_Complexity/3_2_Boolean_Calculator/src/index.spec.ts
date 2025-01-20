@@ -65,5 +65,10 @@ describe('boolean calculator', () => {
             const expression = '(TRUE OR TRUE OR TRUE) AND FALSE';
             expect(BooleanCalculator.run(expression)).toBeFalsy();
         });
+
+        it('should know that the result for "NOT (TRUE AND TRUE)" is false', () => {
+            const expression = 'NOT (TRUE AND TRUE)';
+            expect(BooleanCalculator.run(expression)).toBeFalsy();
+        });
     })
 })
