@@ -2,9 +2,9 @@
   "name": "puppeteer-jest-typescript",
   "version": "1.0.0",
   "scripts": {
-    "copy": "cp src/manifest.json dist/manifest.json && cp src/popup/popup.html dist/popup/popup.html && cp src/popup/styles.css dist/popup/styles.css",
+    "copy": "cp src/manifest.json dist/manifest.json && cp src/popup/popup.html dist/popup/popup.html && cp src/popup/styles.css dist/popup/styles.css && cp src/content.css dist/content.css",
     "build": "rimraf dist && tsc && npm run copy",
-    "test": "jest"
+    "test": "npm run build && jest"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.299",
