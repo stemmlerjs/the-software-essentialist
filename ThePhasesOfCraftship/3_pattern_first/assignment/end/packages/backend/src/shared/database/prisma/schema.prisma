@@ -1,0 +1,74 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./../dev.db" // Replace with your SQLite file path
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  email     String @unique
+  firstName String
+  lastName  String
+  username  String
+  password  String
+
+  // Define a one-to-one relationship with Member
+  member    Member?
+}
+
+model Member {
+  id    Int    @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
+  posts Post[]
+  votes  Vote[]
+  comments  Comment[]
+}
+
+model Post {
+  id             Int       @id @default(autoincrement())
+  memberPostedBy Member    @relation(fields: [memberId], references: [id])
+  memberId       Int // Foreign key to the Member table
+  postType       String // 'Text' or 'Link'
+  title          String
+  content        String
+  comments       Comment[]
+  dateCreated    DateTime  @default(now())
+  votes          Vote[]
+}
+
+model Comment {
+  id     Int  @id @default(autoincrement())
+
+  // Foreign key relation to the Post table
+  postId Int // Foreign key to the Post table
+  post   Post @relation(fields: [postId], references: [id])
+  text String
+
+  memberId        Int // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id]) 
+
+  parentCommentId    Int?
+  parentComment Comment? @relation("Replies", fields: [parentCommentId], references: [id])
+  replyComments Comment[] @relation("Replies")
+}
+
+model Vote {
+  id            Int  @id @default(autoincrement())
+
+  postId        Int // Foreign key to the Post table
+  postBelongsTo Post @relation(fields: [postId], references: [id])
+
+  memberId        Int // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  voteType String  // 'Upvote' or 'Downvote'
+}

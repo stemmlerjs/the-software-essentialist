@@ -120,12 +120,10 @@ defineFeature(feature, (test) => {
     let studentAssignment: StudentAssignment;
 
     given('a student was already assigned an assignment', async () => {
-      let classroomBuilder = await aClassRoom().withName('Math');
+      let aMathClass = await aClassRoom().withName('Math');
       studentAssignment = await aStudentAssigment()
-        .from(anAssignment().from(classroomBuilder))
-        .and(anEnrolledStudent()
-          .from(classroomBuilder)
-          .and(aStudent().withName('Khalil')))
+        .from(anAssignment().from(aMathClass))
+        .and(anEnrolledStudent().from(aMathClass).and(aStudent().withName('Khalil')))
         .build();
     });
 
