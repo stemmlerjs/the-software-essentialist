@@ -1,0 +1,33 @@
+{
+  "name": "chrome-speech-to-text",
+  "version": "1.0.0",
+  "description": "A Chrome extension for speech-to-text functionality.",
+  "main": "src/background.ts",
+  "scripts": {
+    "dev": "NODE_ENV=development webpack --watch",
+    "build": "NODE_ENV=production webpack"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "speech",
+    "text",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "web-ext": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.299",
+    "chrome-extension-cli": "^1.5.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "eslint": "^7.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^4.9.5",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-extension-reloader": "^1.1.4"
+  }
+}
