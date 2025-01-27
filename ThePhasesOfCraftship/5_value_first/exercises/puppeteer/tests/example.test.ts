@@ -23,5 +23,5 @@ afterEach(async () => {
 
 test('popup renders correctly', async () => {
   const page = await browser?.newPage();
-  await page?.goto(`chrome-extension://${EXTENSION_ID}/public/popup.html`);
+  await page?.goto(`chrome-extension://${EXTENSION_ID}/popup/popup.html`);
 });

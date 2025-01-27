@@ -2,14 +2,17 @@
   "name": "puppeteer-jest-typescript",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc",
+    "copy": "cp src/manifest.json dist/manifest.json && cp src/popup/popup.html dist/popup/popup.html && cp src/popup/styles.css dist/popup/styles.css",
+    "build": "rimraf dist && tsc && npm run copy",
     "test": "jest"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.299",
     "@types/jest": "^27.0.3",
     "@types/puppeteer": "^5.4.4",
     "jest": "^27.0.6",
     "puppeteer": "^10.0.0",
+    "rimraf": "^6.0.1",
     "ts-jest": "^27.0.3",
     "typescript": "^4.3.5"
   }
