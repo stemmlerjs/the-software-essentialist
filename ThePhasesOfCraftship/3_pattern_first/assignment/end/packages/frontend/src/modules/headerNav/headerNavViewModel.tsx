@@ -5,8 +5,8 @@
 // a users domain model, 
 // and 
 
-import { NavigationDm } from "./navigationDm"
-import { UserDm } from "./userDm"
+import { NavigationDm } from "../navigation/navigationDm"
+import { UserDm } from "../users/userDm";
 
 interface HeaderNavigationViewModelProps {
   currentPage: string;

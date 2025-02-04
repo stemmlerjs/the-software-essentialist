@@ -2,26 +2,9 @@
 import { Link } from "react-router-dom";
 import arrow from "../shared/assets/arrow.svg";
 import moment from 'moment';
+import { PostViewModel } from "../modules/posts/postViewModel";
 
-
-type Vote = { id: number, postId: number, voteType: 'Upvote' | 'Downvote' };
-type Comment = {};
-
-type Post = {
-  title: string;
-  dateCreated: string;
-  memberPostedBy: any;
-  comments: Comment[];
-  votes: Vote[]
-};
-
-function computeVoteCount(votes: Vote[]) {
-  let count = 0;
-  votes.forEach((v) => v.voteType === 'Upvote' ? count++ : count--);
-  return count;
-}
-
-export const PostsList = ({ posts }: { posts: Post[] }) => (
+export const PostsList = ({ posts }: { posts: PostViewModel[] }) => (
   <div className="posts-list">
     {posts.map((post, key) => (
       <div className="post-item" key={key}>
@@ -29,7 +12,7 @@ export const PostsList = ({ posts }: { posts: Post[] }) => (
           <div className="post-item-upvote">
             <img src={arrow} />
           </div>
-          <div>{computeVoteCount(post.votes)}</div>
+          <div>{post.voteScore}</div>
           <div className="post-item-downvote">
             <img src={arrow} />
           </div>
@@ -42,8 +25,8 @@ export const PostsList = ({ posts }: { posts: Post[] }) => (
             by {post.memberPostedBy.user.username}
           </Link>
           <div>
-            {post.comments.length}{" "}
-            {post.comments.length !== 1 ? `comments` : "comment"}
+            {post.numComments}{" "}
+            {post.numComments !== 1 ? `comments` : "comment"}
           </div>
           </div>
         </div>

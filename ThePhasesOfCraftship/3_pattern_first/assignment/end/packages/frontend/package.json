@@ -19,6 +19,8 @@
     "@emotion/styled": "^11.11.0",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
+    "mobx": "^6.13.6",
+    "mobx-react-lite": "^4.1.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

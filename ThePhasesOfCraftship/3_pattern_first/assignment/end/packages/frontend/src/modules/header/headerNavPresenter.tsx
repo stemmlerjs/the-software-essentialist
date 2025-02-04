@@ -1,9 +1,9 @@
 import { Users } from "@dddforum/shared/src/api";
-import { UsersRepository } from "../usersRepository";
-import { HeaderNavigationViewModel } from "../headerNavigationViewModel";
-import { NavigationRepository } from "../navigationRepository";
+import { NavigationRepository } from "../navigation/navigationRepository";
+import { UsersRepository } from "../users/usersRepository";
+import { HeaderNavigationViewModel } from "../headerNav/headerNavViewModel";
 
-export class RegistrationPresenter {
+export class HeaderNavPresenter {
   constructor(
     private usersRepository: UsersRepository,
     private navigationRepository: NavigationRepository,

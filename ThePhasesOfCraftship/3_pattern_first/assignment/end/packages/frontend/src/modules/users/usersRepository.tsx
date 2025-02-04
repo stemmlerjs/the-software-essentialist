@@ -1,6 +1,7 @@
 
 import { APIClient, Users } from "@dddforum/shared/src/api"
 import { UserDm } from "./userDm";
+import { makeAutoObservable } from "mobx";
 
 export class UsersRepository {
 
@@ -8,6 +9,7 @@ export class UsersRepository {
   private userDm: UserDm;
 
   constructor (gateway: APIClient) {
+    makeAutoObservable(this);
     this.gateway = gateway
     this.userDm = new UserDm();
   }
@@ -28,5 +30,6 @@ export class UsersRepository {
     // You will have to translate the DTO into a Domain Model.
 
     // If the auth fails, return the user domain model as is. The user will have to re-authenticate.
+    return this.userDm;
   }
 }

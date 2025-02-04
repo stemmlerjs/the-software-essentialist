@@ -1,10 +1,10 @@
 
 
 import { createAPIClient, Users } from '@dddforum/shared/src/api';
-import { RegistrationPresenter } from '../../../src/modules/registration/registrationPresenter';
-import { UsersRepository } from '../../../src/modules/usersRepository';
-import { HeaderNavigationViewModel } from '../../../src/modules/headerNavigationViewModel'
-import { NavigationRepository } from '../../../src/modules/navigationRepository';
+import { NavigationRepository } from '../../../src/modules/navigation/navigationRepository';
+import { HeaderPresenter } from '../../../src/modules/headerNav/headerNavPresenter';
+import { UsersRepository } from '../../../src/modules/users/usersRepository';
+import { HeaderNavigationViewModel } from '../../../src/modules/headerNav/headerNavViewModel';
 
 describe('Registration', () => {
 
@@ -13,7 +13,7 @@ describe('Registration', () => {
   
   let usersRepository = new UsersRepository(apiClient);
   let navigationRepository = new NavigationRepository();
-  let registrationPresenter = new RegistrationPresenter(
+  let registrationPresenter = new HeaderPresenter(
     usersRepository, 
     navigationRepository
   );
