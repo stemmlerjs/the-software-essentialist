@@ -4,6 +4,7 @@ import { createAPIClient, Users } from '@dddforum/shared/src/api';
 import { RegistrationPresenter } from '../../../src/modules/registration/registrationPresenter';
 import { UsersRepository } from '../../../src/modules/usersRepository';
 import { HeaderNavigationViewModel } from '../../../src/modules/headerNavigationViewModel'
+import { NavigationRepository } from '../../../src/modules/navigationRepository';
 
 describe('Registration', () => {
 
@@ -11,7 +12,11 @@ describe('Registration', () => {
   let apiClient = createAPIClient('http://localhost:3000');
   
   let usersRepository = new UsersRepository(apiClient);
-  let registrationPresenter = new RegistrationPresenter(usersRepository);
+  let navigationRepository = new NavigationRepository();
+  let registrationPresenter = new RegistrationPresenter(
+    usersRepository, 
+    navigationRepository
+  );
   let headerNavigationViewModel: HeaderNavigationViewModel;
 
   it ('should be authenticated and redirected to the /dashboard page after successful registration', async () => {
