@@ -8,6 +8,8 @@ import { PostsService } from "./postsService";
 import { InMemoryPostsRepository } from "./adapters/inMemoryPostsRepository";
 import { ProductionPostsRepository } from "./adapters/productionPostsRepository";
 import { Database } from "../../shared/database";
+import { PostReadModel } from "./domain/postReadModel";
+import { MemberReadModel } from "../members/domain/memberReadModel";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

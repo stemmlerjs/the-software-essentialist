@@ -14,6 +14,7 @@ export class InMemoryPostsRepository implements PostsRepository {
   }
 
   public static createWithSeedData (): InMemoryPostsRepository {
-    return new InMemoryPostsRepository([]);
+    // Put seed data here
+    return new InMemoryPostsRepository();
   }
 }

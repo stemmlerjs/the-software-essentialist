@@ -52,7 +52,7 @@ defineFeature(feature, (test) => {
             
 
       when('I register with valid account details accepting marketing emails', async () => {
-          userResponse = await application. users.createUser(createUserCommand);
+          userResponse = await application.users.createUser(createUserCommand);
           addEmailToListResponse = await application.marketing.addEmailToList(createUserCommand.email);
       });
 
