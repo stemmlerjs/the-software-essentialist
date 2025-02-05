@@ -2,7 +2,7 @@
 
 import { createAPIClient, Users } from '@dddforum/shared/src/api';
 import { NavigationRepository } from '../../../src/modules/navigation/navigationRepository';
-import { HeaderPresenter } from '../../../src/modules/headerNav/headerNavPresenter';
+import { RegistrationPagePresenter } from '../../../src/modules/registrationPagePresenter';
 import { UsersRepository } from '../../../src/modules/users/usersRepository';
 import { HeaderNavigationViewModel } from '../../../src/modules/headerNav/headerNavViewModel';
 
@@ -13,7 +13,7 @@ describe('Registration', () => {
   
   let usersRepository = new UsersRepository(apiClient);
   let navigationRepository = new NavigationRepository();
-  let registrationPresenter = new HeaderPresenter(
+  let registrationPagePresenter = new RegistrationPagePresenter(
     usersRepository, 
     navigationRepository
   );
@@ -32,7 +32,7 @@ describe('Registration', () => {
       lastName: 'Bob'
     }
 
-    apiClient.users.register = jest.fn().mockImplementation(() => {
+    jest.spyOn(registrationPagePresenter.usersRepository.api.users, 'register').mockImplementation(() => {
       return Promise.resolve({
         success: true,
         data: {
@@ -45,12 +45,12 @@ describe('Registration', () => {
       } as Users.CreateUserResponse);
     });
 
-    await registrationPresenter.load((viewModels) => {
+    await registrationPagePresenter.load((viewModels) => {
       headerNavigationViewModel = viewModels.headerNavigationViewModel
     });
 
-    await registrationPresenter.register(userRegistrationDetails);
-    expect(apiClient.users.register).toHaveBeenCalledWith(userRegistrationDetails);
+    await registrationPagePresenter.register(userRegistrationDetails);
+    expect(registrationPagePresenter.usersRepository.api.users.register).toHaveBeenCalledTimes(1);
 
     expect(headerNavigationViewModel.currentPage).toBe('dashboard');
     expect(headerNavigationViewModel.isAuthenticated).toBe(true);

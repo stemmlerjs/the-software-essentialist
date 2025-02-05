@@ -32,7 +32,7 @@ export class PostsModule extends ApplicationModule {
     if (this.postsRepository) return this.postsRepository;
 
     if (this.shouldBuildFakeRepository) {
-      return new InMemoryPostsRepository();
+      return InMemoryPostsRepository.createWithSeedData();
     }
 
     return new ProductionPostsRepository(this.db.getConnection());

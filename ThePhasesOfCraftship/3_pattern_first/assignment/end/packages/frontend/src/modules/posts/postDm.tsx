@@ -19,12 +19,6 @@ export type Vote = {
 
 export type Comment = {};
 
-// title: post.title,
-//       dateCreated: post.dateCreated,
-//       memberPostedBy: post.memberPostedBy,
-//       comments: post.comments,
-//       votes: post.votes,
-
 export class PostDm {
 
   private props: PostDmProps;
@@ -59,10 +53,9 @@ export class PostDm {
       id: postDTO.id,
       title: postDTO.title,
       dateCreated: postDTO.dateCreated,
-      member: {
-        memberId: postDTO.member.memberId
-      },
-      votes: postDTO.votes
+      member: postDTO.member,
+      votes: postDTO.votes,
+      comments: postDTO.comments
     });
   }
 

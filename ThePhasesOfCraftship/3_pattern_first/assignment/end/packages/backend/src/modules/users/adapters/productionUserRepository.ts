@@ -17,7 +17,7 @@ export class ProductionUserRepository implements UsersRepository {
     }
   }
 
-  async findById(id: number): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     try {
       const maybeUser = await this.prisma.user.findFirst({ where: { id } });
       if (!maybeUser) return null;
@@ -73,7 +73,7 @@ export class ProductionUserRepository implements UsersRepository {
   }
 
   async update(
-    id: number,
+    id: string,
     props: Partial<ValidatedUser>,
   ): Promise<User | null> {
     const prismaUser = await this.prisma.user.update({

@@ -1,6 +1,5 @@
 
 
-// 
 // To create this, we need a navigation domain model, 
 // a users domain model, 
 // and 
@@ -18,8 +17,12 @@ export class HeaderNavigationViewModel {
 
   private props: HeaderNavigationViewModelProps
 
-  private constructor(props: HeaderNavigationViewModelProps) {
-    this.props = props;
+  constructor(props?: HeaderNavigationViewModelProps) {
+    this.props = {
+      currentPage: props ? props.currentPage : '',
+      isAuthenticated: props ? props.isAuthenticated : false,
+      username: props ? props.username : ''
+    };
   }
 
   get currentPage () {
@@ -37,8 +40,8 @@ export class HeaderNavigationViewModel {
   public static create (user: UserDm, navigation: NavigationDm): HeaderNavigationViewModel {
     return new HeaderNavigationViewModel({
       currentPage: navigation.currentPage,
-      isAuthenticated: user.isAuthenticated,
-      username: user.username
+      isAuthenticated: user ? true : false,
+      username: user ? user.username : ''
     });
   }
 }

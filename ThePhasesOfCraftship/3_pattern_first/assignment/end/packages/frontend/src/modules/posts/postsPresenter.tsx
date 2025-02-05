@@ -12,7 +12,7 @@ export class PostsPresenter {
   }
 
   setupSubscriptions () {
-    observe(this.postsRepository, 'posts', (postDms) => {
+    observe(this.postsRepository, 'postsDm', (postDms) => {
       this.postVMs = postDms.newValue.map(postDm => PostViewModel.fromDomain(postDm));
     });
   }

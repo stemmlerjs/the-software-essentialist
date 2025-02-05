@@ -2,7 +2,7 @@ import axios from "axios";
 import { APIResponse, GenericErrors, ServerError } from ".";
 
 export type ValidatedUser = {
-  id?: number;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -18,7 +18,7 @@ export type CreateUserParams = {
 };
 
 export type UserDTO = {
-  id: number;
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

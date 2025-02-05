@@ -11,11 +11,13 @@ export class GetPostsQuery {
   static fromRequest(query: Request["query"]) {
     const { sort } = query;
 
+    console.log("sort", sort);
+
     if (!sort) {
       throw new MissingRequestParamsException(["sort"]);
     }
 
-    if (sort !== "recent") {
+    if (sort !== "recent" && sort !== "popular") {
       throw new InvalidRequestParamsException(["sort"]);
     }
 

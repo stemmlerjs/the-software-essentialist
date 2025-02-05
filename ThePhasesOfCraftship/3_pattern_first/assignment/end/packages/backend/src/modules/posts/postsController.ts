@@ -38,7 +38,7 @@ export class PostsController {
       const posts = await this.postsService.getPosts(query);
       const response: GetPostsResponse = {
         success: true,
-        data: posts,
+        data: posts.map((p) => p.toDTO()),
         error: {},
       };
       return res.status(200).json(response);

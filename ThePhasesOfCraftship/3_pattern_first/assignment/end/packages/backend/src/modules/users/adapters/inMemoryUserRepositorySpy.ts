@@ -3,6 +3,8 @@ import { Spy } from "../../../shared/testDoubles/spy";
 import { UsersRepository } from "../ports/usersRepository";
 import { CreateUserCommand } from "../usersCommand";
 import { User } from "@prisma/client";
+import { randomUUID } from "node:crypto";
+;
 
 export class InMemoryUserRepositorySpy
   extends Spy<UsersRepository>
@@ -19,14 +21,14 @@ export class InMemoryUserRepositorySpy
     this.addCall("save", [user]);
     const newUser = {
       ...user,
-      id: this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1,
+      id: randomUUID(),
       password: '',
     };
     this.users.push(newUser);
     return Promise.resolve({ ...newUser, password: "password" });
   }
 
-  findById(id: number): Promise<User | null> {
+  findById(id: string): Promise<User | null> {
     return Promise.resolve(this.users.find((user) => user.id === id) || null);
   }
 
@@ -39,7 +41,7 @@ export class InMemoryUserRepositorySpy
   }
 
   async update(
-    id: number,
+    id: string,
     props: Partial<CreateUserCommand>,
   ): Promise<User | null> {
     const userIndex = this.users.findIndex((user) => user.id === id);

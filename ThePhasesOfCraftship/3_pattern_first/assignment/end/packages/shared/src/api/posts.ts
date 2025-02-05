@@ -1,30 +1,38 @@
 import axios from "axios";
 import { APIResponse, ServerError } from ".";
 
+export type GetPostsQueryOption = 'popular' | 'recent';
+
 export type GetPostsParams = {
-  sort: string;
+  sort: GetPostsQueryOption
 };
 
-export type Post = {
-  id: number;
+export type MemberDTO = {
+  memberId: string
+}
+
+export type PostDTO = {
+  id: string;
   memberId: number;
   postType: string;
   title: string;
   content: string;
   dateCreated: string;
+  member: MemberDTO;
 };
 
 export type GetPostErrors = ServerError;
 
-export type GetPostsResponse = APIResponse<Post[], GetPostErrors>;
+export type GetPostsResponse = APIResponse<PostDTO[], GetPostErrors>;
 
 export type PostsResponse = GetPostsResponse;
 
 export const createPostsAPI = (apiURL: string) => {
   return {
-    getPosts: async (sort: string): Promise<PostsResponse> => {
+    getPosts: async (sort: GetPostsQueryOption): Promise<PostsResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
+        console.log(successResponse)
         return successResponse.data as GetPostsResponse;
       } catch (err) {
         //@ts-expect-error

@@ -1,5 +1,6 @@
-import { Post } from "@dddforum/shared/src/api/posts";
+
+import { PostReadModel } from "../domain/postReadModel";
 
 export interface PostsRepository {
-  findPosts(sort: string): Promise<Post[]>;
+  findPosts(sort: string): Promise<PostReadModel[]>;
 }

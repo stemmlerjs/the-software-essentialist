@@ -5,8 +5,8 @@ import { User } from "@prisma/client";
 export interface UsersRepository {
   findUserByEmail(email: string): Promise<User | null>;
   save(user: ValidatedUser): Promise<User>;
-  findById(id: number): Promise<User | null>;
+  findById(id: string): Promise<User | null>;
   delete(email: string): Promise<void>;
   findUserByUsername(username: string): Promise<User | null>;
-  update(id: number, props: Partial<ValidatedUser>): Promise<User | null>;
+  update(id: string, props: Partial<ValidatedUser>): Promise<User | null>;
 }
