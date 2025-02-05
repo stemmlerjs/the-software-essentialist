@@ -13,7 +13,6 @@ export class PostsRepository {
   async getPosts(query?: Posts.GetPostsQueryOption) {
     const getPostsResponse = await this.api.posts.getPosts(query ? query : 'popular');
     const postDTOs = getPostsResponse.data;
-    console.log(postDTOs);
     this.postsDm = postDTOs.map(postDTO => PostDm.fromDTO(postDTO));
   }
 }

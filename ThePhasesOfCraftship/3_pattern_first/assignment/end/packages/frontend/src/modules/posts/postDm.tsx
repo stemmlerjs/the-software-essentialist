@@ -1,7 +1,7 @@
 import { Posts } from "@dddforum/shared/src/api";
 
 interface PostDmProps {
-  id: number;
+  id: string;
   title: string;
   dateCreated: string;
   member: {
@@ -48,7 +48,7 @@ export class PostDm {
   }
   
   
-  public static fromDTO (postDTO: Posts.Post) {
+  public static fromDTO (postDTO: Posts.PostDTO) {
     return new PostDm({
       id: postDTO.id,
       title: postDTO.title,
