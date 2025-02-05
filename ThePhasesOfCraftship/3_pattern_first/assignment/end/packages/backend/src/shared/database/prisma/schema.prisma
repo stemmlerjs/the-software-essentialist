@@ -1,4 +1,3 @@
-
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -12,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(uuid())
   email     String @unique
   firstName String
   lastName  String
@@ -24,19 +23,19 @@ model User {
 }
 
 model Member {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
 
   user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
+  userId String @unique // relation scalar field (used in the `@relation` attribute above)
   posts Post[]
   votes  Vote[]
   comments  Comment[]
 }
 
 model Post {
-  id             Int       @id @default(autoincrement())
+  id             String    @id @default(uuid())
   memberPostedBy Member    @relation(fields: [memberId], references: [id])
-  memberId       Int // Foreign key to the Member table
+  memberId       String // Foreign key to the Member table
   postType       String // 'Text' or 'Link'
   title          String
   content        String
@@ -46,28 +45,28 @@ model Post {
 }
 
 model Comment {
-  id     Int  @id @default(autoincrement())
+  id     String @id @default(uuid())
 
   // Foreign key relation to the Post table
-  postId Int // Foreign key to the Post table
+  postId String // Foreign key to the Post table
   post   Post @relation(fields: [postId], references: [id])
   text String
 
-  memberId        Int // Foreign key to the Member table
+  memberId        String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id]) 
 
-  parentCommentId    Int?
+  parentCommentId    String?
   parentComment Comment? @relation("Replies", fields: [parentCommentId], references: [id])
   replyComments Comment[] @relation("Replies")
 }
 
 model Vote {
-  id            Int  @id @default(autoincrement())
+  id            String @id @default(uuid())
 
-  postId        Int // Foreign key to the Post table
+  postId        String // Foreign key to the Post table
   postBelongsTo Post @relation(fields: [postId], references: [id])
 
-  memberId        Int // Foreign key to the Member table
+  memberId        String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
   voteType String  // 'Upvote' or 'Downvote'
