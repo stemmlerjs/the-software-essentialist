@@ -45,10 +45,20 @@ class ServerErrorException extends CustomException {
   }
 }
 
+class DatabaseError extends CustomException {
+  constructor() {
+    super(
+      "An error occurred saving to the database",
+      "DatabaseError",
+    );
+  }
+}
+
 export {
   InvalidRequestBodyException,
   ServerErrorException,
   InvalidRequestParamsException,
   MissingRequestParamsException,
   InvalidParamsException,
+  DatabaseError,
 };

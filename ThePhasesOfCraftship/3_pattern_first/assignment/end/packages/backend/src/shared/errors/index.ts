@@ -7,3 +7,4 @@ export type ErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => Response;
+

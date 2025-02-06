@@ -2,6 +2,8 @@
 import { PrismaClient } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
 import { PostReadModel } from "../domain/postReadModel";
+import { DatabaseError } from "../../../shared/exceptions";
+import { Post } from "../domain/post";
 
 export class ProductionPostsRepository implements PostsRepository {
   constructor(private prisma: PrismaClient) {}
@@ -18,5 +20,9 @@ export class ProductionPostsRepository implements PostsRepository {
     });
 
     return []
+  }
+
+  async save(post: Post): Promise<void | DatabaseError> {
+    return;
   }
 }

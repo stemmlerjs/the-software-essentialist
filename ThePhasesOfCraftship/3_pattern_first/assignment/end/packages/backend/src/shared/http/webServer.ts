@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { Server } from "http";
 
-import { ProcessService } from "@dddforum/backend/src/shared/processes/processService";
+import { ProcessService } from "../processes/processService";
 
 interface WebServerConfig {
   port: number;

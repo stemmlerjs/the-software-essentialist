@@ -1,10 +1,12 @@
 
 import { CommentDTO } from "@dddforum/shared/src/api/posts";
 import { Comment } from "@prisma/client";
+import { MemberReadModel } from "../../members/domain/memberReadModel";
 
 interface CommentReadModelProps {
   id: string;
   text: string;
+  dateCreated: string;
 }
 
 export class CommentReadModel {
@@ -27,8 +29,8 @@ export class CommentReadModel {
     return {
       id: this.props.id,
       text: this.props.text,
-      dateCreated: this.props.
-      member: MemberDTO;
+      dateCreated: this.props.dateCreated,
+      member: this.props.member
     }
   }
 }

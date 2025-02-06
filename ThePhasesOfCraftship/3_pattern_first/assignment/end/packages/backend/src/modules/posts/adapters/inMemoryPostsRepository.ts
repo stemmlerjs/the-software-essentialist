@@ -1,6 +1,8 @@
 
 import { PostsRepository } from "../ports/postsRepository";
 import { PostReadModel } from "../domain/postReadModel"
+import { Post } from "../domain/post";
+import { DatabaseError } from "../../../shared/exceptions";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];
@@ -16,5 +18,11 @@ export class InMemoryPostsRepository implements PostsRepository {
   public static createWithSeedData (): InMemoryPostsRepository {
     // Put seed data here
     return new InMemoryPostsRepository();
+  }
+
+  public async save(post: Post): Promise<void | DatabaseError> {
+
+    return Promise.resolve();
+    
   }
 }

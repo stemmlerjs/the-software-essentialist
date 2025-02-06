@@ -1,8 +1,10 @@
 import express from "express";
 import { GetPostsQuery } from "./postsQuery";
-import { GetPostsResponse } from "@dddforum/shared/src/api/posts";
+import { CreatePostResponse, GetPostsResponse } from "@dddforum/shared/src/api/posts";
 import { PostsService } from "./postsService";
 import { ErrorHandler } from "../../shared/errors";
+import { CreatePostCommand } from "./postsCommands";
+import { DatabaseError } from "../../shared/exceptions";
 
 export class PostsController {
   private router: express.Router;
@@ -22,6 +24,7 @@ export class PostsController {
 
   private setupRoutes() {
     this.router.get("/", this.getPosts.bind(this));
+    this.router.post("/new", this.createPost.bind(this));
   }
 
   private setupErrorHandler() {
@@ -39,6 +42,30 @@ export class PostsController {
       const response: GetPostsResponse = {
         success: true,
         data: posts.map((p) => p.toDTO()),
+        error: {},
+      };
+      return res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  private async createPost(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const command = CreatePostCommand.fromRequest(req.body);
+      const postOrError = await this.postsService.createPost(command);
+
+      if (postOrError instanceof DatabaseError) {
+        return next(postOrError);
+      }
+
+      const response: CreatePostResponse = {
+        success: true,
+        data: postOrError.toDTO(),
         error: {},
       };
       return res.status(200).json(response);

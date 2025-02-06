@@ -1,13 +1,13 @@
 import { ValidatedUser } from "@dddforum/shared/src/api/users";
-import { NumberUtil } from "@dddforum/shared/src/utils/numberUtil";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
+import { randomUUID } from "node:crypto";
 
 export class ValidatedUserBuilder {
   private props: ValidatedUser;
 
   constructor() {
     this.props = {
-      id: -1,
+      id: randomUUID(),
       firstName: "",
       lastName: "",
       email: "",
@@ -17,7 +17,7 @@ export class ValidatedUserBuilder {
   }
 
   public withAllRandomDetails() {
-    this.props.id = NumberUtil.generateRandomInteger(100000, 8000000);
+    this.props.id = randomUUID()
     this.withFirstName(TextUtil.createRandomText(10));
     this.withLastName(TextUtil.createRandomText(10));
     this.withEmail(TextUtil.createRandomEmail());

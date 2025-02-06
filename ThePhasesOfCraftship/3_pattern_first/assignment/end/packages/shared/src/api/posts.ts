@@ -15,7 +15,8 @@ export type PostDTO = {
   id: string;
   postType: string;
   title: string;
-  content: string;
+  content?: string;
+  link?: string;
   dateCreated: string;
   member: MemberDTO;
   comments: CommentDTO[];
@@ -42,6 +43,10 @@ export type CreatePostErrors = ServerError;
 
 export type CreatePostResponse = APIResponse<PostDTO, CreatePostErrors>;
 
+export type PostsResponse = 
+  GetPostsResponse 
+  | CreatePostResponse;
+
 // clean
 export type CreatePostInput = {
   title: string;
@@ -62,6 +67,7 @@ export const createPostsAPI = (apiURL: string) => {
         });
         return successResponse.data as CreatePostResponse;
       } catch (err) {
+        console.log(err);
         //@ts-expect-error
         return err.response.data as CreatePostResponse;
       }
