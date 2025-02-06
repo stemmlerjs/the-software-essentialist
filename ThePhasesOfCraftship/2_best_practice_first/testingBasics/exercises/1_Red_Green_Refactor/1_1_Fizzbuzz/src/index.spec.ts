@@ -18,6 +18,9 @@ describe("fizzBuzz", () => {
 	test("5 returns 'Buzz'", () => {
 		expect(fizzBuzz(5)).toBe("Buzz");
 	});
+	test("25 returns 'Buzz'", () => {
+		expect(fizzBuzz(25)).toBe("Buzz");
+	});
 	test("43 returns '43'", () => {
 		expect(fizzBuzz(43)).toBe("43");
 	});
