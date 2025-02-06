@@ -1,4 +1,5 @@
 export function fizzBuzz(inputNumber: number): string {
 	if (inputNumber === 3) return 'Fizz';
-	return 'Buzz';
+	if (inputNumber === 5) return 'Buzz';
+	return `${inputNumber}`;
 }
