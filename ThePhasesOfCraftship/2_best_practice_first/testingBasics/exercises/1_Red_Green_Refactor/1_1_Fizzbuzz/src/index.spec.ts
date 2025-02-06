@@ -15,11 +15,13 @@ describe("fizzBuzz", () => {
 			});
 		});
 	});
-	test("5 returns 'Buzz'", () => {
-		expect(fizzBuzz(5)).toBe("Buzz");
-	});
-	test("25 returns 'Buzz'", () => {
-		expect(fizzBuzz(25)).toBe("Buzz");
+	describe("When the input is divisible by 5", () => {
+		describe("it returns 'Buzz'", () => {
+			const divisibleBy5Cases = [5, 25, 80];
+			test.each(divisibleBy5Cases)("fizzBuzz(%s) returns 'Buzz'", (input: number) => {
+				expect(fizzBuzz(input)).toBe("Buzz");
+			});
+		});
 	});
 	test("43 returns '43'", () => {
 		expect(fizzBuzz(43)).toBe("43");
