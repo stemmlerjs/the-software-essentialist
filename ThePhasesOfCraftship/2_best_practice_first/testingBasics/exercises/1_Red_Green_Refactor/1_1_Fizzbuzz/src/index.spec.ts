@@ -23,11 +23,13 @@ describe("fizzBuzz", () => {
 			});
 		});
 	});
-	test("15 returns 'FizzBuzz'", () => {
-		expect(fizzBuzz(15)).toBe("FizzBuzz");
-	});
-	test("45 returns 'FizzBuzz'", () => {
-		expect(fizzBuzz(45)).toBe("FizzBuzz");
+	describe("When the input is divisible by 3 and 5", () => {
+		describe("it returns 'FizzBuzz'", () => {
+			const divisibleBy3And5Cases = [15, 45];
+			test.each(divisibleBy3And5Cases)("fizzBuzz(%s) returns 'FizzBuzz'", (input: number) => {
+				expect(fizzBuzz(input)).toBe("FizzBuzz");
+			});
+		});
 	});
 	test("43 returns '43'", () => {
 		expect(fizzBuzz(43)).toBe("43");
