@@ -1,5 +1,7 @@
 export function fizzBuzz(inputNumber: number): string {
+	if (inputNumber < 1) throw new Error('Input number must be >= 1');
 	if (inputNumber > 100) throw new Error('Input number must be <= 100');
+	
 	const isDivisibleBy3 = inputNumber % 3 === 0;
 	const isDivisibleBy5 = inputNumber % 5 === 0;
 	const isDivisibleBy3And5 = isDivisibleBy3 && isDivisibleBy5;
