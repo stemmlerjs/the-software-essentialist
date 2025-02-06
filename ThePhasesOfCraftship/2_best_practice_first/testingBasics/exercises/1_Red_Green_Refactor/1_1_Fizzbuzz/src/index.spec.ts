@@ -1,6 +1,15 @@
 import { fizzBuzz } from "./fizzbuzz";
 
 describe("fizzBuzz", () => {
+	describe("When the input is lower than 1", () => {
+		describe("it throws an error", () => {
+			const lowerThan1Cases = [-1, 0, -100];
+			test.each(lowerThan1Cases)("fizzBuzz(%s) throws an error", (input: number) => {
+				expect(() => fizzBuzz(input)).toThrowError('Input number must be >= 1');
+			});
+		});
+	});
+
 	describe("When the input is greater than 100", () => {
 		describe("it throws an error", () => {
 			const greaterThan100Cases = [101, 200, 1000];
