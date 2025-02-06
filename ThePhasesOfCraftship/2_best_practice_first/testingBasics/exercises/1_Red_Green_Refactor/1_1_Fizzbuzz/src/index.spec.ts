@@ -44,7 +44,7 @@ describe("fizzBuzz", () => {
 
 	describe("When the input is divisible by 5", () => {
 		describe("it returns 'Buzz'", () => {
-			const divisibleBy5Cases = [5, 25, 80];
+			const divisibleBy5Cases = [5, 25, 100];
 			test.each(divisibleBy5Cases)("fizzBuzz(%s) returns 'Buzz'", (input: number) => {
 				expect(fizzBuzz(input)).toBe("Buzz");
 			});
