@@ -60,7 +60,15 @@ describe("fizzBuzz", () => {
 		});
 	});
 
-	test("43 returns '43'", () => {
-		expect(fizzBuzz(43)).toBe("43");
+	describe("Other numbers return themselves as a string", () => {
+		const otherCases: [input: number, expectedReturn: string][] = [
+			[1, '1'],
+			[2, '2'],
+			[43, '43'],
+			[98, '98']
+		];
+		test.each(otherCases)("fizzBuzz(%s) returns %s", (input, expectedReturn) => {
+			expect(fizzBuzz(input)).toBe(expectedReturn);
+		});
 	});
 });
