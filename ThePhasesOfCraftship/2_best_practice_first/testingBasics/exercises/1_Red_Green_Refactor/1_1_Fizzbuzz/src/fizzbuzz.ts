@@ -1,4 +1,5 @@
 export function fizzBuzz(inputNumber: number): string {
+	if (typeof inputNumber !== 'number') throw new Error('Input number must be a number');
 	if (inputNumber < 1) throw new Error('Input number must be >= 1');
 	if (inputNumber > 100) throw new Error('Input number must be <= 100');
 	

@@ -1,6 +1,13 @@
 import { fizzBuzz } from "./fizzbuzz";
 
 describe("fizzBuzz", () => {
+	describe("Any non-number throws an error", () => {
+		const nonNumberCases = ["", "1", {}, [], null, undefined];
+		test.each(nonNumberCases)("fizzBuzz(%p) throws an error", (input: any) => {
+			expect(() => fizzBuzz(input)).toThrowError('Input number must be a number');
+		});
+	});
+
 	describe("When the input is lower than 1", () => {
 		describe("it throws an error", () => {
 			const lowerThan1Cases = [-1, 0, -100];
