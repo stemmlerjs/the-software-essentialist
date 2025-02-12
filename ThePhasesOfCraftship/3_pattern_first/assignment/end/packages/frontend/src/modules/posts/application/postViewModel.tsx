@@ -1,17 +1,17 @@
 import { UserDm } from "../../users/domain/userDm";
-import { PostDm, Vote } from "../domain/postDm";
+import { PostDm } from "../domain/postDm";
 
 type PostViewModelProps = {
   title: string;
   dateCreated: string;
-  memberPostedBy: any;
   numComments: number;
   voteScore: number;
   canCastVote: boolean;
+  memberUserName: string;
 };
 
 export class PostViewModel {
-  private props: PostViewModelProps;
+  private readonly props: PostViewModelProps;
 
   constructor(props: PostViewModelProps) {
     this.props = props;
@@ -23,10 +23,6 @@ export class PostViewModel {
 
   get dateCreated() {
     return this.props.dateCreated;
-  }
-
-  get memberPostedBy() {
-    return this.props.memberPostedBy;
   }
 
   get numComments() {
@@ -41,18 +37,22 @@ export class PostViewModel {
     return this.props.canCastVote
   }
 
+  get memberUserName () {
+    return this.props.memberUserName
+  }
+
   public static fromDomain(post: PostDm, currentUser: UserDm): PostViewModel {
 
     return new PostViewModel({
       title: post.title,
       dateCreated: post.dateCreated,
-      memberPostedBy: post.memberPostedBy,
       // this is something we could calculate based on the votes on the frontend, but there
       // is a better, more performant design that we can use to get this information from the backend
       voteScore: post.voteScore,
       // Same for this.
       numComments: post.comments.length,
-      canCastVote: currentUser.canVote()
+      canCastVote: currentUser.canVote(),
+      memberUserName: post.member.username
     });
   }
 }

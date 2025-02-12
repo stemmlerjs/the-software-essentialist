@@ -6,6 +6,7 @@ interface PostDmProps {
   dateCreated: string;
   member: {
     memberId: string;
+    username: string;
   }
   voteScore: number;
   comments: Comment[]
@@ -35,8 +36,8 @@ export class PostDm {
     return this.props.dateCreated;
   }
 
-  get memberPostedBy () {
-    return this.props.member.memberId;
+  get member () {
+    return this.props.member
   }
 
   get voteScore () {

@@ -12,12 +12,19 @@ export class ProductionUsersRepository implements UsersRepository {
   constructor (api: APIClient) {
     makeAutoObservable(this);
     this.api = api;
-    this.currentUser = new UserDm();
+    this.currentUser = this.loadInitialUserState();
+  }
+
+  private loadInitialUserState () {
+    // not implemented;
+    // use cookies, localstorage, auth tokens, etc. to determine if the user is authenticated
+    // if they are, return a UserDm with the user's information
+    return new UserDm({ isAuthenticated: false, username: '', userRoles: [] });
   }
 
   async getCurrentUser(): Promise<UserDm> {
     // If the user is already loaded, just return it.
-    if (this.currentUser.isAuthenticated) return this.currentUser;
+    if (this.currentUser.isAuthenticated()) return this.currentUser;
 
     // // If the user isn't already loaded, see if there's an auth token in cookie storage.
     // const tokenOrNothing = this.localStorage.getItem('authToken');

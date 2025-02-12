@@ -8,6 +8,7 @@ export const fakePostsData: PostDTO[] = [
     dateCreated: new Date().toString(),
     member: {
       memberId: '1',
+      username: 'khalilstemmler'
     },
     voteScore: 4,
     postType: 'link',
@@ -19,6 +20,7 @@ export const fakePostsData: PostDTO[] = [
     dateCreated: new Date().toString(),
     member: {
       memberId: '3',
+      username: 'billybob'
     },
     voteScore: 2,
     postType: 'link',
@@ -30,6 +32,7 @@ export const fakePostsData: PostDTO[] = [
     dateCreated: new Date().toString(),
     member: {
       memberId: '3',
+      username: 'samson'
     },
     voteScore: -1,
     postType: 'link',

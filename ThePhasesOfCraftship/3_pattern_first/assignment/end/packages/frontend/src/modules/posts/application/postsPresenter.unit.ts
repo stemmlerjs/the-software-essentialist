@@ -5,6 +5,7 @@ import { FakePostsRepository } from "../repos/fakePostsRepository";
 import { FakeUsersRepository } from "../../users/repos/fakeUsersRepo";
 import { fakePostsData } from "../__tests__/fakePostsData";
 import { fakeUserData } from "../../users/__tests__/fakeUserData";
+import { SearchFilterViewModel } from "./searchFilterViewModel";
 
 describe('PostsPresenter', () => {
 
@@ -27,7 +28,41 @@ describe('PostsPresenter', () => {
     expect(firstPost.voteScore).toEqual(4);
   });
 
-  it ('can switch between popular posts and new posts', () => {
+  it ('can switch between popular posts and new posts', async () => {
+    let loadedPostsVm: PostViewModel[] = [];
+    let activeSearchFilter: SearchFilterViewModel = new SearchFilterViewModel('popular');
+    let postsRepository = new FakePostsRepository(fakePostsData);
+    let usersRepository = new FakeUsersRepository(fakeUserData);
+
+    let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
+
+    await postsPresenter.load((postsVm, searchFilterVm) => {
+      loadedPostsVm = postsVm;
+      activeSearchFilter = searchFilterVm;
+    });
+    expect(loadedPostsVm).toHaveLength(3);
+    expect(activeSearchFilter.value).toEqual('popular');
+    
+    // TODO: assert that it sorts them in the right order
+
+    postsPresenter.switchSearchFilter('recent');
+
+    await postsPresenter.load((postsVm, searchFilterVm) => {
+      loadedPostsVm = postsVm;
+      activeSearchFilter = searchFilterVm;
+    });
+
+    expect(activeSearchFilter.value).toEqual('recent');
+    expect(loadedPostsVm).toHaveLength(3);
+
+    // TODO: assert that it sorts them in the right order again
+  });
+
+  it ('does not let level 1 users cast votes', async () => {
+
+  });
+
+  it('does let level 2 users cast votes', async () => {
     
   });
 })

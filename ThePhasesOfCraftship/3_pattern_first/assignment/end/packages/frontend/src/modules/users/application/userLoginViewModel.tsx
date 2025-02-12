@@ -4,20 +4,20 @@
 // a users domain model, 
 // and 
 
-import { NavigationDm } from "../navigation/navigationDm"
-import { UserDm } from "../users/domain/userDm";
+import { NavigationDm } from "../../navigation/domain/navigationDm"
+import { UserDm } from "../domain/userDm";
 
-interface HeaderNavigationViewModelProps {
+interface UserLoginViewModelProps {
   currentPage: string;
   isAuthenticated: boolean;
   username: string;
 }
 
-export class HeaderNavigationViewModel {
+export class UserLoginViewModel {
 
-  private props: HeaderNavigationViewModelProps
+  private props: UserLoginViewModelProps
 
-  constructor(props?: HeaderNavigationViewModelProps) {
+  constructor(props?: UserLoginViewModelProps) {
     this.props = {
       currentPage: props ? props.currentPage : '',
       isAuthenticated: props ? props.isAuthenticated : false,
@@ -37,10 +37,10 @@ export class HeaderNavigationViewModel {
     return this.props.username;
   }
 
-  public static create (user: UserDm, navigation: NavigationDm): HeaderNavigationViewModel {
-    return new HeaderNavigationViewModel({
+  public static fromDomain (user: UserDm, navigation: NavigationDm): UserLoginViewModel {
+    return new UserLoginViewModel({
       currentPage: navigation.currentPage,
-      isAuthenticated: user ? true : false,
+      isAuthenticated: user.isAuthenticated(),
       username: user ? user.username : ''
     });
   }

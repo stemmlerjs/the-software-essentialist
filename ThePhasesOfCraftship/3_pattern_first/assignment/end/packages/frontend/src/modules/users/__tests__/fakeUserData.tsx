@@ -5,5 +5,6 @@ export const fakeUserData: UserDTO = {
   email: 'khalil@essentialist.dev',
   firstName: 'Khalil',
   lastName: 'Stemmler',
-  username: 'khalilstemmler'
+  username: 'khalilstemmler',
+  roles: []
 }

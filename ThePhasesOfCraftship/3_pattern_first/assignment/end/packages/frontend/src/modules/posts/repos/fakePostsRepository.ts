@@ -15,7 +15,6 @@ export class FakePostsRepository implements PostsRepository {
   }
 
   async getPosts(query?: Posts.GetPostsQueryOption): Promise<PostDm[]> {
-
     return this.postsDm
   }
 }
