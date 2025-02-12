@@ -1,4 +1,5 @@
-import { PostDm, Vote } from "./postDm";
+import { UserDm } from "../../users/domain/userDm";
+import { PostDm, Vote } from "../domain/postDm";
 
 type PostViewModelProps = {
   title: string;
@@ -6,14 +7,8 @@ type PostViewModelProps = {
   memberPostedBy: any;
   numComments: number;
   voteScore: number;
+  canCastVote: boolean;
 };
-
-// This got moved from the view into the presenter layer. Good.
-function computeVoteCount(votes: Vote[]) {
-  let count = 0;
-  votes.forEach((v) => v.voteType === 'Upvote' ? count++ : count--);
-  return count;
-}
 
 export class PostViewModel {
   private props: PostViewModelProps;
@@ -42,7 +37,11 @@ export class PostViewModel {
     return this.props.voteScore;
   }
 
-  public static fromDomain(post: PostDm): PostViewModel {
+  get canCastVote () {
+    return this.props.canCastVote
+  }
+
+  public static fromDomain(post: PostDm, currentUser: UserDm): PostViewModel {
 
     return new PostViewModel({
       title: post.title,
@@ -50,9 +49,10 @@ export class PostViewModel {
       memberPostedBy: post.memberPostedBy,
       // this is something we could calculate based on the votes on the frontend, but there
       // is a better, more performant design that we can use to get this information from the backend
-      voteScore: computeVoteCount(post.votes),
+      voteScore: post.voteScore,
       // Same for this.
-      numComments: post.comments.length
+      numComments: post.comments.length,
+      canCastVote: currentUser.canVote()
     });
   }
 }

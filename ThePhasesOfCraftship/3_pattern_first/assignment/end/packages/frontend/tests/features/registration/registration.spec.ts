@@ -2,8 +2,8 @@
 
 import { createAPIClient, Users } from '@dddforum/shared/src/api';
 import { NavigationRepository } from '../../../src/modules/navigation/navigationRepository';
-import { RegistrationPagePresenter } from '../../../src/modules/registrationPagePresenter';
-import { UsersRepository } from '../../../src/modules/users/usersRepository';
+import { RegistrationPagePresenter } from '../../../src/modules/users/application/registrationPagePresenter';
+import { UsersRepository } from '../../../src/modules/users/repos/productionUsersRepo';
 import { HeaderNavigationViewModel } from '../../../src/modules/headerNav/headerNavViewModel';
 
 describe('Registration', () => {

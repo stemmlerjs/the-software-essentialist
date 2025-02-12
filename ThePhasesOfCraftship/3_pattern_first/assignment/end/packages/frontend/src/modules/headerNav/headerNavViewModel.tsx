@@ -5,7 +5,7 @@
 // and 
 
 import { NavigationDm } from "../navigation/navigationDm"
-import { UserDm } from "../users/userDm";
+import { UserDm } from "../users/domain/userDm";
 
 interface HeaderNavigationViewModelProps {
   currentPage: string;

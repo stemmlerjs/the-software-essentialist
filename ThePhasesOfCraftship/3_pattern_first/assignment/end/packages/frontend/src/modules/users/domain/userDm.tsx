@@ -13,4 +13,12 @@ export class UserDm {
   public static fromDTO (dto: Users.UserDTO): UserDm {
     return new UserDm();
   }
+
+  public get memberRoles () {
+    return [];
+  }
+
+  public canVote () {
+    return this.memberRoles.includes('member');
+  }
 }

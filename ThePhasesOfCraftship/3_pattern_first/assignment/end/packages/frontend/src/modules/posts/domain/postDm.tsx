@@ -7,7 +7,7 @@ interface PostDmProps {
   member: {
     memberId: string;
   }
-  votes: Vote[],
+  voteScore: number;
   comments: Comment[]
 }
 
@@ -39,14 +39,13 @@ export class PostDm {
     return this.props.member.memberId;
   }
 
-  get votes () {
-    return this.props.votes;
+  get voteScore () {
+    return this.props.voteScore;
   }
 
   get comments () {
     return this.props.comments;
   }
-  
   
   public static fromDTO (postDTO: Posts.PostDTO) {
     return new PostDm({
@@ -54,7 +53,7 @@ export class PostDm {
       title: postDTO.title,
       dateCreated: postDTO.dateCreated,
       member: postDTO.member,
-      votes: postDTO.votes,
+      voteScore: postDTO.voteScore,
       comments: postDTO.comments
     });
   }

@@ -1,8 +1,8 @@
 import { APIClient, Posts } from "@dddforum/shared/src/api";
-import { PostDm } from "./postDm";
 import { makeAutoObservable } from "mobx";
+import { PostDm } from "../domain/postDm";
 
-export class PostsRepository {
+export class ProductionPostsRepository {
   public postsDm: PostDm[];
 
   constructor (private api: APIClient) {
@@ -14,5 +14,6 @@ export class PostsRepository {
     const getPostsResponse = await this.api.posts.getPosts(query ? query : 'popular');
     const postDTOs = getPostsResponse.data;
     this.postsDm = postDTOs.map(postDTO => PostDm.fromDTO(postDTO));
+    return this.postsDm
   }
 }

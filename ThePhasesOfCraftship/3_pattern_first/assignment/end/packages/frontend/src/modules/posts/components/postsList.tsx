@@ -1,8 +1,8 @@
 
 import { Link } from "react-router-dom";
-import arrow from "../shared/assets/arrow.svg";
+import arrow from "../../../shared/assets/arrow.svg";
 import moment from 'moment';
-import { PostViewModel } from "../modules/posts/postViewModel";
+import { PostViewModel } from "../application/postViewModel";
 
 export const PostsList = ({ posts }: { posts: PostViewModel[] }) => (
   <div className="posts-list">

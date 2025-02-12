@@ -1,15 +1,14 @@
 
-import { Layout } from "../components/layout";
-import {
-  RegistrationForm,
-} from "../components/registrationForm";
+
 import { ToastContainer, toast } from 'react-toastify';
-import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
-import { useSpinner } from "../contexts/spinnerContext";
-import { OverlaySpinner } from "../components/overlaySpinner";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { api } from "../App";
+import { useUser } from '../shared/contexts/userContext';
+import { useSpinner } from '../shared/contexts/spinnerContext';
+import { Layout } from '../shared/components/layout';
+import { RegistrationForm } from '../shared/components/registrationForm';
+import { OverlaySpinner } from '../shared/components/overlaySpinner';
 
 type ValidationResult = {
   success: boolean;

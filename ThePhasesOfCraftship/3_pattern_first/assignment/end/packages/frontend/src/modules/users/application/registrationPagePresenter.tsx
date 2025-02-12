@@ -1,9 +1,9 @@
 
 import { Users } from "@dddforum/shared/src/api";
-import { HeaderNavigationViewModel } from "./headerNav/headerNavViewModel";
-import { NavigationRepository } from "./navigation/navigationRepository";
-import { UsersRepository } from "./users/usersRepository";
+import { HeaderNavigationViewModel } from "../../headerNav/headerNavViewModel";
+import { NavigationRepository } from "../../navigation/navigationRepository";
 import { observe } from "mobx";
+import { UsersRepository } from "../repos/usersRepo";
 
 export class RegistrationPagePresenter {
   public headerNavVm: HeaderNavigationViewModel;
@@ -17,7 +17,7 @@ export class RegistrationPagePresenter {
   }
 
   private setupSubscriptions () {
-    observe(this.usersRepository, 'userDm', (userDm) => this.load());
+    observe(this.usersRepository, 'currentUser', (userDm) => this.load());
   }
 
   async register(registrationDetails: Users.CreateUserParams) {
@@ -28,7 +28,7 @@ export class RegistrationPagePresenter {
   }
 
   async load(callback?: any) {
-    let user = await this.usersRepository.getAuthenticatedCurrentUser();
+    let user = await this.usersRepository.getCurrentUser();
     let navigation = await this.navigationRepository.getCurrentNavigation();
 
     this.headerNavVm = HeaderNavigationViewModel.create(
@@ -36,8 +36,6 @@ export class RegistrationPagePresenter {
       navigation,
     );
 
-    callback({
-      headerNavigationViewModel: this.headerNavVm
-    });
+    callback(this.headerNavVm);
   }
 }

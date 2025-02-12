@@ -6,9 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import { MainPage } from "./pages/mainPage";
 import { RegisterPage } from "./pages/registerPage";
-import { UserProvider } from "./contexts/userContext";
-import { SpinnerProvider } from "./contexts/spinnerContext";
 import { appConfig } from "./config";
+import { SpinnerProvider } from "./shared/contexts/spinnerContext";
+import { UserProvider } from "./shared/contexts/userContext";
 
 export const api = createAPIClient(appConfig.apiURL);
 
