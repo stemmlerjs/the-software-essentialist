@@ -6,9 +6,9 @@ import { NavigationRepository } from "./navigationRepository";
 export class FakeNavigationRepository implements NavigationRepository {
   public navigationDm: NavigationDm;
 
-  constructor () {
+  constructor (currentRoute: string) {
     makeAutoObservable(this);
-    this.navigationDm = new NavigationDm();
+    this.navigationDm = new NavigationDm({ pathname: currentRoute });
   }
   
   getCurrentNavigation () {

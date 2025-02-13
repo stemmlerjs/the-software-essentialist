@@ -1,18 +1,19 @@
 
 import { UserLoginViewModel } from "./userLoginViewModel";
 import { NavigationRepository } from "../../navigation/repos/navigationRepository";
-import { observe } from "mobx";
+import { makeAutoObservable, observe } from "mobx";
 import { UsersRepository } from "../repos/usersRepo";
 
 export class NavLoginPresenter {
-  public userLogin: UserLoginViewModel;
+  public userLogin: UserLoginViewModel | null;
 
   constructor(
     public usersRepository: UsersRepository,
     private navigationRepository: NavigationRepository,
   ) {
+    makeAutoObservable(this);
     this.setupSubscriptions();
-    this.userLogin = new UserLoginViewModel();
+    this.userLogin = null;
   }
 
   private setupSubscriptions () {

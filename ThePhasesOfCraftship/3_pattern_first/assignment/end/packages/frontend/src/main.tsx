@@ -8,11 +8,15 @@ import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository.j
 import { fakePostsData } from './modules/posts/__tests__/fakePostsData.js';
 import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo.js';
 import { fakeUserData } from './modules/users/__tests__/fakeUserData.js';
+import { NavLoginPresenter } from './modules/users/application/navLoginPresenter.js';
+import { ProductionNavigationRepository } from './modules/navigation/repos/productionNavigationRepository.js';
 
 const apiClient = createAPIClient('http://localhost:3000');
 const postsRepository = new FakePostsRepository(fakePostsData);
 const usersRepository = new FakeUsersRepository(fakeUserData);
+const navigationRepository = new ProductionNavigationRepository();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
+const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationRepository);
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -22,7 +26,13 @@ createRoot(document.getElementById('root')!).render(
 
 export {
   apiClient,
+  
+  // Repositories
   postsRepository,
   usersRepository,
-  postsPresenter
+  navigationRepository,
+
+  // Presenters
+  postsPresenter,
+  navLoginPresenter
 }

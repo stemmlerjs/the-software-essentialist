@@ -7,7 +7,7 @@ import { UsersRepository } from "./usersRepo";
 export class ProductionUsersRepository implements UsersRepository {
 
   public api: APIClient;
-  public currentUser: UserDm;
+  public currentUser: UserDm | null;
 
   constructor (api: APIClient) {
     makeAutoObservable(this);
@@ -22,9 +22,9 @@ export class ProductionUsersRepository implements UsersRepository {
     return new UserDm({ isAuthenticated: false, username: '', userRoles: [] });
   }
 
-  async getCurrentUser(): Promise<UserDm> {
+  async getCurrentUser(): Promise<UserDm | null> {
     // If the user is already loaded, just return it.
-    if (this.currentUser.isAuthenticated()) return this.currentUser;
+    if (this.currentUser?.isAuthenticated()) return this.currentUser;
 
     // // If the user isn't already loaded, see if there's an auth token in cookie storage.
     // const tokenOrNothing = this.localStorage.getItem('authToken');

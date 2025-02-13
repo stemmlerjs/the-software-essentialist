@@ -1,32 +1,24 @@
 
-
-// To create this, we need a navigation domain model, 
-// a users domain model, 
-// and 
-
 import { NavigationDm } from "../../navigation/domain/navigationDm"
 import { UserDm } from "../domain/userDm";
 
 interface UserLoginViewModelProps {
-  currentPage: string;
+  pathname: string;
   isAuthenticated: boolean;
-  username: string;
+  username: string | null;
+  linkText: "Join" | "Logout" | "";
 }
 
 export class UserLoginViewModel {
 
   private props: UserLoginViewModelProps
 
-  constructor(props?: UserLoginViewModelProps) {
-    this.props = {
-      currentPage: props ? props.currentPage : '',
-      isAuthenticated: props ? props.isAuthenticated : false,
-      username: props ? props.username : ''
-    };
+  constructor(props: UserLoginViewModelProps) {
+    this.props = props;
   }
 
-  get currentPage () {
-    return this.props.currentPage;
+  get pathname () {
+    return this.props.pathname;
   }
 
   get isAuthenticated () {
@@ -37,11 +29,24 @@ export class UserLoginViewModel {
     return this.props.username;
   }
 
-  public static fromDomain (user: UserDm, navigation: NavigationDm): UserLoginViewModel {
+  get linkText () {
+    return this.props.linkText
+  }
+
+  public static fromDomain (user: UserDm | null, navigation: NavigationDm): UserLoginViewModel {
+    const shouldRenderJoinText = () => {
+      return !user && navigation.pathname !== '/join'
+    }
+    
+    const shouldRenderLogoutText = () => {
+      return user && navigation.pathname !== '/join'
+    }
+
     return new UserLoginViewModel({
-      currentPage: navigation.currentPage,
-      isAuthenticated: user.isAuthenticated(),
-      username: user ? user.username : ''
+      pathname: navigation.pathname,
+      isAuthenticated: user ? true : false,
+      username: user ? user.username : null,
+      linkText: shouldRenderJoinText() ? 'Join' : shouldRenderLogoutText() ? 'Logout' : '',
     });
   }
 }
