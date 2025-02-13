@@ -15,6 +15,11 @@ export class FakePostsRepository implements PostsRepository {
   }
 
   async getPosts(query?: Posts.GetPostsQueryOption): Promise<PostDm[]> {
-    return this.postsDm
+    if (query === "recent") {
+      return this.postsDm.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
+    } else if (query === "popular") {
+      return this.postsDm.sort((a, b) => b.voteScore - a.voteScore);
+    }
+    return this.postsDm;
   }
 }

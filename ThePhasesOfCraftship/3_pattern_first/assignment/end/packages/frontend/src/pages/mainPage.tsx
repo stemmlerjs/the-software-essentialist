@@ -6,27 +6,32 @@ import { PostsViewSwitcher } from "../modules/posts/components/postsViewSwitcher
 import { PostsList } from "../modules/posts/components/postsList";
 import { Layout } from "../shared/components/layout";
 import { postsPresenter } from "../main";
+import { PostsFilterValue } from "../modules/posts/application/searchFilterViewModel";
 
 export const MainPage = () => {
   const [posts, setPosts] = useState<PostViewModel[]>([]);
+  const [postView, setPostsView] = useState<PostsFilterValue>('popular');
 
   useEffect(() => {
     async function loadPosts() {
       observe(postsPresenter, 'postVMs', (obj) => {
-        console.log('new', obj.newValue);
         setPosts(obj.newValue);
+      });
+
+      observe(postsPresenter, 'searchFilter', (obj) => {
+        setPostsView(obj.newValue.value);
       });
       await postsPresenter.load();
     }
     loadPosts();
-
-    // In theory, you'd continue to use this pattern to load more presenters.
-    // load<name> + calling the function
   }, []);
 
   return (
     <Layout>
-      <PostsViewSwitcher />
+      <PostsViewSwitcher 
+        postsView={postView}
+        onPostViewSelected={(newValue) => postsPresenter.switchSearchFilter(newValue)}
+      />
       <PostsList
         posts={posts}
       />

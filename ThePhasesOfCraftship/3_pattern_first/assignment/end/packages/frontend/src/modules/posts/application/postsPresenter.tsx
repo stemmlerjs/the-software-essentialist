@@ -1,8 +1,9 @@
+
 import { makeAutoObservable, observe } from "mobx";
 import { PostViewModel } from "./postViewModel";
 import { PostsRepository } from "../repos/postsRepository";
 import { UsersRepository } from "../../users/repos/usersRepo";
-import { FilterValue, SearchFilterViewModel } from "./searchFilterViewModel";
+import { PostsFilterValue, SearchFilterViewModel } from "./searchFilterViewModel";
 
 export class PostsPresenter {
   postVMs: PostViewModel[];
@@ -40,7 +41,7 @@ export class PostsPresenter {
     callback && callback(this.postVMs, this.searchFilter);
   }
 
-  switchSearchFilter (nextFilter: FilterValue) {
+  switchSearchFilter (nextFilter: PostsFilterValue) {
     this.searchFilter = new SearchFilterViewModel(nextFilter);
   }
 }

@@ -42,8 +42,8 @@ describe('PostsPresenter', () => {
     });
     expect(loadedPostsVm).toHaveLength(3);
     expect(activeSearchFilter.value).toEqual('popular');
-    
-    // TODO: assert that it sorts them in the right order
+    expect(loadedPostsVm[0].voteScore).toBeGreaterThanOrEqual(loadedPostsVm[1].voteScore);
+    expect(loadedPostsVm[1].voteScore).toBeGreaterThanOrEqual(loadedPostsVm[2].voteScore);
 
     postsPresenter.switchSearchFilter('recent');
 
@@ -52,9 +52,11 @@ describe('PostsPresenter', () => {
       activeSearchFilter = searchFilterVm;
     });
 
-    expect(activeSearchFilter.value).toEqual('recent');
     expect(loadedPostsVm).toHaveLength(3);
-
+    expect(activeSearchFilter.value).toEqual('recent');
+    expect(Date.parse(loadedPostsVm[0].dateCreated)).toBeGreaterThanOrEqual(Date.parse(loadedPostsVm[1].dateCreated));
+    expect(Date.parse(loadedPostsVm[1].dateCreated)).toBeGreaterThanOrEqual(Date.parse(loadedPostsVm[2].dateCreated));
+    
     // TODO: assert that it sorts them in the right order again
   });
 

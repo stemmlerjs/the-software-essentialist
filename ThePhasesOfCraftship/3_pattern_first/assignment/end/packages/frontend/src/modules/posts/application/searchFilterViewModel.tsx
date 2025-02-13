@@ -1,11 +1,11 @@
 import { GetPostsQueryOption } from "@dddforum/shared/src/api/posts";
 
-export type FilterValue = GetPostsQueryOption;
+export type PostsFilterValue = GetPostsQueryOption;
 
 export class SearchFilterViewModel {
-  private _value: FilterValue;
+  private _value: PostsFilterValue;
 
-  constructor (value: FilterValue) {
+  constructor (value: PostsFilterValue) {
     this._value = value;
   }
 
