@@ -14,4 +14,8 @@ export class FakeNavigationRepository implements NavigationRepository {
   getCurrentNavigation () {
     return this.navigationDm;
   }
+
+  goTo (path: string, options?: { inSeconds: number }) {
+    this.navigationDm = new NavigationDm({ pathname: path });
+  }
 }

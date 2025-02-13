@@ -10,6 +10,9 @@ import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo.js';
 import { fakeUserData } from './modules/users/__tests__/fakeUserData.js';
 import { NavLoginPresenter } from './modules/users/application/navLoginPresenter.js';
 import { ProductionNavigationRepository } from './modules/navigation/repos/productionNavigationRepository.js';
+import { RegistrationPresenter } from './modules/users/application/registrationPresenter.js';
+import { ToastService } from './shared/services/toastService.js';
+import { MarketingService } from './shared/services/marketingService.js';
 
 const apiClient = createAPIClient('http://localhost:3000');
 const postsRepository = new FakePostsRepository(fakePostsData);
@@ -17,6 +20,9 @@ const usersRepository = new FakeUsersRepository(fakeUserData);
 const navigationRepository = new ProductionNavigationRepository();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationRepository);
+const toastService = new ToastService();
+const marketingService = new MarketingService();
+const registrationPresenter = new RegistrationPresenter(toastService, usersRepository, marketingService, navigationRepository);
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -34,5 +40,10 @@ export {
 
   // Presenters
   postsPresenter,
-  navLoginPresenter
+  navLoginPresenter,
+  registrationPresenter,
+
+  // Services
+  marketingService,
+  toastService
 }

@@ -24,4 +24,11 @@ export class ProductionNavigationRepository implements NavigationRepository {
     this.navigationDm = new NavigationDm({ pathname: window.location.pathname });
   }
 
+  goTo (path: string, options?: { inSeconds: number }): void {
+    setTimeout(() => { 
+      window.history.pushState({}, '', path);
+      this.navigationDm = new NavigationDm({ pathname: path });
+    }, options?.inSeconds || 0);
+  }
+
 }
