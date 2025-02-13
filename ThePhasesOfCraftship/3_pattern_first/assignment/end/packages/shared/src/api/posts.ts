@@ -9,6 +9,7 @@ export type GetPostsParams = {
 
 export type MemberDTO = {
   memberId: string
+  username: string;
 }
 
 export type PostDTO = {
@@ -20,7 +21,7 @@ export type PostDTO = {
   dateCreated: string;
   member: MemberDTO;
   comments: CommentDTO[];
-  votes: VoteDTO[]
+  voteScore: number;
 };
 
 export type VoteDTO = {

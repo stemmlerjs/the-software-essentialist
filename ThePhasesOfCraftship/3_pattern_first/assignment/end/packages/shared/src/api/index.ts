@@ -29,3 +29,4 @@ export type APIClient = ReturnType<typeof createAPIClient>;
 export * as Users from "./users"
 export * as Marketing from "./marketing"
 export * as Posts from "./posts";
+export * as Members from './members';

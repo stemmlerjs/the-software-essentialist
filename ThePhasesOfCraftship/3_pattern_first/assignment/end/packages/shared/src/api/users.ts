@@ -23,6 +23,7 @@ export type UserDTO = {
   firstName: string;
   lastName: string;
   username: string;
+  roles: string[];
 };
 
 export type EmailAlreadyInUseError = "EmailAlreadyInUse";
