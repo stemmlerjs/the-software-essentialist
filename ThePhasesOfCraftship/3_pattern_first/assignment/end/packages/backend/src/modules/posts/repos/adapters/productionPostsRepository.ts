@@ -1,9 +1,8 @@
 
-import { PrismaClient } from "@prisma/client";
+import { Post, PrismaClient } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
-import { PostReadModel } from "../domain/postReadModel";
-import { DatabaseError } from "../../../shared/exceptions";
-import { Post } from "../domain/post";
+import { PostReadModel } from "../../domain/readModels/postReadModel";
+import { DatabaseError } from "../../../../shared/exceptions";
 
 export class ProductionPostsRepository implements PostsRepository {
   constructor(private prisma: PrismaClient) {}

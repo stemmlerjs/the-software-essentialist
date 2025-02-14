@@ -8,6 +8,8 @@ import { ValidatedUser } from "@dddforum/shared/src/api/users";
 import { TransactionalEmailAPI } from "../notifications/ports/transactionalEmailAPI";
 import { UsersRepository } from "./ports/usersRepository";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
+import { User } from "./domain/user";
+import { UserDetails } from "./domain/userDetails";
 
 
 export class UsersService {
@@ -46,7 +48,7 @@ export class UsersService {
       password: ${validatedUser.password}`,
     });
 
-    return prismaUser;
+    return User.toDTO(prismaUser);
   }
 
   async getUserByEmail(email: string) {
@@ -59,5 +61,13 @@ export class UsersService {
 
   async deleteUser(email: string) {
     await this.repository.delete(email);
+  }
+
+  async getUserDetailsByEmail (email: string) {
+    const userModel = await this.repository.findUserByEmail(email);
+    if (!userModel) {
+      throw new UserNotFoundException(email);
+    }
+    return UserDetails.toDTO(userModel);
   }
 }

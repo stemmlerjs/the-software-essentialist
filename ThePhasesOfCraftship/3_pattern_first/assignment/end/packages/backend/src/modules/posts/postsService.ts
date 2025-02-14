@@ -1,4 +1,4 @@
-import { Post } from "./domain/post";
+import { Post } from "./domain/writeModels/post";
 import { PostsRepository } from "./ports/postsRepository";
 import { CreatePostCommand } from "./postsCommands";
 import { GetPostsQuery } from "./postsQuery";

@@ -39,10 +39,13 @@ export class UsersController {
   ) {
     try {
       const command = CreateUserCommand.fromRequest(req.body);
-      const user = await this.usersService.createUser(command);
+      await this.usersService.createUser(command);
+
+      const userDTO = await this.usersService.getUserDetailsByEmail(command.email);
+
       const response: CreateUserResponse = {
         success: true,
-        data: user,
+        data: userDTO,
         error: {},
       };
       return res.status(201).json(response);
@@ -58,10 +61,14 @@ export class UsersController {
   ) {
     try {
       const email = req.params.email;
-      const user = await this.usersService.getUserByEmail(email);
+
+      await this.usersService.getUserDetailsByEmail(email);
+
+      const userDTO = await this.usersService.getUserDetailsByEmail(email);
+
       const response: GetUserByEmailResponse = {
         success: true,
-        data: user,
+        data: userDTO,
         error: {},
       };
       return res.status(200).json(response);

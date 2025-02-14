@@ -15,7 +15,6 @@ model User {
   email     String @unique
   firstName String
   lastName  String
-  username  String
   password  String
 
   // Define a one-to-one relationship with Member
@@ -30,6 +29,7 @@ model Member {
   posts Post[]
   votes  Vote[]
   comments  Comment[]
+  username  String @unique
 }
 
 model Post {
@@ -42,6 +42,7 @@ model Post {
   comments       Comment[]
   dateCreated    DateTime  @default(now())
   votes          Vote[]
+  voteScore      Int       @default(0)
 }
 
 model Comment {
