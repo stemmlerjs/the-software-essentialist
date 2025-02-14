@@ -49,6 +49,17 @@ export class Post {
     });
   }
 
+  public static fromPrismaToDomain (prismaModel: PostPrismaModel): Post {
+    return new Post({
+      id: prismaModel.id,
+      memberId: prismaModel.memberId,
+      title: prismaModel.title,
+      content: prismaModel.content,
+      postType: prismaModel.postType as 'link' | 'text', // TODO: value object-ify
+      votes: Votes.create(),
+    });
+  }
+
   public static toDTO (postModel: PostPrismaModel, memberModel: MemberPrismaModel): PostDTO {
     return {
       id: postModel.id,

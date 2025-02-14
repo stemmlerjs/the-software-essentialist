@@ -1,17 +1,21 @@
 
+
 import { PostsRepository } from "../ports/postsRepository";
-import { PostReadModel } from "../domain/postReadModel"
-import { Post } from "../domain/post";
-import { DatabaseError } from "../../../shared/exceptions";
+import { DatabaseError } from "../../../../shared/exceptions";
+import { Post } from "../../domain/writeModels/post";
+import { GetPostsQuery } from "../../postsQuery";
 
 export class InMemoryPostsRepository implements PostsRepository {
-  private posts: PostReadModel[];
+  private posts: Post[];
 
-  constructor (posts?: PostReadModel[]) {
+  constructor (posts?: Post[]) {
     this.posts = posts ? posts : []
   }
+  getPostById(id: string): Promise<Post | null> {
+    throw new Error("Method not implemented.");
+  }
 
-  async findPosts(_sort: string): Promise<PostReadModel[]> {
+  async findPosts(query: GetPostsQuery): Promise<Post[]> {
     return this.posts;
   }
 

@@ -40,6 +40,9 @@ export class PostsController {
     try {
       const query = GetPostsQuery.fromRequest(req.query);
       const posts = await this.postsService.getPosts(query);
+      
+      
+      // Todo: lock down these controllers to have a standardized structure for responses.
       const response: GetPostsResponse = {
         success: true,
         data: posts.map((p) => p.toDTO()),
@@ -60,19 +63,16 @@ export class PostsController {
       const command = CreatePostCommand.fromRequest(req.body);
       const postOrError = await this.postsService.createPost(command);
 
-      if (postOrError instanceof Post) {
-        const postDetails = await this.postsService.getPostDetailsById(postOrError.id)
+      // Todo: lock down these controllers to have a standardized structure for responses.
+      if (postOrError instanceof Post) { 
         const response: CreatePostResponse = {
           success: true,
-          data: postDetails.toDTO(),
+          data: postOrError.toDTO(),
           error: {},
         };
-        return res.status(200).json(response)
-      } else {
-        return next(postOrError)
+        return res.status(200).json(response);
       }
 
-      ;
     } catch (error) {
       next(error);
     }

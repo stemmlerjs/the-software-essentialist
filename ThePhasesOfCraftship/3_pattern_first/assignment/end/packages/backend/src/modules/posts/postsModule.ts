@@ -9,6 +9,7 @@ import { Database } from "../../shared/database";
 import { InMemoryPostsRepository } from "./repos/adapters/inMemoryPostsRepository";
 import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepository";
 import { PostsRepository } from "./repos/ports/postsRepository";
+import { MembersRepository } from "../members/repos/ports/membersRepository";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;
@@ -18,15 +19,16 @@ export class PostsModule extends ApplicationModule {
   private constructor(
     private db: Database,
     config: Config,
+    private membersRepository: MembersRepository,
   ) {
     super(config);
     this.postsRepository = this.createPostsRepository();
-    this.postsService = this.createPostsService();
+    this.postsService = this.createPostsService(membersRepository);
     this.postsController = this.createPostsController();
   }
 
-  static build(db: Database, config: Config) {
-    return new PostsModule(db, config);
+  static build(db: Database, config: Config, membersRepository: MembersRepository) {
+    return new PostsModule(db, config, membersRepository);
   }
 
   private createPostsRepository() {
@@ -39,8 +41,8 @@ export class PostsModule extends ApplicationModule {
     return new ProductionPostsRepository(this.db.getConnection());
   }
 
-  private createPostsService() {
-    return new PostsService(this.postsRepository);
+  private createPostsService(membersRepository: MembersRepository) {
+    return new PostsService(this.postsRepository, membersRepository);
   }
 
   private createPostsController() {
