@@ -1,3 +1,4 @@
+import { MembersModule } from "../../modules/members/membersModule";
 import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
@@ -21,6 +22,7 @@ export class CompositionRoot {
   private marketingModule: MarketingModule;
   private postsModule: PostsModule;
   private notificationsModule: NotificationsModule;
+  private membersModule: MembersModule;
 
   public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
@@ -34,10 +36,15 @@ export class CompositionRoot {
     this.dbConnection = this.createDBConnection();
     this.notificationsModule = this.createNotificationsModule();
     this.marketingModule = this.createMarketingModule();
+    this.membersModule = this.createMembersModule();
     this.usersModule = this.createUsersModule();
     this.postsModule = this.createPostsModule();
     this.webServer = this.createWebServer();
     this.mountRoutes();
+  }
+
+  createMembersModule () {
+    return MembersModule.build(this.dbConnection, this.config);
   }
 
   createNotificationsModule() {
@@ -52,6 +59,7 @@ export class CompositionRoot {
     return UsersModule.build(
       this.dbConnection,
       this.notificationsModule.getTransactionalEmailAPI(),
+      this.membersModule.getMembersRepository(),
       this.config,
     );
   }

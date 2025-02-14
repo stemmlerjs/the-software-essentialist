@@ -9,6 +9,7 @@ import { UsersRepository } from "./ports/usersRepository";
 import { InMemoryUserRepositorySpy } from "./adapters/inMemoryUserRepositorySpy";
 import { ProductionUserRepository } from "./adapters/productionUserRepository";
 import { Database } from "../../shared/database";
+import { MembersRepository } from "../members/repos/ports/membersRepository";
 
 export class UsersModule extends ApplicationModule {
   private usersService: UsersService;
@@ -18,16 +19,17 @@ export class UsersModule extends ApplicationModule {
   private constructor(
     private db: Database,
     private emailAPI: TransactionalEmailAPI,
+    private membersRepository: MembersRepository,
     config: Config,
   ) {
     super(config);
     this.usersRepository = this.createUsersRepository();
-    this.usersService = this.createUsersService();
+    this.usersService = this.createUsersService(membersRepository);
     this.usersController = this.createUsersController();
   }
 
-  static build(db: Database, emailAPI: TransactionalEmailAPI, config: Config) {
-    return new UsersModule(db, emailAPI, config);
+  static build(db: Database, emailAPI: TransactionalEmailAPI, membersRepository: MembersRepository, config: Config) {
+    return new UsersModule(db, emailAPI, membersRepository, config);
   }
 
   private createUsersRepository() {
@@ -39,8 +41,8 @@ export class UsersModule extends ApplicationModule {
     return new ProductionUserRepository(this.db.getConnection());
   }
 
-  private createUsersService() {
-    return new UsersService(this.usersRepository, this.emailAPI);
+  private createUsersService(membersRepository: MembersRepository) {
+    return new UsersService(this.usersRepository, membersRepository, this.emailAPI);
   }
 
   private createUsersController() {

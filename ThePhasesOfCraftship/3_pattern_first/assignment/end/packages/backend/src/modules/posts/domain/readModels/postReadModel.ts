@@ -1,8 +1,7 @@
 import { PostDTO } from "@dddforum/shared/src/api/posts";
 import { Comment, Member, Post, Vote } from "@prisma/client";
-import { MemberReadModel } from "../../members/domain/memberReadModel";
-import { CommentReadModel } from "./readModels/commentReadModel";
-import { VoteReadModel } from "./voteReadModel";
+import { CommentReadModel } from "./commentReadModel";
+import { MemberReadModel } from "../../../members/domain/memberReadModel";
 
 interface PostReadModelProps {
   id: string;
@@ -10,7 +9,7 @@ interface PostReadModelProps {
   content: string;
   member: MemberReadModel;
   comments: CommentReadModel[];
-  votes: VoteReadModel[]
+  voteScore: number;
 }
 
 export class PostReadModel {
@@ -21,14 +20,15 @@ export class PostReadModel {
     this.props = props;
   }
 
-  public static fromPrisma (prismaPost: Post, member: Member, comments: Comment[], votes: Vote[]): PostReadModel {
+  public static fromPrismaToReadModel (prismaPost: Post, member: Member, comments: Comment[], votes: Vote[]): PostReadModel {
+    
     return new PostReadModel({
       id: prismaPost.id,
       title: prismaPost.title,
       content: prismaPost.content,
       member: MemberReadModel.fromPrisma(member),
       comments: comments.map((c) => CommentReadModel.fromPrisma(c)),
-      votes: votes.map((v) => VoteReadModel.fromPrisma(v))
+      voteScore: prismaPost.voteScore,
     })
   }
 
@@ -41,7 +41,9 @@ export class PostReadModel {
       dateCreated: new Date().toISOString(),
       member: this.props.member.toDTO(),
       comments: this.props.comments.map((c) => c.toDTO()),
-      votes: this.props.votes.map((v) => v.toDTO())
+      voteScore: this.props.voteScore
     }
   }
 }
+
+

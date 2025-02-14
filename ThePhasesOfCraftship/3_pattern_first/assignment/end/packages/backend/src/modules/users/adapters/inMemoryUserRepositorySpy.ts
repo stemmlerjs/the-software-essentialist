@@ -59,12 +59,6 @@ export class InMemoryUserRepositorySpy
     );
   }
 
-  async findUserByUsername(username: string): Promise<User | null> {
-    return Promise.resolve(
-      this.users.find((user) => user.username === username) || null,
-    );
-  }
-
   async reset() {
     this.calls = [];
     this.users = [];

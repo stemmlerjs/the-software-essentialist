@@ -1,13 +1,14 @@
+
 import { Config } from "../../shared/config";
 import { WebServer } from "../../shared/http/webServer";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { PostsRepository } from "./ports/postsRepository";
 import { PostsController } from "./postsController";
 import { postsErrorHandler } from "./postsErrors";
 import { PostsService } from "./postsService";
-import { InMemoryPostsRepository } from "./adapters/inMemoryPostsRepository";
-import { ProductionPostsRepository } from "./adapters/productionPostsRepository";
 import { Database } from "../../shared/database";
+import { InMemoryPostsRepository } from "./repos/adapters/inMemoryPostsRepository";
+import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepository";
+import { PostsRepository } from "./repos/ports/postsRepository";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

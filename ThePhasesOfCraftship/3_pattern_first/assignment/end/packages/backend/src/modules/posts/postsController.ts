@@ -5,6 +5,7 @@ import { PostsService } from "./postsService";
 import { ErrorHandler } from "../../shared/errors";
 import { CreatePostCommand } from "./postsCommands";
 import { DatabaseError } from "../../shared/exceptions";
+import { Post } from "./domain/writeModels/post";
 
 export class PostsController {
   private router: express.Router;
@@ -59,16 +60,19 @@ export class PostsController {
       const command = CreatePostCommand.fromRequest(req.body);
       const postOrError = await this.postsService.createPost(command);
 
-      if (postOrError instanceof DatabaseError) {
-        return next(postOrError);
+      if (postOrError instanceof Post) {
+        const postDetails = await this.postsService.getPostDetailsById(postOrError.id)
+        const response: CreatePostResponse = {
+          success: true,
+          data: postDetails.toDTO(),
+          error: {},
+        };
+        return res.status(200).json(response)
+      } else {
+        return next(postOrError)
       }
 
-      const response: CreatePostResponse = {
-        success: true,
-        data: postOrError.toDTO(),
-        error: {},
-      };
-      return res.status(200).json(response);
+      ;
     } catch (error) {
       next(error);
     }

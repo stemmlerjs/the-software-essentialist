@@ -1,3 +1,4 @@
+
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../members/repos/adapters/productionMembersRepository";
@@ -10,7 +11,8 @@ import { PrismaClient } from "@prisma/client";
 describe ('createPost', () => {
 
   let prisma = new PrismaClient();
-  let membersRepo = new ProductionMembersRepository();
+  
+  let membersRepo = new ProductionMembersRepository(prisma);
   let postsRepo = new ProductionPostsRepository(prisma);
   
   const useCase = new CreatePost(postsRepo, membersRepo);

@@ -7,6 +7,7 @@ import { Post } from "../../domain/writeModels/post";
 import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { CreatePostCommand } from "../../postsCommands";
 import { MembersRepository } from "../../../members/repos/ports/membersRepository";
+import { CanCreatePostPolicy } from "./canCreatePost";
 
 interface UseCase<Request, Response> { 
   execute(request: Request): Promise<Response>;
@@ -16,10 +17,39 @@ type Response = Post | ValidationError | PermissionError | MemberNotFoundError |
 
 export class CreatePost implements UseCase<CreatePostCommand, Response> {
 
-  constructor(private postRepository: PostsRepository, memberRepository: MembersRepository) {}
+  constructor(private postRepository: PostsRepository, private memberRepository: MembersRepository) {}
 
-  execute(request: CreatePostCommand): Promise<Response> {
-    throw new Error("Method not implemented.");
+  async execute(request: CreatePostCommand): Promise<Response> {
+    const { memberId, title, content, postType } = request.props;
+
+    const member = await this.memberRepository.getMemberById(memberId);
+    
+    if (!member) {
+      return new MemberNotFoundError();
+    }
+
+    if (CanCreatePostPolicy.isAllowed(member)) {
+      return new PermissionError();
+    }
+
+    const postOrError = Post.create({
+      title: title,
+      content: content,
+      memberId: memberId,
+      postType,
+    });
+
+    if (postOrError instanceof ValidationError) {
+      return postOrError
+    }
+
+    try {
+      await this.postRepository.save(postOrError);
+      return postOrError;
+      
+    } catch (error) {
+      console.log(error);
+      return new ServerError();
+    }
   }
-
 }

@@ -1,18 +1,27 @@
-import { PostDTO } from "@dddforum/shared/src/api/posts";
+import { CreatePostInput, PostDTO } from "@dddforum/shared/src/api/posts";
 import { Votes } from "./votes";
 import { Post as PostPrismaModel } from "@prisma/client";
 import { Member as MemberPrismaModel } from "@prisma/client";
+import { ValidationError } from "@dddforum/shared/src/errors";
+import { randomUUID } from "node:crypto";
 
 interface PostProps {
+  id: string;
+  memberId: string;
   title: string;
-  link: string;
+  link?: string;
   votes: Votes;
   content?: string;
+  postType: 'link' | 'text';
 }
 
 export class Post {
   constructor (private props: PostProps) {
 
+  }
+
+  id () {
+    return this.props.id
   }
 
   get title () {
@@ -27,8 +36,17 @@ export class Post {
     return this.props.votes;
   }
 
-  public static create (props: PostProps) {
-    return new Post(props);
+  public static create (input: CreatePostInput): Post | ValidationError {
+    const votes = Votes.create();
+
+    // Todo: setup id
+    // Todo: setup timestamp (date created)
+    
+    return new Post({
+      ...input,
+      id: randomUUID(),
+      votes,
+    });
   }
 
   public static toDTO (postModel: PostPrismaModel, memberModel: MemberPrismaModel): PostDTO {

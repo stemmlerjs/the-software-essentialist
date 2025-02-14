@@ -30,6 +30,7 @@ model Member {
   votes  Vote[]
   comments  Comment[]
   username  String @unique
+  reputationScore Int @default(0)
 }
 
 model Post {

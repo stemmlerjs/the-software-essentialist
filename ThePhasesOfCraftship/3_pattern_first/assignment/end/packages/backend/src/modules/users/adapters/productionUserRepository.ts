@@ -33,14 +33,13 @@ export class ProductionUserRepository implements UsersRepository {
       const user = await this.prisma.user.create({
         data: {
           email,
-          username,
           firstName,
           lastName,
           password: generateRandomPassword(10),
         },
       });
       await this.prisma.member.create({
-        data: { userId: user.id },
+        data: { userId: user.id, username },
       });
 
       return user;
@@ -58,18 +57,6 @@ export class ProductionUserRepository implements UsersRepository {
       }),
       this.prisma.user.delete({ where: { email } }),
     ]);
-  }
-
-  async findUserByUsername(username: string): Promise<User | null> {
-    try {
-      const maybeUser = await this.prisma.user.findFirst({
-        where: { username },
-      });
-      if (!maybeUser) return null;
-      return maybeUser;
-    } catch (err) {
-      throw new Error("Database exception");
-    }
   }
 
   async update(

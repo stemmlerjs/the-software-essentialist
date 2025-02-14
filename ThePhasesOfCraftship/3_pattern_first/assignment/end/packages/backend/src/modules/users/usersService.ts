@@ -10,26 +10,29 @@ import { UsersRepository } from "./ports/usersRepository";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 import { User } from "./domain/user";
 import { UserDetails } from "./domain/userDetails";
+import { MembersRepository } from "../members/repos/ports/membersRepository";
 
 
 export class UsersService {
   constructor(
-    private repository: UsersRepository,
+    private usersRepo: UsersRepository,
+    private membersRepo: MembersRepository,
     private emailAPI: TransactionalEmailAPI,
   ) {}
 
   async createUser(userData: CreateUserCommand) {
-    const existingUserByEmail = await this.repository.findUserByEmail(
+    const existingUserByEmail = await this.usersRepo.findUserByEmail(
       userData.email,
     );
     if (existingUserByEmail) {
       throw new EmailAlreadyInUseException(userData.email);
     }
 
-    const existingUserByUsername = await this.repository.findUserByUsername(
+    const existingMemberByUsername = await this.membersRepo.findUserByUsername(
       userData.username,
     );
-    if (existingUserByUsername) {
+
+    if (existingMemberByUsername) {
       throw new UsernameAlreadyTakenException(userData.username);
     }
     
@@ -38,7 +41,7 @@ export class UsersService {
       password: TextUtil.createRandomText(10)
     }
     
-    const prismaUser = await this.repository.save(validatedUser);
+    const prismaUser = await this.usersRepo.save(validatedUser);
 
     await this.emailAPI.sendMail({
       to: validatedUser.email,
@@ -52,7 +55,7 @@ export class UsersService {
   }
 
   async getUserByEmail(email: string) {
-    const prismaUser = await this.repository.findUserByEmail(email);
+    const prismaUser = await this.usersRepo.findUserByEmail(email);
     if (!prismaUser) {
       throw new UserNotFoundException(email);
     }
@@ -60,11 +63,11 @@ export class UsersService {
   }
 
   async deleteUser(email: string) {
-    await this.repository.delete(email);
+    await this.usersRepo.delete(email);
   }
 
   async getUserDetailsByEmail (email: string) {
-    const userModel = await this.repository.findUserByEmail(email);
+    const userModel = await this.usersRepo.findUserByEmail(email);
     if (!userModel) {
       throw new UserNotFoundException(email);
     }
