@@ -22,6 +22,17 @@ export class ProductionMembersRepository implements MembersRepository {
 
     return Member.toDomainFromPrisma(memberData);
   }
+
+  async save(member: Member): Promise<void> {
+    const memberData = member.toPersistence();
+
+    // TODO: Implement this
+    // await this.prisma.member.upsert({
+    //   where: { id: member.id },
+    //   update: memberData,
+    //   create: memberData,
+    // });
+  }
   
   
 }

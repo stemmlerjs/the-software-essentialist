@@ -29,4 +29,10 @@ export class Member {
     });
   }
 
+  toPersistence () {
+    return {
+      reputationScore: this.props.reputationScore
+    }
+  }
+
 }

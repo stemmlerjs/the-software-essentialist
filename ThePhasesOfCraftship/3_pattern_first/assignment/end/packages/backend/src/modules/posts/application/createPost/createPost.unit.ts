@@ -19,7 +19,10 @@ describe ('createPost', () => {
 
   describe('permissions & identity', () => {
 
-    test('if the member was not found, they should not be able to create the post', async () => {
+    test.only('if the member was not found, they should not be able to create the post', async () => {
+
+      useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
+      const saveSpy = jest.spyOn(useCase['memberRepository'], 'save');
 
       const command = new CreatePostCommand({
         title: 'A new post',
@@ -32,6 +35,7 @@ describe ('createPost', () => {
       
       expect(response instanceof MemberNotFoundError).toBe(true);
       expect((response as MemberNotFoundError).name).toEqual('MemberNotFoundError');
+      expect(saveSpy).not.toHaveBeenCalled();
     });
   
     test('as a level 1 member, I should not be able to create a new post', async () => {

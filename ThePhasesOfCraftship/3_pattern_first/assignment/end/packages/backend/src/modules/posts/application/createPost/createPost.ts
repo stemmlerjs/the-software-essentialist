@@ -24,7 +24,7 @@ export class CreatePost implements UseCase<CreatePostCommand, Response> {
 
     const member = await this.memberRepository.getMemberById(memberId);
     
-    if (!member) {
+    if (member === null) {
       return new MemberNotFoundError();
     }
 
