@@ -20,7 +20,7 @@ export class ProductionMembersRepository implements MembersRepository {
       return null;
     }
 
-    return Member.toDomainFromPrisma(memberData);
+    return Member.toDomain(memberData);
   }
 
   async save(member: Member): Promise<void> {

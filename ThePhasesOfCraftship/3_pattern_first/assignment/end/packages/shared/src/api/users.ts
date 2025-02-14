@@ -1,5 +1,6 @@
 import axios from "axios";
-import { APIResponse, GenericErrors, ServerError } from ".";
+import { APIResponse } from ".";
+import { GenericErrors, ServerError } from "../errors";
 
 export type ValidatedUser = {
   id?: string;
@@ -22,10 +23,8 @@ export type UserDTO = {
   email: string;
   firstName: string;
   lastName: string;
-  username: string;
   roles: string[];
 };
-
 export type EmailAlreadyInUseError = "EmailAlreadyInUse";
 export type UsernameAlreadyTakenError = "UsernameAlreadyTaken";
 export type CreateUserErrors =

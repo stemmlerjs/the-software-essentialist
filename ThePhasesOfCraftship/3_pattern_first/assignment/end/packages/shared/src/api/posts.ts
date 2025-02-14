@@ -51,7 +51,8 @@ export type PostsResponse =
 // clean
 export type CreatePostInput = {
   title: string;
-  postType: 'link' | 'text',
+  postType: 'link' | 'text';
+  memberId: string;
   content?: string;
   link?: string;
 }

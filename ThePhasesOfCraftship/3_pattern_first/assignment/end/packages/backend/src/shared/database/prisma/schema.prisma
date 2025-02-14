@@ -21,6 +21,8 @@ model User {
   member    Member?
 }
 
+// Use custom validation in your application code to ensure correct values
+
 model Member {
   id    String @id @default(uuid())
 
@@ -31,8 +33,9 @@ model Member {
   comments  Comment[]
   username  String @unique
   reputationScore Int @default(0)
+  reputationLevel String
 }
-
+  
 model Post {
   id             String    @id @default(uuid())
   memberPostedBy Member    @relation(fields: [memberId], references: [id])

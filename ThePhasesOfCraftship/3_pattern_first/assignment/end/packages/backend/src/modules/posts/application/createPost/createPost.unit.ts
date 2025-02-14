@@ -7,6 +7,7 @@ import { MemberNotFoundError, PermissionError, ValidationError } from '@dddforum
 import { CreatePostCommand } from "../../postsCommands";
 import { Post } from "../../domain/writeModels/post";
 import { PrismaClient } from "@prisma/client";
+import { Member, MemberReputationLevel } from "../../../members/domain/member";
 
 describe ('createPost', () => {
 
@@ -19,7 +20,7 @@ describe ('createPost', () => {
 
   describe('permissions & identity', () => {
 
-    test.only('if the member was not found, they should not be able to create the post', async () => {
+    test('if the member was not found, they should not be able to create the post', async () => {
 
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
       const saveSpy = jest.spyOn(useCase['memberRepository'], 'save');
@@ -40,16 +41,49 @@ describe ('createPost', () => {
   
     test('as a level 1 member, I should not be able to create a new post', async () => {
 
+      // This is what takes us into double loop
+      let level1Member = Member.create({
+        userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
+        username: 'jill'
+      }) as Member
+
+      useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level1Member);
+
       const command = new CreatePostCommand({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
-        memberId: 'non-existent-id'
+        memberId: level1Member.id
       });
       
       let response = await useCase.execute(command);
   
       expect(response instanceof PermissionError).toBe(true);
+    });
+
+    test('as a level 2 member, I should be able to create a new post', async () => {
+
+      let level2Member = Member.toDomain({
+        userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
+        username: 'jill',
+        reputationScore: 10,
+        reputationLevel: MemberReputationLevel.Level2,
+        id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'
+      });
+
+      useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level2Member);
+
+      const command = new CreatePostCommand({
+        title: 'A new post',
+        postType: 'text',
+        content: 'This is a new post',
+        memberId: level2Member.id
+      });
+      
+      let response = await useCase.execute(command);
+  
+      expect(response instanceof PermissionError).toBe(false);
+      expect(response instanceof Post).toBe(true);
     });
   });
 

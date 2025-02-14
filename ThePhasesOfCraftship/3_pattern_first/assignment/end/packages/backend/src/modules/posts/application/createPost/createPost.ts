@@ -28,7 +28,7 @@ export class CreatePost implements UseCase<CreatePostCommand, Response> {
       return new MemberNotFoundError();
     }
 
-    if (CanCreatePostPolicy.isAllowed(member)) {
+    if (!CanCreatePostPolicy.isAllowed(member)) {
       return new PermissionError();
     }
 
