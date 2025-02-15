@@ -23,10 +23,6 @@ export class PostsService {
 
   async getPostById (id: string) {
      // Todo: Make the contract have both 'getPostById' and 'getPostDetailsById' methods.
-    const postOrNotFound = await this.postsRepo.getPostById(id);
-
-    if (!postOrNotFound) {
-      return PostNotFoundError()
-    }
+    return await this.postsRepo.getPostById(id);
   }
 }

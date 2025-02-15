@@ -6,7 +6,7 @@ import {
 import { GetPostsParams } from "@dddforum/shared/src/api/posts";
 
 export class GetPostsQuery {
-  constructor(public props: GetPostsParams) {}
+  constructor(private props: GetPostsParams) {}
 
   static fromRequest(query: Request["query"]) {
     const { sort } = query;

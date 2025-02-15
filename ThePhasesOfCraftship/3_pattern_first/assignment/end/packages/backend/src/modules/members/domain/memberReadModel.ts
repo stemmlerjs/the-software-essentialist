@@ -4,6 +4,7 @@ import { Member } from "@prisma/client";
 
 interface MemberReadModelProps {
   id: string;
+  username: string;
 }
 
 export class MemberReadModel {
@@ -13,15 +14,25 @@ export class MemberReadModel {
     this.props = props;
   }  
 
+  get id () {
+    return this.props.id;
+  }
+
+  get username () {
+    return this.props.username;
+  }
+
   public static fromPrisma (member: Member) {
     return new MemberReadModel({
-      id: member.id
+      id: member.id,
+      username: member.username,
     });
   }
 
   public toDTO (): MemberDTO {
     return {
-      memberId: this.props.id
+      memberId: this.props.id,
+      username: this.props.username
     }
   }
 }

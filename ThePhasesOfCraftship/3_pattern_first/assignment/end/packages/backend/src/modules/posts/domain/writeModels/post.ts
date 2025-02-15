@@ -1,7 +1,7 @@
-import { CreatePostInput, PostDTO } from "@dddforum/shared/src/api/posts";
+
+import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { Votes } from "./votes";
 import { Post as PostPrismaModel } from "@prisma/client";
-import { Member as MemberPrismaModel } from "@prisma/client";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -27,7 +27,9 @@ const createLinkPostSchema = z.object({
 });
 
 export class Post {
-  constructor (private props: PostProps) {
+  constructor (
+    private props: PostProps
+  ) {
 
   }
 
@@ -89,22 +91,22 @@ export class Post {
     });
   }
 
-  public static toDTO (postModel: PostPrismaModel, memberModel: MemberPrismaModel): PostDTO {
-    return {
-      id: postModel.id,
-      title: postModel.title,
-      content: postModel.content,
-      postType: postModel.postType,
-      dateCreated: postModel.dateCreated.toISOString(),
-      member: {
-        memberId: postModel.memberId,
-        // TODO: ensure in model
-        username: memberModel.username,
-      },
-      // TODO: add.
-      voteScore: postModel.voteScore,
-      comments: []
-    }
+  // public static toDTO (postModel: PostPrismaModel, memberModel: MemberPrismaModel): PostDTO {
+  //   return {
+  //     id: postModel.id,
+  //     title: postModel.title,
+  //     content: postModel.content,
+  //     postType: postModel.postType,
+  //     dateCreated: postModel.dateCreated.toISOString(),
+  //     member: {
+  //       memberId: postModel.memberId,
+  //       // TODO: ensure in model
+  //       username: memberModel.username,
+  //     },
+  //     // TODO: add.
+  //     voteScore: postModel.voteScore,
+  //     comments: []
+  //   }
 
   }
 
@@ -122,5 +124,5 @@ export class Post {
   //     comments: [],
   //     dateCreated: new Date().toISOString(),
   //   }
-  // }
-}
+  
+// }

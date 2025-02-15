@@ -1,5 +1,5 @@
 import { PostDTO } from "@dddforum/shared/src/api/posts";
-import { Comment, Member, Post, Vote } from "@prisma/client";
+import { Comment, Member, Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
 
@@ -20,14 +20,14 @@ export class PostReadModel {
     this.props = props;
   }
 
-  public static fromPrismaToReadModel (prismaPost: Post, member: Member, comments: Comment[], votes: Vote[]): PostReadModel {
+  public static fromPrismaToDomain (prismaPost: Post, member: MemberReadModel, comments: CommentReadModel[]): PostReadModel {
     
     return new PostReadModel({
       id: prismaPost.id,
       title: prismaPost.title,
       content: prismaPost.content,
-      member: MemberReadModel.fromPrisma(member),
-      comments: comments.map((c) => CommentReadModel.fromPrisma(c)),
+      member: member,
+      comments: comments,
       voteScore: prismaPost.voteScore,
     })
   }

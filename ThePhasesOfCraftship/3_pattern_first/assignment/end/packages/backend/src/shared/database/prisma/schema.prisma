@@ -34,6 +34,9 @@ model Member {
   username  String @unique
   reputationScore Int @default(0)
   reputationLevel String
+
+  dateCreated    DateTime  @default(now())
+  lastUpdated    DateTime  @default(now())
 }
   
 model Post {
@@ -45,6 +48,7 @@ model Post {
   content        String
   comments       Comment[]
   dateCreated    DateTime  @default(now())
+  lastUpdated    DateTime  @default(now())
   votes          Vote[]
   voteScore      Int       @default(0)
 }
@@ -63,6 +67,9 @@ model Comment {
   parentCommentId    String?
   parentComment Comment? @relation("Replies", fields: [parentCommentId], references: [id])
   replyComments Comment[] @relation("Replies")
+
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @default(now())
 }
 
 model Vote {
@@ -75,4 +82,6 @@ model Vote {
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
   voteType String  // 'Upvote' or 'Downvote'
+
+  lastUpdated    DateTime  @default(now())
 }
