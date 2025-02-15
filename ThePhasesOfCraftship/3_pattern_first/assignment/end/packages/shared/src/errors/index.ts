@@ -19,6 +19,13 @@ export class MemberNotFoundError {
   }
 }
 
+export class CommentNotFoundError {
+  public name: string;
+  constructor(public message?: string) {
+    this.name = this.constructor.name;
+  }
+}
+
 export class ServerError {
   public name: string;
   constructor(public message?: string) {

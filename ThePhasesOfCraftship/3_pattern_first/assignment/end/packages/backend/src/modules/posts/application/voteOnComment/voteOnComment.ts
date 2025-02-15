@@ -5,16 +5,19 @@ import { Post } from "../../domain/writeModels/post";
 import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { CreatePostCommand } from "../../postsCommands";
 import { MembersRepository } from "../../../members/repos/ports/membersRepository";
-import { CanCreatePostPolicy } from "./canCreatePost";
+import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
 import { UseCase } from '@dddforum/shared/src/core/useCase';
 
-type CreatePostResponse = Post | ValidationError | PermissionError | MemberNotFoundError | ServerError;
+type VoteOnCommentResponse = Post | ValidationError | PermissionError | MemberNotFoundError | ServerError;
 
-export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse> {
+export class CreatePost implements UseCase<CreatePostCommand, VoteOnCommentResponse> {
 
-  constructor(private postRepository: PostsRepository, private memberRepository: MembersRepository) {}
+  constructor(
+    private postRepository: PostsRepository, 
+    private memberRepository: MembersRepository
+  ) {}
 
-  async execute(request: CreatePostCommand): Promise<CreatePostResponse> {
+  async execute(request: CreatePostCommand): Promise<VoteOnCommentResponse> {
     const { memberId, title, content, postType, link } = request.props;
 
     const member = await this.memberRepository.getMemberById(memberId);
@@ -23,7 +26,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       return new MemberNotFoundError();
     }
 
-    if (!CanCreatePostPolicy.isAllowed(member)) {
+    if (!CanVoteOnCommentPolicy.isAllowed(member)) {
       return new PermissionError();
     }
 

@@ -39,6 +39,10 @@ export class Member {
     return this.props.reputationScore
   }
 
+  get username () {
+    return this.props.username;
+  }
+
   get reputationLevel () {
     return this.props.reputationLevel;
   }
@@ -64,7 +68,11 @@ export class Member {
 
   toPersistence () {
     return {
-      reputationScore: this.props.reputationScore
+      id: this.id,
+      userId: this.props.userId,
+      username: this.props.username,
+      reputationScore: this.props.reputationScore,
+      reputationLevel: this.props.reputationLevel
     }
   }
 

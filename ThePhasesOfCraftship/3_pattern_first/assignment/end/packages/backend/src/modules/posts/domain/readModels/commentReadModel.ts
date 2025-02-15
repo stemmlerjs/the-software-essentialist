@@ -1,6 +1,6 @@
 
 import { CommentDTO } from "@dddforum/shared/src/api/posts";
-import { Member, Comment as PrismaCommentModel } from "@prisma/client";
+import { Comment as PrismaCommentModel } from "@prisma/client";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
 
 interface CommentReadModelProps {

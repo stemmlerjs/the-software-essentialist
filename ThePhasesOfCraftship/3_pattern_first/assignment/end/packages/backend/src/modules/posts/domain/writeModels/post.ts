@@ -90,39 +90,4 @@ export class Post {
       votes: Votes.create(),
     });
   }
-
-  // public static toDTO (postModel: PostPrismaModel, memberModel: MemberPrismaModel): PostDTO {
-  //   return {
-  //     id: postModel.id,
-  //     title: postModel.title,
-  //     content: postModel.content,
-  //     postType: postModel.postType,
-  //     dateCreated: postModel.dateCreated.toISOString(),
-  //     member: {
-  //       memberId: postModel.memberId,
-  //       // TODO: ensure in model
-  //       username: memberModel.username,
-  //     },
-  //     // TODO: add.
-  //     voteScore: postModel.voteScore,
-  //     comments: []
-  //   }
-
-  }
-
-  // public toDTO (): PostDTO {
-  //   // TODO: implement this
-  //   return {
-  //     id: "123",
-  //     member: {
-  //       memberId: "123",
-  //     },
-  //     title: this.props.title,
-  //     content: this.props.content,
-  //     votes: [],
-  //     postType: "text",
-  //     comments: [],
-  //     dateCreated: new Date().toISOString(),
-  //   }
-  
-// }
+}

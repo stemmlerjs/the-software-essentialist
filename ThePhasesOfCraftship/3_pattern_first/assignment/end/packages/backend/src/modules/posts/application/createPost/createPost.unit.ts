@@ -1,5 +1,4 @@
 
-import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../members/repos/adapters/productionMembersRepository";
 import { ProductionPostsRepository } from "../../repos/adapters/productionPostsRepository";

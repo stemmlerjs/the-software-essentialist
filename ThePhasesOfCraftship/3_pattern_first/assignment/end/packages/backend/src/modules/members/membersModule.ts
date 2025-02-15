@@ -1,3 +1,4 @@
+
 import { Config } from "../../shared/config";
 import { Database } from "../../shared/database";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
@@ -17,7 +18,7 @@ export class MembersModule extends ApplicationModule {
   }
 
   createMembersRepository () {
-    return new ProductionMembersRepository(this.db.getConnection());
+    return new ProductionMembersRepository(this.db.getConnection())
   }
 
   getMembersRepository () {

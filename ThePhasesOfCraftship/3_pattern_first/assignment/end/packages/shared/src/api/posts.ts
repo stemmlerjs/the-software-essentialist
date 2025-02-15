@@ -58,6 +58,12 @@ export type CreatePostInput = {
   link?: string;
 }
 
+export type VoteOnCommentInput = {
+  commentId: string;
+  voteType: 'up' | 'down';
+  memberId: string;
+}
+
 export const createPostsAPI = (apiURL: string) => {
   return {
     // auth

@@ -7,8 +7,17 @@ export class ProductionMembersRepository implements MembersRepository {
   constructor (private prisma: PrismaClient) {
     
   }
-  findUserByUsername(username: string): Promise<Member | null> {
-    throw new Error("Method not implemented.");
+  async findUserByUsername(username: string): Promise<Member | null> {
+    
+    const memberData = await this.prisma.member.findUnique({
+      where: { username: username },
+    });
+
+    if (!memberData) {
+      return null;
+    }
+
+    return Member.toDomain(memberData);
   }
   
   async getMemberById(memberId: string): Promise<Member | null> {
@@ -26,12 +35,11 @@ export class ProductionMembersRepository implements MembersRepository {
   async save(member: Member): Promise<void> {
     const memberData = member.toPersistence();
 
-    // TODO: Implement this
-    // await this.prisma.member.upsert({
-    //   where: { id: member.id },
-    //   update: memberData,
-    //   create: memberData,
-    // });
+    await this.prisma.member.upsert({
+      where: { id: memberData.id },
+      update: memberData,
+      create: memberData,
+    });
   }
   
   
