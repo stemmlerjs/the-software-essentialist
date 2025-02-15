@@ -9,6 +9,22 @@ import { Post } from "../../domain/writeModels/post";
 import { PrismaClient } from "@prisma/client";
 import { Member, MemberReputationLevel } from "../../../members/domain/member";
 
+function setupTest (useCase: CreatePost) {
+  jest.resetAllMocks();
+
+  let level2Member = Member.toDomain({
+    userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
+    username: 'jill',
+    reputationScore: 10,
+    reputationLevel: MemberReputationLevel.Level2,
+    id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'
+  });
+
+  useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level2Member);
+
+  return level2Member;
+}
+
 describe ('createPost', () => {
 
   let prisma = new PrismaClient();
@@ -32,7 +48,7 @@ describe ('createPost', () => {
         memberId: 'non-existent-id'
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
       
       expect(response instanceof MemberNotFoundError).toBe(true);
       expect((response as MemberNotFoundError).name).toEqual('MemberNotFoundError');
@@ -42,7 +58,7 @@ describe ('createPost', () => {
     test('as a level 1 member, I should not be able to create a new post', async () => {
 
       // This is what takes us into double loop
-      let level1Member = Member.create({
+      const level1Member = Member.create({
         userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
         username: 'jill'
       }) as Member
@@ -56,22 +72,14 @@ describe ('createPost', () => {
         memberId: level1Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
   
       expect(response instanceof PermissionError).toBe(true);
     });
 
     test('as a level 2 member, I should be able to create a new post', async () => {
 
-      let level2Member = Member.toDomain({
-        userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-        username: 'jill',
-        reputationScore: 10,
-        reputationLevel: MemberReputationLevel.Level2,
-        id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'
-      });
-
-      useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level2Member);
+      const level2Member = setupTest(useCase);
 
       const command = new CreatePostCommand({
         title: 'A new post',
@@ -80,7 +88,7 @@ describe ('createPost', () => {
         memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
   
       expect(response instanceof PermissionError).toBe(false);
       expect(response instanceof Post).toBe(true);
@@ -90,83 +98,111 @@ describe ('createPost', () => {
   describe('text posts', () => {
     test ('as a level 2 member, I should be able to create a new text post with valid post details', async () => {
 
+      const level2Member = setupTest(useCase);
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
+
       const command = new CreatePostCommand({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
-        memberId: 'non-existent-id'
+        memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
 
       expect(response instanceof Post).toBe(true);
       expect((response as Post).title).toEqual('A new post');
+      expect(saveSpy).toHaveBeenCalled();
     });
   
-    test('as a level 2 member, I should not be able to create a text post without providing a valid title and text', async () => {
+    test.each([
+      { title: '', content: '' },
+      { title: 'A', content: 'sdsd' },
+      { title: 'Title! Looks good. But no content.', content: '' },
+      { title: 'Another', content: '2' }
+    ])('as a level 2 member, I should not be able to create a text post with invalid title or content: %o', async ({ title, content }) => {
+
+      const level2Member = setupTest(useCase);
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
+
       const command = new CreatePostCommand({
-        title: 'A new post',
+        title,
         postType: 'text',
-        content: 'This is a new post',
-        memberId: 'non-existent-id'
+        content,
+        memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
 
       expect(response instanceof ValidationError).toBe(true);
+      expect(saveSpy).not.toHaveBeenCalled();
     });
   })
 
   describe('link posts', () => {
     test('as a level 2 member, I should be able to create a new link post with valid post details', async () => {
+
+      const level2Member = setupTest(useCase);
+
       const command = new CreatePostCommand({
         title: 'A new post',
         postType: 'link',
         link: 'https://www.google.com',
-        memberId: 'level-2-member-id'
+        memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
 
       expect(response instanceof Post).toBe(true);
       expect((response as Post).title).toEqual('A new post');
       expect((response as Post).link).toEqual('https://www.google.com');
     });
 
-    test ('as a level 2 member, I should not be able to create a new post with invalid post details', async () => {
+    test.each([
+      { title: 'A new post', link: '' },
+      { title: 'A new post', link: 'invalid-url' },
+      { title: 'A new post', link: 'www.google.com' } // Assuming the link should be a full URL with http/https
+    ])('as a level 2 member, I should not be able to create a link post with an invalid link: %o', async ({ title, link }) => {
+
+      const level2Member = setupTest(useCase);
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
 
       const command = new CreatePostCommand({
-        title: 'A new post',
-        postType: 'text',
-        content: 'This is a new post',
-        memberId: 'non-existent-id'
+        title,
+        postType: 'link',
+        link,
+        memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
 
       expect(response instanceof ValidationError).toBe(true);
+      expect(saveSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('default votes', () => {
     test('as a level 2 member, when creating a new post, the post should have 1 upvote by me', async () => {
+
+      const level2Member = setupTest(useCase);
+
       const command = new CreatePostCommand({
         title: 'A new post',
         postType: 'link',
         link: 'https://www.google.com',
-        memberId: 'level-2-member-id'
+        memberId: level2Member.id
       });
       
-      let response = await useCase.execute(command);
+      const response = await useCase.execute(command);
 
       expect(response instanceof Post).toBe(true);
-      let post = (response as Post);
-      let vote = post.votes.getFirst()
+      const post = (response as Post);
+      const vote = post.votes.getFirst()
 
       expect(post.title).toEqual('A new post');
       expect(post.link).toEqual('https://www.google.com');
       expect(vote.isUpvote()).toEqual(true);
-      expect(vote.memberId).toEqual('level-2-member-id');
+      expect(vote.memberId).toEqual(level2Member.id);
     });
   })
 

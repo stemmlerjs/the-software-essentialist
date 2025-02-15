@@ -20,7 +20,7 @@ export class CreatePost implements UseCase<CreatePostCommand, Response> {
   constructor(private postRepository: PostsRepository, private memberRepository: MembersRepository) {}
 
   async execute(request: CreatePostCommand): Promise<Response> {
-    const { memberId, title, content, postType } = request.props;
+    const { memberId, title, content, postType, link } = request.props;
 
     const member = await this.memberRepository.getMemberById(memberId);
     
@@ -37,6 +37,7 @@ export class CreatePost implements UseCase<CreatePostCommand, Response> {
       content: content,
       memberId: memberId,
       postType,
+      link
     });
 
     if (postOrError instanceof ValidationError) {
