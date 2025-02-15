@@ -1,5 +1,6 @@
 import axios from "axios";
-import { APIResponse, ServerError } from ".";
+import { APIResponse } from ".";
+import { ServerError } from "../errors";
 
 export type GetPostsQueryOption = 'popular' | 'recent';
 
@@ -42,7 +43,7 @@ export type GetPostsResponse = APIResponse<PostDTO[], GetPostErrors>;
 
 export type CreatePostErrors = ServerError;
 
-export type CreatePostResponse = APIResponse<PostDTO, CreatePostErrors>;
+export type CreatePostResponse = APIResponse<void, CreatePostErrors>;
 
 export type PostsResponse = 
   GetPostsResponse 

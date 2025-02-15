@@ -10,7 +10,7 @@ export type Error<U> = {
 export type APIResponse<T, U> = {
   success: boolean;
   data: T;
-  error: Error<U>;
+  error?: Error<U>;
 };
 
 export const createAPIClient = (apiURL: string) => {

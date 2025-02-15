@@ -34,7 +34,6 @@ export class DatabaseFixture {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-            username: user.username,
             password: generateRandomPassword(10),
           },
         });

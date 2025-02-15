@@ -6,23 +6,23 @@ export class Collection<T> {
     this.items = items;
   }
 
-  add (item: T) {
+  protected add (item: T) {
     this.items.push(item);
   }
 
-  remove (item: T) {
+  protected remove (item: T) {
     this.items = this.items.filter(i => i !== item);
   }
 
-  getItems () {
+  protected getItems () {
     return this.items;
   }
 
-  first () {
+  protected first () {
     return this.items[0];
   }
 
-  last () {
+  protected last () {
     return this.items[this.items.length - 1];
   }
 }
