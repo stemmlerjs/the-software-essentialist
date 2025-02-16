@@ -29,7 +29,8 @@ model Member {
   user   User @relation(fields: [userId], references: [id])
   userId String @unique // relation scalar field (used in the `@relation` attribute above)
   posts Post[]
-  votes  Vote[]
+  postVotes PostVote[]
+  commentVotes CommentVote[]
   comments  Comment[]
   username  String @unique
   reputationScore Int @default(0)
@@ -49,7 +50,7 @@ model Post {
   comments       Comment[]
   dateCreated    DateTime  @default(now())
   lastUpdated    DateTime  @default(now())
-  votes          Vote[]
+  postVotes      PostVote[]
   voteScore      Int       @default(0)
 }
 
@@ -70,13 +71,29 @@ model Comment {
 
   dateCreated  DateTime  @default(now())
   lastUpdated    DateTime  @default(now())
+  commentVotes CommentVote[]
+  voteScore      Int       @default(0)
 }
 
-model Vote {
+model PostVote {
   id            String @id @default(uuid())
 
   postId        String // Foreign key to the Post table
   postBelongsTo Post @relation(fields: [postId], references: [id])
+
+  memberId        String // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  voteType String  // 'Upvote' or 'Downvote'
+
+  lastUpdated    DateTime  @default(now())
+}
+
+model CommentVote {
+  id            String @id @default(uuid())
+
+  commentId     String // Foreign key to the Comment table
+  commentBelongsTo Comment @relation(fields: [commentId], references: [id])
 
   memberId        String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
