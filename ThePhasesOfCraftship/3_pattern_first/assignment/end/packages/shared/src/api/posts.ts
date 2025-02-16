@@ -58,9 +58,11 @@ export type CreatePostInput = {
   link?: string;
 }
 
+export type VoteType = 'upvote' | 'downvote';
+
 export type VoteOnCommentInput = {
   commentId: string;
-  voteType: 'up' | 'down';
+  voteType: VoteType;
   memberId: string;
 }
 
