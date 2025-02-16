@@ -42,7 +42,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
 
     if (existingVoteOrNull) {
       commentVote = existingVoteOrNull
-      commentVote.castVote(voteType)
+      
     } else {
       let commentVoteOrError = CommentVote.create({
         memberId, commentId, voteType
@@ -53,6 +53,8 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
       }
       commentVote = commentVoteOrError;
     }
+
+    commentVote.castVote(voteType)
 
     try {
       await this.voteRepository.save(commentVote);

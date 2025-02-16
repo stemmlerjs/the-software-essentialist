@@ -5,6 +5,7 @@ import { VoteType } from "@dddforum/shared/src/api/posts";
 import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
 import { CommentDownvoted } from "../../comments/domain/commentDownvoted";
 import { randomUUID } from "crypto";
+import { CommentVote as CommentVotePrismaModel } from "@prisma/client";
 
 // Inputs find their way all the way to the types near the api often
 interface CommentVoteInput {
@@ -17,12 +18,14 @@ interface CommentVoteProps {
   id: string,
   memberId: string,
   commentId: string,
-  createdAt: Date,
   value: number;
 }
 
 abstract class AggregateRoot {
   protected domainEvents: DomainEvent[] = [];
+  getDomainEvents () {
+    return this.domainEvents;
+  }
 }
 
 export class CommentVote extends AggregateRoot {
@@ -34,6 +37,14 @@ export class CommentVote extends AggregateRoot {
 
   get memberId () {
     return this.props.memberId;
+  }
+
+  get commentId () {
+    return this.props.commentId;
+  }
+
+  get value () {
+    return this.props.value;
   }
 
   private constructor(
@@ -67,6 +78,10 @@ export class CommentVote extends AggregateRoot {
     this.domainEvents.push(new CommentDownvoted(this.id, this.props.memberId));
   }
 
+  public static toDomain (props: CommentVoteProps): CommentVote {
+    return new CommentVote(props);
+  }
+
   public static create (input: CommentVoteInput): CommentVote | ValidationError {
     // TODO: Validation checks on all domain models;
 
@@ -74,7 +89,6 @@ export class CommentVote extends AggregateRoot {
       id: randomUUID(),
       memberId: input.memberId,
       commentId: input.commentId,
-      createdAt: new Date(),
       value: 0
     });
   }

@@ -9,6 +9,6 @@ export class CommentDownvoted extends DomainEvent {
     public readonly id: string = randomUUID(),
     public readonly date: Date = new Date()
   ) {
-    super(id, date);
+    super(id, date, 'CommentDownvoted');
   }
 }
