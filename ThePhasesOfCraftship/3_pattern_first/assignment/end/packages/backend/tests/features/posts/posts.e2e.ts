@@ -9,18 +9,17 @@ import { WebServer } from "../../../src/shared/http";
 import { Member, MemberReputationLevel } from "../../../src/modules/members/domain/member";
 import { MemberUsername } from "../../../src/modules/members/domain/memberUsername";
 
-async function setupTest(fixture: DatabaseFixture) {
+async function setupTest(fixture: DatabaseFixture, reputationLevel: MemberReputationLevel, score: number = 6) {
   const member = Member.toDomain({
     id: '78b501b8-b72b-48d7-af2e-6dab6e53ff00',
     userId: '961f6e1a-b078-4e9c-b02e-9855e8f26099',
     username: MemberUsername.toDomain('khalilstemmler'),
-    reputationLevel: MemberReputationLevel.Level1,
-    reputationScore: 6,
+    reputationLevel: reputationLevel,
+    reputationScore: score,
   });
   await fixture.setupWithExistingMembers([member]);
   return { member };
 }
-
 
 describe('posts', () => {
 
@@ -50,8 +49,26 @@ describe('posts', () => {
     // TODO: Soon, we will need to use a sandboxed auth token to do this (RDD-first)
     let authToken: string = "asdasds"
 
+    it('should not be able to create a post if they are level 1', async () => {
+      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level1);
+    
+      let postData: CreatePostInput = {
+        memberId: member.id,
+        title: 'My first post',
+        postType: "text",
+        content: 'This is my first post! I hope you like it!'
+      };
+
+      let response = await apiClient.posts.create(postData, authToken);
+
+      expect(response).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.error?.code).toBeDefined();
+      expect(response.error?.code).toEqual('PermissionError');
+    });
+
     it.only ('can create a text post', async () => {
-      const { member } = await setupTest(databaseFixture);
+      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
       
       let postData: CreatePostInput = {
         memberId: member.id,

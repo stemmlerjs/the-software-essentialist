@@ -1,35 +1,45 @@
-export class ValidationError {
-  public name: string;
+
+export type ApplicationErrorName =
+  | "ValidationError"
+  | "PermissionError"
+  | "MemberNotFoundError"
+  | "CommentNotFoundError"
+  | "ServerError";
+
+export abstract class ApplicationError {
+  constructor(
+    public name: ApplicationErrorName,
+    public message?: string,
+  ) {}
+}
+
+export class ValidationError extends ApplicationError {
   constructor(public message?: string) {
-    this.name = this.constructor.name;
+    super("ValidationError", message);
   }
 }
 
-export class PermissionError {
-  public name: string;
+export class PermissionError extends ApplicationError {
   constructor(public message?: string) {
-    this.name = this.constructor.name;
+    super("PermissionError", message);
   }
 }
 
-export class MemberNotFoundError {
-  public name: string;
+export class MemberNotFoundError extends ApplicationError {
   constructor(public message?: string) {
-    this.name = this.constructor.name;
+    super("MemberNotFoundError", message);
   }
 }
 
-export class CommentNotFoundError {
-  public name: string;
+export class CommentNotFoundError extends ApplicationError {
   constructor(public message?: string) {
-    this.name = this.constructor.name;
+    super("CommentNotFoundError", message);
   }
 }
 
-export class ServerError {
-  public name: string;
+export class ServerError extends ApplicationError {
   constructor(public message?: string) {
-    this.name = this.constructor.name;
+    super("ServerError", message);
   }
 }
 

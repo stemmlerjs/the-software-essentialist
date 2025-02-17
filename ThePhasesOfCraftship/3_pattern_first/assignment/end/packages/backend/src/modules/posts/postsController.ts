@@ -63,14 +63,7 @@ export class PostsController {
 
       if (!result.isSuccess()) {
         const error = result.getError();
-        switch (error.name) {
-          case 'PermissionError':
-            return res.status(403).json(error);
-          case 'ValidationError':
-            return res.status(400).json(error);
-          default:
-            return res.status(500).json(error);
-        }
+        return next(error);
       } else {
         const newPost = result.getValue() as Post;
         const postDetails = await this.postsService.getPostDetailsById(newPost.id);
