@@ -2,15 +2,17 @@ import express from 'express'
 
 import { ErrorExceptionType, ErrorHandler } from '../shared/errors'
 import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils'
-import { prisma } from '../shared/database'
+import { ClassesService } from './classes.service'
 
 export class ClassesController {
 	router: express.Router
 	errorHandler: ErrorHandler
+	classesService: ClassesService
 
-	constructor(errorHandler: ErrorHandler) {
+	constructor(errorHandler: ErrorHandler, classesService: ClassesService) {
 		this.router = express.Router()
 		this.errorHandler = errorHandler
+		this.classesService = classesService
 
 		this.setupRoutes()
 		this.setupErrorHandler()
@@ -37,15 +39,11 @@ export class ClassesController {
 		
 			const { name } = req.body;
 		
-			const cls = await prisma.class.create({
-				data: {
-					name
-				}
-			});
+			const cls = await this.classesService.createClass(name);
 		
 			res.status(201).json({ error: undefined, data: parseForResponse(cls), success: true });
 		} catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error)
 		}
 	}
 
@@ -57,30 +55,11 @@ export class ClassesController {
 				return res.status(400).json({ error: ErrorExceptionType.ValidationError, data: undefined, success: false });
 			}
 	
-			// check if class exists
-			const cls = await prisma.class.findUnique({
-				where: {
-					id
-				}
-			});
-	
-			if (!cls) {
-				return res.status(404).json({ error: ErrorExceptionType.ClassNotFound, data: undefined, success: false });
-			}
-	
-			const assignments = await prisma.assignment.findMany({
-				where: {
-					classId: id
-				},
-				include: {
-					class: true,
-					studentTasks: true
-				}
-			});
-		
+			const assignments = await this.classesService.getClassAssignments(id);
+
 			res.status(200).json({ error: undefined, data: parseForResponse(assignments), success: true });
 		} catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error)
 		}
 	}
 }
