@@ -1,4 +1,4 @@
-import { Member, MemberReputationLevel } from "../../../members/domain/member";
+import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 
 export class CanVoteOnCommentPolicy {
   public static isAllowed(member: Member): boolean {

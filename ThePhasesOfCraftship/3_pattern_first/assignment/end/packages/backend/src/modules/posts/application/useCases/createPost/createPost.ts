@@ -1,18 +1,23 @@
 
-
-import { PostsRepository } from "../../repos/ports/postsRepository";
-import { Post } from "../../domain/writeModels/post";
 import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
-import { CreatePostCommand } from "../../postsCommands";
-import { MembersRepository } from "../../../members/repos/ports/membersRepository";
 import { CanCreatePostPolicy } from "./canCreatePost";
 import { UseCase } from '@dddforum/shared/src/core/useCase';
+import { Post } from "../../../domain/post";
+import { PostsRepository } from "../../../repos/ports/postsRepository";
+import { CreatePostCommand } from "../../../postsCommands";
+import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
+import { VoteRepository } from "../../../../comments/repos/ports/commentVoteRepository";
+import { PostVote } from "../../../domain/postVote";
 
 type CreatePostResponse = Post | ValidationError | PermissionError | MemberNotFoundError | ServerError;
 
 export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse> {
 
-  constructor(private postRepository: PostsRepository, private memberRepository: MembersRepository) {}
+  constructor(
+    private postRepository: PostsRepository, 
+    private memberRepository: MembersRepository,
+    private votesRepository: VoteRepository,
+  ) {}
 
   async execute(request: CreatePostCommand): Promise<CreatePostResponse> {
     const { memberId, title, content, postType, link } = request.props;
@@ -39,8 +44,19 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       return postOrError
     }
 
+    const initialMemberVoteOrError = PostVote.create({
+      voteType: 'upvote',
+      postId: postOrError.id,
+      memberId: memberId
+    });
+
+    if (initialMemberVoteOrError instanceof ValidationError) {
+      return initialMemberVoteOrError
+    }
+
     try {
       await this.postRepository.save(postOrError);
+      await this.votesRepository.save(initialMemberVoteOrError);
       return postOrError;
       
     } catch (error) {

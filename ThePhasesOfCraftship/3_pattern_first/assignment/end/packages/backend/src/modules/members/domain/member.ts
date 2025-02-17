@@ -1,7 +1,9 @@
 
+import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
+import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 
 interface MemberProps {
   id: string;
@@ -18,7 +20,7 @@ interface CreateMemberInput {
   username: string;
 }
 
-export class Member {
+export class Member extends AggregateRoot {
 
   public static REPUTATION_SCORES = {
     Level1: 5,
@@ -28,6 +30,7 @@ export class Member {
   private props: MemberProps;
 
   private constructor (props: MemberProps) {
+    super();
     this.props = props
   }
 
@@ -45,6 +48,19 @@ export class Member {
 
   get reputationLevel () {
     return this.props.reputationLevel;
+  }
+
+  updateReputationScore (newScore: number) {
+    const oldScore = this.props.reputationScore;
+    this.props.reputationScore = newScore;
+
+    if (oldScore < Member.REPUTATION_SCORES.Level1 && newScore >= Member.REPUTATION_SCORES.Level1) {
+      this.props.reputationLevel = MemberReputationLevel.Level1;
+      this.domainEvents.push(new MemberReputationLevelUpgraded(this.id, this.reputationLevel));
+    } else if (oldScore < Member.REPUTATION_SCORES.Level2 && newScore >= Member.REPUTATION_SCORES.Level2) {
+      this.props.reputationLevel = MemberReputationLevel.Level2;
+      this.domainEvents.push(new MemberReputationLevelUpgraded(this.id, this.reputationLevel));
+    }
   }
 
   public static create (inputProps: CreateMemberInput): Member | ValidationError {

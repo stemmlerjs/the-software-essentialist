@@ -1,12 +1,13 @@
 
 import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
-import { MembersRepository } from "../../../members/repos/ports/membersRepository";
+import { CommentVote } from "../../../domain/commentVote";
+import { UseCase } from "@dddforum/shared/src/core/useCase";
+import { VoteOnCommentCommand } from "../../../../posts/postsCommands";
+import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
+import { CommentRepository } from "../../../repos/ports/commentRepository";
+import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
-import { UseCase } from '@dddforum/shared/src/core/useCase';
-import { CommentRepository } from "../../repos/ports/commentRepository";
-import { VoteRepository } from "../../../votes/repos/ports/voteRepository";
-import { CommentVote } from "../../../votes/domain/commentVote";
-import { VoteOnCommentCommand } from "../../../posts/postsCommands";
+import { VoteRepository } from "../../../repos/ports/commentVoteRepository";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
 
@@ -15,7 +16,8 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
   constructor(
     private memberRepository: MembersRepository,
     private commentRepository: CommentRepository,
-    private voteRepository: VoteRepository
+    private voteRepository: VoteRepository,
+    private eventBus: EventBus
   ) {}
 
   async execute(request: VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
@@ -58,6 +60,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
 
     try {
       await this.voteRepository.save(commentVote);
+      await this.eventBus.publishEvents(commentVote.getDomainEvents());
 
       return commentVote;
       

@@ -2,9 +2,9 @@
 
 import { PostsRepository } from "../ports/postsRepository";
 import { DatabaseError } from "../../../../shared/exceptions";
-import { Post } from "../../domain/writeModels/post";
+import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
-import { PostReadModel } from "../../domain/readModels/postReadModel";
+import { PostReadModel } from "../../domain/postReadModel";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];

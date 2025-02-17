@@ -1,11 +1,11 @@
 import express from "express";
 import { GetPostsQuery } from "./postsQuery";
 import { CreatePostResponse, GetPostsResponse } from "@dddforum/shared/src/api/posts";
-import { PostsService } from "./postsService";
 import { ErrorHandler } from "../../shared/errors";
 import { CreatePostCommand } from "./postsCommands";
 import { DatabaseError } from "../../shared/exceptions";
-import { Post } from "./domain/writeModels/post";
+import { Post } from "./domain/post";
+import { PostsService } from "./application/postsService";
 
 export class PostsController {
   private router: express.Router;

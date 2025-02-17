@@ -1,9 +1,9 @@
 
-import { MembersRepository } from "../members/repos/ports/membersRepository";
-import { CreatePost } from "./application/createPost/createPost";
-import { CreatePostCommand } from "./postsCommands";
-import { GetPostsQuery } from "./postsQuery";
-import { PostsRepository } from "./repos/ports/postsRepository";
+import { MembersRepository } from "../../members/repos/ports/membersRepository";
+import { CreatePostCommand } from "../postsCommands";
+import { GetPostsQuery } from "../postsQuery";
+import { PostsRepository } from "../repos/ports/postsRepository";
+import { CreatePost } from "./useCases/createPost/createPost";
 
 export class PostsService {
   constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository) {}

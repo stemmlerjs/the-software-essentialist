@@ -1,5 +1,5 @@
 
-import { Member, MemberReputationLevel } from "../../../members/domain/member";
+import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 
 export class CanCreatePostPolicy {
 

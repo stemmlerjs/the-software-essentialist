@@ -1,7 +1,7 @@
 
 import { DatabaseError } from "../../../../shared/exceptions";
-import { PostReadModel } from "../../domain/readModels/postReadModel";
-import { Post } from "../../domain/writeModels/post";
+import { PostReadModel } from "../../domain/postReadModel";
+import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
 
 export interface PostsRepository {

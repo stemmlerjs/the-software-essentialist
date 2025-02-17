@@ -1,11 +1,12 @@
 
 import { ValidationError } from "@dddforum/shared/src/errors";
-import { CommentUpvoted } from "../../comments/domain/commentUpvoted";
+import { CommentUpvoted } from "./commentUpvoted";
 import { VoteType } from "@dddforum/shared/src/api/posts";
 import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { CommentDownvoted } from "../../comments/domain/commentDownvoted";
+import { CommentDownvoted } from "./commentDownvoted";
 import { randomUUID } from "crypto";
 import { CommentVote as CommentVotePrismaModel } from "@prisma/client";
+import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
 
 // Inputs find their way all the way to the types near the api often
 interface CommentVoteInput {
@@ -19,13 +20,6 @@ interface CommentVoteProps {
   memberId: string,
   commentId: string,
   value: number;
-}
-
-abstract class AggregateRoot {
-  protected domainEvents: DomainEvent[] = [];
-  getDomainEvents () {
-    return this.domainEvents;
-  }
 }
 
 export class CommentVote extends AggregateRoot {

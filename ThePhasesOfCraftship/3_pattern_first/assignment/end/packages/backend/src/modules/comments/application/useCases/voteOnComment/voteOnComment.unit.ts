@@ -1,21 +1,23 @@
 import { PrismaClient } from "@prisma/client";
-import { ProductionMembersRepository } from "../../../members/repos/adapters/productionMembersRepository";
+import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
 import { CommentNotFoundError, MemberNotFoundError } from "@dddforum/shared/src/errors";
-import { VoteOnCommentCommand } from "../../../posts/postsCommands";
-import { ProductionCommentsRepository } from "../../repos/adapters/productionCommentRepository";
-import { ProductionVotesRepository } from "../../../votes/repos/adapters/productionVotesRepository";
-import { Member, MemberReputationLevel } from "../../../members/domain/member";
-import { Comment } from "../../domain/comment";
-import { CommentVote } from "../../../votes/domain/commentVote";
+import { VoteOnCommentCommand } from "../../../../posts/postsCommands";
+import { ProductionCommentsRepository } from "../../../repos/adapters/productionCommentRepository";
+import { ProductionVotesRepository } from "../../../repos/adapters/productionCommentVotesRepository";
+import { Member, MemberReputationLevel } from "../../../../members/domain/member";
+import { Comment } from "../../../domain/comment";
+import { CommentVote } from "../../../domain/commentVote";
+import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 
 let prisma = new PrismaClient();
 
 let membersRepo = new ProductionMembersRepository(prisma);
 let commentsRepo = new ProductionCommentsRepository(prisma);
 let votesRepo = new ProductionVotesRepository(prisma);
+let eventBus = new InMemoryEventBus();
 
-const useCase = new VoteOnComment(membersRepo, commentsRepo, votesRepo);
+const useCase = new VoteOnComment(membersRepo, commentsRepo, votesRepo, eventBus);
 
 function setupCommentAndMember (useCase: VoteOnComment, memberReputationLevel: MemberReputationLevel) {
   jest.resetAllMocks();
@@ -36,12 +38,9 @@ function setupCommentAndMember (useCase: VoteOnComment, memberReputationLevel: M
     postId: '2e348513-b2d7-449a-aed4-7b0050261e3e'
   });
 
-  
-
   useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(member);
   useCase['commentRepository'].getCommentById = jest.fn().mockResolvedValue(comment);
   
-
   return {member, comment};
 }
 
@@ -63,6 +62,7 @@ describe('voteOnComment', () => {
 
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: 'non-existent-id',
@@ -75,6 +75,7 @@ describe('voteOnComment', () => {
       expect(response instanceof MemberNotFoundError).toBe(true);
       expect((response as MemberNotFoundError).name).toEqual('MemberNotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
+      expect(eventBusSpy).not.toHaveBeenCalled();
     });
 
     test('if the comment was not found, they should not be able to vote on the comment', async () => {
@@ -83,6 +84,7 @@ describe('voteOnComment', () => {
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue({});
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: 'non-existent-id',
@@ -95,6 +97,7 @@ describe('voteOnComment', () => {
       expect(response instanceof CommentNotFoundError).toBe(true);
       expect((response as CommentNotFoundError).name).toEqual('CommentNotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
+      expect(eventBusSpy).not.toHaveBeenCalled();
     });
 
     it.each([
@@ -104,6 +107,7 @@ describe('voteOnComment', () => {
       const { member } = setupCommentAndMember(useCase, reputationLevel);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: 'existing-comment-id',
@@ -116,6 +120,12 @@ describe('voteOnComment', () => {
       expect(response).toBeDefined();
       expect(response instanceof CommentVote).toBeTruthy();
       expect((response as CommentVote).value).toEqual(1);
+      expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
+      expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentUpvoted');
+      expect(eventBusSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ name: 'CommentUpvoted' })
+      ]));
       expect(saveSpy).toHaveBeenCalled();
     });
   });
@@ -125,6 +135,7 @@ describe('voteOnComment', () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -140,6 +151,10 @@ describe('voteOnComment', () => {
       expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
       expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentUpvoted');
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ name: 'CommentUpvoted' })
+      ]));
     });
 
     test('as a level 1 member, when I downvote a comment I have not yet downvoted, the comment should be downvoted and a downvoted event should get dispatched', async () => {
@@ -147,6 +162,7 @@ describe('voteOnComment', () => {
       setupCommentVote(member, comment, 0);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -162,6 +178,10 @@ describe('voteOnComment', () => {
       expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
       expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentDownvoted');
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ name: 'CommentDownvoted' })
+      ]));
     });
 
     test('as a level 1 member, when I upvote a comment I have already upvoted, the comment should remain upvoted and no upvoted event should get dispatched', async () => {
@@ -169,6 +189,7 @@ describe('voteOnComment', () => {
       setupCommentVote(member, comment, 1);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -183,6 +204,7 @@ describe('voteOnComment', () => {
       expect((response as CommentVote).value).toEqual(1);
       expect((response as CommentVote).getDomainEvents()).toHaveLength(0);
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith([]);
     });
 
     test('as a level 1 member, when I downvote a comment I have already downvoted, the comment should remain downvoted', async () => {
@@ -190,6 +212,7 @@ describe('voteOnComment', () => {
       setupCommentVote(member, comment, -1);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -203,29 +226,17 @@ describe('voteOnComment', () => {
       expect(response instanceof CommentVote).toBeTruthy();
       expect((response as CommentVote).value).toEqual(-1);
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith([]);
     });
   });
 
   describe ('many existing comments vote score', () => {
 
     test('upvote existing: as a level 1 member, when I upvote a comment with existing votes that I have not yet upvoted, the comment score should get incremented', async () => {
-      const previousVotes = [
-        ['fd2b8704-e44f-434a-afcd-6aea4103f51d', 'upvote'],
-        ['d74cd0f9-1afa-4a67-9d7c-6c38639ce362', 'upvote'],
-        ['65551634-6071-490a-98b8-176eb75ecca3', 'upvote'],
-        ['9f4b72a8-45bc-4436-b537-74e19da2fd19', 'downvote']
-      ];
-
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
 
-      // const comment = {
-      //   id: 'existing-comment-id',
-      //   votes: previousVotes.map(([memberId, voteType]) => ({ memberId, voteType }))
-      // };
-
-      // useCase['commentRepository'].getCommentById = jest.fn().mockResolvedValue(comment);
-
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -238,6 +249,10 @@ describe('voteOnComment', () => {
       expect(response).toBeDefined();
       expect(response instanceof CommentVote).toBeTruthy();
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ name: 'CommentUpvoted' })
+      ]));
     });
 
     test('downvote existing: as a level 1 member, when I downvote a comment with existing votes that I have not yet downvoted, the comment score should get decremented', async () => {
@@ -250,14 +265,8 @@ describe('voteOnComment', () => {
 
       const {member, comment } = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
 
-      // const comment = {
-      //   id: 'existing-comment-id',
-      //   votes: previousVotes.map(([memberId, voteType]) => ({ memberId, voteType }))
-      // };
-
-      // useCase['commentRepository'].getCommentById = jest.fn().mockResolvedValue(comment);
-
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const eventBusSpy = jest.spyOn(useCase['eventBus'], 'publishEvents');
 
       const command = new VoteOnCommentCommand({
         commentId: comment.id,
@@ -269,6 +278,10 @@ describe('voteOnComment', () => {
 
       expect(response).toBeDefined();
       expect(saveSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalled();
+      expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ name: 'CommentDownvoted' })
+      ]));
     });
 
   });

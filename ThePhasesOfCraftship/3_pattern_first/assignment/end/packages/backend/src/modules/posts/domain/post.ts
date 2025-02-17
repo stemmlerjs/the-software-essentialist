@@ -1,6 +1,5 @@
 
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
-import { Votes } from "./votes";
 import { Post as PostPrismaModel } from "@prisma/client";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { randomUUID } from "node:crypto";
@@ -11,7 +10,6 @@ interface PostProps {
   memberId: string;
   title: string;
   link?: string;
-  votes: Votes;
   content?: string;
   postType: 'link' | 'text';
 }
@@ -33,7 +31,7 @@ export class Post {
 
   }
 
-  id () {
+  get id () {
     return this.props.id
   }
 
@@ -43,10 +41,6 @@ export class Post {
 
   get link () {
     return this.props.link;
-  }
-
-  get votes () {
-    return this.props.votes;
   }
 
   public static create (input: CreatePostInput): Post | ValidationError {
@@ -68,15 +62,10 @@ export class Post {
     }
 
     const postId = randomUUID();
-    
-    const votes = Votes.create();
-
-    votes.addUpvote(input.memberId, postId);
 
     return new Post({
       ...input,
       id: postId,
-      votes
     });
   }
 
@@ -87,7 +76,6 @@ export class Post {
       title: prismaModel.title,
       content: prismaModel.content,
       postType: prismaModel.postType as 'link' | 'text', // TODO: value object-ify
-      votes: Votes.create(),
     });
   }
 }

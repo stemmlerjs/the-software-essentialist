@@ -1,7 +1,7 @@
 import { PostDTO } from "@dddforum/shared/src/api/posts";
 import { Comment, Member, Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
-import { MemberReadModel } from "../../../members/domain/memberReadModel";
+import { MemberReadModel } from "../../members/domain/memberReadModel";
 
 interface PostReadModelProps {
   id: string;

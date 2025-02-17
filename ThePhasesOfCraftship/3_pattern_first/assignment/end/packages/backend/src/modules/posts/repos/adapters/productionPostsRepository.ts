@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
 import { DatabaseError } from "../../../../shared/exceptions";
-import { Post } from "../../domain/writeModels/post";
+import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
-import { PostReadModel } from "../../domain/readModels/postReadModel";
-import { CommentReadModel } from "../../domain/readModels/commentReadModel";
+import { PostReadModel } from "../../domain/postReadModel";
+import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
 
 export class ProductionPostsRepository implements PostsRepository {
