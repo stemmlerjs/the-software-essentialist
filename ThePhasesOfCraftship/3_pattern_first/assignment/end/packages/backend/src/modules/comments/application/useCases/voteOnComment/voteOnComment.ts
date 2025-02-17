@@ -46,9 +46,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
       commentVote = existingVoteOrNull
       
     } else {
-      let commentVoteOrError = CommentVote.create({
-        memberId, commentId, voteType
-      });
+      let commentVoteOrError = CommentVote.create(memberId, commentId);
 
       if (commentVoteOrError instanceof ValidationError) {
         return commentVoteOrError;

@@ -44,11 +44,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       return fail(postOrError);
     }
 
-    const initialMemberVoteOrError = PostVote.create({
-      voteType: 'upvote',
-      postId: postOrError.id,
-      memberId: memberId
-    });
+    const initialMemberVoteOrError = PostVote.createUpvote(memberId, postOrError.id);
 
     if (initialMemberVoteOrError instanceof ValidationError) {
       return fail(initialMemberVoteOrError);

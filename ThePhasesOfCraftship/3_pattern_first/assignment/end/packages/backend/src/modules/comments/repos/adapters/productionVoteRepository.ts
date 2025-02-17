@@ -34,12 +34,12 @@ export class ProductionVotesRepository implements VoteRepository {
           }
         },
         update: {
-          value: vote.value
+          value: vote.getValue()
         },
         create: {
           memberId: vote.memberId,
           postId: vote.postId,
-          value: vote.value
+          value: vote.getValue()
         }
       });
     } else if (vote instanceof CommentVote) {
@@ -51,12 +51,12 @@ export class ProductionVotesRepository implements VoteRepository {
           }
         },
         update: {
-          value: vote.value
+          value: vote.getValue()
         },
         create: {
           memberId: vote.memberId,
           commentId: vote.commentId,
-          value: vote.value
+          value: vote.getValue()
         }
       });
     }

@@ -1,54 +1,55 @@
-
-import { ValidationError } from "@dddforum/shared/src/errors";
-import { CommentUpvoted } from "./commentUpvoted";
 import { VoteType } from "@dddforum/shared/src/api/posts";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { CommentDownvoted } from "./commentDownvoted";
-import { randomUUID } from "crypto";
-import { CommentVote as CommentVotePrismaModel } from "@prisma/client";
 import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
+import { ValidationError } from "@dddforum/shared/src/errors";
+import { randomUUID } from "crypto";
+import { CommentUpvoted } from "./commentUpvoted";
+import { CommentDownvoted } from "./commentDownvoted";
 
-// Inputs find their way all the way to the types near the api often
-interface CommentVoteInput {
-  memberId: string;
-  commentId: string;
-  voteType: VoteType;
-}
+type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
 interface CommentVoteProps {
-  id: string,
-  memberId: string,
-  commentId: string,
-  value: number;
+  id: string;
+  memberId: string;
+  commentId: string;
+  voteState: VoteState;
 }
 
 export class CommentVote extends AggregateRoot {
   private props: CommentVoteProps;
 
-  get id () {
-    return this.props.id;
-  }
-
-  get memberId () {
-    return this.props.memberId;
-  }
-
-  get commentId () {
-    return this.props.commentId;
-  }
-
-  get value () {
-    return this.props.value;
-  }
-
-  private constructor(
-    props: CommentVoteProps
-  ) {
+  private constructor(props: CommentVoteProps) {
     super();
     this.props = props;
   }
 
-  castVote (voteType: VoteType) {
+  get id(): string {
+    return this.props.id;
+  }
+
+  get memberId(): string {
+    return this.props.memberId;
+  }
+
+  get commentId(): string {
+    return this.props.commentId;
+  }
+
+  get voteState(): VoteState {
+    return this.props.voteState;
+  }
+
+  getValue (): number {
+    switch (this.props.voteState) {
+      case 'Upvoted':
+        return 1;
+      case 'Downvoted':
+        return -1;
+      default:
+        return 0;
+    }
+  }
+
+  castVote(voteType: VoteType) {
     if (voteType === 'upvote') {
       this.upvote();
     } else {
@@ -56,34 +57,51 @@ export class CommentVote extends AggregateRoot {
     }
   }
 
-  private upvote () {
-    if (this.props.value === 1) {
+  private upvote() {
+    if (this.props.voteState === 'Upvoted') {
       return;
     }
-    this.props.value++;
+    this.props.voteState = 'Upvoted';
     this.domainEvents.push(new CommentUpvoted(this.id, this.props.memberId));
   }
 
-  private downvote () {
-    if (this.props.value === -1) {
+  private downvote() {
+    if (this.props.voteState === 'Downvoted') {
       return;
     }
-    this.props.value--;
+    this.props.voteState = 'Downvoted';
     this.domainEvents.push(new CommentDownvoted(this.id, this.props.memberId));
   }
 
-  public static toDomain (props: CommentVoteProps): CommentVote {
+  public static toDomain(props: CommentVoteProps): CommentVote {
     return new CommentVote(props);
   }
 
-  public static create (input: CommentVoteInput): CommentVote | ValidationError {
-    // TODO: Validation checks on all domain models;
+  public static create (memberId: string, commentId: string) : CommentVote | ValidationError {
 
     return new CommentVote({
       id: randomUUID(),
-      memberId: input.memberId,
-      commentId: input.commentId,
-      value: 0
+      memberId: memberId,
+      commentId: commentId,
+      voteState: 'Default'
+    });
+  }
+
+  public static createUpvote(memberId: string, commentId: string): CommentVote | ValidationError {
+    return new CommentVote({
+      id: randomUUID(),
+      memberId: memberId,
+      commentId: commentId,
+      voteState: 'Upvoted'
+    });
+  }
+
+  public static createDownvote(memberId: string, commentId: string): CommentVote | ValidationError {
+    return new CommentVote({
+      id: randomUUID(),
+      memberId: memberId,
+      commentId: commentId,
+      voteState: 'Downvoted'
     });
   }
 }

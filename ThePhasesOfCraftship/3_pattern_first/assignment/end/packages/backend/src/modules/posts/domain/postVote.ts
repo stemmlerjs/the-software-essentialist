@@ -5,23 +5,19 @@ import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";
 
+export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
+
 interface PostVoteProps {
   id: string;
   memberId: string;
   postId: string;
-  value: number;
-}
-
-interface PostVoteInput {
-  memberId: string;
-  postId: string;
-  voteType: VoteType
+  voteState: VoteState;
 }
 
 export class PostVote extends AggregateRoot {
   private props: PostVoteProps;
 
-  private constructor (props: PostVoteProps) {
+  private constructor(props: PostVoteProps) {
     super();
     this.props = props;
   }
@@ -38,8 +34,19 @@ export class PostVote extends AggregateRoot {
     return this.props.postId;
   }
 
-  get value (): number {
-    return this.props.value
+  get voteState(): VoteState {
+    return this.props.voteState;
+  }
+
+  getValue () {
+    switch (this.props.voteState) {
+      case 'Upvoted':
+        return 1;
+      case 'Downvoted':
+        return -1;
+      default:
+        return 0;
+    }
   }
 
   castVote(voteType: VoteType) {
@@ -51,18 +58,18 @@ export class PostVote extends AggregateRoot {
   }
 
   private upvote() {
-    if (this.props.value === 1) {
+    if (this.props.voteState === 'Upvoted') {
       return;
     }
-    this.props.value++;
+    this.props.voteState = 'Upvoted';
     this.domainEvents.push(new PostUpvoted(this.id, this.props.memberId));
   }
 
   private downvote() {
-    if (this.props.value === -1) {
+    if (this.props.voteState === 'Downvoted') {
       return;
     }
-    this.props.value--;
+    this.props.voteState = 'Downvoted';
     this.domainEvents.push(new PostDownvoted(this.id, this.props.memberId));
   }
 
@@ -70,12 +77,21 @@ export class PostVote extends AggregateRoot {
     return new PostVote(props);
   }
 
-  public static create(input: PostVoteInput): PostVote | ValidationError {
+  public static createUpvote(memberId: string, postId: string): PostVote | ValidationError {
     return new PostVote({
       id: randomUUID(),
-      memberId: input.memberId,
-      postId: input.postId,
-      value: 0,
+      memberId: memberId,
+      postId: postId,
+      voteState: 'Upvoted'
+    });
+  }
+
+  public static createDownvote(memberId: string, postId: string): PostVote | ValidationError {
+    return new PostVote({
+      id: randomUUID(),
+      memberId: memberId,
+      postId: postId,
+      voteState: 'Downvoted'
     });
   }
 }
