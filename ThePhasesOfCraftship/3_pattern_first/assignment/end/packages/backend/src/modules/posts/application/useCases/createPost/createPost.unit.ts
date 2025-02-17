@@ -7,7 +7,7 @@ import { ProductionPostsRepository } from "../../../repos/adapters/productionPos
 import { CreatePostCommand } from "../../../postsCommands";
 import { MemberNotFoundError, PermissionError, ValidationError } from "@dddforum/shared/src/errors";
 import { Post } from "../../../domain/post";
-import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionCommentVotesRepository";
+import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionVoteRepository";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 
 function setupTest (useCase: CreatePost) {

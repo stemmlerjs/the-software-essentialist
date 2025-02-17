@@ -7,7 +7,7 @@ import { MembersRepository } from "../../../../members/repos/ports/membersReposi
 import { CommentRepository } from "../../../repos/ports/commentRepository";
 import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
-import { VoteRepository } from "../../../repos/ports/commentVoteRepository";
+import { VoteRepository } from "../../../repos/ports/voteRepository";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
 

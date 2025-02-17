@@ -4,7 +4,7 @@ import { VoteOnComment } from "./voteOnComment";
 import { CommentNotFoundError, MemberNotFoundError } from "@dddforum/shared/src/errors";
 import { VoteOnCommentCommand } from "../../../../posts/postsCommands";
 import { ProductionCommentsRepository } from "../../../repos/adapters/productionCommentRepository";
-import { ProductionVotesRepository } from "../../../repos/adapters/productionCommentVotesRepository";
+import { ProductionVotesRepository } from "../../../repos/adapters/productionVoteRepository";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { Comment } from "../../../domain/comment";
 import { CommentVote } from "../../../domain/commentVote";

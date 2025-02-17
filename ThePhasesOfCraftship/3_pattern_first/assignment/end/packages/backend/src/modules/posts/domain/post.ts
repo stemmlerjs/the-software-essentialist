@@ -1,4 +1,3 @@
-
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { Post as PostPrismaModel } from "@prisma/client";
 import { ValidationError } from "@dddforum/shared/src/errors";
@@ -14,6 +13,7 @@ interface PostProps {
   link?: string;
   content?: string;
   postType: PostType;
+  voteScore: number;
 }
 
 const createTextPostSchema = z.object({
@@ -45,6 +45,22 @@ export class Post extends AggregateRoot {
     return this.props.link;
   }
 
+  get memberId() {
+    return this.props.memberId;
+  }
+
+  get content() {
+    return this.props.content;
+  }
+
+  get postType() {
+    return this.props.postType;
+  }
+
+  get voteScore () {
+    return this.props.voteScore
+  }
+
   public static create (input: CreatePostInput): Post | ValidationError {
     const isTextPost = input.postType === 'text';
 
@@ -67,17 +83,20 @@ export class Post extends AggregateRoot {
 
     return new Post({
       ...input,
+      voteScore: 0,
       id: postId,
     });
   }
 
-  public static fromPrismaToDomain (prismaModel: PostPrismaModel): Post {
+  public static toDomain (prismaModel: PostPrismaModel): Post {
     return new Post({
       id: prismaModel.id,
       memberId: prismaModel.memberId,
       title: prismaModel.title,
-      content: prismaModel.content,
-      postType: prismaModel.postType as 'link' | 'text',
+      content: prismaModel.content ? prismaModel.content : undefined,
+      link: prismaModel.link ? prismaModel.link : undefined,
+      postType: prismaModel.postType as PostType,
+      voteScore: prismaModel.voteScore
     });
   }
 }

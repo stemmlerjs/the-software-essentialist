@@ -67,7 +67,7 @@ describe('posts', () => {
       expect(response.error?.code).toEqual('PermissionError');
     });
 
-    it.only ('can create a text post', async () => {
+    it.only ('can create a text post with an initial upvote', async () => {
       const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
       
       let postData: CreatePostInput = {
@@ -83,10 +83,10 @@ describe('posts', () => {
 
       expect(response).toBeDefined();
       expect(response.success).toBe(true);
-      // expect(response.data.title).toBe(postData.title);
-      // expect(response.data.postType).toBe(postData.postType);
-      // expect(response.data.content).toBe(postData.content);
-      // expect(response.data.voteCount).toEqual(1);
+      expect(response.data.title).toBe(postData.title);
+      expect(response.data.postType).toBe(postData.postType);
+      expect(response.data.content).toBe(postData.content);
+      expect(response.data.voteScore).toEqual(1);
     });
 
     // it ('can create a link post', async () => {

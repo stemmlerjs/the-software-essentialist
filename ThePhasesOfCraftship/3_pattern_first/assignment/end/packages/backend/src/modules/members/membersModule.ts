@@ -3,7 +3,7 @@ import { Config } from "../../shared/config";
 import { Database } from "../../shared/database";
 import { EventBus } from "../../shared/eventBus/ports/eventBus";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { VoteRepository } from "../comments/repos/ports/commentVoteRepository";
+import { VoteRepository } from "../comments/repos/ports/voteRepository";
 import { MemberService } from "./application/membersService";
 import { MemberSubscriptions } from "./application/memberSubscriptions";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";

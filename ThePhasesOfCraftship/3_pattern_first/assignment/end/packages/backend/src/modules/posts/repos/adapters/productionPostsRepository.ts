@@ -73,14 +73,43 @@ export class ProductionPostsRepository implements PostsRepository {
       return null;
     }
 
+    const voteScore = await this.prisma.postVote.count({
+      where: {
+        postId: id,
+        voteType: "upvote",
+      }
+    });
+
     return PostReadModel.fromPrismaToDomain(
-      post,
+      { ...post, voteScore },
       MemberReadModel.fromPrisma(post.memberPostedBy),
       post.comments.map((c) => CommentReadModel.fromPrismaToDomain(c, MemberReadModel.fromPrisma(c.memberPostedBy))),
     );
   }
 
   async save(post: Post): Promise<void | DatabaseError> {
-    return;
+    try {
+      await this.prisma.post.upsert({
+        where: { id: post.id },
+        update: {
+          title: post.title,
+          content: post.content,
+          voteScore: post.voteScore,
+          memberId: post.memberId,
+        },
+        create: {
+          id: post.id,
+          title: post.title,
+          postType: post.postType,
+          content: post.content,
+          link: post.link,
+          voteScore: post.voteScore,
+          memberId: post.memberId
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new DatabaseError();
+    }
   }
 }

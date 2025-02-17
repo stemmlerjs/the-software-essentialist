@@ -5,7 +5,7 @@ import { ProductionMembersRepository } from "../../../repos/adapters/productionM
 import { UpdateMemberReputationScore } from "./updateMemberReputationScore";
 import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
-import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionCommentVotesRepository";
+import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionVoteRepository";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
 import { MemberUsername } from "../../../domain/memberUsername";

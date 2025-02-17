@@ -5,7 +5,7 @@ import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { MemberNotFoundError } from "@dddforum/shared/src/errors";
 import { Member } from "../../../domain/member";
 import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
-import { VoteRepository } from "../../../../comments/repos/ports/commentVoteRepository";
+import { VoteRepository } from "../../../../comments/repos/ports/voteRepository";
 
 type UpdateMemberReputationScoreResponse = Member | MemberNotFoundError;
 

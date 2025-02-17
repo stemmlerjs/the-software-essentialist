@@ -1,5 +1,5 @@
 import { EventBus } from "../../../shared/eventBus/ports/eventBus";
-import { VoteRepository } from "../../comments/repos/ports/commentVoteRepository";
+import { VoteRepository } from "../../comments/repos/ports/voteRepository";
 import { UpdateMemberReputationScoreCommand } from "../memberCommands";
 import { MembersRepository } from "../repos/ports/membersRepository";
 import { UpdateMemberReputationScore } from "./useCases/updateMemberReputation/updateMemberReputationScore";

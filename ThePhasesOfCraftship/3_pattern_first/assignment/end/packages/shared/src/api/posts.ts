@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APIResponse } from ".";
 import { ServerError } from "../errors";
+import { PostType } from "@dddforum/backend/src/modules/posts/domain/postType";
 
 export type GetPostsQueryOption = 'popular' | 'recent';
 
@@ -23,6 +24,7 @@ export type PostDTO = {
   member: MemberDTO;
   comments: CommentDTO[];
   voteScore: number;
+  lastUpdated: string;
 };
 
 export type VoteDTO = {
@@ -52,7 +54,7 @@ export type PostsAPIResponse =
 // clean
 export type CreatePostInput = {
   title: string;
-  postType: 'link' | 'text';
+  postType: PostType
   memberId: string;
   content?: string;
   link?: string;

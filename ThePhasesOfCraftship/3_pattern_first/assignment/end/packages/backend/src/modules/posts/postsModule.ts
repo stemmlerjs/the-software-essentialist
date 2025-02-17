@@ -1,3 +1,4 @@
+
 import { Config } from "../../shared/config";
 import { WebServer } from "../../shared/http/webServer";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
@@ -9,7 +10,7 @@ import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepos
 import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
-import { VoteRepository } from "../comments/repos/ports/commentVoteRepository";
+import { VoteRepository } from "../comments/repos/ports/voteRepository";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

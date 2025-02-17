@@ -2,14 +2,19 @@ import { PostDTO } from "@dddforum/shared/src/api/posts";
 import { Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
+import { PostType } from "./postType";
 
 interface PostReadModelProps {
   id: string;
   title: string;
-  content: string;
+  content: string | undefined
+  link: string | undefined
   member: MemberReadModel;
   comments: CommentReadModel[];
   voteScore: number;
+  postType: PostType;
+  dateCreated: string;
+  lastUpdated: string;
 }
 
 export class PostReadModel {
@@ -29,10 +34,14 @@ export class PostReadModel {
     return new PostReadModel({
       id: prismaPost.id,
       title: prismaPost.title,
-      content: prismaPost.content,
+      content: prismaPost.content ? prismaPost.content : undefined,
+      link: prismaPost.link ? prismaPost.link : undefined,
       member: member,
       comments: comments,
       voteScore: prismaPost.voteScore,
+      postType: prismaPost.postType as PostType,
+      dateCreated: prismaPost.dateCreated.toISOString(),
+      lastUpdated: prismaPost.lastUpdated.toISOString()
     })
   }
 
@@ -40,9 +49,10 @@ export class PostReadModel {
     return {
       id: this.props.id,
       title: this.props.title,
-      content: 'content',
-      postType: 'post',
-      dateCreated: new Date().toISOString(),
+      content: this.props.content,
+      postType: this.props.postType,
+      dateCreated: this.props.dateCreated,
+      lastUpdated: this.props.lastUpdated,
       member: this.props.member.toDTO(),
       comments: this.props.comments.map((c) => c.toDTO()),
       voteScore: this.props.voteScore

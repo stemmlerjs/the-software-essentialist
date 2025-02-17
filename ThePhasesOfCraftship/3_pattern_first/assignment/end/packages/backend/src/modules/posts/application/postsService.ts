@@ -1,5 +1,5 @@
 
-import { VoteRepository } from "../../comments/repos/ports/commentVoteRepository";
+import { VoteRepository } from "../../comments/repos/ports/voteRepository";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { CreatePostCommand } from "../postsCommands";
 import { GetPostsQuery } from "../postsQuery";

@@ -37,7 +37,7 @@ model Member {
   reputationLevel String
 
   dateCreated    DateTime  @default(now())
-  lastUpdated    DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
 }
   
 model Post {
@@ -46,10 +46,11 @@ model Post {
   memberId       String // Foreign key to the Member table
   postType       String // 'Text' or 'Link'
   title          String
-  content        String
+  content        String?
+  link           String?
   comments       Comment[]
   dateCreated    DateTime  @default(now())
-  lastUpdated    DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
   postVotes      PostVote[]
   voteScore      Int       @default(0)
 }
@@ -70,7 +71,7 @@ model Comment {
   replyComments Comment[] @relation("Replies")
 
   dateCreated  DateTime  @default(now())
-  lastUpdated    DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
   commentVotes CommentVote[]
   voteScore      Int       @default(0)
 }
@@ -84,9 +85,10 @@ model PostVote {
   memberId        String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
-  voteType String  // 'Upvote' or 'Downvote'
+  value  Int       @default(0)
 
-  lastUpdated    DateTime  @default(now())
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
 }
 
 model CommentVote {
@@ -98,7 +100,8 @@ model CommentVote {
   memberId        String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
-  voteType String  // 'Upvote' or 'Downvote'
+  value  Int       @default(0)
 
-  lastUpdated    DateTime  @default(now())
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
 }

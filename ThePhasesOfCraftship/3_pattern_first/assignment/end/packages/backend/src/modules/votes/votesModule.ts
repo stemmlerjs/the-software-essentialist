@@ -2,8 +2,8 @@
 import { Config } from "../../shared/config";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { Database } from "../../shared/database";
-import { VoteRepository } from "../comments/repos/ports/commentVoteRepository";
-import { ProductionVotesRepository } from "../comments/repos/adapters/productionCommentVotesRepository";
+import { VoteRepository } from "../comments/repos/ports/voteRepository";
+import { ProductionVotesRepository } from "../comments/repos/adapters/productionVoteRepository";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
