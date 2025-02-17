@@ -9,6 +9,7 @@ import { Member, MemberReputationLevel } from "../../../../members/domain/member
 import { Comment } from "../../../domain/comment";
 import { CommentVote } from "../../../domain/commentVote";
 import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
+import { MemberUsername } from "../../../../members/domain/memberUsername";
 
 let prisma = new PrismaClient();
 
@@ -24,7 +25,7 @@ function setupCommentAndMember (useCase: VoteOnComment, memberReputationLevel: M
 
   let member = Member.toDomain({
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill',
+    username: MemberUsername.toDomain('jill'),
     reputationScore: 10,
     reputationLevel: memberReputationLevel,
     id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'
@@ -256,13 +257,6 @@ describe('voteOnComment', () => {
     });
 
     test('downvote existing: as a level 1 member, when I downvote a comment with existing votes that I have not yet downvoted, the comment score should get decremented', async () => {
-      const previousVotes = [
-        ['fd2b8704-e44f-434a-afcd-6aea4103f51d', 'upvote'],
-        ['d74cd0f9-1afa-4a67-9d7c-6c38639ce362', 'upvote'],
-        ['65551634-6071-490a-98b8-176eb75ecca3', 'upvote'],
-        ['9f4b72a8-45bc-4436-b537-74e19da2fd19', 'downvote']
-      ];
-
       const {member, comment } = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');

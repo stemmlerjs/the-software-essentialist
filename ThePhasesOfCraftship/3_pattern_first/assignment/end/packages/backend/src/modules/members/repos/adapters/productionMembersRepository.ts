@@ -35,11 +35,16 @@ export class ProductionMembersRepository implements MembersRepository {
   async save(member: Member): Promise<void> {
     const memberData = member.toPersistence();
 
-    await this.prisma.member.upsert({
-      where: { id: memberData.id },
-      update: memberData,
-      create: memberData,
-    });
+    try {
+      await this.prisma.member.upsert({
+        where: { id: memberData.id },
+        update: memberData,
+        create: memberData,
+      });
+    } catch (err) {
+      console.log(err)
+      throw new Error("Database exception");
+    }
   }
   
   

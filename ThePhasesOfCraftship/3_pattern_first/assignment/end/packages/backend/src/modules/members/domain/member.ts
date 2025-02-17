@@ -4,11 +4,12 @@ import { ValidationError } from "@dddforum/shared/src/errors";
 import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
+import { MemberUsername } from "./memberUsername";
 
 interface MemberProps {
   id: string;
   userId: string;
-  username: string;
+  username: MemberUsername;
   reputationScore: number;
   reputationLevel: MemberReputationLevel
 }
@@ -64,11 +65,19 @@ export class Member extends AggregateRoot {
   }
 
   public static create (inputProps: CreateMemberInput): Member | ValidationError {
+    const memberUsername = MemberUsername.create(inputProps.username);
+
+    // Example of using value objects to validate input to create the aggregate
+    if (memberUsername instanceof ValidationError) {
+      return memberUsername;
+    }
+
     return new Member({
       ...inputProps,
       id: randomUUID(),
       reputationScore: 0,
       reputationLevel: MemberReputationLevel.Level1,
+      username: memberUsername
     });
   }
 
@@ -77,7 +86,7 @@ export class Member extends AggregateRoot {
       id: recreationProps.id,
       reputationScore: recreationProps.reputationScore,
       userId: recreationProps.userId,
-      username: recreationProps.username,
+      username: recreationProps.username instanceof MemberUsername ? recreationProps.username : MemberUsername.toDomain(recreationProps.username),
       reputationLevel: recreationProps.reputationLevel as MemberReputationLevel
     });
   }
@@ -86,9 +95,9 @@ export class Member extends AggregateRoot {
     return {
       id: this.id,
       userId: this.props.userId,
-      username: this.props.username,
+      username: this.props.username.value,
       reputationScore: this.props.reputationScore,
-      reputationLevel: this.props.reputationLevel
+      reputationLevel: this.props.reputationLevel,
     }
   }
 

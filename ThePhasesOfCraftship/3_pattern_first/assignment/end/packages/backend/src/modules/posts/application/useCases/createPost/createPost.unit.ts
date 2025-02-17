@@ -8,13 +8,14 @@ import { CreatePostCommand } from "../../../postsCommands";
 import { MemberNotFoundError, PermissionError, ValidationError } from "@dddforum/shared/src/errors";
 import { Post } from "../../../domain/post";
 import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionCommentVotesRepository";
+import { MemberUsername } from "../../../../members/domain/memberUsername";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
 
   let level2Member = Member.toDomain({
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill',
+    username: MemberUsername.toDomain('jill'),
     reputationScore: 10,
     reputationLevel: MemberReputationLevel.Level2,
     id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'

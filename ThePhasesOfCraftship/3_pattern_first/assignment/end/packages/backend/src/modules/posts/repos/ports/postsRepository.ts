@@ -8,4 +8,5 @@ export interface PostsRepository {
   findPosts(query: GetPostsQuery): Promise<PostReadModel[]>;
   save (post: Post): Promise<void | DatabaseError>;
   getPostById (id: string): Promise<Post | null>;
+  getPostDetailsById (id: string): Promise<PostReadModel | null>;
 }

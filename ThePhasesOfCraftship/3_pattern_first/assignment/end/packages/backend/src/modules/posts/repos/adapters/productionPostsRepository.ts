@@ -51,6 +51,35 @@ export class ProductionPostsRepository implements PostsRepository {
     );
   }
 
+  public async getPostDetailsById(id: string): Promise<PostReadModel | null> {
+    const post = await this.prisma.post.findUnique({
+      where: { id },
+      include: {
+        memberPostedBy: true,
+        comments: {
+          include: {
+            memberPostedBy: true
+          }
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      return null;
+    }
+
+    return PostReadModel.fromPrismaToDomain(
+      post,
+      MemberReadModel.fromPrisma(post.memberPostedBy),
+      post.comments.map((c) => CommentReadModel.fromPrismaToDomain(c, MemberReadModel.fromPrisma(c.memberPostedBy))),
+    );
+  }
+
   async save(post: Post): Promise<void | DatabaseError> {
     return;
   }

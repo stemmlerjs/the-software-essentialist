@@ -1,7 +1,7 @@
 
 import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { CanCreatePostPolicy } from "./canCreatePost";
-import { UseCase } from '@dddforum/shared/src/core/useCase';
+import { fail, success, UseCase, UseCaseResponse } from '@dddforum/shared/src/core/useCase';
 import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
@@ -9,7 +9,7 @@ import { MembersRepository } from "../../../../members/repos/ports/membersReposi
 import { VoteRepository } from "../../../../comments/repos/ports/commentVoteRepository";
 import { PostVote } from "../../../domain/postVote";
 
-type CreatePostResponse = Post | ValidationError | PermissionError | MemberNotFoundError | ServerError;
+export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
 
 export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse> {
 
@@ -25,11 +25,11 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
     const member = await this.memberRepository.getMemberById(memberId);
     
     if (member === null) {
-      return new MemberNotFoundError();
+      return fail(new MemberNotFoundError())
     }
 
     if (!CanCreatePostPolicy.isAllowed(member)) {
-      return new PermissionError();
+      return fail(new PermissionError());
     }
 
     const postOrError = Post.create({
@@ -41,7 +41,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
     });
 
     if (postOrError instanceof ValidationError) {
-      return postOrError
+      return fail(postOrError);
     }
 
     const initialMemberVoteOrError = PostVote.create({
@@ -51,17 +51,17 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
     });
 
     if (initialMemberVoteOrError instanceof ValidationError) {
-      return initialMemberVoteOrError
+      return fail(initialMemberVoteOrError);
     }
 
     try {
       await this.postRepository.save(postOrError);
       await this.votesRepository.save(initialMemberVoteOrError);
-      return postOrError;
+      return success(postOrError);
       
     } catch (error) {
       console.log(error);
-      return new ServerError();
+      return fail(new ServerError());
     }
   }
 }

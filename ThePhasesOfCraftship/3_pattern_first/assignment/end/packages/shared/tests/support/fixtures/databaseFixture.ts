@@ -2,6 +2,9 @@ import { generateRandomPassword } from "@dddforum/backend/src/shared/utils";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersCommand";
 import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
+import { CreateMemberCommand } from "@dddforum/backend/src/modules/members/memberCommands";
+import { Member } from "@dddforum/backend/src/modules/members/domain/member";
+import { MembersModule } from "@dddforum/backend/src/modules/members/membersModule";
 
 export class DatabaseFixture {
   constructor(private composition: CompositionRoot) {
@@ -12,8 +15,9 @@ export class DatabaseFixture {
 
     try {
       await connection.$transaction([
+        connection.postVote.deleteMany(),
+        connection.commentVote.deleteMany(),
         connection.comment.deleteMany(),
-        connection.vote.deleteMany(),
         connection.post.deleteMany(),
         connection.member.deleteMany(),
         connection.user.deleteMany(),
@@ -25,6 +29,13 @@ export class DatabaseFixture {
     }
   }
 
+  async setupWithExistingMembers (members: Member[]) {
+    const membersModule = (this.composition.getModule('members') as MembersModule);
+    const membersRepo = membersModule.getMembersRepository();
+    await Promise.all(members.map((member) => membersRepo.save(member)));
+  }
+
+  // Deprecated (auth/identity is moving to an external service)
   async setupWithExistingUsers(createUserParams: CreateUserParams[]) {
     const connection = this.composition.getDatabase().getConnection();
     await connection.$transaction(

@@ -39,15 +39,15 @@ export type CommentDTO = {
 
 export type GetPostErrors = ServerError;
 
-export type GetPostsResponse = APIResponse<PostDTO[], GetPostErrors>;
+export type GetPostsAPIResponse = APIResponse<PostDTO[], GetPostErrors>;
 
 export type CreatePostErrors = ServerError;
 
-export type CreatePostResponse = APIResponse<void, CreatePostErrors>;
+export type CreatePostAPIResponse = APIResponse<PostDTO, CreatePostErrors>;
 
-export type PostsResponse = 
-  GetPostsResponse 
-  | CreatePostResponse;
+export type PostsAPIResponse = 
+    GetPostsAPIResponse 
+  | CreatePostAPIResponse;
 
 // clean
 export type CreatePostInput = {
@@ -69,28 +69,27 @@ export type VoteOnCommentInput = {
 export const createPostsAPI = (apiURL: string) => {
   return {
     // auth
-    create: async (command: CreatePostInput, authToken: string): Promise<CreatePostResponse> => {
+    create: async (command: CreatePostInput, authToken: string): Promise<CreatePostAPIResponse> => {
       try {
         const successResponse = await axios.post(`${apiURL}/posts/new`, command, {
           headers: {
             Authorization: `Bearer ${authToken}`
           }
         });
-        return successResponse.data as CreatePostResponse;
+        return successResponse.data as CreatePostAPIResponse;
       } catch (err) {
-        console.log(err);
         //@ts-expect-error
-        return err.response.data as CreatePostResponse;
+        return err.response.data as CreatePostAPIResponse;
       }
     },
-    getPosts: async (sort: GetPostsQueryOption): Promise<GetPostsResponse> => {
+    getPosts: async (sort: GetPostsQueryOption): Promise<GetPostsAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
         console.log(successResponse)
-        return successResponse.data as GetPostsResponse;
+        return successResponse.data as GetPostsAPIResponse;
       } catch (err) {
         //@ts-expect-error
-        return err.response.data as GetPostsResponse;
+        return err.response.data as GetPostsAPIResponse;
       }
     },
   };

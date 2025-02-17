@@ -1,6 +1,5 @@
 import { Member, MemberReputationLevel } from "./member"
 
-
 describe('member', () => {
   test('a new member should start out at level 1 reputation level', () => {
     let member = Member.create({

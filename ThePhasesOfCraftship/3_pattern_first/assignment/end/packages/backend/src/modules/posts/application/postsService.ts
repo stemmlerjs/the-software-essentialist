@@ -1,4 +1,5 @@
 
+import { VoteRepository } from "../../comments/repos/ports/commentVoteRepository";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { CreatePostCommand } from "../postsCommands";
 import { GetPostsQuery } from "../postsQuery";
@@ -6,7 +7,7 @@ import { PostsRepository } from "../repos/ports/postsRepository";
 import { CreatePost } from "./useCases/createPost/createPost";
 
 export class PostsService {
-  constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository) {}
+  constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository, private votesRepository: VoteRepository) {}
 
   async getPosts(query: GetPostsQuery) {
     // Todo: Make the underlying repo use real models instead. Use "postdetails" in the contract. Start w/ the contract.
@@ -18,11 +19,15 @@ export class PostsService {
 
   async createPost (command: CreatePostCommand) {
     // Todo: design all slices like this for commands, it's pretty clean and the composition is nice.
-    return new CreatePost(this.postsRepo, this.membersRepo).execute(command);
+    return new CreatePost(this.postsRepo, this.membersRepo, this.votesRepository).execute(command);
   }
 
   async getPostById (id: string) {
      // Todo: Make the contract have both 'getPostById' and 'getPostDetailsById' methods.
-    return await this.postsRepo.getPostById(id);
+    return this.postsRepo.getPostById(id);
+  }
+
+  async getPostDetailsById (id: string) {
+    return this.postsRepo.getPostDetailsById(id);
   }
 }

@@ -1,4 +1,6 @@
+
 import { MembersModule } from "../../modules/members/membersModule";
+import { VotesModule } from "../../modules/votes/votesModule";
 import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
@@ -25,6 +27,7 @@ export class CompositionRoot {
   private postsModule: PostsModule;
   private notificationsModule: NotificationsModule;
   private membersModule: MembersModule;
+  private votesModule: VotesModule;
 
   public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
@@ -37,6 +40,7 @@ export class CompositionRoot {
     this.config = config;
     this.dbConnection = this.createDBConnection();
     this.eventBus = this.createEventBus();
+    this.votesModule = this.createVotesModule();
     this.notificationsModule = this.createNotificationsModule();
     this.marketingModule = this.createMarketingModule();
     this.membersModule = this.createMembersModule();
@@ -46,8 +50,8 @@ export class CompositionRoot {
     this.mountRoutes();
   }
 
-  createMembersModule () {
-    return MembersModule.build(this.dbConnection, this.eventBus, this.config);
+  createMembersModule() {
+    return MembersModule.build(this.dbConnection, this.eventBus, this.votesModule.getVotesRepository(), this.config);
   }
 
   createNotificationsModule() {
@@ -67,8 +71,17 @@ export class CompositionRoot {
     );
   }
 
+  createVotesModule () {
+    return VotesModule.build(this.dbConnection, this.config);
+  }
+
   createPostsModule() {
-    return PostsModule.build(this.dbConnection, this.config, this.membersModule.getMembersRepository());
+    return PostsModule.build(
+      this.dbConnection,
+      this.config,
+      this.membersModule.getMembersRepository(),
+      this.votesModule.getVotesRepository(),
+    );
   }
 
   getDatabase() {
@@ -76,7 +89,7 @@ export class CompositionRoot {
     return this.dbConnection;
   }
 
-  createEventBus () {
+  createEventBus() {
     return new InMemoryEventBus();
   }
 
@@ -95,7 +108,7 @@ export class CompositionRoot {
   }
 
   private createDBConnection() {
-    if(this.shouldBuildFakeRepository()) {
+    if (this.shouldBuildFakeRepository()) {
       return new FakeDatabase();
     }
     const dbConnection = new PrismaDatabase();
@@ -119,6 +132,25 @@ export class CompositionRoot {
 
   getContactListAPI() {
     return this.marketingModule.getContactListAPI();
+  }
+
+  getModule (moduleName: 'members' | 'users' | 'votes' | 'posts' | 'notifications' | 'marketing') {
+    switch (moduleName) {
+      case 'members':
+        return this.membersModule;
+      case 'users':
+        return this.usersModule;
+      case 'posts':
+        return this.postsModule;
+      case 'votes':
+        return this.votesModule;
+      case 'notifications':
+        return this.notificationsModule;
+      case 'marketing':
+        return this.marketingModule;
+      default:
+        throw new Error(`Module ${moduleName} not found`);
+    }
   }
 
   getRepositories() {

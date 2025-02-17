@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CustomException } from "../../shared/exceptions";
 import { MarketingResponse } from "@dddforum/shared/src/api/marketing";
+import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
 
 export function marketingErrorHandler(
   error: CustomException,
@@ -15,7 +16,7 @@ export function marketingErrorHandler(
       data: null,
       error: {
         message: error.message,
-        code: "ValidationError",
+        code: new ValidationError(error.message),
       },
     };
     return res.status(400).json(responseBody);
@@ -25,7 +26,7 @@ export function marketingErrorHandler(
     success: false,
     data: null,
     error: {
-      code: "ServerError",
+      code: new ServerError(error.message),
     },
   };
 

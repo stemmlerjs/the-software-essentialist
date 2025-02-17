@@ -30,4 +30,8 @@ export class InMemoryPostsRepository implements PostsRepository {
     return Promise.resolve();
     
   }
+
+  public async getPostDetailsById(id: string): Promise<PostReadModel | null> {
+    return this.posts.find(post => post.id === id) || null;
+  }
 }

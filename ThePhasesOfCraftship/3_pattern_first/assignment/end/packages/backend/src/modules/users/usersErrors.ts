@@ -1,6 +1,11 @@
+
 import { Request, Response, NextFunction } from "express";
 import { UserResponse } from "@dddforum/shared/src/api/users";
 import { CustomException } from "../../shared/exceptions";
+import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
+
+// Todo: refactor all of these to use the new error handling system
 
 export function userErrorHandler(
   error: CustomException,
@@ -18,7 +23,7 @@ export function userErrorHandler(
       data: null,
       error: {
         message: error.message,
-        code: "ValidationError",
+        code: new ValidationError(error.message)
       },
     };
     return res.status(400).json(responseBody);
@@ -29,7 +34,7 @@ export function userErrorHandler(
       success: false,
       data: null,
       error: {
-        code: "UsernameAlreadyTaken",
+        code: new UsernameAlreadyTakenException(error.message)
       },
     };
     return res.status(409).json(responseBody);
@@ -40,7 +45,7 @@ export function userErrorHandler(
       success: false,
       data: null,
       error: {
-        code: "EmailAlreadyInUse",
+        code: new EmailAlreadyInUseException(error.message)
       },
     };
     return res.status(409).json(responseBody);
@@ -51,7 +56,7 @@ export function userErrorHandler(
       success: false,
       data: null,
       error: {
-        code: "UserNotFound",
+        code: new UserNotFoundException(error.message)
       },
     };
     return res.status(404).json(responseBody);
@@ -61,7 +66,7 @@ export function userErrorHandler(
     success: false,
     data: null,
     error: {
-      code: "ServerError",
+      code: new ServerError(error.message)
     },
   };
 

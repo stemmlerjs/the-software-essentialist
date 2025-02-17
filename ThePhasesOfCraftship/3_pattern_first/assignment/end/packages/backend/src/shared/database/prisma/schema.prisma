@@ -10,23 +10,23 @@ datasource db {
   url      = "file:./../dev.db" // Replace with your SQLite file path
 }
 
-model User {
-  id        String @id @default(uuid())
-  email     String @unique
-  firstName String
-  lastName  String
-  password  String
+// Todo: get rid of user from here - get user details from an external service (e.g. Auth0)
+// model User {
+//   id        String @id @default(uuid())
+//   email     String @unique
+//   firstName String
+//   lastName  String
+//   password  String
 
-  // Define a one-to-one relationship with Member
-  member    Member?
-}
+//   // Define a one-to-one relationship with Member
+//   member    Member?
+// }
 
 // Use custom validation in your application code to ensure correct values
 
 model Member {
   id    String @id @default(uuid())
 
-  user   User @relation(fields: [userId], references: [id])
   userId String @unique // relation scalar field (used in the `@relation` attribute above)
   posts Post[]
   postVotes PostVote[]

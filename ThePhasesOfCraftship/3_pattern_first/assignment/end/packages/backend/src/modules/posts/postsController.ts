@@ -1,9 +1,9 @@
+
 import express from "express";
 import { GetPostsQuery } from "./postsQuery";
-import { CreatePostResponse, GetPostsResponse } from "@dddforum/shared/src/api/posts";
+import { CreatePostAPIResponse, GetPostsAPIResponse } from "@dddforum/shared/src/api/posts";
 import { ErrorHandler } from "../../shared/errors";
 import { CreatePostCommand } from "./postsCommands";
-import { DatabaseError } from "../../shared/exceptions";
 import { Post } from "./domain/post";
 import { PostsService } from "./application/postsService";
 
@@ -41,7 +41,7 @@ export class PostsController {
       const query = GetPostsQuery.fromRequest(req.query);
       const posts = await this.postsService.getPosts(query);
       
-      const response: GetPostsResponse = {
+      const response: GetPostsAPIResponse = {
         success: true,
         data: posts.map((p) => p.toDTO()),
       };
@@ -59,16 +59,31 @@ export class PostsController {
   ) {
     try {
       const command = CreatePostCommand.fromRequest(req.body);
-      const postOrError = await this.postsService.createPost(command);
-      
-      if (postOrError instanceof Post) { 
-        const response: CreatePostResponse = {
+      const result = await this.postsService.createPost(command);
+
+      if (!result.isSuccess()) {
+        const error = result.getError();
+        switch (error.name) {
+          case 'PermissionError':
+            return res.status(403).json(error);
+          case 'ValidationError':
+            return res.status(400).json(error);
+          default:
+            return res.status(500).json(error);
+        }
+      } else {
+        const newPost = result.getValue() as Post;
+        const postDetails = await this.postsService.getPostDetailsById(newPost.id);
+
+        if (!postDetails) {
+          return res.status(500).json("Server error: post created but could not be retrieved.");
+        }
+
+        const response: CreatePostAPIResponse = {
           success: true,
-          data: undefined
+          data: postDetails?.toDTO()
         };
         return res.status(200).json(response);
-      } else  {
-        next(postOrError);
       }
     } catch (error) {
       next(error);

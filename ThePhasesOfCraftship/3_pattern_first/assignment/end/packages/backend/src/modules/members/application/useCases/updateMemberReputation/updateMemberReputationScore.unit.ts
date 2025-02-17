@@ -8,13 +8,14 @@ import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
 import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionCommentVotesRepository";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
+import { MemberUsername } from "../../../domain/memberUsername";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();
 
   let member = Member.toDomain({
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill',
+    username: MemberUsername.toDomain('jill'),
     reputationScore: initialReputationScore,
     reputationLevel: initialReputationScore >= 10 ? MemberReputationLevel.Level2 : MemberReputationLevel.Level1,
     id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea'

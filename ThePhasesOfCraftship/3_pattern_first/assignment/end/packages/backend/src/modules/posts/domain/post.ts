@@ -4,6 +4,8 @@ import { Post as PostPrismaModel } from "@prisma/client";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { PostType } from "./postType";
+import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
 
 interface PostProps {
   id: string;
@@ -11,7 +13,7 @@ interface PostProps {
   title: string;
   link?: string;
   content?: string;
-  postType: 'link' | 'text';
+  postType: PostType;
 }
 
 const createTextPostSchema = z.object({
@@ -24,11 +26,11 @@ const createLinkPostSchema = z.object({
   link: z.string().url(),
 });
 
-export class Post {
+export class Post extends AggregateRoot {
   constructor (
     private props: PostProps
   ) {
-
+    super();
   }
 
   get id () {
@@ -75,7 +77,7 @@ export class Post {
       memberId: prismaModel.memberId,
       title: prismaModel.title,
       content: prismaModel.content,
-      postType: prismaModel.postType as 'link' | 'text', // TODO: value object-ify
+      postType: prismaModel.postType as 'link' | 'text',
     });
   }
 }

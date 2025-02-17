@@ -1,5 +1,6 @@
 import axios from "axios";
-import { APIResponse, GenericErrors } from ".";
+import { APIResponse } from ".";
+import { GenericErrors } from "../errors";
 
 export type AddEmailToListErrors = GenericErrors;
 export type AddEmailToListResponse = APIResponse<boolean, AddEmailToListErrors>;
