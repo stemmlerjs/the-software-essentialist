@@ -1,16 +1,20 @@
 import express, { NextFunction } from 'express';
 
-import { prisma } from '../../database';
-import { InvalidIdentifierException, InvalidRequestBodyException } from '../../shared/errors/exceptions';
+import { InvalidIdentifierException, InvalidRequestBodyException } from '../shared/errors/exceptions';
+import { StudentAssignmentsService } from '../student-assignments/student-assignments.service';
 
-import { errorHandler } from '../error-handler';
-import { StudentNotFoundException } from '../exceptions';
+import { StudentsService } from './students.service';
+import { errorHandler } from './error-handler';
 
 export class StudentsController {
 	router: express.Router
+	studentsService: StudentsService
+	studentAssignmentsService: StudentAssignmentsService
 
-	constructor() {
+	constructor(studentsService: StudentsService, studentAssignmentsService: StudentAssignmentsService) {
 		this.router = express.Router();
+		this.studentsService = studentsService;
+		this.studentAssignmentsService = studentAssignmentsService;
 		this.setupRoutes();
 	  	this.setupErrorHandler();
 	}
@@ -27,12 +31,8 @@ export class StudentsController {
 	
 			const { name } = req.body;
 	
-			const student = await prisma.student.create({
-				data: {
-					name
-				}
-			});
-	
+			const student =  await this.studentsService.createStudent(name);
+			
 			res.status(201).json({ error: undefined, data: parseForResponse(student), success: true });
 		} catch (error) {
 			next(error)
@@ -41,16 +41,7 @@ export class StudentsController {
 
 	async getStudents(req: express.Request, res: express.Response, next: NextFunction) {
 		try {
-			const students = await prisma.student.findMany({
-				include: {
-					classes: true,
-					assignments: true,
-					reportCards: true
-				}, 
-				orderBy: {
-					name: 'asc'
-				}
-			});
+			const students = await this.studentsService.getStudents();
 			res.status(200).json({ error: undefined, data: parseForResponse(students), success: true });
 		} catch (error) {
 			next(error)
@@ -65,20 +56,7 @@ export class StudentsController {
 				throw new InvalidIdentifierException('Invalid ID');
 			}
 			
-			const student = await prisma.student.findUnique({
-				where: {
-					id
-				},
-				include: {
-					classes: true,
-					assignments: true,
-					reportCards: true
-				}
-			});
-		
-			if (!student) {
-				throw new StudentNotFoundException();
-			}
+			const student = await this.studentsService.getStudent(id);
 		
 			res.status(200).json({ error: undefined, data: parseForResponse(student), success: true });
 		} catch (error) {
@@ -93,26 +71,7 @@ export class StudentsController {
 					throw new InvalidIdentifierException();
 				}
 		
-				// check if student exists
-				const student = await prisma.student.findUnique({
-					where: {
-						id
-					}
-				});
-		
-				if (!student) {
-					throw new StudentNotFoundException();
-				}
-		
-				const studentAssignments = await prisma.studentAssignment.findMany({
-					where: {
-						studentId: id,
-						status: 'submitted'
-					},
-					include: {
-						assignment: true
-					},
-				});
+				const studentAssignments = await this.studentAssignmentsService.getStudentAssignments(id);
 			
 				res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
 			} catch (error) {
@@ -127,29 +86,7 @@ export class StudentsController {
 				throw new InvalidIdentifierException();
 			}
 	
-			// check if student exists
-			const student = await prisma.student.findUnique({
-				where: {
-					id
-				}
-			});
-	
-			if (!student) {
-				throw new StudentNotFoundException();
-			}
-	
-			const studentAssignments = await prisma.studentAssignment.findMany({
-				where: {
-					studentId: id,
-					status: 'submitted',
-					grade: {
-						not: null
-					}
-				},
-				include: {
-					assignment: true
-				},
-			});
+			const studentAssignments = await this.studentAssignmentsService.getStudentAssignments(id, true);
 		
 			res.status(200).json({ error: undefined, data: parseForResponse(studentAssignments), success: true });
 		} catch (error) {
