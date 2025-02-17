@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { CreatePost } from "./createPost";
@@ -22,6 +21,7 @@ function setupTest (useCase: CreatePost) {
   });
 
   useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level2Member);
+  useCase['votesRepository'].save = jest.fn().mockImplementation(async () => {});
 
   return level2Member;
 }
@@ -41,7 +41,7 @@ describe ('createPost', () => {
     test('if the member was not found, they should not be able to create the post', async () => {
 
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
-      const saveSpy = jest.spyOn(useCase['memberRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
 
       const command = new CreatePostCommand({
         title: 'A new post',
@@ -51,15 +51,15 @@ describe ('createPost', () => {
       });
       
       const response = await useCase.execute(command);
-      
-      expect(response instanceof MemberNotFoundError).toBe(true);
-      expect((response as MemberNotFoundError).name).toEqual('MemberNotFoundError');
+
+      expect(response.isSuccess()).toBe(false);
+      expect(response.getError() instanceof MemberNotFoundError).toBe(true);
+      expect(response.getError().name).toEqual('MemberNotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
     });
   
     test('as a level 1 member, I should not be able to create a new post', async () => {
 
-      // This is what takes us into double loop
       const level1Member = Member.create({
         userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
         username: 'jill'
@@ -76,12 +76,14 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
   
-      expect(response instanceof PermissionError).toBe(true);
+      expect(response.isSuccess()).toBe(false);
+      expect(response.getError() instanceof PermissionError).toBe(true);
     });
 
     test('as a level 2 member, I should be able to create a new post', async () => {
 
       const level2Member = setupTest(useCase);
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
       const command = new CreatePostCommand({
         title: 'A new post',
@@ -92,8 +94,9 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
   
-      expect(response instanceof PermissionError).toBe(false);
-      expect(response instanceof Post).toBe(true);
+      expect(response.isSuccess()).toBe(true);
+      expect(response.getValue() instanceof Post).toBe(true);
+      expect(saveSpy).toHaveBeenCalled();
     });
   });
 
@@ -101,7 +104,7 @@ describe ('createPost', () => {
     test ('as a level 2 member, I should be able to create a new text post with valid post details', async () => {
 
       const level2Member = setupTest(useCase);
-      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
       const command = new CreatePostCommand({
         title: 'A new post',
@@ -112,8 +115,9 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
 
-      expect(response instanceof Post).toBe(true);
-      expect((response as Post).title).toEqual('A new post');
+      expect(response.isSuccess()).toBe(true);
+      expect(response.getValue() instanceof Post).toBe(true);
+      expect((response.getValue() as Post).title).toEqual('A new post');
       expect(saveSpy).toHaveBeenCalled();
     });
   
@@ -125,7 +129,7 @@ describe ('createPost', () => {
     ])('as a level 2 member, I should not be able to create a text post with invalid title or content: %o', async ({ title, content }) => {
 
       const level2Member = setupTest(useCase);
-      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
       const command = new CreatePostCommand({
         title,
@@ -136,7 +140,8 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
 
-      expect(response instanceof ValidationError).toBe(true);
+      expect(response.isSuccess()).toBe(false);
+      expect(response.getError() instanceof ValidationError).toBe(true);
       expect(saveSpy).not.toHaveBeenCalled();
     });
   })
@@ -155,9 +160,10 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
 
-      expect(response instanceof Post).toBe(true);
-      expect((response as Post).title).toEqual('A new post');
-      expect((response as Post).link).toEqual('https://www.google.com');
+      expect(response.isSuccess()).toBe(true);
+      expect(response.getValue() instanceof Post).toBe(true);
+      expect((response.getValue() as Post).title).toEqual('A new post');
+      expect((response.getValue() as Post).link).toEqual('https://www.google.com');
     });
 
     test.each([
@@ -167,7 +173,7 @@ describe ('createPost', () => {
     ])('as a level 2 member, I should not be able to create a link post with an invalid link: %o', async ({ title, link }) => {
 
       const level2Member = setupTest(useCase);
-      const saveSpy = jest.spyOn(useCase['postRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
       const command = new CreatePostCommand({
         title,
@@ -178,7 +184,8 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
 
-      expect(response instanceof ValidationError).toBe(true);
+      expect(response.isSuccess()).toBe(false);
+      expect(response.getError() instanceof ValidationError).toBe(true);
       expect(saveSpy).not.toHaveBeenCalled();
     });
   });
@@ -199,16 +206,13 @@ describe ('createPost', () => {
       
       const response = await useCase.execute(command);
 
-      expect(response instanceof Post).toBe(true);
-      const post = (response as Post);
+      expect(response.isSuccess()).toBe(true);
+      const post = response.getValue() as Post;
 
       expect(post.title).toEqual('A new post');
       expect(post.link).toEqual('https://www.google.com');
 
       expect(postVoteSaveSpy).toHaveBeenCalledTimes(1);
-
-      // expect(vote.isUpvote()).toEqual(true);
-      // expect(vote.memberId).toEqual(level2Member.id);
     });
   })
 

@@ -89,6 +89,8 @@ model PostVote {
 
   dateCreated  DateTime  @default(now())
   lastUpdated    DateTime  @updatedAt
+
+  @@unique([memberId, postId])
 }
 
 model CommentVote {
@@ -104,4 +106,6 @@ model CommentVote {
 
   dateCreated  DateTime  @default(now())
   lastUpdated    DateTime  @updatedAt
+
+  @@unique([memberId, commentId])
 }
