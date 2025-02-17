@@ -5,6 +5,24 @@ import {
 } from "../../shared/exceptions";
 import { GetPostsParams } from "@dddforum/shared/src/api/posts";
 
+export class GetPostByIdQuery {
+  constructor(private props: { postId: string }) {}
+
+  static fromRequest(req: Request) {
+    const postId = req['query'].postId || req['params'].postId;
+
+    if (!postId) {
+      throw new MissingRequestParamsException(["postId"]);
+    }
+
+    return new GetPostByIdQuery({ postId: postId as string });
+  }
+
+  get postId() {
+    return this.props.postId;
+  }
+}
+
 export class GetPostsQuery {
   constructor(private props: GetPostsParams) {}
 

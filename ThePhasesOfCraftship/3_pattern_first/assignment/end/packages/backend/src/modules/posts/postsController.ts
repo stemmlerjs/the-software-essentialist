@@ -1,7 +1,7 @@
 
 import express from "express";
-import { GetPostsQuery } from "./postsQuery";
-import { CreatePostAPIResponse, GetPostsAPIResponse } from "@dddforum/shared/src/api/posts";
+import { GetPostByIdQuery, GetPostsQuery } from "./postsQuery";
+import { CreatePostAPIResponse, GetPostByIdAPIResponse, GetPostsAPIResponse } from "@dddforum/shared/src/api/posts";
 import { ErrorHandler } from "../../shared/errors";
 import { CreatePostCommand } from "./postsCommands";
 import { Post } from "./domain/post";
@@ -26,6 +26,7 @@ export class PostsController {
   private setupRoutes() {
     this.router.get("/", this.getPosts.bind(this));
     this.router.post("/new", this.createPost.bind(this));
+    this.router.get('/:postId', this.getPostById.bind(this));
   }
 
   private setupErrorHandler() {
@@ -69,13 +70,53 @@ export class PostsController {
         const postDetails = await this.postsService.getPostDetailsById(newPost.id);
 
         if (!postDetails) {
-          return res.status(500).json("Server error: post created but could not be retrieved.");
+          // Improvement: Handle these consistently and with strict types
+          return res.status(500).json({
+            success: false,
+            data: undefined,
+            error: {
+              code: "ServerError",
+              message: "Server error: post created but could not be retrieved."
+            }
+          });
         }
 
         const response: CreatePostAPIResponse = {
           success: true,
           data: postDetails?.toDTO()
         };
+        return res.status(200).json(response);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  private async getPostById (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const query = GetPostByIdQuery.fromRequest(req);
+      const postOrNothing = await this.postsService.getPostDetailsById(query.postId);
+
+      if (postOrNothing === null) {
+        // Improvement: Handle these consistently and with strict types
+        return res.status(404).json({
+          success: false,
+          data: undefined,
+          error: {
+            code: "PostNotFound",
+            message: "Post not found."
+          }
+        });
+      } else {
+        const response: GetPostByIdAPIResponse = {
+          success: true,
+          data: postOrNothing.toDTO()
+        };
+        // Improvement: Handle these consistently and with strict types
         return res.status(200).json(response);
       }
     } catch (error) {

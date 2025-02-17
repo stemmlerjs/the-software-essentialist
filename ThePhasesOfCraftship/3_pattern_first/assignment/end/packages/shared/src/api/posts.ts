@@ -39,13 +39,17 @@ export type CommentDTO = {
   member: MemberDTO;
 };
 
-export type GetPostErrors = ServerError;
+export type GetPostsErrors = ServerError;
 
-export type GetPostsAPIResponse = APIResponse<PostDTO[], GetPostErrors>;
+export type GetPostsAPIResponse = APIResponse<PostDTO[], GetPostsErrors>;
 
 export type CreatePostErrors = ServerError;
 
 export type CreatePostAPIResponse = APIResponse<PostDTO, CreatePostErrors>;
+
+export type GetPostByIdErrors = ServerError;
+
+export type GetPostByIdAPIResponse = APIResponse<PostDTO, GetPostByIdErrors>
 
 export type PostsAPIResponse = 
     GetPostsAPIResponse 
@@ -87,12 +91,20 @@ export const createPostsAPI = (apiURL: string) => {
     getPosts: async (sort: GetPostsQueryOption): Promise<GetPostsAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
-        console.log(successResponse)
         return successResponse.data as GetPostsAPIResponse;
       } catch (err) {
         //@ts-expect-error
         return err.response.data as GetPostsAPIResponse;
       }
     },
+    getPostById: async (postId: string): Promise<GetPostByIdAPIResponse> => {
+      try {
+        const successResponse = await axios.get(`${apiURL}/posts/${postId}`);
+        return successResponse.data as GetPostByIdAPIResponse;
+      } catch (err) {
+        //@ts-expect-error
+        return err.response.data as GetPostByIdAPIResponse;
+      }
+    }
   };
 };

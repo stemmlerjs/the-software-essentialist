@@ -1,5 +1,5 @@
 
-import { createAPIClient } from "@dddforum/shared/src/api";
+import { APIClient, createAPIClient } from "@dddforum/shared/src/api";
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { CompositionRoot } from "../../../src/shared/compositionRoot";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
@@ -9,7 +9,7 @@ import { WebServer } from "../../../src/shared/http";
 import { Member, MemberReputationLevel } from "../../../src/modules/members/domain/member";
 import { MemberUsername } from "../../../src/modules/members/domain/memberUsername";
 
-async function setupTest(fixture: DatabaseFixture, reputationLevel: MemberReputationLevel, score: number = 6) {
+async function setupMember(fixture: DatabaseFixture, reputationLevel: MemberReputationLevel, score: number = 6) {
   const member = Member.toDomain({
     id: '78b501b8-b72b-48d7-af2e-6dab6e53ff00',
     userId: '961f6e1a-b078-4e9c-b02e-9855e8f26099',
@@ -19,6 +19,20 @@ async function setupTest(fixture: DatabaseFixture, reputationLevel: MemberReputa
   });
   await fixture.setupWithExistingMembers([member]);
   return { member };
+}
+
+async function setupPost (apiClient: APIClient, member: Member, authToken: string) {
+  let postData: CreatePostInput = {
+    memberId: member.id,
+    title: 'A new post',
+    postType: "text",
+    content: 'This is a new text post that I am creating!'
+  };
+  let response = await apiClient.posts.create(postData, authToken);
+
+  expect(response).toBeDefined();
+  expect(response.success).toBe(true);
+  return { post: response.data};
 }
 
 describe('posts', () => {
@@ -50,7 +64,7 @@ describe('posts', () => {
     let authToken: string = "asdasds"
 
     it('should not be able to create a post if they are level 1', async () => {
-      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level1);
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level1);
     
       let postData: CreatePostInput = {
         memberId: member.id,
@@ -68,7 +82,7 @@ describe('posts', () => {
     });
 
     it ('can create a text post with an initial upvote', async () => {
-      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
       
       let postData: CreatePostInput = {
         memberId: member.id,
@@ -88,7 +102,7 @@ describe('posts', () => {
     });
 
     it ('can create a link post', async () => {
-      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
       let postData: CreatePostInput = {
         memberId: member.id,
@@ -105,7 +119,7 @@ describe('posts', () => {
     });
 
     it ('cannot create a link post without supplying a link', async () => {
-      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
       let postData: CreatePostInput = {
         memberId: member.id,
@@ -117,11 +131,12 @@ describe('posts', () => {
       expect(response).toBeDefined();
       expect(response.success).toBe(false);
       expect(response.error).toBeDefined();
-      // expect(response.error instanceof ValidationError).toBe()
+      expect(response.error?.code).toBeDefined();
+      expect(response.error?.code).toEqual('ValidationError');
     });
 
     it ('cannot create a text post without supplying content', async () => {
-      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
       let postData: CreatePostInput = {
         memberId: member.id,
@@ -136,10 +151,25 @@ describe('posts', () => {
       expect(response.error).toBeDefined();
     });
 
-  });
+    it ('can fetch a previously created post by id', async () => {
+      const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
+      const { post } = await setupPost(apiClient, member, authToken);
+  
+      let response = await apiClient.posts.getPostById(post.id);
 
-  describe('fetching posts', () => {
-    it ('can fetch a previously created post by id', async () => {})
-    it ('returns a not found error if the post does not exist', async () => {})
-  })
+      expect(response).toBeDefined();
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+    });
+  
+    it ('returns a not found error if the post does not exist', async () => {
+  
+      let response = await apiClient.posts.getPostById('non-existent-id');
+
+      expect(response).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.error).toBeDefined();
+    });
+
+  });
 })
