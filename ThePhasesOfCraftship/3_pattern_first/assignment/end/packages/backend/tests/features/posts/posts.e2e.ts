@@ -67,7 +67,7 @@ describe('posts', () => {
       expect(response.error?.code).toEqual('PermissionError');
     });
 
-    it.only ('can create a text post with an initial upvote', async () => {
+    it ('can create a text post with an initial upvote', async () => {
       const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
       
       let postData: CreatePostInput = {
@@ -79,8 +79,6 @@ describe('posts', () => {
 
       let response = await apiClient.posts.create(postData, authToken);
 
-      console.log(response);
-
       expect(response).toBeDefined();
       expect(response.success).toBe(true);
       expect(response.data.title).toBe(postData.title);
@@ -89,45 +87,54 @@ describe('posts', () => {
       expect(response.data.voteScore).toEqual(1);
     });
 
-    // it ('can create a link post', async () => {
-    //   let postData: CreatePostInput = {
-    //     title: 'Check out this site',
-    //     postType: 'link',
-    //     link: 'https://khalilstemmler.com'
-    //   };
-    //   let response = await apiClient.posts.create(postData, authToken);
-    //   expect(response).toBeDefined();
-    //   expect(response.success).toBe(true);
-    //   expect(response.data.title).toBe(postData.title);
-    //   expect(response.data.postType).toBe(postData.postType);
-    //   expect(response.data.content).toBe(postData.content);
-    // });
+    it ('can create a link post', async () => {
+      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
 
-    // it ('cannot create a link post without supplying a link', async () => {
-    //   let postData: CreatePostInput = {
-    //     title: 'Check out this site',
-    //     postType: 'link',
-    //     link: ''
-    //   };
-    //   let response = await apiClient.posts.create(postData, authToken);
-    //   expect(response).toBeDefined();
-    //   expect(response.success).toBe(false);
-    //   expect(response.error).toBeDefined();
-    //   // expect(response.error instanceof ValidationError).toBe()
-    // });
+      let postData: CreatePostInput = {
+        memberId: member.id,
+        title: 'Check out this site',
+        postType: 'link',
+        link: 'https://khalilstemmler.com'
+      };
+      let response = await apiClient.posts.create(postData, authToken);
+      expect(response).toBeDefined();
+      expect(response.success).toBe(true);
+      expect(response.data.title).toBe(postData.title);
+      expect(response.data.postType).toBe(postData.postType);
+      expect(response.data.content).toBe(postData.content);
+    });
 
-    // it ('cannot create a text post without supplying content', async () => {
-    //   let postData: CreatePostInput = {
-    //     title: 'A new post',
-    //     postType: "text",
-    //     content: ''
-    //   };
-    //   let response = await apiClient.posts.create(postData, authToken);
+    it ('cannot create a link post without supplying a link', async () => {
+      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
 
-    //   expect(response).toBeDefined();
-    //   expect(response.success).toBe(false);
-    //   expect(response.error).toBeDefined();
-    // });
+      let postData: CreatePostInput = {
+        memberId: member.id,
+        title: 'Check out this site',
+        postType: 'link',
+        link: ''
+      };
+      let response = await apiClient.posts.create(postData, authToken);
+      expect(response).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.error).toBeDefined();
+      // expect(response.error instanceof ValidationError).toBe()
+    });
+
+    it ('cannot create a text post without supplying content', async () => {
+      const { member } = await setupTest(databaseFixture, MemberReputationLevel.Level2);
+
+      let postData: CreatePostInput = {
+        memberId: member.id,
+        title: 'A new post',
+        postType: "text",
+        content: ''
+      };
+      let response = await apiClient.posts.create(postData, authToken);
+
+      expect(response).toBeDefined();
+      expect(response.success).toBe(false);
+      expect(response.error).toBeDefined();
+    });
 
   });
 

@@ -73,21 +73,9 @@ export class ProductionPostsRepository implements PostsRepository {
       return null;
     }
 
-    const votes = await this.prisma.postVote.findMany({
-      where: {
-        postId: id,
-      }
-    })
-
-    console.log(votes);
-
     const voteScore = await this.prisma.postVote.aggregate({
-      _sum: {
-      value: true,
-      },
-      where: {
-      postId: id,
-      },
+      _sum: { value: true },
+      where: { postId: id },
     }).then(result => result._sum.value || 0);
 
     return PostReadModel.fromPrismaToDomain(
