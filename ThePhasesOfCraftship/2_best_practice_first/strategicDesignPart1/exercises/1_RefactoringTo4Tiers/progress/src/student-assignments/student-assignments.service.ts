@@ -1,55 +1,41 @@
-import { prisma } from "../shared/database";
+import { AssignmentPersistence, StudentAssignmentPersistence, StudentPersistence } from "../shared/database";
 import { AssignmentNotFoundException, InvalidGradeException, StudentAssignmentNotFoundException, StudentNotFoundException } from "../shared/errors";
 
 export class StudentAssignmentsService {
+	studentsPersistence: StudentPersistence;
+	assignmentsPersistence: AssignmentPersistence;
+	studentAssignmentsPersistence: StudentAssignmentPersistence;
+
+	constructor(studentPersistence: StudentPersistence, assignmentPersistence: AssignmentPersistence, studentAssignmentPersistence: StudentAssignmentPersistence) {
+		this.studentsPersistence = studentPersistence;
+		this.assignmentsPersistence = assignmentPersistence;
+		this.studentAssignmentsPersistence = studentAssignmentPersistence;
+	}
+
 	async assignStudentToAssignment(studentId: string, assignmentId: string) {
-		const student = await prisma.student.findUnique({
-			where: {
-				id: studentId
-			}
-		});
+		const student = await this.studentsPersistence.getById(studentId);
 
 		if (!student) {
 			throw new StudentNotFoundException();
 		}
 
-		const assignment = await prisma.assignment.findUnique({
-			where: {
-				id: assignmentId
-			}
-		});
+		const assignment = await this.assignmentsPersistence.getById(assignmentId);
 
 		if (!assignment) {
 			throw new AssignmentNotFoundException();
 		}
 
-		return await prisma.studentAssignment.create({
-			data: {
-				studentId,
-				assignmentId,
-			}
-		});
+		return await this.studentAssignmentsPersistence.create(studentId, assignmentId);
 	}
 
 	async submitAssignment(id: string) {
-		const studentAssignment = await prisma.studentAssignment.findUnique({
-			where: {
-				id
-			}
-		});
+		const studentAssignment = this.studentAssignmentsPersistence.getById(id);
 
 		if (!studentAssignment) {
 			throw new StudentAssignmentNotFoundException();
 		}
 
-		return await prisma.studentAssignment.update({
-			where: {
-				id
-			},
-			data: {
-				status: 'submitted'
-			}
-		});
+		return this.studentAssignmentsPersistence.submit(id);
 	}
 
 	async gradeAssignment(id: string, grade: string) {
@@ -58,23 +44,12 @@ export class StudentAssignmentsService {
 		}
 		
 		// check if student assignment exists
-		const studentAssignment = await prisma.studentAssignment.findUnique({
-			where: {
-				id
-			}
-		});
+		const studentAssignment = await this.studentAssignmentsPersistence.getById(id);
 	
 		if (!studentAssignment) {
 			throw new StudentAssignmentNotFoundException();
 		}
-	
-		return await prisma.studentAssignment.update({
-			where: {
-				id
-			},
-			data: {
-				grade,
-			}
-		});
+
+		return this.studentAssignmentsPersistence.grade(id, grade);
 	}
 }

@@ -1,39 +1,25 @@
-import { prisma } from "../shared/database";
+import { StudentAssignmentPersistence, StudentPersistence } from "../shared/database";
 import { StudentNotFoundException } from "../shared/errors";
 
 export class StudentsService {
+	studentPersistence: StudentPersistence;
+	studentAssignmentPersistence: StudentAssignmentPersistence;
+	
+	constructor(studentPersistence: StudentPersistence, studentAssignmentPersistence: StudentAssignmentPersistence) {
+		this.studentPersistence = studentPersistence;
+		this.studentAssignmentPersistence = studentAssignmentPersistence;
+	}
+
 	async createStudent(name: string) {
-		return await prisma.student.create({
-			data: {
-				name
-			}
-		});
+		return this.studentPersistence.create(name);
 	}
 
 	async getStudents() {
-		return await prisma.student.findMany({
-			include: {
-				classes: true,
-				assignments: true,
-				reportCards: true
-			}, 
-			orderBy: {
-				name: 'asc'
-			}
-		});
+		return this.studentPersistence.getAll();
 	}
 
 	async getStudent(id: string) {
-		const student = await prisma.student.findUnique({
-			where: {
-				id
-			},
-			include: {
-				classes: true,
-				assignments: true,
-				reportCards: true
-			}
-		});
+		const student = await this.studentPersistence.getById(id);
 
 		if (!student) {
 			throw new StudentNotFoundException();
@@ -45,31 +31,12 @@ export class StudentsService {
 	async getStudentAssignments(id: string) {
 		await this.getStudent(id);
 
-		return await prisma.studentAssignment.findMany({
-			where: {
-				studentId: id,
-				status: 'submitted'
-			},
-			include: {
-				assignment: true
-			},
-		});
+		return await this.studentAssignmentPersistence.getAllForStudent(id)
 	}
 
 	async getStudentGrades(id: string) {
 		await this.getStudent(id);
 
-		return await prisma.studentAssignment.findMany({
-			where: {
-				studentId: id,
-				status: 'submitted',
-				grade: {
-					not: null
-				}
-			},
-			include: {
-				assignment: true
-			},
-		});
+		return this.studentAssignmentPersistence.getAllGradedForStudent(id);
 	}
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 import { ErrorExceptionType, ErrorHandler } from '../shared/errors';
-import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils';
+import { isMissingKeys, parseForResponse } from '../shared/utils';
 import { StudentAssignmentsService } from './student-assignments.service';
 
 export class StudentAssignmentsController {
@@ -8,10 +8,10 @@ export class StudentAssignmentsController {
 	errorHandler: ErrorHandler
 	studentAssignmentsService: StudentAssignmentsService
 
-	constructor(errorHandler: ErrorHandler) {
+	constructor(errorHandler: ErrorHandler, studentAssignmentsService: StudentAssignmentsService) {
 		this.router = express.Router()
 		this.errorHandler = errorHandler
-		this.studentAssignmentsService = new StudentAssignmentsService()
+		this.studentAssignmentsService = studentAssignmentsService
 
 		this.setupRoutes()
 		this.setupErrorHandler()

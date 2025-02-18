@@ -1,36 +1,26 @@
-import { prisma } from "../shared/database";
+import { AssignmentPersistence, ClassPersistence, prisma } from "../shared/database";
 import { ClassNotFoundException } from "../shared/errors";
 
 export class ClassesService {
+	classPersistence: ClassPersistence;
+	assignmentPersistence: AssignmentPersistence;
+	
+	constructor(classPersistence: ClassPersistence, assignmentPersistence: AssignmentPersistence) {
+		this.classPersistence = classPersistence;
+		this.assignmentPersistence = assignmentPersistence;
+	}
+
 	async createClass(name: string) {
-		return await prisma.class.create({
-			data: {
-				name
-			}
-		});
+		return await this.classPersistence.create(name);
 	}
 
 	async getClassAssignments(id: string) {
-		const cls = await prisma.class.findUnique({
-			where: {
-				id
-			}
-		});
+		const cls = await this.classPersistence.getById(id);
 
 		if (!cls) {
 			throw new ClassNotFoundException();
 		}
-
-		const assignments = await prisma.assignment.findMany({
-			where: {
-				classId: id
-			},
-			include: {
-				class: true,
-				studentTasks: true
-			}
-		});
-
-		return assignments;
+		
+		return await this.assignmentPersistence.getClassAssignments(id);
 	}
 }
