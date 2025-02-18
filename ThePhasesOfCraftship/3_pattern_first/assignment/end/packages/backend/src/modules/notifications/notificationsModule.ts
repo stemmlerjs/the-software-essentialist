@@ -1,18 +1,36 @@
 import { Config } from "../../shared/config";
+import { EventBus } from "../../shared/eventBus/ports/eventBus";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { TransactionalEmailAPISpy } from "./adapters/transactionalEmailAPI/transactionalEmailAPISpy";
-import { TransactionalEmailAPI } from "./ports/transactionalEmailAPI";
+import { NotificationsService } from "./application/notificationsService";
+import { NotificationsSubscriptions } from "./application/notificationSubscriptions";
+import { TransactionalEmailAPISpy } from "./externalServices/adapters/transactionalEmailAPI/transactionalEmailAPISpy";
+import { TransactionalEmailAPI } from "./externalServices/ports/transactionalEmailAPI";
 
 export class NotificationsModule extends ApplicationModule {
   private transactionalEmailAPI: TransactionalEmailAPI;
+  private notificationsService: NotificationsService;
+  private notificationsSubscriptions: NotificationsSubscriptions;
 
-  private constructor(config: Config) {
+  private constructor(
+    private eventBus: EventBus,
+    config: Config
+  ) {
     super(config);
     this.transactionalEmailAPI = this.createTransactionalEmailAPI();
+    this.notificationsService = this.createNotificationsService()
+    this.notificationsSubscriptions = this.createNotificationSubscriptions();
   }
 
-  static build(config: Config) {
-    return new NotificationsModule(config);
+  static build(eventBus: EventBus, config: Config) {
+    return new NotificationsModule(eventBus, config);
+  }
+
+  private createNotificationSubscriptions () {
+    return new NotificationsSubscriptions(this.eventBus, this.notificationsService);
+  }
+
+  private createNotificationsService () {
+    return new NotificationsService(this.transactionalEmailAPI);
   }
 
   public getTransactionalEmailAPI() {

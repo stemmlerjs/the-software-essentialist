@@ -29,6 +29,7 @@ export class MemberReadModel {
     });
   }
 
+  // Continue to add the remaining properties when necessary
   public toDTO (): MemberDTO {
     return {
       memberId: this.props.id,

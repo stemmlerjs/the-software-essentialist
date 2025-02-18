@@ -55,7 +55,7 @@ export class CompositionRoot {
   }
 
   createNotificationsModule() {
-    return NotificationsModule.build(this.config);
+    return NotificationsModule.build(this.eventBus, this.config);
   }
 
   createMarketingModule() {

@@ -8,7 +8,7 @@ import { UpdateMemberReputationScoreCommand } from "../memberCommands";
 export class MemberSubscriptions {
 
   constructor (private eventBus: EventBus, private memberService: MemberService) {
-    this.setupSubscriptions
+    this.setupSubscriptions();
   }
 
   setupSubscriptions () {

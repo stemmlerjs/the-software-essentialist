@@ -1,5 +1,4 @@
-import request from 'supertest';
-import { EventBus } from './eventBus'; // Adjust the import according to your project structure
+import { EventBus } from './eventBus'; 
 import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
 import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
 
@@ -63,7 +62,7 @@ describe('EventBus', () => {
 
     const testEvent = new TestEvent('testData');
     eventBus.publishEvents([testEvent]);
-    
+
     expect(listener).not.toHaveBeenCalled();
   });
 });
