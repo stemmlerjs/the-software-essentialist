@@ -89,6 +89,10 @@ export class CompositionRoot {
     return this.dbConnection;
   }
 
+  getEventBus() {
+    return this.eventBus;
+  }
+
   createEventBus() {
     return new InMemoryEventBus();
   }
@@ -123,6 +127,8 @@ export class CompositionRoot {
       users: this.usersModule.getUsersService(),
       posts: this.postsModule.getPostsService(),
       marketing: this.marketingModule.getMarketingService(),
+      notifications: this.notificationsModule.getNotificationsService(),
+      votes: this.votesModule.getVotesService(),
     };
   }
 

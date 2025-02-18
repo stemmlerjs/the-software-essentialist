@@ -1,11 +1,12 @@
 
 import { PostVote } from "../../../posts/domain/postVote";
-import { MemberCommentVotesRoundup } from "../../../votes/domain/memberCommentVotesRoundup";
-import { MemberPostVotesRoundup } from "../../../votes/domain/memberPostVotesRoundup";
-import { CommentVote } from "../../domain/commentVote";
+import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundup";
+import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
+import { CommentVote } from "../../../comments/domain/commentVote";
 
 export interface VoteRepository {
-  findVoteByMemberIdAndCommentId (memberId: string, commentId: string): Promise<CommentVote | null>;
+  findVoteByMemberAndPostId (memberId: string, postId: string): Promise<PostVote | null>;
+  findVoteByMemberAndCommentId (memberId: string, commentId: string): Promise<CommentVote | null>;
   // Always keep in mind the extremes. What if a member's comment has 1000 comments? 
   // That's why we use a roundup.
   getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup>;

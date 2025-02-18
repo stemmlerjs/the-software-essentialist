@@ -33,6 +33,10 @@ export class NotificationsModule extends ApplicationModule {
     return new NotificationsService(this.transactionalEmailAPI);
   }
 
+  public getNotificationsService () {
+    return this.notificationsService;
+  }
+
   public getTransactionalEmailAPI() {
     return this.transactionalEmailAPI;
   }

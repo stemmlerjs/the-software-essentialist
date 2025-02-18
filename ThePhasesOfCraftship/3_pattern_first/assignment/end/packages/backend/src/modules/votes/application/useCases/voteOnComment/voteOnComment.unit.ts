@@ -3,15 +3,15 @@ import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
 import { CommentNotFoundError, MemberNotFoundError } from "@dddforum/shared/src/errors";
-import { VoteOnCommentCommand } from "../../../../posts/postsCommands";
-import { ProductionCommentsRepository } from "../../../repos/adapters/productionCommentRepository";
-import { ProductionVotesRepository } from "../../../repos/adapters/productionVoteRepository";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
-import { Comment } from "../../../domain/comment";
-import { CommentVote } from "../../../domain/commentVote";
 import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
+import { ProductionCommentsRepository } from "../../../../comments/repos/adapters/productionCommentRepository";
+import { ProductionVotesRepository } from "../../../repos/adapters/productionVotesRepo";
+import { Comment } from "../../../../comments/domain/comment";
+import { CommentVote } from "../../../../comments/domain/commentVote";
+import { VoteOnCommentCommand } from "../../../votesCommands";
 
 let prisma = new PrismaClient();
 
@@ -55,7 +55,7 @@ function setupCommentVote (member: Member, comment: Comment, state: VoteState) {
     voteState: state
   });
 
-  useCase['voteRepository'].findVoteByMemberIdAndCommentId = jest.fn().mockResolvedValue(commentVote);
+  useCase['voteRepository'].findVoteByMemberAndCommentId = jest.fn().mockResolvedValue(commentVote);
 }
 
 describe('voteOnComment', () => {

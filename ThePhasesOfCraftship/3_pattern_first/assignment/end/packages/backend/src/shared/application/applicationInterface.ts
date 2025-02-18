@@ -1,9 +1,14 @@
+
 import { MarketingService } from "../../modules/marketing/marketingService";
-import { PostsService } from "../../modules/posts/postsService";
+import { NotificationsService } from "../../modules/notifications/application/notificationsService";
+import { PostsService } from "../../modules/posts/application/postsService";
 import { UsersService } from "../../modules/users/usersService";
+import { VotesService } from "../../modules/votes/application/votesService";
 
 export interface Application {
   users: UsersService;
   posts: PostsService;
   marketing: MarketingService;
+  notifications: NotificationsService;
+  votes: VotesService;
 }

@@ -72,6 +72,12 @@ export type VoteOnCommentInput = {
   memberId: string;
 }
 
+export type VoteOnPostInput = {
+  postId: string;
+  voteType: VoteType;
+  memberId: string;
+}
+
 export const createPostsAPI = (apiURL: string) => {
   return {
     // auth

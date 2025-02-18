@@ -1,11 +1,10 @@
+
 import { PrismaClient } from "@prisma/client";
-import { VoteRepository } from "../ports/voteRepository";
 import { MemberCommentVotesRoundup } from "../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../votes/domain/memberPostVotesRoundup";
 import { PostVote } from "../../../posts/domain/postVote";
-import { CommentVote } from "../../domain/commentVote";
-
-// TODO: Move this
+import { CommentVote } from "../../../comments/domain/commentVote";
+import { VoteRepository } from "../ports/voteRepository";
 
 export class ProductionVotesRepository implements VoteRepository {
   constructor (private prisma: PrismaClient) {
@@ -19,7 +18,11 @@ export class ProductionVotesRepository implements VoteRepository {
     throw new Error("Method not implemented.");
   }
   
-  async findVoteByMemberIdAndCommentId(memberId: string, commentId: string) {
+  async findVoteByMemberAndCommentId(memberId: string, commentId: string) {
+    return null;
+  }
+
+  async findVoteByMemberAndPostId(memberId: string, postId: string) {
     return null;
   }
 

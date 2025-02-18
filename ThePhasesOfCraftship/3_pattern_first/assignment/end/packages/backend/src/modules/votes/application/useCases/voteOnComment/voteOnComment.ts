@@ -1,12 +1,12 @@
 
 import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
-import { CommentVote } from "../../../domain/commentVote";
 import { UseCase } from "@dddforum/shared/src/core/useCase";
-import { VoteOnCommentCommand } from "../../../../posts/postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { CommentRepository } from "../../../repos/ports/commentRepository";
 import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
+import { VoteOnCommentCommand } from "../../../votesCommands";
+import { CommentVote } from "../../../../comments/domain/commentVote";
+import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
@@ -27,7 +27,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     const [memberOrNull, commentOrNull, existingVoteOrNull] = await Promise.all([
       this.memberRepository.getMemberById(memberId),
       this.commentRepository.getCommentById(commentId),
-      this.voteRepository.findVoteByMemberIdAndCommentId(memberId, commentId)
+      this.voteRepository.findVoteByMemberAndCommentId(memberId, commentId)
     ]);
 
     if (memberOrNull === null) {

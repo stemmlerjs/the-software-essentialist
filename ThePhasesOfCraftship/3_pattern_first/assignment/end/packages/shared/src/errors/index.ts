@@ -4,6 +4,7 @@ export type ApplicationErrorName =
   | "PermissionError"
   | "MemberNotFoundError"
   | "CommentNotFoundError"
+  | "PostNotFoundError"
   | "ServerError";
 
 export abstract class ApplicationError {
@@ -34,6 +35,12 @@ export class MemberNotFoundError extends ApplicationError {
 export class CommentNotFoundError extends ApplicationError {
   constructor(public message?: string) {
     super("CommentNotFoundError", message);
+  }
+}
+
+export class PostNotFoundError extends ApplicationError {
+  constructor(public message?: string) {
+    super("PostNotFoundError", message);
   }
 }
 

@@ -6,7 +6,7 @@ import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { VoteRepository } from "../../../../comments/repos/ports/voteRepository";
+import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { PostVote } from "../../../domain/postVote";
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
@@ -44,11 +44,13 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       return fail(postOrError);
     }
 
-    const initialMemberVoteOrError = PostVote.createUpvote(memberId, postOrError.id);
+    const initialMemberVoteOrError = PostVote.create(memberId, postOrError.id);
 
     if (initialMemberVoteOrError instanceof ValidationError) {
       return fail(initialMemberVoteOrError);
     }
+
+    initialMemberVoteOrError.castVote('upvote');
 
     try {
       await this.postRepository.save(postOrError);

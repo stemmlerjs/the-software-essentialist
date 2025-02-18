@@ -5,10 +5,10 @@ import { ProductionMembersRepository } from "../../../repos/adapters/productionM
 import { UpdateMemberReputationScore } from "./updateMemberReputationScore";
 import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
-import { ProductionVotesRepository } from "../../../../comments/repos/adapters/productionVoteRepository";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
 import { MemberUsername } from "../../../domain/memberUsername";
+import { ProductionVotesRepository } from "../../../../votes/repos/adapters/productionVotesRepo";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();

@@ -77,21 +77,12 @@ export class PostVote extends AggregateRoot {
     return new PostVote(props);
   }
 
-  public static createUpvote(memberId: string, postId: string): PostVote | ValidationError {
+  public static create (memberId: string, postId: string) : PostVote | ValidationError {
     return new PostVote({
       id: randomUUID(),
       memberId: memberId,
       postId: postId,
-      voteState: 'Upvoted'
-    });
-  }
-
-  public static createDownvote(memberId: string, postId: string): PostVote | ValidationError {
-    return new PostVote({
-      id: randomUUID(),
-      memberId: memberId,
-      postId: postId,
-      voteState: 'Downvoted'
+      voteState: 'Default'
     });
   }
 }

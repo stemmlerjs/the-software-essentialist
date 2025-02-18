@@ -2,8 +2,9 @@
 import { Config } from "../../shared/config";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { Database } from "../../shared/database";
-import { VoteRepository } from "../comments/repos/ports/voteRepository";
-import { ProductionVotesRepository } from "../comments/repos/adapters/productionVoteRepository";
+import { VoteRepository } from "./repos/ports/voteRepository";
+import { VotesService } from "./application/votesService";
+import { ProductionVotesRepository } from "./repos/adapters/productionVotesRepo";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
@@ -28,5 +29,9 @@ export class VotesModule extends ApplicationModule {
 
   public getVotesRepository() {
     return this.votesRepository;
+  }
+
+  public getVotesService () {
+    return new VotesService();
   }
 }
