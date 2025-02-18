@@ -1,3 +1,4 @@
+
 import { PrismaClient } from "@prisma/client";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { CreatePost } from "./createPost";
@@ -7,7 +8,7 @@ import { CreatePostCommand } from "../../../postsCommands";
 import { MemberNotFoundError, PermissionError, ValidationError } from "@dddforum/shared/src/errors";
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { ProductionVotesRepository } from "../../../../votes/repos/adapters/productionVotesRepo";
+import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
@@ -21,7 +22,6 @@ function setupTest (useCase: CreatePost) {
   });
 
   useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level2Member);
-  useCase['votesRepository'].save = jest.fn().mockImplementation(async () => {});
 
   return level2Member;
 }
@@ -32,9 +32,9 @@ describe ('createPost', () => {
   
   let membersRepo = new ProductionMembersRepository(prisma);
   let postsRepo = new ProductionPostsRepository(prisma);
-  let votesRepo = new ProductionVotesRepository(prisma);
+  let eventBus = new InMemoryEventBus();
   
-  const useCase = new CreatePost(postsRepo, membersRepo, votesRepo);
+  const useCase = new CreatePost(postsRepo, membersRepo, eventBus);
 
   describe('permissions & identity', () => {
 

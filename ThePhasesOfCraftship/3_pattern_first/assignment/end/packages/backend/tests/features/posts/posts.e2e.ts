@@ -32,7 +32,7 @@ async function setupPost (apiClient: APIClient, member: Member, authToken: strin
 
   expect(response).toBeDefined();
   expect(response.success).toBe(true);
-  return { post: response.data};
+  return { post: response.data };
 }
 
 describe('posts', () => {
@@ -81,9 +81,9 @@ describe('posts', () => {
       expect(response.error?.code).toEqual('PermissionError');
     });
 
-    it ('can create a text post with an initial upvote', async () => {
+    it ('should have an initial upvote when creating a post', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
-      
+    
       let postData: CreatePostInput = {
         memberId: member.id,
         title: 'My first post',
@@ -98,7 +98,15 @@ describe('posts', () => {
       expect(response.data.title).toBe(postData.title);
       expect(response.data.postType).toBe(postData.postType);
       expect(response.data.content).toBe(postData.content);
-      expect(response.data.voteScore).toEqual(1);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      let getPostResponse = await apiClient.posts.getPostById(response.data.id);
+      expect(getPostResponse.success).toBe(true);
+      expect(getPostResponse.data.title).toBe(postData.title);
+      expect(getPostResponse.data.postType).toBe(postData.postType);
+      expect(getPostResponse.data.content).toBe(postData.content);
+      expect(getPostResponse.data.voteScore).toBe(1);
     });
 
     it ('can create a link post', async () => {

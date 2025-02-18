@@ -8,6 +8,7 @@ import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { PostVote } from "../../../domain/postVote";
+import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
 
@@ -16,7 +17,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
   constructor(
     private postRepository: PostsRepository, 
     private memberRepository: MembersRepository,
-    private votesRepository: VoteRepository,
+    private eventBus: EventBus
   ) {}
 
   async execute(request: CreatePostCommand): Promise<CreatePostResponse> {
@@ -54,7 +55,8 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
 
     try {
       await this.postRepository.save(postOrError);
-      await this.votesRepository.save(initialMemberVoteOrError);
+      await this.eventBus.publishEvents(postOrError.getDomainEvents());
+
       return success(postOrError);
       
     } catch (error) {

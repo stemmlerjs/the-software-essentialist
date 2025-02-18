@@ -11,6 +11,7 @@ import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
 import { VoteRepository } from "../votes/repos/ports/voteRepository";
+import { EventBus } from "../../shared/eventBus/ports/eventBus";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;
@@ -20,17 +21,17 @@ export class PostsModule extends ApplicationModule {
   private constructor(
     private db: Database,
     config: Config,
+    private eventBus: EventBus,
     private membersRepository: MembersRepository,
-    private voteRepository: VoteRepository,
   ) {
     super(config);
     this.postsRepository = this.createPostsRepository();
-    this.postsService = this.createPostsService(membersRepository, voteRepository);
+    this.postsService = this.createPostsService(membersRepository);
     this.postsController = this.createPostsController();
   }
 
-  static build(db: Database, config: Config, membersRepository: MembersRepository, voteRepository: VoteRepository) {
-    return new PostsModule(db, config, membersRepository, voteRepository);
+  static build(db: Database, config: Config, eventBus: EventBus, membersRepository: MembersRepository) {
+    return new PostsModule(db, config, eventBus, membersRepository);
   }
 
   private createPostsRepository() {
@@ -43,8 +44,8 @@ export class PostsModule extends ApplicationModule {
     return new ProductionPostsRepository(this.db.getConnection());
   }
 
-  private createPostsService(membersRepository: MembersRepository, voteRepository: VoteRepository) {
-    return new PostsService(this.postsRepository, membersRepository, voteRepository);
+  private createPostsService(membersRepository: MembersRepository) {
+    return new PostsService(this.postsRepository, membersRepository, this.eventBus);
   }
 
   private createPostsController() {

@@ -2,6 +2,14 @@ import { VoteOnCommentInput, VoteOnPostInput } from "@dddforum/shared/src/api/po
 import { MissingRequestParamsException } from "../../shared/exceptions";
 import { Request } from "express";
 
+export class UpdateMemberReputationScoreCommand {
+  constructor(
+    public readonly props: {
+      memberId: string;
+    }
+  ) {}
+}
+
 export class VoteOnCommentCommand {
   constructor(public props: VoteOnCommentInput) {}
 

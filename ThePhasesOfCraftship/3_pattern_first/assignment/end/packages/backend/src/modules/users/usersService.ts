@@ -5,12 +5,13 @@ import {
   UsernameAlreadyTakenException,
 } from "./usersExceptions";
 import { ValidatedUser } from "@dddforum/shared/src/api/users";
-import { TransactionalEmailAPI } from "../notifications/ports/transactionalEmailAPI";
+
 import { UsersRepository } from "./ports/usersRepository";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
 import { User } from "./domain/user";
 import { UserDetails } from "./domain/userDetails";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
+import { TransactionalEmailAPI } from "../notifications/externalServices/ports/transactionalEmailAPI";
 
 
 export class UsersService {

@@ -1,14 +1,14 @@
 
 import { PrismaClient } from "@prisma/client";
-import { Member, MemberReputationLevel } from "../../../domain/member";
-import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
 import { UpdateMemberReputationScore } from "./updateMemberReputationScore";
 import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
-import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
-import { MemberUsername } from "../../../domain/memberUsername";
 import { ProductionVotesRepository } from "../../../../votes/repos/adapters/productionVotesRepo";
+import { MemberUsername } from "../../../../members/domain/memberUsername";
+import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
+import { Member, MemberReputationLevel } from "../../../../members/domain/member";
+import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();

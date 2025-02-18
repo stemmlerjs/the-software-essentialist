@@ -1,4 +1,5 @@
 
+import { CommentsModule } from "../../modules/comments/commentsModule";
 import { MembersModule } from "../../modules/members/membersModule";
 import { VotesModule } from "../../modules/votes/votesModule";
 import { Application } from "../application/applicationInterface";
@@ -24,8 +25,11 @@ export class CompositionRoot {
 
   private usersModule: UsersModule;
   private marketingModule: MarketingModule;
-  private postsModule: PostsModule;
+  
+  
   private notificationsModule: NotificationsModule;
+  private commentsModule: CommentsModule;
+  private postsModule: PostsModule;
   private membersModule: MembersModule;
   private votesModule: VotesModule;
 
@@ -40,18 +44,31 @@ export class CompositionRoot {
     this.config = config;
     this.dbConnection = this.createDBConnection();
     this.eventBus = this.createEventBus();
-    this.votesModule = this.createVotesModule();
+    
+   
     this.notificationsModule = this.createNotificationsModule();
     this.marketingModule = this.createMarketingModule();
     this.membersModule = this.createMembersModule();
-    this.usersModule = this.createUsersModule();
     this.postsModule = this.createPostsModule();
+    this.commentsModule = this.createCommentsModule();
+    this.votesModule = this.createVotesModule();
+    
+    this.usersModule = this.createUsersModule();
+    
     this.webServer = this.createWebServer();
     this.mountRoutes();
   }
 
+  createCommentsModule () {
+    return CommentsModule.build(this.dbConnection, this.config);
+  }
+
   createMembersModule() {
-    return MembersModule.build(this.dbConnection, this.eventBus, this.votesModule.getVotesRepository(), this.config);
+    return MembersModule.build(
+      this.dbConnection, 
+      this.eventBus, 
+      this.config
+    );
   }
 
   createNotificationsModule() {
@@ -72,15 +89,22 @@ export class CompositionRoot {
   }
 
   createVotesModule () {
-    return VotesModule.build(this.dbConnection, this.config);
+    return VotesModule.build(
+      this.dbConnection, 
+      this.membersModule.getMembersRepository(),
+      this.commentsModule.getCommentsRepository(),
+      this.postsModule.getPostsRepository(),
+      this.eventBus,
+      this.config
+    );
   }
 
   createPostsModule() {
     return PostsModule.build(
       this.dbConnection,
       this.config,
+      this.eventBus,
       this.membersModule.getMembersRepository(),
-      this.votesModule.getVotesRepository(),
     );
   }
 

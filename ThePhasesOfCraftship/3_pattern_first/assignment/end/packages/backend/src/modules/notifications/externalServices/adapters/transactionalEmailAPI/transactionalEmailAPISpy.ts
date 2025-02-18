@@ -1,5 +1,6 @@
 
-import { Spy } from "../../../../shared/testDoubles/spy";
+
+import { Spy } from "../../../../../shared/testDoubles/spy";
 import {
   SendMailInput,
   TransactionalEmailAPI,

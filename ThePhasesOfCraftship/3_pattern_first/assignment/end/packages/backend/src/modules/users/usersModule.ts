@@ -4,12 +4,12 @@ import { UsersService } from "./usersService";
 import { userErrorHandler } from "./usersErrors";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { Config } from "../../shared/config";
-import { TransactionalEmailAPI } from "../notifications/ports/transactionalEmailAPI";
 import { UsersRepository } from "./ports/usersRepository";
 import { InMemoryUserRepositorySpy } from "./adapters/inMemoryUserRepositorySpy";
 import { ProductionUserRepository } from "./adapters/productionUserRepository";
 import { Database } from "../../shared/database";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
+import { TransactionalEmailAPI } from "../notifications/externalServices/ports/transactionalEmailAPI";
 
 export class UsersModule extends ApplicationModule {
   private usersService: UsersService;

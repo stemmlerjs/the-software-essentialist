@@ -12,6 +12,7 @@ export class InMemoryEventBus implements EventBus {
       const handlers = this.subscriptions.get(eventType);
   
       if (handlers) {
+        console.log(`Publishing event: ${eventType}`);
         handlers.forEach(handler => handler(event));
       }
     });

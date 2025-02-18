@@ -4,7 +4,8 @@ import { CommentRepository } from "../../comments/repos/ports/commentRepository"
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { PostsRepository } from "../../posts/repos/ports/postsRepository";
 import { VoteRepository } from "../repos/ports/voteRepository";
-import { VoteOnCommentCommand, VoteOnPostCommand } from "../votesCommands";
+import { UpdateMemberReputationScoreCommand, VoteOnCommentCommand, VoteOnPostCommand } from "../votesCommands";
+import { UpdateMemberReputationScore } from "./useCases/updateMemberReputation/updateMemberReputationScore";
 import { VoteOnPost } from "./useCases/voteOnPost/voteOnPost";
 
 export class VotesService {
@@ -28,6 +29,14 @@ export class VotesService {
   castVoteOnPost (command: VoteOnPostCommand) {
     return new VoteOnPost(
       this.memberRepository, this.postRepository, this.voteRepository, this.eventBus
+    ).execute(command);
+  }
+
+  updateMemberReputationScore(command: UpdateMemberReputationScoreCommand) {
+    return new UpdateMemberReputationScore(
+      this.memberRepository,
+      this.voteRepository,
+      this.eventBus,
     ).execute(command);
   }
 

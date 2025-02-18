@@ -1,20 +1,20 @@
 
-import { VoteRepository } from "../../votes/repos/ports/voteRepository";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { CreatePostCommand } from "../postsCommands";
 import { GetPostsQuery } from "../postsQuery";
 import { PostsRepository } from "../repos/ports/postsRepository";
 import { CreatePost } from "./useCases/createPost/createPost";
+import { EventBus } from "../../../shared/eventBus/ports/eventBus";
 
 export class PostsService {
-  constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository, private votesRepository: VoteRepository) {}
+  constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository, private eventBus: EventBus) {}
 
   async getPosts(query: GetPostsQuery) {
     return this.postsRepo.findPosts(query);
   }
 
   async createPost (command: CreatePostCommand) {
-    return new CreatePost(this.postsRepo, this.membersRepo, this.votesRepository).execute(command);
+    return new CreatePost(this.postsRepo, this.membersRepo, this.eventBus).execute(command);
   }
 
   async getPostById (id: string) {

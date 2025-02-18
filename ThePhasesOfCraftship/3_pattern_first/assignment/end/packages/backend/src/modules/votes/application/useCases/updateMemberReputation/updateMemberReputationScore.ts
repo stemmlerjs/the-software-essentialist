@@ -1,11 +1,11 @@
 
 import { UseCase } from "@dddforum/shared/src/core/useCase";
-import { MembersRepository } from "../../../repos/ports/membersRepository";
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
-import { MemberNotFoundError } from "@dddforum/shared/src/errors";
-import { Member } from "../../../domain/member";
-import { UpdateMemberReputationScoreCommand } from "../../../memberCommands";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
+import { MemberNotFoundError } from "@dddforum/shared/src/errors";
+import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
+import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
+import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
+import { Member } from "../../../../members/domain/member";
 
 type UpdateMemberReputationScoreResponse = Member | MemberNotFoundError;
 

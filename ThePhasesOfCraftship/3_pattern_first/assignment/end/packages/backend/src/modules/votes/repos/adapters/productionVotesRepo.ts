@@ -1,10 +1,10 @@
 
 import { PrismaClient } from "@prisma/client";
-import { MemberCommentVotesRoundup } from "../../../votes/domain/memberCommentVotesRoundup";
-import { MemberPostVotesRoundup } from "../../../votes/domain/memberPostVotesRoundup";
 import { PostVote } from "../../../posts/domain/postVote";
 import { CommentVote } from "../../../comments/domain/commentVote";
 import { VoteRepository } from "../ports/voteRepository";
+import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundup";
+import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
 
 export class ProductionVotesRepository implements VoteRepository {
   constructor (private prisma: PrismaClient) {

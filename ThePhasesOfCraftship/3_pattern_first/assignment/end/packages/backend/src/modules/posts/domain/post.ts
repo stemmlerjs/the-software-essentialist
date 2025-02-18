@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { PostType } from "./postType";
 import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
+import { PostCreated } from "./postCreated";
 
 interface PostProps {
   id: string;
@@ -81,11 +82,15 @@ export class Post extends AggregateRoot {
 
     const postId = randomUUID();
 
-    return new Post({
+    const post = new Post({
       ...input,
       voteScore: 0,
       id: postId,
     });
+
+    post.domainEvents.push(new PostCreated(postId, input.memberId));
+
+    return post;
   }
 
   public static toDomain (prismaModel: PostPrismaModel): Post {

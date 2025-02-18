@@ -1,5 +1,5 @@
 
-import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { CommentNotFoundError, MemberNotFoundError, PermissionError, PostNotFoundError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { UseCase } from "@dddforum/shared/src/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
@@ -27,7 +27,7 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
 
     const [memberOrNull, postOrNull, existingVoteOrNull] = await Promise.all([
       this.memberRepository.getMemberById(memberId),
-      this.postRepository.getPostById(postId),
+      this.postRepository.getPostDetailsById(postId),
       this.voteRepository.findVoteByMemberAndPostId(memberId, postId)
     ]);
 
@@ -36,7 +36,7 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
     }
 
     if (postOrNull === null) {
-      return new CommentNotFoundError();
+      return new PostNotFoundError();
     }
 
     if (!CanVoteOnPostPolicy.isAllowed(memberOrNull)) {
