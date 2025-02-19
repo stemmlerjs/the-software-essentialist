@@ -61,6 +61,13 @@ export class InvalidGradeException extends Error {
 	}
 }
 
+export class ValidationError extends Error {
+	constructor(message = 'Validation error') {
+		super(message);
+		this.name = 'ValidationError';
+	}
+}
+
 export type ErrorHandler = (
 	error: Error,
 	req: Request,
@@ -136,6 +143,15 @@ export function errorHandler(
 		message: error.message,
 	  });
 	}
+
+	if (error instanceof ValidationError) {
+		return res.status(400).json({
+		  error: ErrorExceptionType.ValidationError,
+		  data: undefined,
+		  success: false,
+		  message: error.message,
+		});
+	  }
 
 	return res.status(500).json({
 	  error: ErrorExceptionType.ServerError,

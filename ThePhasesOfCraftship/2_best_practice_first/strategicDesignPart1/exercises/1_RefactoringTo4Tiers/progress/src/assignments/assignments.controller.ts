@@ -2,6 +2,7 @@ import express from 'express';
 import { ErrorExceptionType, ErrorHandler } from '../shared/errors';
 import { isMissingKeys, isUUID, parseForResponse } from '../shared/utils';
 import { AssignmentsService } from './asssignments.service';
+import { CreateAssignmentDTO, GetAssignmentDTO } from './dto';
 
 export class AssignmentsController {
 	router: express.Router
@@ -32,13 +33,8 @@ export class AssignmentsController {
 
 	async createAssignment(req: express.Request, res: express.Response, next: express.NextFunction) {
 		try {
-			if (isMissingKeys(req.body, ['classId', 'title'])) {
-				return res.status(400).json({ error: ErrorExceptionType.ValidationError, data: undefined, success: false });
-			}
-		
-			const { classId, title } = req.body;
-		
-			const assignment = await this.assignmentsService.createAssignment(classId, title);
+			const createAssignmentDto = CreateAssignmentDTO.fromRequest(req.body);
+			const assignment = await this.assignmentsService.createAssignment(createAssignmentDto);
 		
 			res.status(201).json({ error: undefined, data: parseForResponse(assignment), success: true });
 		} catch (error) {
@@ -48,13 +44,8 @@ export class AssignmentsController {
 
 	async getAssignment(req: express.Request, res: express.Response, next: express.NextFunction) {
 		try {
-			const { id } = req.params;
-			
-			if(!isUUID(id)) {
-				return res.status(400).json({ error: ErrorExceptionType.ValidationError, data: undefined, success: false });
-			}
-			
-			const assignment = await this.assignmentsService.getAssignment(id);
+			const getAssigmentDto = GetAssignmentDTO.fromRequest(req.params);			
+			const assignment = await this.assignmentsService.getAssignment(getAssigmentDto);
 		
 			res.status(200).json({ error: undefined, data: parseForResponse(assignment), success: true });
 		} catch (error) {

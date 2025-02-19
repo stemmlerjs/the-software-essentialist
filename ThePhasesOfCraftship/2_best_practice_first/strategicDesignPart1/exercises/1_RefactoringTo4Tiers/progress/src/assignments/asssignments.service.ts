@@ -1,5 +1,6 @@
 import { AssignmentPersistence, prisma } from "../shared/database";
 import { AssignmentNotFoundException } from "../shared/errors";
+import { CreateAssignmentDTO, GetAssignmentDTO } from "./dto";
 
 export class AssignmentsService {
 	assignmentPersistence: AssignmentPersistence;
@@ -8,11 +9,13 @@ export class AssignmentsService {
 		this.assignmentPersistence = assignmentPersistance
 	}
 
-	async createAssignment(classId: string, title: string) {	
+	async createAssignment(createAssignmentDto: CreateAssignmentDTO) {	
+		const { classId, title } = createAssignmentDto;
 		return await this.assignmentPersistence.create(classId, title);
 	}
 
-	async getAssignment(id: string) {
+	async getAssignment(getAssigmentDto: GetAssignmentDTO) {
+		const { id } = getAssigmentDto;
 		const assignment = await this.assignmentPersistence.getById(id);
 
 		if (!assignment) {
