@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "clean": "rimraf ./dist",
-      "build": "npm run clean && tsc -b tsconfig.build.json"
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -b tsconfig.build.json",
+    "test:unit": "jest -c jest.config.unit.ts",
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "devDependencies": {
+  }
 }
