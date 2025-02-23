@@ -8,8 +8,9 @@ import { ProductionVotesRepository } from "./repos/adapters/productionVotesRepo"
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { CommentRepository } from "../comments/repos/ports/commentRepository";
 import { PostsRepository } from "../posts/repos/ports/postsRepository";
-import { EventBus } from "../../shared/eventBus/ports/eventBus";
 import { VotesSubscriptions } from "./application/votesSubscriptions";
+import { EventBus } from "../../shared/events/ports/eventBus";
+import { EventsTable } from "../../shared/events/ports/eventTable";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
@@ -22,6 +23,7 @@ export class VotesModule extends ApplicationModule {
     private commentRepository: CommentRepository,
     private postsRepository: PostsRepository,
     private eventBus: EventBus,
+    private eventsTable: EventsTable,
     config: Config,
   ) {
     super(config);
@@ -30,12 +32,12 @@ export class VotesModule extends ApplicationModule {
     this.votesSubscriptions = this.createVotesSubscriptions();
   }
 
-  static build(db: Database, membersRepo: MembersRepository, commentsRepo: CommentRepository, postsRepo: PostsRepository, eventBus: EventBus, config: Config) {
-    return new VotesModule(db, membersRepo, commentsRepo, postsRepo, eventBus, config);
+  static build(db: Database, membersRepo: MembersRepository, commentsRepo: CommentRepository, postsRepo: PostsRepository, eventBus: EventBus, eventsTable: EventsTable, config: Config) {
+    return new VotesModule(db, membersRepo, commentsRepo, postsRepo, eventBus, eventsTable, config);
   }
   
   private createVotesService () {
-    return new VotesService(this.membersRepository, this.commentRepository, this.postsRepository, this.votesRepository, this.eventBus);
+    return new VotesService(this.membersRepository, this.commentRepository, this.postsRepository, this.votesRepository);
   }
 
   private createVotesSubscriptions () {
@@ -45,7 +47,7 @@ export class VotesModule extends ApplicationModule {
   private createVotesRepository() {
     if (this.votesRepository) return this.votesRepository;
 
-    return new ProductionVotesRepository(this.db.getConnection());
+    return new ProductionVotesRepository(this.db.getConnection(),this.eventsTable);
   }
 
   public getVotesRepository() {

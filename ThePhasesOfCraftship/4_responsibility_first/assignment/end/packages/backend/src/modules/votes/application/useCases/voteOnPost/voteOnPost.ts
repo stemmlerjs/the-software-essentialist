@@ -3,7 +3,6 @@ import { CommentNotFoundError, MemberNotFoundError, PermissionError, PostNotFoun
 import { UseCase } from "@dddforum/shared/src/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { CanVoteOnPostPolicy } from "./canVoteOnPost";
 import { VoteOnPostCommand } from "../../../votesCommands";
 import { PostVote } from "../../../../posts/domain/postVote";
@@ -17,8 +16,7 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
   constructor(
     private memberRepository: MembersRepository,
     private postRepository: PostsRepository,
-    private voteRepository: VoteRepository,
-    private eventBus: EventBus
+    private voteRepository: VoteRepository
   ) {}
 
   async execute(request: VoteOnPostCommand): Promise<VoteOnPostResponse> {
@@ -58,8 +56,9 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
     postVote.castVote(voteType)
 
     try {
-      await this.voteRepository.save(postVote);
-      await this.eventBus.publishEvents(postVote.getDomainEvents());
+      const domainEvents = postVote.getDomainEvents();
+      
+      await this.voteRepository.saveAggregateAndEvents(postVote, domainEvents);
 
       return postVote;
       

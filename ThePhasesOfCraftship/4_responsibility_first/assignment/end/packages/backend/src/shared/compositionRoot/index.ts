@@ -6,7 +6,8 @@ import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
 import { FakeDatabase, PrismaDatabase } from "../database/database";
-import { InMemoryEventBus } from "../eventBus/adapters/inMemoryEventBus";
+import { InMemoryEventBus } from "../events/adapters/inMemoryEventBus";
+import { EventsTable } from "../events/ports/eventTable";
 import { WebServer } from "../http";
 import {
   UsersModule,
@@ -22,6 +23,7 @@ export class CompositionRoot {
   private eventBus: InMemoryEventBus;
   private dbConnection: Database;
   private config: Config;
+  private eventsTable: EventsTable;
 
   private usersModule: UsersModule;
   private marketingModule: MarketingModule;
@@ -44,6 +46,7 @@ export class CompositionRoot {
     this.config = config;
     this.dbConnection = this.createDBConnection();
     this.eventBus = this.createEventBus();
+    this.eventsTable = this.createEventsTable();
     
    
     this.notificationsModule = this.createNotificationsModule();
@@ -57,6 +60,10 @@ export class CompositionRoot {
     
     this.webServer = this.createWebServer();
     this.mountRoutes();
+  }
+
+  createEventsTable () {
+    return new EventsTable(this.dbConnection.getConnection());
   }
 
   createCommentsModule () {
@@ -95,6 +102,7 @@ export class CompositionRoot {
       this.commentsModule.getCommentsRepository(),
       this.postsModule.getPostsRepository(),
       this.eventBus,
+      this.eventsTable,
       this.config
     );
   }

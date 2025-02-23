@@ -1,4 +1,5 @@
-import { EventBus } from "../../../shared/eventBus/ports/eventBus";
+
+import { EventBus } from "../../../shared/events/ports/eventBus";
 import { VoteOnComment } from "../../comments/application/useCases/voteOnComment/voteOnComment";
 import { CommentRepository } from "../../comments/repos/ports/commentRepository";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
@@ -15,20 +16,19 @@ export class VotesService {
     private commentRepository: CommentRepository, 
     private postRepository: PostsRepository, 
     private voteRepository: VoteRepository,
-    private eventBus: EventBus
   ) {
 
   }
 
   castVoteOnComment (command: VoteOnCommentCommand) {
     return new VoteOnComment(
-      this.memberRepository, this.commentRepository, this.voteRepository, this.eventBus
+      this.memberRepository, this.commentRepository, this.voteRepository
     ).execute(command);
   }
 
   castVoteOnPost (command: VoteOnPostCommand) {
     return new VoteOnPost(
-      this.memberRepository, this.postRepository, this.voteRepository, this.eventBus
+      this.memberRepository, this.postRepository, this.voteRepository, 
     ).execute(command);
   }
 
@@ -36,7 +36,6 @@ export class VotesService {
     return new UpdateMemberReputationScore(
       this.memberRepository,
       this.voteRepository,
-      this.eventBus,
     ).execute(command);
   }
 

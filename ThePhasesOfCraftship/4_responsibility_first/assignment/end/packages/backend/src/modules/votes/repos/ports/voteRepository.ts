@@ -3,6 +3,7 @@ import { PostVote } from "../../../posts/domain/postVote";
 import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
 import { CommentVote } from "../../../comments/domain/commentVote";
+import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
 
 export interface VoteRepository {
   findVoteByMemberAndPostId (memberId: string, postId: string): Promise<PostVote | null>;
@@ -12,4 +13,5 @@ export interface VoteRepository {
   getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup>;
   getMemberPostVotesRoundup(memberId: string): Promise<MemberPostVotesRoundup>;
   save (postOrCommentVote: CommentVote | PostVote): Promise<void>;
+  saveAggregateAndEvents (postOrCommentVote: CommentVote | PostVote, events: DomainEvent[]): Promise<void>;
 }

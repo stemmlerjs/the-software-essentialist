@@ -3,7 +3,6 @@ import { UseCase } from "@dddforum/shared/src/core/useCase";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { MemberNotFoundError } from "@dddforum/shared/src/errors";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member } from "../../../../members/domain/member";
 
@@ -16,8 +15,7 @@ type UpdateMemberReputationScoreResponse = Member | MemberNotFoundError;
 export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputationScoreCommand, UpdateMemberReputationScoreResponse> {
   constructor(
     private memberRepository: MembersRepository,
-    private votesRepository: VoteRepository,
-    private eventBus: EventBus
+    private votesRepository: VoteRepository
   ) {}
 
   async execute(request: UpdateMemberReputationScoreCommand): Promise<UpdateMemberReputationScoreResponse> {
@@ -50,7 +48,7 @@ export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputati
 
     // There's a chance that the member's reputation level has changed as a result of the 
     // new score as well.
-    await this.eventBus.publishEvents(memberOrNull.getDomainEvents());
+    // await this.eventBus.publishEvents(memberOrNull.getDomainEvents());
 
     return memberOrNull;
   }

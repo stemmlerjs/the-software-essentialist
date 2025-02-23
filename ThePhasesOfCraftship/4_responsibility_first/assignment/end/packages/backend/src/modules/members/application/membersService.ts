@@ -1,4 +1,5 @@
-import { EventBus } from "../../../shared/eventBus/ports/eventBus";
+
+import { EventBus } from "../../../shared/events/ports/eventBus";
 import { MembersRepository } from "../repos/ports/membersRepository";
 import { CreateMember } from "./useCases/createMember/createMember";
 

@@ -112,9 +112,11 @@ model CommentVote {
 
 model Event {
   id            String   @id @default(uuid())
+  aggregateId   String
   name          String
-  status        Boolean  @default(false)
-  data          Json
+  status        String   @default("INITIAL")
+  retries          Int     @default(0)
+  data          String
   dateCreated   DateTime @default(now())
   lastUpdated   DateTime @updatedAt
 }

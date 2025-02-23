@@ -4,7 +4,6 @@ import { ProductionMembersRepository } from "../../../../members/repos/adapters/
 import { VoteOnComment } from "./voteOnComment";
 import { CommentNotFoundError, MemberNotFoundError } from "@dddforum/shared/src/errors";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
-import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
 import { ProductionCommentsRepository } from "../../../../comments/repos/adapters/productionCommentRepository";
@@ -12,12 +11,15 @@ import { ProductionVotesRepository } from "../../../repos/adapters/productionVot
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { VoteOnCommentCommand } from "../../../votesCommands";
+import { EventsTable } from "../../../../../shared/events/ports/eventTable";
+import { InMemoryEventBus } from "../../../../../shared/events/adapters/inMemoryEventBus";
 
 let prisma = new PrismaClient();
 
 let membersRepo = new ProductionMembersRepository(prisma);
 let commentsRepo = new ProductionCommentsRepository(prisma);
-let votesRepo = new ProductionVotesRepository(prisma);
+let eventsTable = new EventsTable(prisma);
+let votesRepo = new ProductionVotesRepository(prisma, eventsTable);
 let eventBus = new InMemoryEventBus();
 
 const useCase = new VoteOnComment(membersRepo, commentsRepo, votesRepo, eventBus);

@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Event" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'QUEUED',
+    "retries" INTEGER NOT NULL DEFAULT 0,
+    "data" TEXT NOT NULL,
+    "dateCreated" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastUpdated" DATETIME NOT NULL
+);

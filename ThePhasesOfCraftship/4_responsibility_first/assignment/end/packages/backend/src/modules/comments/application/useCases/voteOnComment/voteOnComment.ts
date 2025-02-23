@@ -4,7 +4,6 @@ import { CommentVote } from "../../../domain/commentVote";
 import { UseCase } from "@dddforum/shared/src/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CommentRepository } from "../../../repos/ports/commentRepository";
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { VoteOnCommentCommand } from "../../../../votes/votesCommands";
 import { CanVoteOnCommentPolicy } from "../../../../votes/application/useCases/voteOnComment/canVoteOnComment";
@@ -16,8 +15,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
   constructor(
     private memberRepository: MembersRepository,
     private commentRepository: CommentRepository,
-    private voteRepository: VoteRepository,
-    private eventBus: EventBus
+    private voteRepository: VoteRepository
   ) {}
 
   async execute(request: VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
@@ -58,7 +56,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
 
     try {
       await this.voteRepository.save(commentVote);
-      await this.eventBus.publishEvents(commentVote.getDomainEvents());
+      // await this.eventBus.publishEvents(commentVote.getDomainEvents());
 
       return commentVote;
       

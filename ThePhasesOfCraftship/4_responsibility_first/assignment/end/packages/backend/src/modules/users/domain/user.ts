@@ -1,13 +1,12 @@
 
-import { User as PrismaUserModel } from "@prisma/client";
 
 export class User {
 
-  public static toDomain (userModel: PrismaUserModel) {
+  public static toDomain () {
 
   }
 
-  public static toDTO (user: PrismaUserModel) {
+  public static toDTO () {
     return 
   }
 }

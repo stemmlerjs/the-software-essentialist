@@ -39,7 +39,8 @@ export type GetUserByEmailResponse = APIResponse<UserDTO, GetUserByEmailErrors>;
 export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;
 
 export type UserResponse = APIResponse<
-  CreateUserResponse | GetUserByEmailResponse | null,
+  CreateUserResponse | 
+  GetUserByEmailResponse | null,
   GetUserErrors
 >;
 

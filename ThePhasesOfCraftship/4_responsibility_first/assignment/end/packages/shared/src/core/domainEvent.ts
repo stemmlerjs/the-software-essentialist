@@ -22,7 +22,7 @@ export abstract class DomainEvent {
     public readonly id: string = randomUUID(),
     private retries: number = 0,
     private status: DomainEventStatus = 'INITIAL',
-    private createdAt: string = new Date().toISOString()
+    public readonly createdAt: string = new Date().toISOString()
   ) {
 
   }

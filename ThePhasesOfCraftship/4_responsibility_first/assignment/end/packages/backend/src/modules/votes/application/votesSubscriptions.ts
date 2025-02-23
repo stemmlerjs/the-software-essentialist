@@ -1,10 +1,10 @@
 
-import { EventBus } from "../../../shared/eventBus/ports/eventBus";
 import { CommentUpvoted } from "../../comments/domain/commentUpvoted";
 import { CommentDownvoted } from "../../comments/domain/commentDownvoted";
 import { UpdateMemberReputationScoreCommand, VoteOnPostCommand } from "../votesCommands";
 import { VotesService } from "./votesService";
 import { PostCreated } from "../../posts/domain/postCreated";
+import { EventBus } from "../../../shared/events/ports/eventBus";
 
 export class VotesSubscriptions {
 

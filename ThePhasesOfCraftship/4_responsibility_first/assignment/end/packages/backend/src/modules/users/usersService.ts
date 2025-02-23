@@ -52,7 +52,8 @@ export class UsersService {
       password: ${validatedUser.password}`,
     });
 
-    return User.toDTO(prismaUser);
+    // TODO: Update
+    return User.toDTO();
   }
 
   async getUserByEmail(email: string) {
