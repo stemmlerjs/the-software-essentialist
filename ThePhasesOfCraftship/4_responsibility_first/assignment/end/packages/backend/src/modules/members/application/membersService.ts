@@ -1,5 +1,5 @@
 
-import { EventBus } from "../../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 import { MembersRepository } from "../repos/ports/membersRepository";
 import { CreateMember } from "./useCases/createMember/createMember";
 

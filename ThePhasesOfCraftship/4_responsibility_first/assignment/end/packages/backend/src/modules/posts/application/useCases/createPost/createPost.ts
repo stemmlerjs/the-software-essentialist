@@ -7,7 +7,7 @@ import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { PostVote } from "../../../domain/postVote";
-import { EventBus } from "../../../../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
 

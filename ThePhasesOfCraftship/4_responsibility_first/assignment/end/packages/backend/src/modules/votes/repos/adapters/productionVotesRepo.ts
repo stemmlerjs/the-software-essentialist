@@ -6,10 +6,10 @@ import { VoteRepository } from "../ports/voteRepository";
 import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
 import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { EventsTable } from "../../../../shared/events/ports/eventTable";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class ProductionVotesRepository implements VoteRepository {
-  constructor (private prisma: PrismaClient, private eventsTable: EventsTable) {
+  constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
   }
 
   getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup> {

@@ -6,8 +6,8 @@ import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
 import { FakeDatabase, PrismaDatabase } from "../database/database";
-import { InMemoryEventBus } from "../events/adapters/inMemoryEventBus";
-import { EventsTable } from "../events/ports/eventTable";
+import { InMemoryEventBus } from "@dddforum/shared/src/events/bus/adapters/inMemoryEventBus";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 import { WebServer } from "../http";
 import {
   UsersModule,
@@ -23,7 +23,7 @@ export class CompositionRoot {
   private eventBus: InMemoryEventBus;
   private dbConnection: Database;
   private config: Config;
-  private eventsTable: EventsTable;
+  private eventsTable: EventOutboxTable;
 
   private usersModule: UsersModule;
   private marketingModule: MarketingModule;
@@ -63,7 +63,7 @@ export class CompositionRoot {
   }
 
   createEventsTable () {
-    return new EventsTable(this.dbConnection.getConnection());
+    return new EventOutboxTable(this.dbConnection.getConnection());
   }
 
   createCommentsModule () {

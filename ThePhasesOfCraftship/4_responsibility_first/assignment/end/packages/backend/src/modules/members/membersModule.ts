@@ -1,7 +1,7 @@
 
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 import { Config } from "../../shared/config";
 import { Database } from "../../shared/database";
-import { EventBus } from "../../shared/events/ports/eventBus";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { MemberService } from "./application/membersService";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";

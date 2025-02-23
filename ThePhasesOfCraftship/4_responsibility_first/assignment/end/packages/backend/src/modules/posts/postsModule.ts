@@ -10,8 +10,7 @@ import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepos
 import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
-import { VoteRepository } from "../votes/repos/ports/voteRepository";
-import { EventBus } from "../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

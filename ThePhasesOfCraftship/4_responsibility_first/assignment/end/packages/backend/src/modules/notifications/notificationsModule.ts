@@ -1,5 +1,5 @@
 import { Config } from "../../shared/config";
-import { EventBus } from "../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { NotificationsService } from "./application/notificationsService";
 import { NotificationsSubscriptions } from "./application/notificationSubscriptions";

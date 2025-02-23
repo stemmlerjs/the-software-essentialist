@@ -7,7 +7,7 @@ import { VoteOnCommentCommand } from "../../../votesCommands";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
-import { EventBus } from "../../../../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
 

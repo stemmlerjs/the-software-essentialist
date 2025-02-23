@@ -3,18 +3,20 @@ import { ProductionMembersRepository } from "../../../../members/repos/adapters/
 import { VoteOnPost } from "./voteOnPost";
 import { ProductionPostsRepository } from "../../../../posts/repos/adapters/productionPostsRepository";
 import { ProductionVotesRepository } from "../../../repos/adapters/productionVotesRepo";
-import { EventsTable } from "../../../../../shared/events/ports/eventTable";
 import { VoteOnPostCommand } from "../../../votesCommands";
 import { PostVote } from "../../../../posts/domain/postVote";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { Post } from "../../../../posts/domain/post";
 import { randomUUID } from "crypto";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { PostUpvoted } from "../../../../posts/domain/postUpvoted";
+import { PostDownvoted } from "../../../../posts/domain/postDownvoted";
 
 describe('voteOnPost', () => {
 
   const prisma = new PrismaClient();
-  const eventsTable = new EventsTable(prisma);
+  const eventsTable = new EventOutboxTable(prisma);
   const memberRepository = new ProductionMembersRepository(prisma);
   const postRepository = new ProductionPostsRepository(prisma);
   const voteRepository = new ProductionVotesRepository(prisma, eventsTable);
@@ -77,10 +79,12 @@ describe('voteOnPost', () => {
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostUpvoted');
-    expect(eventsFromTable[0].aggregateId).toBe(aggregateId);
-    expect(eventsFromTable[0].data.postVoteId).toBe(aggregateId);
-    expect(eventsFromTable[0].data.postId).toBe(post.id);
-    expect(eventsFromTable[0].data.memberId).toBe(member.id);
+
+    const event = PostUpvoted.toDomain(eventsFromTable[0]);
+    expect(event.aggregateId).toBe(aggregateId);
+    expect(event.data.postVoteId).toBe(aggregateId);
+    expect(event.data.postId).toBe(post.id);
+    expect(event.data.memberId).toBe(member.id);
   });
 
   it('should be able to cast an downvote', async () => {
@@ -99,9 +103,11 @@ describe('voteOnPost', () => {
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostDownvoted');
-    expect(eventsFromTable[0].aggregateId).toBe(aggregateId);
-    expect(eventsFromTable[0].data.postVoteId).toBe(aggregateId);
-    expect(eventsFromTable[0].data.postId).toBe(post.id);
-    expect(eventsFromTable[0].data.memberId).toBe(member.id);
+
+    const event = PostDownvoted.toDomain(eventsFromTable[0]);
+    expect(event.aggregateId).toBe(aggregateId);
+    expect(event.data.postVoteId).toBe(aggregateId);
+    expect(event.data.postId).toBe(post.id);
+    expect(event.data.memberId).toBe(member.id);
   });
 })

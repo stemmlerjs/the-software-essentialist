@@ -1,5 +1,5 @@
 
-import { EventBus } from "../../../shared/events/ports/eventBus";
+
 import { VoteOnComment } from "../../comments/application/useCases/voteOnComment/voteOnComment";
 import { CommentRepository } from "../../comments/repos/ports/commentRepository";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";

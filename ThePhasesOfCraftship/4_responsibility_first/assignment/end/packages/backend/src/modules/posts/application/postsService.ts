@@ -1,5 +1,5 @@
 
-import { EventBus } from "../../../shared/events/ports/eventBus";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { CreatePostCommand } from "../postsCommands";
 import { GetPostsQuery } from "../postsQuery";

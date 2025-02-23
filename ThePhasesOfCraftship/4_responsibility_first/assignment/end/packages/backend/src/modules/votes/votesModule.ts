@@ -9,8 +9,8 @@ import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { CommentRepository } from "../comments/repos/ports/commentRepository";
 import { PostsRepository } from "../posts/repos/ports/postsRepository";
 import { VotesSubscriptions } from "./application/votesSubscriptions";
-import { EventBus } from "../../shared/events/ports/eventBus";
-import { EventsTable } from "../../shared/events/ports/eventTable";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
@@ -23,7 +23,7 @@ export class VotesModule extends ApplicationModule {
     private commentRepository: CommentRepository,
     private postsRepository: PostsRepository,
     private eventBus: EventBus,
-    private eventsTable: EventsTable,
+    private eventsTable: EventOutboxTable,
     config: Config,
   ) {
     super(config);
@@ -32,7 +32,7 @@ export class VotesModule extends ApplicationModule {
     this.votesSubscriptions = this.createVotesSubscriptions();
   }
 
-  static build(db: Database, membersRepo: MembersRepository, commentsRepo: CommentRepository, postsRepo: PostsRepository, eventBus: EventBus, eventsTable: EventsTable, config: Config) {
+  static build(db: Database, membersRepo: MembersRepository, commentsRepo: CommentRepository, postsRepo: PostsRepository, eventBus: EventBus, eventsTable: EventOutboxTable, config: Config) {
     return new VotesModule(db, membersRepo, commentsRepo, postsRepo, eventBus, eventsTable, config);
   }
   
