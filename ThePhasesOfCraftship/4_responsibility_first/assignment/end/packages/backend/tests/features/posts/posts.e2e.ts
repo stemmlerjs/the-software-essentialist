@@ -40,22 +40,14 @@ describe('posts', () => {
   describe ('creating new posts', () => {
 
     let databaseFixture: DatabaseFixture;
-    const apiClient = createAPIClient("http://localhost:3000");
+    let apiClient = createAPIClient("http://localhost:3000");
     let composition: CompositionRoot;
-    let server: WebServer;
-    const config: Config = new Config("test:e2e");
-    let dbConnection: Database;
+    let config: Config = new Config("test:e2e");
 
     beforeAll(async () => {
       composition = CompositionRoot.createCompositionRoot(config);
       await composition.start();
-      // server = composition.getWebServer();
       databaseFixture = new DatabaseFixture(composition);
-      // dbConnection = composition.getDatabase();
-      // await composition['eventBus'].initialize();
-  
-      // await server.start();
-      // await dbConnection.connect();
     });
 
     afterAll(async () => {
