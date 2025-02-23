@@ -6,9 +6,8 @@ import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { PostVote } from "../../../domain/postVote";
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
+import { EventBus } from "../../../../../shared/events/ports/eventBus";
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
 

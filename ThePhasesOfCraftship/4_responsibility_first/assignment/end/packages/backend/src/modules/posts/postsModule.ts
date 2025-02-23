@@ -11,7 +11,7 @@ import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
 import { VoteRepository } from "../votes/repos/ports/voteRepository";
-import { EventBus } from "../../shared/eventBus/ports/eventBus";
+import { EventBus } from "../../shared/events/ports/eventBus";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

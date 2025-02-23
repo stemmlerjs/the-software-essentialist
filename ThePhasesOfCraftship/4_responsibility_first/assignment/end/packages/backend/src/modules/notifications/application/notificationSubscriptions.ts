@@ -1,5 +1,5 @@
 
-import { EventBus } from "../../../shared/eventBus/ports/eventBus";
+import { EventBus } from "../../../shared/events/ports/eventBus";
 import { MemberReputationLevelUpgraded } from "../../members/domain/memberReputationLevelUpgraded";
 import { SendNotificationCommand } from "../notificationCommands";
 import { NotificationsService } from "./notificationsService";

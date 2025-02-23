@@ -1,10 +1,10 @@
 
+import { EventBus } from "../../../shared/events/ports/eventBus";
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
 import { CreatePostCommand } from "../postsCommands";
 import { GetPostsQuery } from "../postsQuery";
 import { PostsRepository } from "../repos/ports/postsRepository";
 import { CreatePost } from "./useCases/createPost/createPost";
-import { EventBus } from "../../../shared/eventBus/ports/eventBus";
 
 export class PostsService {
   constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository, private eventBus: EventBus) {}
