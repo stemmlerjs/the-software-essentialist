@@ -1,3 +1,4 @@
+
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnPost } from "./voteOnPost";
@@ -80,7 +81,7 @@ describe('voteOnPost', () => {
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostUpvoted');
 
-    const event = PostUpvoted.toDomain(eventsFromTable[0]);
+    const event = eventsFromTable[0] as PostUpvoted;
     expect(event.aggregateId).toBe(aggregateId);
     expect(event.data.postVoteId).toBe(aggregateId);
     expect(event.data.postId).toBe(post.id);
@@ -104,7 +105,7 @@ describe('voteOnPost', () => {
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostDownvoted');
 
-    const event = PostDownvoted.toDomain(eventsFromTable[0]);
+    const event = eventsFromTable[0] as PostDownvoted
     expect(event.aggregateId).toBe(aggregateId);
     expect(event.data.postVoteId).toBe(aggregateId);
     expect(event.data.postId).toBe(post.id);

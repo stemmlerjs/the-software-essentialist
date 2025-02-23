@@ -1,8 +1,9 @@
 import { randomUUID } from "crypto";
+import { Event as PrismaEventModel } from "@prisma/client";
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
 
-export abstract class DomainEvent {
+export class DomainEvent {
 
   constructor(
     public readonly name: string,
@@ -40,6 +41,18 @@ export abstract class DomainEvent {
 
   public serializeData() {
     return JSON.stringify(this.data);
+  }
+
+  public static toDomain(prismaEventModel: PrismaEventModel): DomainEvent {
+    return new DomainEvent(
+      prismaEventModel.name,
+      JSON.parse(prismaEventModel.data),
+      prismaEventModel.aggregateId,
+      prismaEventModel.id,
+      prismaEventModel.retries,
+      prismaEventModel.status as DomainEventStatus,
+      prismaEventModel.dateCreated.toISOString()
+    );
   }
 }
 

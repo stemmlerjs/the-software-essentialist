@@ -8,14 +8,24 @@ export class EventOutboxTable {
     this.prisma = prisma;
   }
 
-  async getEventsByAggregateId (aggregateId: string): Promise<PrismaEventModel[]> {
+  async getUnprocessedEvents(): Promise<DomainEvent[]> {
+    const events = await this.prisma.event.findMany({
+      where: {
+        status: 'INITIAL'
+      }
+    });
+
+    return events.map((eventModel) => DomainEvent.toDomain(eventModel))
+  }
+
+  async getEventsByAggregateId (aggregateId: string): Promise<DomainEvent[]> {
     const eventModels = await this.prisma.event.findMany({
       where: {
         aggregateId
       }
     });
 
-    return eventModels;
+    return eventModels.map((eventModel) => DomainEvent.toDomain(eventModel))
   }
 
   async save(events: DomainEvent[], transaction?: Prisma.TransactionClient) {
