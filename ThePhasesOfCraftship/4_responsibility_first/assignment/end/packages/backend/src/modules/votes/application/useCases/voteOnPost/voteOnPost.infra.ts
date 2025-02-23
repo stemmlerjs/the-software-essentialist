@@ -61,21 +61,47 @@ describe('voteOnPost', () => {
     return { member, post };
   }
 
-  it.only('should be able to cast an upvote', async () => {
+  it('should be able to cast an upvote', async () => {
     const { member, post } = await setupTest()
 
     const command = new VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'upvote' });
     const response = await useCase.execute(command);
 
+    // Post use case response
     expect(response).toBeInstanceOf(PostVote);
     expect((response as PostVote).memberId).toBe(member.id);
     expect((response as PostVote).postId).toBe(post.id);
 
+    // Domain event saved
     const aggregateId = (response as PostVote).id;
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
-    console.log(eventsFromTable)
-
+    expect(eventsFromTable.length).toBe(1);
+    expect(eventsFromTable[0].name).toBe('PostUpvoted');
+    expect(eventsFromTable[0].aggregateId).toBe(aggregateId);
+    expect(eventsFromTable[0].data.postVoteId).toBe(aggregateId);
+    expect(eventsFromTable[0].data.postId).toBe(post.id);
+    expect(eventsFromTable[0].data.memberId).toBe(member.id);
   });
 
-  it('should be able to cast a downvote', () => {});
+  it('should be able to cast an downvote', async () => {
+    const { member, post } = await setupTest()
+
+    const command = new VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'downvote' });
+    const response = await useCase.execute(command);
+
+    // Post use case response
+    expect(response).toBeInstanceOf(PostVote);
+    expect((response as PostVote).memberId).toBe(member.id);
+    expect((response as PostVote).postId).toBe(post.id);
+
+    // Domain event saved
+    const aggregateId = (response as PostVote).id;
+    const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
+    expect(eventsFromTable.length).toBe(1);
+    expect(eventsFromTable[0].name).toBe('PostDownvoted');
+    expect(eventsFromTable[0].aggregateId).toBe(aggregateId);
+    expect(eventsFromTable[0].data.postVoteId).toBe(aggregateId);
+    expect(eventsFromTable[0].data.postId).toBe(post.id);
+    expect(eventsFromTable[0].data.memberId).toBe(member.id);
+  });
 })

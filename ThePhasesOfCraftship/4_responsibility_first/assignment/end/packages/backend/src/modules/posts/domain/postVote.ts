@@ -64,7 +64,7 @@ export class PostVote extends AggregateRoot {
     const domainEvent = PostUpvoted.create({
       memberId: this.props.memberId,
       postId: this.props.postId,
-      postUpvoteId: this.id
+      postVoteId: this.id
     });
     this.props.voteState = 'Upvoted';
     this.domainEvents.push(domainEvent);

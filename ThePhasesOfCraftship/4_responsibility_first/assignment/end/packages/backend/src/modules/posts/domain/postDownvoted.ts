@@ -16,7 +16,7 @@ export class PostDownvoted extends DomainEvent {
       status?: DomainEventStatus,
       createdAt?: string
     ) {
-      super('PostUpvoted', props, props.postVoteId, id, retries, status, createdAt);
+      super('PostDownvoted', props, props.postVoteId, id, retries, status, createdAt);
     }
 
   public static create(props: PostDownvotedEventProps) {

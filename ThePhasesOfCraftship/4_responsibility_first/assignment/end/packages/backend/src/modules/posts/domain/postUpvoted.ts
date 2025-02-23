@@ -3,7 +3,7 @@ import { DomainEvent, DomainEventStatus } from '@dddforum/shared/src/core/domain
 import { Event as EventModel } from '@prisma/client'
 
 interface PostUpdatedEventProps {
-  postUpvoteId: string
+  postVoteId: string
   postId: string;
   memberId: string;
 }
@@ -16,7 +16,7 @@ export class PostUpvoted extends DomainEvent {
     status?: DomainEventStatus,
     createdAt?: string
   ) {
-    super('PostUpvoted', props, props.postUpvoteId, id, retries, status, createdAt);
+    super('PostUpvoted', props, props.postVoteId, id, retries, status, createdAt);
   }
 
   public static create (props: PostUpdatedEventProps) {
@@ -30,7 +30,7 @@ export class PostUpvoted extends DomainEvent {
 
     return new PostUpvoted(
       {
-        postUpvoteId: eventModel.aggregateId,
+        postVoteId: eventModel.aggregateId,
         postId: serializedData.postId,
         memberId: serializedData.memberId
       }, 
