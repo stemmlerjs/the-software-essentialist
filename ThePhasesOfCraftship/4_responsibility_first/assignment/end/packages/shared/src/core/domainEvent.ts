@@ -43,6 +43,10 @@ export class DomainEvent {
     return JSON.stringify(this.data);
   }
 
+  public serialize() {
+    return JSON.stringify(this);
+  }
+
   public static toDomain(prismaEventModel: PrismaEventModel): DomainEvent {
     return new DomainEvent(
       prismaEventModel.name,

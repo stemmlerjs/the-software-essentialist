@@ -1,10 +1,16 @@
-
-
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
-import { MessageRelay } from "./relay";
+import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
 import { PrismaClient } from "@prisma/client";
+import { Relay } from "./relay";
+import dotenv from 'dotenv';
 
-const prisma = new PrismaClient()
-const eventsTable = new EventOutboxTable(prisma);
-const messageRelay = new MessageRelay(eventsTable);
-messageRelay.start();
+dotenv.config();
+
+const prisma = new PrismaClient();
+const outboxTable = new EventOutboxTable(prisma);
+const publisher = new RabbitMQMessageBus({
+  connectionString: 'amqp://user:password@127.0.0.1:5672'
+});
+const relay = new Relay(outboxTable, publisher);
+
+relay.start();

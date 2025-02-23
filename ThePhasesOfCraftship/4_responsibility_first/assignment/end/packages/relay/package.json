@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lab:start-relay":"ts-node lab/start-relay.ts",
-    "lab:add-event": "ts-node lab/add-event.ts",
+    "lab:produce": "ts-node lab/produce.ts",
+    "lab:subscribe": "ts-node lab/subscribe.ts",
     "build": "tsc -b tsconfig.json",
     "start:dev": "npx nodemon",
     "test": "jest",

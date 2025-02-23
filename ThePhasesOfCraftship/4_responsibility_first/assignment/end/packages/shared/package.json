@@ -12,6 +12,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0"
+  },
   "devDependencies": {
+    "@types/amqplib": "^0.10.6"
   }
 }

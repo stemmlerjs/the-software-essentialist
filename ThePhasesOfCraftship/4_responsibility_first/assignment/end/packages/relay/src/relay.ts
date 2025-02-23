@@ -1,12 +1,16 @@
 
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
+import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
 
 export class Relay {
   private queue: DomainEvent[];
+  private isProcessing = false;
 
-  constructor (private outboxTable: EventOutboxTable) {
-    this.outboxTable = outboxTable
+  constructor (
+    private outboxTable: EventOutboxTable, 
+    private publisher: RabbitMQMessageBus
+  ) {
     this.queue = []
   }
 
@@ -35,6 +39,9 @@ export class Relay {
     if (this.queue.length === 0) {
       return;
     }
+    if (this.isProcessing) {
+      return;
+    }
 
     const event = this.queue.shift();
     if (!event) {
@@ -53,11 +60,11 @@ export class Relay {
       // Increment the retries and save the event
       await this.outboxTable.save([event]);
     }
+    this.isProcessing = false;
   }
 
   private async publishToRabbitMQ(event: DomainEvent): Promise<void> {
-    // Implement the logic to publish the event to RabbitMQ
-    // This is a placeholder function and should be replaced with actual implementation
     console.log(`Publishing event to RabbitMQ: ${event.name} ${JSON.stringify(event.data)}`);
+    await this.publisher.publish(event.name, event);
   }
 }

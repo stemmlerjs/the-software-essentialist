@@ -3,6 +3,7 @@ import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutbox
 import { PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { Relay } from "../src/relay";
+import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
 
 class TestEvent extends DomainEvent {
     constructor (aggregateId: string, data: any, id?: string, retries?: number, status?: DomainEventStatus) {
@@ -12,12 +13,15 @@ class TestEvent extends DomainEvent {
 
 let prisma = new PrismaClient();
 let outbox = new EventOutboxTable(prisma);
-let relay = new Relay(outbox);
+const rabbitMqEventBus = new RabbitMQMessageBus({
+  connectionString: 'amqp://user:password@127.0.0.1:5672'
+});
+let relay = new Relay(outbox, rabbitMqEventBus);
 
 async function setupLab () {
   let unprocessedEvents = [
-    new TestEvent(randomUUID(), { testData: 'John' }),
-    new TestEvent(randomUUID(), { testData: 'John' })
+    new TestEvent(randomUUID(), { testData: 'John' }, randomUUID()),
+    new TestEvent(randomUUID(), { testData: 'John' }, randomUUID())
   ]
 
   let publishedEvents = [
@@ -34,6 +38,7 @@ async function setupLab () {
 
 async function main () {
   await setupLab();
+  await rabbitMqEventBus.connect();
   relay.start();
 }
 
