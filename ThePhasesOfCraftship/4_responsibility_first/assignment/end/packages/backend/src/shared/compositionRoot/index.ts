@@ -6,7 +6,6 @@ import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
 import { FakeDatabase, PrismaDatabase } from "../database/database";
-import { InMemoryEventBus } from "@dddforum/shared/src/events/bus/adapters/inMemoryEventBus";
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 import { WebServer } from "../http";
 import {
@@ -15,25 +14,27 @@ import {
   NotificationsModule,
   MarketingModule,
 } from "@dddforum/backend/src/modules";
+import { NatsEventBus } from "@dddforum/shared/src/events/bus/adapters/natsEventBus";
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
 
-  private webServer: WebServer;
-  private eventBus: InMemoryEventBus;
+  
+  private eventBus: NatsEventBus;
   private dbConnection: Database;
   private config: Config;
-  private eventsTable: EventOutboxTable;
+  private eventsOutboxTable: EventOutboxTable;
+  private webServer!: WebServer;
 
-  private usersModule: UsersModule;
-  private marketingModule: MarketingModule;
+  private usersModule!: UsersModule;
+  private marketingModule!: MarketingModule;
   
   
-  private notificationsModule: NotificationsModule;
-  private commentsModule: CommentsModule;
-  private postsModule: PostsModule;
-  private membersModule: MembersModule;
-  private votesModule: VotesModule;
+  private notificationsModule!: NotificationsModule;
+  private commentsModule!: CommentsModule;
+  private postsModule!: PostsModule;
+  private membersModule!: MembersModule;
+  private votesModule!: VotesModule;
 
   public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
@@ -44,21 +45,30 @@ export class CompositionRoot {
 
   private constructor(config: Config) {
     this.config = config;
+    
+    // Create services
     this.dbConnection = this.createDBConnection();
     this.eventBus = this.createEventBus();
-    this.eventsTable = this.createEventsTable();
+    this.eventsOutboxTable = this.createEventsTable();
+    this.webServer = this.createWebServer();
+  }
+
+  async start () {
+    // Start services
+    await this.dbConnection.connect();
+    await this.webServer.start();
+    await this.eventBus.initialize();
     
-   
+    // Connect modules
     this.notificationsModule = this.createNotificationsModule();
     this.marketingModule = this.createMarketingModule();
     this.membersModule = this.createMembersModule();
     this.postsModule = this.createPostsModule();
     this.commentsModule = this.createCommentsModule();
     this.votesModule = this.createVotesModule();
-    
     this.usersModule = this.createUsersModule();
     
-    this.webServer = this.createWebServer();
+    
     this.mountRoutes();
   }
 
@@ -73,7 +83,7 @@ export class CompositionRoot {
   createMembersModule() {
     return MembersModule.build(
       this.dbConnection, 
-      this.eventBus, 
+      this.eventsOutboxTable, 
       this.config
     );
   }
@@ -102,7 +112,7 @@ export class CompositionRoot {
       this.commentsModule.getCommentsRepository(),
       this.postsModule.getPostsRepository(),
       this.eventBus,
-      this.eventsTable,
+      this.eventsOutboxTable,
       this.config
     );
   }
@@ -111,7 +121,7 @@ export class CompositionRoot {
     return PostsModule.build(
       this.dbConnection,
       this.config,
-      this.eventBus,
+      this.eventsOutboxTable,
       this.membersModule.getMembersRepository(),
     );
   }
@@ -126,7 +136,7 @@ export class CompositionRoot {
   }
 
   createEventBus() {
-    return new InMemoryEventBus();
+    return new NatsEventBus();
   }
 
   createWebServer() {

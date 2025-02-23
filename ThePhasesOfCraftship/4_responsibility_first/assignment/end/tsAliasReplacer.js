@@ -8,6 +8,7 @@ const replacements = [
   ["@dddforum/shared/src", "@dddforum/shared/dist"],
   ["@dddforum/backend/src", "@dddforum/backend/dist"],
   ["@dddforum/frontend/src", "@dddforum/frontend/dist"],
+  ["@dddforum/relay/src", "@dddforum/relay/dist"],
 ];
 
 /**

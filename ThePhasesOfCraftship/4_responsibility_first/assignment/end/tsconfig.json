@@ -11,7 +11,8 @@
     "paths": {
       "@dddforum/backend/*": ["./packages/backend/*"],
       "@dddforum/frontend/*": ["./packages/frontend/*"],
-      "@dddforum/shared/*": ["./packages/shared/*"]
+      "@dddforum/shared/*": ["./packages/shared/*"],
+      "@dddforum/relay/*": ["./packages/relay/*"]
     }
   }
 }

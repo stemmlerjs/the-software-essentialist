@@ -1,7 +1,7 @@
 {
-  "name": "@dddforum/message-relay",
+  "name": "@dddforum/relay",
   "version": "1.0.0",
-  "description": "The message relay which publishes messages into rabbitmq",
+  "description": "The transactional outbox/relay which publishes messages into rabbitmq",
   "main": "index.js",
   "scripts": {
     "lab:start-relay":"ts-node lab/start-relay.ts",
@@ -9,6 +9,7 @@
     "lab:subscribe": "ts-node lab/subscribe.ts",
     "build": "tsc -b tsconfig.json",
     "start:dev": "npx nodemon",
+    "start": "npm run build && node dist/relay/src/index.js",
     "test": "jest",
     "test:dev": "jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts",

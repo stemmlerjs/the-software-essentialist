@@ -13,6 +13,7 @@ export class NatsEventBus implements EventBus {
 
   public async initialize() {
     this.nc = await connect({ servers: "nats://localhost:4222" });
+    console.log('initialized');
   }
 
   async publishEvents(events: DomainEvent[]): Promise<void> {

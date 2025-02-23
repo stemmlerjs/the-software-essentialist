@@ -10,6 +10,7 @@ export default async (): Promise<JestConfigWithTsJest> => ({
   transform: {
     '^.+\\.(t|j)sx?$': ['ts-jest', {}],
   },
+  transformIgnorePatterns: ['^.+\\.js$'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: path.resolve(__dirname, '../../'),
   }),

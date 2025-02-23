@@ -48,16 +48,18 @@ describe('posts', () => {
 
     beforeAll(async () => {
       composition = CompositionRoot.createCompositionRoot(config);
-      server = composition.getWebServer();
+      await composition.start();
+      // server = composition.getWebServer();
       databaseFixture = new DatabaseFixture(composition);
-      dbConnection = composition.getDatabase();
+      // dbConnection = composition.getDatabase();
+      // await composition['eventBus'].initialize();
   
-      await server.start();
-      await dbConnection.connect();
+      // await server.start();
+      // await dbConnection.connect();
     });
 
     afterAll(async () => {
-      await server.stop();
+      await composition['webServer'].stop();
     });
 
     // TODO: Soon, we will need to use a sandboxed auth token to do this (RDD-first)
@@ -99,7 +101,7 @@ describe('posts', () => {
       expect(response.data.postType).toBe(postData.postType);
       expect(response.data.content).toBe(postData.content);
       
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       let getPostResponse = await apiClient.posts.getPostById(response.data.id);
       expect(getPostResponse.success).toBe(true);

@@ -22,9 +22,9 @@ export class VotesSubscriptions {
     try {
       console.log('casting initial vote on post')
       const command = new VoteOnPostCommand({
-        postId: event.postId,
+        postId: event.data.postId,
         voteType: 'upvote',
-        memberId: event.memberId
+        memberId: event.data.memberId
       });
       await this.voteService.castVoteOnPost(command);
     } catch (error) {
@@ -36,7 +36,7 @@ export class VotesSubscriptions {
   async onCommentUpvotedUpdateReputationScore(event: CommentUpvoted) {
     try {
       const command = new UpdateMemberReputationScoreCommand({
-        memberId: event.memberId
+        memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)
     } catch (error) {
@@ -48,7 +48,7 @@ export class VotesSubscriptions {
   async onCommentDownvotedUpdateReputationScore (event: CommentDownvoted) {
     try {
       const command = new UpdateMemberReputationScoreCommand({
-        memberId: event.memberId
+        memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)
     } catch (error) {

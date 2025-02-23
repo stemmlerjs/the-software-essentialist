@@ -65,7 +65,7 @@ export class Relay {
   }
 
   private async publishToRabbitMQ(event: DomainEvent): Promise<void> {
-    console.log(`Publishing event to RabbitMQ: ${event.name} ${JSON.stringify(event.data)}`);
+    console.log(`Publishing event to Message Broker: ${event.name} ${JSON.stringify(event.data)}`);
     await this.publisher.publishEvents([event]);
   }
 }
