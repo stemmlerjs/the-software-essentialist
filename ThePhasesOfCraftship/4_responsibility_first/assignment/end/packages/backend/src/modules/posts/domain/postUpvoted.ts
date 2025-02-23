@@ -1,14 +1,42 @@
 
-import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
-import { randomUUID } from 'crypto';
+import { DomainEvent, DomainEventStatus } from '@dddforum/shared/src/core/domainEvent';
+import { Event as EventModel } from '@prisma/client'
+
+interface PostUpdatedEventProps {
+  postUpvoteId: string
+  postId: string;
+  memberId: string;
+}
 
 export class PostUpvoted extends DomainEvent {
-  constructor(
-    public readonly postId: string,
-    public readonly memberId: string,
-    public readonly id: string = randomUUID(),
-    public readonly date: Date = new Date()
+  private constructor(
+    props: PostUpdatedEventProps,
+    id?: string,
+    retries?: number, 
+    status?: DomainEventStatus,
+    createdAt?: string
   ) {
-    super(id, date, 'PostUpvoted');
+    super('PostUpvoted', props, props.postUpvoteId, id, retries, status, createdAt);
+  }
+
+  public static create (props: PostUpdatedEventProps) {
+    return new PostUpvoted(props);
+  }
+
+  public static toDomain (eventModel: EventModel): PostUpvoted {
+    const serializedData = JSON.parse(eventModel.data) as PostUpdatedEventProps
+
+    // Validate this data here using zod or something
+
+    return new PostUpvoted(
+      {
+        postUpvoteId: eventModel.aggregateId,
+        postId: serializedData.postId,
+        memberId: serializedData.memberId
+      }, 
+      eventModel.id, eventModel.retries, 
+      eventModel.status as DomainEventStatus, 
+      eventModel.dateCreated.toISOString()
+    )
   }
 }

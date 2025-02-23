@@ -1,7 +1,6 @@
 
 import { PrismaClient } from "@prisma/client";
 import { UpdateMemberReputationScore } from "./updateMemberReputationScore";
-import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
 import { ProductionVotesRepository } from "../../../../votes/repos/adapters/productionVotesRepo";
@@ -9,6 +8,7 @@ import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
+import { EventsTable } from "../../../../../shared/events/ports/eventTable";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();
@@ -47,10 +47,10 @@ describe('updateMemberReputationScore', () => {
   let prisma = new PrismaClient();
 
   let membersRepo = new ProductionMembersRepository(prisma);
-  let votesRepo = new ProductionVotesRepository(prisma);
-  let eventBus = new InMemoryEventBus();
+  let eventsTable = new EventsTable(prisma);
+  let votesRepo = new ProductionVotesRepository(prisma, eventsTable);
 
-  const useCase = new UpdateMemberReputationScore(membersRepo, votesRepo, eventBus);
+  const useCase = new UpdateMemberReputationScore(membersRepo, votesRepo);
 
   describe('update with reputation level upgrade', () => {
     test(`

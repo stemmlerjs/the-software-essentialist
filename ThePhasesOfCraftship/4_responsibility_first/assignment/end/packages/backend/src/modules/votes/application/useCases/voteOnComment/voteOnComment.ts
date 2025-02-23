@@ -2,12 +2,12 @@
 import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { UseCase } from "@dddforum/shared/src/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { EventBus } from "../../../../../shared/eventBus/ports/eventBus";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
 import { VoteOnCommentCommand } from "../../../votesCommands";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
+import { EventBus } from "../../../../../shared/events/ports/eventBus";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
 

@@ -61,16 +61,26 @@ export class PostVote extends AggregateRoot {
     if (this.props.voteState === 'Upvoted') {
       return;
     }
+    const domainEvent = PostUpvoted.create({
+      memberId: this.props.memberId,
+      postId: this.props.postId,
+      postUpvoteId: this.id
+    });
     this.props.voteState = 'Upvoted';
-    this.domainEvents.push(new PostUpvoted(this.id, this.props.memberId));
+    this.domainEvents.push(domainEvent);
   }
 
   private downvote() {
     if (this.props.voteState === 'Downvoted') {
       return;
     }
+    const domainEvent = PostDownvoted.create({
+      memberId: this.props.memberId,
+      postId: this.props.postId,
+      postVoteId: this.id
+    });
     this.props.voteState = 'Downvoted';
-    this.domainEvents.push(new PostDownvoted(this.id, this.props.memberId));
+    this.domainEvents.push(domainEvent);
   }
 
   public static toDomain(props: PostVoteProps): PostVote {

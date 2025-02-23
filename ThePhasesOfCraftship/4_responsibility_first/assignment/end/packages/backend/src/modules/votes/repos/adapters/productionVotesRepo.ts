@@ -69,7 +69,7 @@ export class ProductionVotesRepository implements VoteRepository {
     }
 
     async saveAggregateAndEvents(vote: PostVote | CommentVote, events: DomainEvent[]) {
-      await this.prisma.$transaction(async (tx) => {
+      return this.prisma.$transaction(async (tx) => {
         await this.save(vote, tx);
         await this.eventsTable.save(events, tx);
       })

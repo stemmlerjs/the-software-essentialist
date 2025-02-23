@@ -1,37 +1,45 @@
 
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient, Event as PrismaEventModel } from "@prisma/client";
 import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { NotFoundError } from "@dddforum/shared/src/errors";
+import { PostUpvoted } from "../../../modules/posts/domain/postUpvoted";
+import { PostDownvoted } from "../../../modules/posts/domain/postDownvoted";
 
 export class EventsTable {
   constructor (private prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  async getEventByAggregateId (aggregateId: string): Promise<DomainEvent | NotFoundError> {
-    const eventModel = await this.prisma.event.findFirst({
+  public static toDomain (prismaEventModel: PrismaEventModel): DomainEvent {
+    switch (prismaEventModel.name) {
+      case 'PostUpvoted':
+        return PostUpvoted.toDomain(prismaEventModel);
+      case 'PostDownvoted':
+        return PostDownvoted.toDomain(prismaEventModel);
+      default:
+        throw new Error('Event not recognized');
+    }
+  }
+
+  async getEventsByAggregateId (aggregateId: string): Promise<DomainEvent[]> {
+    const eventModels = await this.prisma.event.findMany({
       where: {
         aggregateId
       }
     });
 
-    if (!eventModel) {
-      return new NotFoundError('Event not found');
-    }
-
-    return DomainEvent.toDomain(eventModel);
+    return eventModels.map((eventModel) => EventsTable.toDomain(eventModel))
   }
 
-  save(events: DomainEvent[], transaction?: Prisma.TransactionClient) {
+  async save(events: DomainEvent[], transaction?: Prisma.TransactionClient) {
     const prismaInstance = transaction || this.prisma;
 
     for (const event of events) {
-      prismaInstance.event.create({
+      let result = await prismaInstance.event.create({
         data: {
           id: event.id,
           name: event.name,
-          data: event.data,
+          data: JSON.stringify(event.data),
           status: event.getStatus(),
           retries: event.getRetries(),
           aggregateId: event.aggregateId,
