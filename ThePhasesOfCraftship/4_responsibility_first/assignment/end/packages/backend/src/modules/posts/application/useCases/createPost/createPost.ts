@@ -7,7 +7,6 @@ import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { PostVote } from "../../../domain/postVote";
-import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
 
@@ -15,8 +14,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
 
   constructor(
     private postRepository: PostsRepository, 
-    private memberRepository: MembersRepository,
-    private eventBus: EventBus
+    private memberRepository: MembersRepository
   ) {}
 
   async execute(request: CreatePostCommand): Promise<CreatePostResponse> {
@@ -53,8 +51,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
     initialMemberVoteOrError.castVote('upvote');
 
     try {
-      await this.postRepository.save(postOrError);
-      await this.eventBus.publishEvents(postOrError.getDomainEvents());
+      await this.postRepository.saveAggregateAndEvents(postOrError, postOrError.getDomainEvents());
 
       return success(postOrError);
       

@@ -18,8 +18,8 @@ describe('voteOnPost', () => {
 
   const prisma = new PrismaClient();
   const eventsTable = new EventOutboxTable(prisma);
-  const memberRepository = new ProductionMembersRepository(prisma);
-  const postRepository = new ProductionPostsRepository(prisma);
+  const memberRepository = new ProductionMembersRepository(prisma, eventsTable);
+  const postRepository = new ProductionPostsRepository(prisma, eventsTable);
   const voteRepository = new ProductionVotesRepository(prisma, eventsTable);
   const useCase = new VoteOnPost(memberRepository, postRepository, voteRepository);
 

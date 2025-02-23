@@ -55,8 +55,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     commentVote.castVote(voteType)
 
     try {
-      await this.voteRepository.save(commentVote);
-      // await this.eventBus.publishEvents(commentVote.getDomainEvents());
+      await this.voteRepository.saveAggregateAndEvents(commentVote, commentVote.getDomainEvents());
 
       return commentVote;
       

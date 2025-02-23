@@ -1,12 +1,22 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Member } from "../../domain/member";
 import { MembersRepository } from "../ports/membersRepository";
+import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class ProductionMembersRepository implements MembersRepository {
 
-  constructor (private prisma: PrismaClient) {
+  constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
     
   }
+
+  saveAggregateAndEvents(member: Member, events: DomainEvent[]): Promise<void> {
+    return this.prisma.$transaction(async (tx) => {
+      await this.save(member, tx);
+      await this.eventsTable.save(events, tx);
+    })
+  }
+
   async findUserByUsername(username: string): Promise<Member | null> {
     
     const memberData = await this.prisma.member.findUnique({
@@ -32,11 +42,13 @@ export class ProductionMembersRepository implements MembersRepository {
     return Member.toDomain(memberData);
   }
 
-  async save(member: Member): Promise<void> {
+  async save(member: Member, transaction?: Prisma.TransactionClient) {
+      const prismaInstance = transaction || this.prisma;
+  
     const memberData = member.toPersistence();
 
     try {
-      await this.prisma.member.upsert({
+      await prismaInstance.member.upsert({
         where: { id: memberData.id },
         update: memberData,
         create: memberData,

@@ -10,7 +10,7 @@ import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepos
 import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
-import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;
@@ -20,7 +20,7 @@ export class PostsModule extends ApplicationModule {
   private constructor(
     private db: Database,
     config: Config,
-    private eventBus: EventBus,
+    private eventOutbox: EventOutboxTable,
     private membersRepository: MembersRepository,
   ) {
     super(config);
@@ -29,8 +29,8 @@ export class PostsModule extends ApplicationModule {
     this.postsController = this.createPostsController();
   }
 
-  static build(db: Database, config: Config, eventBus: EventBus, membersRepository: MembersRepository) {
-    return new PostsModule(db, config, eventBus, membersRepository);
+  static build(db: Database, config: Config, eventOutbox: EventOutboxTable, membersRepository: MembersRepository) {
+    return new PostsModule(db, config, eventOutbox, membersRepository);
   }
 
   private createPostsRepository() {
@@ -40,11 +40,11 @@ export class PostsModule extends ApplicationModule {
       return InMemoryPostsRepository.createWithSeedData();
     }
 
-    return new ProductionPostsRepository(this.db.getConnection());
+    return new ProductionPostsRepository(this.db.getConnection(), this.eventOutbox);
   }
 
   private createPostsService(membersRepository: MembersRepository) {
-    return new PostsService(this.postsRepository, membersRepository, this.eventBus);
+    return new PostsService(this.postsRepository, membersRepository);
   }
 
   private createPostsController() {

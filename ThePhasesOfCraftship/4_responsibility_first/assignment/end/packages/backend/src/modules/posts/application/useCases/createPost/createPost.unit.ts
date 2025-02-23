@@ -8,7 +8,7 @@ import { CreatePostCommand } from "../../../postsCommands";
 import { MemberNotFoundError, PermissionError, ValidationError } from "@dddforum/shared/src/errors";
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { InMemoryEventBus } from "../../../../../shared/eventBus/adapters/inMemoryEventBus";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
@@ -30,11 +30,11 @@ describe ('createPost', () => {
 
   let prisma = new PrismaClient();
   
-  let membersRepo = new ProductionMembersRepository(prisma);
-  let postsRepo = new ProductionPostsRepository(prisma);
-  let eventBus = new InMemoryEventBus();
+  let outboxTable = new EventOutboxTable(prisma);
+  let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
+  let postsRepo = new ProductionPostsRepository(prisma, outboxTable);
   
-  const useCase = new CreatePost(postsRepo, membersRepo, eventBus);
+  const useCase = new CreatePost(postsRepo, membersRepo);
 
   describe('permissions & identity', () => {
 

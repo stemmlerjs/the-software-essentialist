@@ -5,12 +5,16 @@ import { DatabaseError } from "../../../../shared/exceptions";
 import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
+import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];
 
   constructor (posts?: PostReadModel[]) {
     this.posts = posts ? posts : []
+  }
+  saveAggregateAndEvents(post: Post, events: DomainEvent[]): Promise<void> {
+    throw new Error("Method not implemented.");
   }
   getPostById(id: string): Promise<Post | null> {
     throw new Error("Method not implemented.");

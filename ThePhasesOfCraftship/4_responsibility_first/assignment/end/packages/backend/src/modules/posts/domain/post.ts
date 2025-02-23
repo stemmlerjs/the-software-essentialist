@@ -88,7 +88,8 @@ export class Post extends AggregateRoot {
       id: postId,
     });
 
-    post.domainEvents.push(new PostCreated(postId, input.memberId));
+    const postCreated = PostCreated.create({ memberId: input.memberId, postId })
+    post.domainEvents.push(postCreated);
 
     return post;
   }

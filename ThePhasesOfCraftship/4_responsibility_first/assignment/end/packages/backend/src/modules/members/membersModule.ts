@@ -1,11 +1,11 @@
 
-import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 import { Config } from "../../shared/config";
 import { Database } from "../../shared/database";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { MemberService } from "./application/membersService";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";
 import { MembersRepository } from "./repos/ports/membersRepository";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: MembersRepository;
@@ -13,7 +13,7 @@ export class MembersModule extends ApplicationModule {
 
   private constructor(
     private db: Database,
-    private eventBus: EventBus,
+    private eventOutbox: EventOutboxTable,
     config: Config,
   ) {
     super(config);
@@ -22,18 +22,18 @@ export class MembersModule extends ApplicationModule {
   }
 
   createMembersService () {
-    return new MemberService(this.membersRepository, this.eventBus);
+    return new MemberService(this.membersRepository);
   }
   
   createMembersRepository () {
-    return new ProductionMembersRepository(this.db.getConnection())
+    return new ProductionMembersRepository(this.db.getConnection(), this.eventOutbox)
   }
 
   getMembersRepository () {
     return this.membersRepository;
   }
 
-  public static build(db: Database, eventBus: EventBus, config: Config) {
-    return new MembersModule(db, eventBus, config);
+  public static build(db: Database, eventOutbox: EventOutboxTable, config: Config) {
+    return new MembersModule(db, eventOutbox, config);
   }
 }

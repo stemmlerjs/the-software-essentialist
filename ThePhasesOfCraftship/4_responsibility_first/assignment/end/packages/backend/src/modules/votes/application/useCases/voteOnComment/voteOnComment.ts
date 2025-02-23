@@ -7,7 +7,6 @@ import { VoteOnCommentCommand } from "../../../votesCommands";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
-import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
 
@@ -16,8 +15,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
   constructor(
     private memberRepository: MembersRepository,
     private commentRepository: CommentRepository,
-    private voteRepository: VoteRepository,
-    private eventBus: EventBus
+    private voteRepository: VoteRepository
   ) {}
 
   async execute(request: VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
@@ -57,8 +55,9 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     commentVote.castVote(voteType)
 
     try {
-      await this.voteRepository.save(commentVote);
-      await this.eventBus.publishEvents(commentVote.getDomainEvents());
+      const domainEvents = commentVote.getDomainEvents();
+      
+      await this.voteRepository.saveAggregateAndEvents(commentVote, domainEvents);
 
       return commentVote;
       

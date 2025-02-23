@@ -44,7 +44,7 @@ export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputati
 
     memberOrNull.updateReputationScore(newScore);
 
-    await this.memberRepository.save(memberOrNull);
+    await this.memberRepository.saveAggregateAndEvents(memberOrNull, memberOrNull.getDomainEvents());
 
     // There's a chance that the member's reputation level has changed as a result of the 
     // new score as well.

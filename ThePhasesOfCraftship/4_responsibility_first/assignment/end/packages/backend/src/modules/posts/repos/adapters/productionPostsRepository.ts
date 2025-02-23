@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
 import { DatabaseError } from "../../../../shared/exceptions";
 import { Post } from "../../domain/post";
@@ -6,9 +6,18 @@ import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
 import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
+import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 
 export class ProductionPostsRepository implements PostsRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private eventsTable: EventOutboxTable) {}
+
+  saveAggregateAndEvents(post: Post, events: DomainEvent[]): Promise<void> {
+    return this.prisma.$transaction(async (tx) => {
+      await this.save(post, tx);
+      await this.eventsTable.save(events, tx);
+    })
+  }
 
   getPostById(id: string): Promise<Post | null> {
     throw new Error("Method not implemented.");
@@ -85,9 +94,11 @@ export class ProductionPostsRepository implements PostsRepository {
     );
   }
 
-  async save(post: Post): Promise<void | DatabaseError> {
+  async save(post: Post, transaction?: Prisma.TransactionClient): Promise<void | DatabaseError> {
+    const prismaInstance = transaction ? transaction : this.prisma;
+
     try {
-      await this.prisma.post.upsert({
+      await prismaInstance.post.upsert({
         where: { id: post.id },
         update: {
           title: post.title,
