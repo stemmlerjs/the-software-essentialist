@@ -4,6 +4,8 @@
   "description": "The message relay which publishes messages into rabbitmq",
   "main": "index.js",
   "scripts": {
+    "lab:start-relay":"ts-node lab/start-relay.ts",
+    "lab:add-event": "ts-node lab/add-event.ts",
     "build": "tsc -b tsconfig.json",
     "start:dev": "npx nodemon",
     "test": "jest",

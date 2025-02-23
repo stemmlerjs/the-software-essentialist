@@ -58,6 +58,6 @@ export class Relay {
   private async publishToRabbitMQ(event: DomainEvent): Promise<void> {
     // Implement the logic to publish the event to RabbitMQ
     // This is a placeholder function and should be replaced with actual implementation
-    console.log(`Publishing event to RabbitMQ: ${event.name}`);
+    console.log(`Publishing event to RabbitMQ: ${event.name} ${JSON.stringify(event.data)}`);
   }
 }
