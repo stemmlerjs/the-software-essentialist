@@ -16,6 +16,10 @@ export class NatsEventBus implements EventBus {
     console.log('initialized');
   }
 
+  public async stop () {
+    await this.nc.close();
+  }
+
   async publishEvents(events: DomainEvent[]): Promise<void> {
     try {
       for (const event of events) {

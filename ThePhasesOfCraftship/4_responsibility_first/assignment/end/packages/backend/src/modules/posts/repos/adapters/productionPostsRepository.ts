@@ -19,8 +19,26 @@ export class ProductionPostsRepository implements PostsRepository {
     })
   }
 
-  getPostById(id: string): Promise<Post | null> {
-    throw new Error("Method not implemented.");
+  async getPostById(id: string): Promise<Post | null> {
+    const post = await this.prisma.post.findUnique({
+      where: { id },
+      include: {
+        memberPostedBy: true,
+        comments: {
+          include: {
+            memberPostedBy: true
+          }
+        },
+      },
+    });
+
+    if (!post) {
+      return null;
+    }
+
+    return Post.toDomain(
+      post,
+    );
   }
 
   async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {

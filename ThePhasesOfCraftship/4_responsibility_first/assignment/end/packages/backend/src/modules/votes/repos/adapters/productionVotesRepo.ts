@@ -12,20 +12,100 @@ export class ProductionVotesRepository implements VoteRepository {
   constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
   }
 
-  getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup> {
-    throw new Error("Method not implemented.");
+  async getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup> {
+    const [allCommentsCount, allCommentsUpvoteCount, allCommentsDownvoteCount] = await Promise.all([
+      this.prisma.commentVote.count({
+        where: { memberId },
+      }),
+      this.prisma.commentVote.count({
+        where: { 
+          memberId,
+          value: 1
+        },
+      }),
+      this.prisma.commentVote.count({
+        where: { 
+          memberId,
+          value: 1
+        },
+      })
+    ])
+
+    const roundup = MemberCommentVotesRoundup.toDomain({
+      memberId, allCommentsCount, allCommentsUpvoteCount, allCommentsDownvoteCount
+    });
+
+    console.log(roundup)
+
+    return roundup;
   }
 
-  getMemberPostVotesRoundup(memberId: string): Promise<MemberPostVotesRoundup> {
-    throw new Error("Method not implemented.");
+  async getMemberPostVotesRoundup(memberId: string): Promise<MemberPostVotesRoundup> {
+    const [allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount] = await Promise.all([
+      this.prisma.postVote.count({
+        where: { memberId },
+      }),
+      this.prisma.postVote.count({
+        where: { 
+          memberId,
+          value: 1
+        },
+      }),
+      this.prisma.postVote.count({
+        where: { 
+          memberId,
+          value: 1
+        },
+      })
+    ])
+
+    const roundup = MemberPostVotesRoundup.toDomain({
+      memberId, allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount
+    });
+
+    console.log(roundup)
+
+    return roundup;
   }
   
-  async findVoteByMemberAndCommentId(memberId: string, commentId: string) {
-    return null;
+  async findVoteByMemberAndCommentId(memberId: string, commentId: string): Promise<CommentVote | null> {
+    const vote = await this.prisma.commentVote.findUnique({
+      where: {
+        memberId_commentId: {
+          memberId,
+          commentId
+        }
+      }
+    });
+
+    if (!vote) return null;
+
+    return CommentVote.toDomain({
+      id: vote.id,
+      memberId: vote.memberId,
+      commentId: vote.commentId,
+      voteState: vote.value === 1 ? 'Upvoted' : vote.value === -1 ? 'Downvoted' : 'Default'
+    });
   }
 
-  async findVoteByMemberAndPostId(memberId: string, postId: string) {
-    return null;
+  async findVoteByMemberAndPostId(memberId: string, postId: string): Promise<PostVote | null> {
+    const vote = await this.prisma.postVote.findUnique({
+      where: {
+        memberId_postId: {
+          memberId,
+          postId
+        }
+      }
+    });
+
+    if (!vote) return null;
+
+    return PostVote.toDomain({
+      id: vote.id,
+      memberId: vote.memberId,
+      postId: vote.postId,
+      voteState: vote.value === 1 ? 'Upvoted' : vote.value === -1 ? 'Downvoted' : 'Default'
+    });
   }
 
   async save(vote: PostVote | CommentVote, transaction?: Prisma.TransactionClient) {

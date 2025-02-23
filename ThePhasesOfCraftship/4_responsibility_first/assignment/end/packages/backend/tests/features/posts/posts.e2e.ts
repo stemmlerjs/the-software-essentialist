@@ -3,9 +3,7 @@ import { APIClient, createAPIClient } from "@dddforum/shared/src/api";
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { CompositionRoot } from "../../../src/shared/compositionRoot";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
-import { Database } from "../../../src/shared/database";
 import { Config } from "../../../src/shared/config";
-import { WebServer } from "../../../src/shared/http";
 import { Member, MemberReputationLevel } from "../../../src/modules/members/domain/member";
 import { MemberUsername } from "../../../src/modules/members/domain/memberUsername";
 
@@ -37,8 +35,6 @@ async function setupPost (apiClient: APIClient, member: Member, authToken: strin
 
 describe('posts', () => {
 
-  describe ('creating new posts', () => {
-
     let databaseFixture: DatabaseFixture;
     let apiClient = createAPIClient("http://localhost:3000");
     let composition: CompositionRoot;
@@ -51,7 +47,7 @@ describe('posts', () => {
     });
 
     afterAll(async () => {
-      await composition['webServer'].stop();
+      await composition.stop()
     });
 
     // TODO: Soon, we will need to use a sandboxed auth token to do this (RDD-first)
@@ -95,6 +91,7 @@ describe('posts', () => {
       
       await new Promise(resolve => setTimeout(resolve, 3000));
 
+      // Read model updated
       let getPostResponse = await apiClient.posts.getPostById(response.data.id);
       expect(getPostResponse.success).toBe(true);
       expect(getPostResponse.data.title).toBe(postData.title);
@@ -173,5 +170,21 @@ describe('posts', () => {
       expect(response.error).toBeDefined();
     });
 
-  });
+
+    // TODO: Final test
+
+    it(`Given a member with a level 2 reputation exists and has 9 posts, 
+      each with 1 upvote by different members, 
+      when a new post is upvoted, 
+      then it should trigger a member reputation update and send a notification to the member`, async () => {
+
+      // Create a member with a level 2 reputation and 9 posts with 9 upvotes, each by different members on each of them
+      // Create the new post we're going to upvote
+      // Create the new member that's going to upvote the new post
+
+      // Upvote the post
+
+      // Expect that the outbox has an event for the post upvoted
+      // Expect that the outbox also has an event for the member reputation updated since 
+    })
 })

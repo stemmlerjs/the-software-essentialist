@@ -45,7 +45,7 @@ export class CompositionRoot {
 
   private constructor(config: Config) {
     this.config = config;
-    
+
     // Create services
     this.dbConnection = this.createDBConnection();
     this.eventBus = this.createEventBus();
@@ -70,6 +70,11 @@ export class CompositionRoot {
     
     
     this.mountRoutes();
+  }
+
+  async stop () {
+    await this.webServer.stop();
+    await this.eventBus.stop();
   }
 
   createEventsTable () {
