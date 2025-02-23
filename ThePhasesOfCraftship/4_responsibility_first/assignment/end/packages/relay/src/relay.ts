@@ -2,6 +2,7 @@
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
 import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
+import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 
 export class Relay {
   private queue: DomainEvent[];
@@ -9,7 +10,7 @@ export class Relay {
 
   constructor (
     private outboxTable: EventOutboxTable, 
-    private publisher: RabbitMQMessageBus
+    private publisher: EventBus
   ) {
     this.queue = []
   }
@@ -65,6 +66,6 @@ export class Relay {
 
   private async publishToRabbitMQ(event: DomainEvent): Promise<void> {
     console.log(`Publishing event to RabbitMQ: ${event.name} ${JSON.stringify(event.data)}`);
-    await this.publisher.publish(event.name, event);
+    await this.publisher.publishEvents([event]);
   }
 }

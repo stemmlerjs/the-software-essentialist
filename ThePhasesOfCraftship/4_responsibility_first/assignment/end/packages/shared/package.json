@@ -13,7 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amqplib": "^0.8.0"
+    "amqplib": "^0.8.0",
+    "nats": "^2.29.2"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6"

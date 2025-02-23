@@ -1,22 +1,21 @@
-import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
+import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { NatsEventBus } from "@dddforum/shared/src/events/bus/adapters/natsEventBus";
 
-const rabbitMQ = new RabbitMQMessageBus({
-  connectionString: 'amqp://user:password@127.0.0.1:5672',
-  exchange: 'domain-events'
-});
+const natsEventBus = new NatsEventBus();
 
-rabbitMQ.connect().then(() => {
-  rabbitMQ.subscribe('TestEvent', (message: string) => {
-    console.log('test event!!!!', message)
-  });
+natsEventBus.initialize().then(() => {
+  console.log('connectd');
+  natsEventBus.subscribe('TestEvent', (event: DomainEvent) => {
+    console.log('test event!!!!', event)
+  })
   
-  rabbitMQ.subscribe('AnotherTestEvent', (message: string) => {
-    console.log('another test event!!!!', message)
+  natsEventBus.subscribe('AnotherTestEvent', (event: DomainEvent) => {
+    console.log('another test event!!!!', event)
   });
-  
-  console.log(rabbitMQ.getSubscribers('TestEvent'));
 })
-
+.catch((err) => {
+  console.error(err)
+})
 
 
 // rabbitMQ.listen();

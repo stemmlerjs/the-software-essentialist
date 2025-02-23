@@ -1,16 +1,20 @@
 version: '3.8'
 
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
+  nats:
+    image: nats:latest
+    container_name: nats
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "4222:4222"
+      - "8222:8222"
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      - NATS_USER=user
+      - NATS_PASSWORD=password
+    command: ["-js", "--store_dir", "/data/jetstream"]
+    volumes:
+      - ./nats-data:/data/jetstream
 
-# After starting the container, Rabbitmq is now accessible at 
-# http://127.0.0.1:15672. 
-# The default username and password should be user:password.
+# After starting the container, NATS with JetStream is now accessible at 
+# nats://127.0.0.1:4222 for client connections and 
+# http://127.0.0.1:8222 for monitoring.
+
