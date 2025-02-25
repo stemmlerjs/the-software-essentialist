@@ -1,9 +1,36 @@
 
+import { Request } from "express";
+import {
+  MissingRequestParamsException,
+} from "../../shared/exceptions";
+import { CreateMemberInput } from "@dddforum/shared/src/api/members";
+
 export class CreateMemberCommand {
-  constructor(
-    public readonly props: {
-      name: string;
-      email: string;
+
+  constructor(public props: CreateMemberInput) {}
+
+  static fromRequest(body: Request['body']) {
+    const { userId, username, email, allowMarketingEmails } = body;
+
+    if (!username) {
+      throw new MissingRequestParamsException(["username"]);
     }
-  ) {}
+
+    if (!userId) {
+      throw new MissingRequestParamsException(["userId"]);
+    }
+
+
+    if (!email) {
+      throw new MissingRequestParamsException(["email"]);
+    }
+
+    if (!allowMarketingEmails) {
+      throw new MissingRequestParamsException(["allowMarketingEmails"]);
+    }
+
+    return new CreateMemberCommand({ ...body });
+  }
 }
+
+

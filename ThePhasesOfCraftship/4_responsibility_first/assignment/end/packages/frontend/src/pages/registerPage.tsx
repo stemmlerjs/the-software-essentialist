@@ -1,31 +1,17 @@
-
-import { ToastContainer } from 'react-toastify';
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
-import { useSpinner } from '../shared/contexts/spinnerContext';
-import { Layout } from '../shared/components/layout';
-import { RegistrationForm } from '../shared/components/registrationForm';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
-import { registrationPresenter } from '../main';
-
 
 export const RegisterPage = () => {
+  const { loginWithRedirect } = useAuth0();
 
-  const spinner = useSpinner();
+  useEffect(() => {
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: "signup",
+      }
+    });
+  }, []);
 
-  return (
-    <Layout>
-      <ToastContainer/>
-      <div>Create Account</div>
-      <RegistrationForm
-        onSubmit={(input: CreateUserParams, allowMarketingEmails: boolean) =>
-          registrationPresenter.submitForm(input, allowMarketingEmails, {
-            onStart: () => spinner.activate(),
-            onSuccess: () => spinner.deactivate(),
-            onFailure: () => spinner.deactivate()
-          })
-        }
-      />
-      <OverlaySpinner isActive={spinner.spinner?.isActive}/>
-    </Layout>
-  );
+  return <OverlaySpinner isActive={true} />;
 };

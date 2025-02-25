@@ -14,6 +14,7 @@
     "test:e2e:dev": "jest -c jest.config.e2e.ts --watch"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.3.0",
     "@dddforum/shared": "file:../shared",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -30,6 +31,7 @@
     "react-toastify": "^9.1.3"
   },
   "devDependencies": {
+    "@types/auth0": "^3.3.10",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",

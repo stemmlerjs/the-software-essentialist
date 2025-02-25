@@ -9,9 +9,12 @@ export class ProductionMembersRepository implements MembersRepository {
   constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
     
   }
+  getMemberByUserId(userId: string): Promise<Member | null> {
+    throw new Error("Method not implemented.");
+  }
 
   saveAggregateAndEvents(member: Member, events: DomainEvent[]): Promise<void> {
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await this.save(member, tx);
       await this.eventsTable.save(events, tx);
     })

@@ -2,6 +2,7 @@ import { createUsersAPI } from "./users";
 import { createMarketingAPI } from "./marketing";
 import { createPostsAPI } from "./posts";
 import { createVotesAPI } from "./votes";
+import { createMembersAPI } from "./members";
 
 export type Error<U> = {
   message?: string;
@@ -14,9 +15,15 @@ export type APIResponse<T, U> = {
   error?: Error<U>;
 };
 
+export const getAuthHeaders = (token?: string) => ({
+  headers: token ? {
+    Authorization: `Bearer ${token}`
+  } : {}
+});
+
 export const createAPIClient = (apiURL: string) => {
   return {
-    users: createUsersAPI(apiURL),
+    members: createMembersAPI(apiURL),
     marketing: createMarketingAPI(apiURL),
     posts: createPostsAPI(apiURL),
     votes: createVotesAPI(apiURL),

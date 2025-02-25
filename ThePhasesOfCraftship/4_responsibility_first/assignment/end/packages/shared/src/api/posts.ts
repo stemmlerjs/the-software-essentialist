@@ -1,5 +1,5 @@
 import axios from "axios";
-import { APIResponse } from ".";
+import { APIResponse, getAuthHeaders } from ".";
 import { ServerError } from "../errors";
 import { PostType } from "@dddforum/backend/src/modules/posts/domain/postType";
 
@@ -60,15 +60,15 @@ export type CreatePostInput = {
 }
 
 export const createPostsAPI = (apiURL: string) => {
+
   return {
-    // auth
     create: async (command: CreatePostInput, authToken: string): Promise<CreatePostAPIResponse> => {
       try {
-        const successResponse = await axios.post(`${apiURL}/posts/new`, command, {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        });
+        const successResponse = await axios.post(
+          `${apiURL}/posts/new`, 
+          command, 
+          getAuthHeaders(authToken)
+        );
         return successResponse.data as CreatePostAPIResponse;
       } catch (err) {
         //@ts-expect-error

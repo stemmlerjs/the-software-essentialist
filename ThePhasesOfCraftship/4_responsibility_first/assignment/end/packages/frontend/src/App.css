@@ -21,6 +21,10 @@ body {
   border-radius: 0.2rem;
 }
 
+button {
+  color: white;
+}
+
 #app-logo img {
   max-width: 4rem;
 }

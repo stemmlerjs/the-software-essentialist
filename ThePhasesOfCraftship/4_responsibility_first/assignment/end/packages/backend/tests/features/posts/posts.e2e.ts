@@ -1,4 +1,3 @@
-
 import { createAPIClient } from "@dddforum/shared/src/api";
 import { CreatePostInput } from "@dddforum/shared/src/api/posts";
 import { CompositionRoot } from "../../../src/shared/compositionRoot";
@@ -10,6 +9,7 @@ import { setupMember } from "../../fixtures/members";
 import { setupLevel2MemberWithUpvotedPost, setupPost } from "../../fixtures/posts";
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
 import { MemberReputationLevelUpgraded } from "@dddforum/backend/src/modules/members/domain/memberReputationLevelUpgraded";
+import jwt from 'jsonwebtoken';
 
 describe('posts', () => {
 
@@ -33,8 +33,26 @@ describe('posts', () => {
     // TODO: We will hook this up afterwards in RDD-First part 2
     let authToken: string = "asdasds"
 
+    // Create a mock JWT token for testing
+    const createTestToken = (memberId: string) => {
+      return jwt.sign(
+        { 
+          sub: memberId,
+          permissions: ['create:posts']
+        },
+        'test-secret',
+        { expiresIn: '1h' }
+      );
+    };
+
+    beforeEach(() => {
+      // Reset authToken before each test
+      authToken = '';
+    });
+
     it('should not be able to create a post if they are level 1', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level1);
+      authToken = createTestToken(member.id);
     
       let postData: CreatePostInput = {
         memberId: member.id,

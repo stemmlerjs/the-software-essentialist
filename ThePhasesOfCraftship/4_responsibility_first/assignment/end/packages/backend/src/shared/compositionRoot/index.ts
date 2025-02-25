@@ -103,9 +103,6 @@ export class CompositionRoot {
 
   createUsersModule() {
     return UsersModule.build(
-      this.dbConnection,
-      this.notificationsModule.getTransactionalEmailAPI(),
-      this.membersModule.getMembersRepository(),
       this.config,
     );
   }
