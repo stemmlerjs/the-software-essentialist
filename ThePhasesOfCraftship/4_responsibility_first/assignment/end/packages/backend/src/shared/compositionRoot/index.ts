@@ -59,15 +59,16 @@ export class CompositionRoot {
     await this.webServer.start();
     await this.eventBus.initialize();
     
-    // Connect modules
+    // Connect modules starting with the root modules (generic)
+    this.usersModule = this.createUsersModule();
     this.notificationsModule = this.createNotificationsModule();
     this.marketingModule = this.createMarketingModule();
+
+    // Build the core modules
     this.membersModule = this.createMembersModule();
     this.postsModule = this.createPostsModule();
     this.commentsModule = this.createCommentsModule();
     this.votesModule = this.createVotesModule();
-    this.usersModule = this.createUsersModule();
-    
     
     this.mountRoutes();
   }
@@ -89,6 +90,7 @@ export class CompositionRoot {
     return MembersModule.build(
       this.dbConnection, 
       this.eventsOutboxTable, 
+      this.usersModule.getUsersService(),
       this.config
     );
   }
@@ -110,6 +112,7 @@ export class CompositionRoot {
   createVotesModule () {
     return VotesModule.build(
       this.dbConnection, 
+      // TODO: just pass modules to each other entirely
       this.membersModule.getMembersRepository(),
       this.commentsModule.getCommentsRepository(),
       this.postsModule.getPostsRepository(),
@@ -155,7 +158,7 @@ export class CompositionRoot {
 
   private mountRoutes() {
     this.marketingModule.mountRouter(this.webServer);
-    this.usersModule.mountRouter(this.webServer);
+    this.membersModule.mountRouter(this.webServer);
     this.postsModule.mountRouter(this.webServer);
     this.votesModule.mountRouter(this.webServer)
   }
@@ -210,7 +213,6 @@ export class CompositionRoot {
 
   getRepositories() {
     return {
-      users: this.usersModule.getUsersRepository(),
       posts: this.postsModule.getPostsRepository(),
     };
   }

@@ -2,17 +2,17 @@ import { PrismaClient } from "@prisma/client";
 import { Member } from "../../../domain/member";
 import { CreateMember } from "./createMember";
 import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
-import { UsersService } from "../../../../users/application/usersService";
+import { UserIdentityService } from "../../../../users/application/userIdentityService";
 import { CreateMemberCommand } from "../../../memberCommands";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
-import { } from '../../../../users/application/usersService'
+import { } from '../../../../users/application/userIdentityService'
 import { Auth0 } from "../../../../users/externalServices/adapters/auth0";
 
 describe('createMember', () => {
   let prisma = new PrismaClient();
   let auth0 = new Auth0();
-  let usersService = new UsersService(auth0);
+  let usersService = new UserIdentityService(auth0);
   let outboxTable = new EventOutboxTable(prisma);
   let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
   const useCase = new CreateMember(usersService, membersRepo);
@@ -29,8 +29,7 @@ describe('createMember', () => {
     const command = new CreateMemberCommand({
       username: 'validuser',
       email: 'test@example.com',
-      userId: 'auth0|123',
-      allowMarketingEmails: true
+      userId: 'auth0|123'
     });
 
     const response = await useCase.execute(command);
@@ -53,8 +52,7 @@ describe('createMember', () => {
     const command = new CreateMemberCommand({
       username: 'takenuser',
       email: 'test@example.com',
-      userId: 'auth0|123',
-      allowMarketingEmails: true
+      userId: 'auth0|123'
     });
 
     const response = await useCase.execute(command);
@@ -71,8 +69,7 @@ describe('createMember', () => {
     const command = new CreateMemberCommand({
       username: '', // Invalid username
       email: 'test@example.com',
-      userId: 'auth0|123',
-      allowMarketingEmails: true
+      userId: 'auth0|123'
     });
 
     const response = await useCase.execute(command);

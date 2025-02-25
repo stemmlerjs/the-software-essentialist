@@ -6,7 +6,7 @@ import { UserDetails } from "../domain/userDetails";
 import { IdentityServiceAPI } from "../externalServices/ports/identityServiceAPI";
 import { NotFoundError } from "@dddforum/shared/src/errors";
 
-export class UsersService {
+export class UserIdentityService {
   constructor(
     private identityServiceAPI: IdentityServiceAPI
   ) {}
@@ -19,6 +19,7 @@ export class UsersService {
       } 
       return new NotFoundError();
     } catch (err) {
+      console.log(err);
       throw new Error('error occurreted getting user from service')
     }
   }

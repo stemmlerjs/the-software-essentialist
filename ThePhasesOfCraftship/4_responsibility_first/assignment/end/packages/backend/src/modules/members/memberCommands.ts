@@ -25,10 +25,6 @@ export class CreateMemberCommand {
       throw new MissingRequestParamsException(["email"]);
     }
 
-    if (!allowMarketingEmails) {
-      throw new MissingRequestParamsException(["allowMarketingEmails"]);
-    }
-
     return new CreateMemberCommand({ ...body });
   }
 }

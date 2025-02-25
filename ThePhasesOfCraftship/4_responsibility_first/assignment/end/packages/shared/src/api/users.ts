@@ -44,8 +44,22 @@ export type UserResponse = APIResponse<
   GetUserErrors
 >;
 
+// TODO: implement
+type AuthenticateResponse = any;
+
 export const createUsersAPI = (apiURL: string) => {
   return {
+    authenticate: async (code: string): Promise<CreateUserResponse> => {
+      try {
+        const successResponse = await axios.post(`${apiURL}/users/authenticate`, {
+          code
+        });
+        return successResponse.data as AuthenticateResponse;
+      } catch (err) {
+        //@ts-ignore
+        return err.response.data as AuthenticateResponse;
+      }
+    },
     register: async (input: CreateUserParams): Promise<CreateUserResponse> => {
       try {
         const successResponse = await axios.post(`${apiURL}/users/new`, {

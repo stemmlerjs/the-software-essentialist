@@ -1,35 +1,52 @@
-
-import { UsersService } from "./application/usersService";
+import { UserIdentityService } from "./application/userIdentityService";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { Config } from "../../shared/config";
 import { IdentityServiceAPI } from "./externalServices/ports/identityServiceAPI";
 import { Auth0 } from "./externalServices/adapters/auth0";
+import { WebServer } from "../../shared/http/webServer";
+import { UsersController } from "./usersController";
+import { userErrorHandler } from "./usersErrors"; // You'll need to create this
 
 export class UsersModule extends ApplicationModule {
-  private usersService: UsersService;
+  private usersService: UserIdentityService;
   private identityServiceAPI: IdentityServiceAPI;
+  private usersController: UsersController;
 
   private constructor(
     config: Config,
   ) {
     super(config);
+    // Build external services + repos, then services, then controllers
+    this.identityServiceAPI = this.createIdentityServiceAPI(config);
     this.usersService = this.createUsersService();
-    this.identityServiceAPI = this.createIdentityServiceAPI();
+    this.usersController = this.createUsersController(config);
   }
 
-  private createIdentityServiceAPI () {
-    return new Auth0();
+  private createIdentityServiceAPI(config: Config) {
+    return new Auth0(
+      config.auth0.domain,
+      config.auth0.clientId,
+      config.auth0.clientSecret
+    );
+  }
+
+  private createUsersService() {
+    return new UserIdentityService(this.identityServiceAPI);
+  }
+
+  private createUsersController(config: Config) {
+    return new UsersController(config, userErrorHandler);
   }
 
   static build(config: Config) {
     return new UsersModule(config);
   }
 
-  private createUsersService() {
-    return new UsersService(this.identityServiceAPI);
-  }
-
   public getUsersService() {
     return this.usersService;
+  }
+
+  public mountRouter(webServer: WebServer) {
+    webServer.mountRouter("/users", this.usersController.getRouter());
   }
 }

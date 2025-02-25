@@ -52,6 +52,10 @@ export class Member extends AggregateRoot {
     return this.props.reputationLevel;
   }
 
+  get userId () {
+    return this.props.userId;
+  }
+
   updateReputationScore (newScore: number) {
     this.props.reputationScore = newScore;
 
@@ -77,6 +81,9 @@ export class Member extends AggregateRoot {
     if (memberUsername instanceof ValidationError) {
       return memberUsername;
     }
+
+    // Can also validate userId and all other properties properly using either zod, 
+    // value objects, or a mixture of both, with zod encapsulated within the objects.
 
     return new Member({
       ...inputProps,

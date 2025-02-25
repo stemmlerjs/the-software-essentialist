@@ -1,9 +1,9 @@
-
 import { Request, Response, NextFunction } from "express";
 import { UserResponse } from "@dddforum/shared/src/api/users";
 import { CustomException } from "../../shared/exceptions";
 import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
+import { ErrorRequestHandler } from 'express';
 
 // Todo: refactor all of these to use the new error handling system
 

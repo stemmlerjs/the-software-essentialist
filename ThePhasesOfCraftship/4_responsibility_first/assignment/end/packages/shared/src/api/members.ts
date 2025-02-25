@@ -13,7 +13,6 @@ export type CreateMemberInput = {
   username: string; 
   email: string; 
   userId: string;
-  allowMarketingEmails: boolean;
 }
 
 // TODO: Fix all types for errors

@@ -1,4 +1,4 @@
-import { UseCase, UseCaseResponse } from "@dddforum/shared/src/core/useCase";
+import { success, UseCase, UseCaseResponse } from "@dddforum/shared/src/core/useCase";
 import { SendNotificationCommand } from "../../../notificationCommands";
 import { MemberNotFoundError, ServerError } from "@dddforum/shared/src/errors";
 import { TransactionalEmailAPI } from "../../../externalServices/ports/transactionalEmailAPI";
@@ -14,6 +14,7 @@ export class SendNotification implements UseCase<SendNotificationCommand, SendNo
   }
 
   async execute(request: SendNotificationCommand): Promise<SendNotificationResponse> {
-      throw new Error('Not yet implemented')
+      console.log('SendNotification -> Not yet implemented')
+      return success(undefined)
     }
 }
