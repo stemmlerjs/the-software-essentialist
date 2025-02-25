@@ -1,18 +1,18 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
-import App from './App.js'
+import App from './App'
 import './index.css'
-import { createAPIClient } from '@dddforum/shared/src/api/index.js';
-import { PostsPresenter } from './modules/posts/application/postsPresenter.js';
-import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository.js';
-import { fakePostsData } from './modules/posts/__tests__/fakePostsData.js';
-import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo.js';
-import { fakeUserData } from './modules/users/__tests__/fakeUserData.js';
-import { NavLoginPresenter } from './modules/users/application/navLoginPresenter.js';
-import { ProductionNavigationRepository } from './modules/navigation/repos/productionNavigationRepository.js';
-import { RegistrationPresenter } from './modules/users/application/registrationPresenter.js';
-import { ToastService } from './shared/services/toastService.js';
-import { MarketingService } from './shared/services/marketingService.js';
+import { createAPIClient } from '@dddforum/shared/src/api';
+import { PostsPresenter } from './modules/posts/application/postsPresenter';
+import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository';
+import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
+import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
+import { fakeUserData } from './modules/users/__tests__/fakeUserData';
+import { NavLoginPresenter } from './modules/users/application/navLoginPresenter';
+import { ProductionNavigationRepository } from './modules/navigation/repos/productionNavigationRepository';
+import { RegistrationPresenter } from './modules/users/application/registrationPresenter';
+import { ToastService } from './shared/services/toastService';
+import { MarketingService } from './shared/services/marketingService';
 
 const apiClient = createAPIClient('http://localhost:3000');
 const postsRepository = new FakePostsRepository(fakePostsData);
