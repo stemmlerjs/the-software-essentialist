@@ -111,6 +111,19 @@ export const createPostsAPI = (apiURL: string) => {
         //@ts-expect-error
         return err.response.data as GetPostByIdAPIResponse;
       }
+    },
+    voteOnPost: async (command: VoteOnPostInput, authToken: string): Promise<APIResponse<VoteDTO, ServerError>> => {
+      try {
+        const successResponse = await axios.post(`${apiURL}/posts/${command.postId}/vote`, command, {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+        return successResponse.data as APIResponse<VoteDTO, ServerError>;
+      } catch (err) {
+        //@ts-expect-error
+        return err.response.data as APIResponse<VoteDTO, ServerError>;
+      }
     }
   };
 };

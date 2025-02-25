@@ -131,6 +131,10 @@ export class CompositionRoot {
     );
   }
 
+  getEventOutboxTable () {
+    return this.eventsOutboxTable;
+  }
+
   getDatabase() {
     if (!this.dbConnection) this.createDBConnection();
     return this.dbConnection;

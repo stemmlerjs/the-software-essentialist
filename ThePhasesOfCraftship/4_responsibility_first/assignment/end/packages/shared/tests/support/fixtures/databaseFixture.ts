@@ -5,6 +5,10 @@ import { CreateUserCommand } from "@dddforum/backend/src/modules/users/usersComm
 import { CompositionRoot } from "@dddforum/backend/src/shared/compositionRoot";
 import { Member } from "@dddforum/backend/src/modules/members/domain/member";
 import { MembersModule } from "@dddforum/backend/src/modules/members/membersModule";
+import { Post } from "@dddforum/backend/src/modules/posts/domain/post";
+import { PostsModule } from "@dddforum/backend/src/modules";
+import { PostVote } from "@dddforum/backend/src/modules/posts/domain/postVote";
+import { VotesModule } from "@dddforum/backend/src/modules/votes/votesModule";
 
 export class DatabaseFixture {
   constructor(private composition: CompositionRoot) {
@@ -32,7 +36,19 @@ export class DatabaseFixture {
   async setupWithExistingMembers (members: Member[]) {
     const membersModule = (this.composition.getModule('members') as MembersModule);
     const membersRepo = membersModule.getMembersRepository();
-    await Promise.all(members.map((member) => membersRepo.save(member)));
+    await Promise.all(members.map((member) => membersRepo.saveAggregateAndEvents(member, member.getDomainEvents())));
+  }
+
+  async setupWithExistingPostVotes(postVotes: PostVote[]) {
+    const votesModule = (this.composition.getModule('votes') as VotesModule);
+    const votesRepo = votesModule.getVotesRepository();
+    await Promise.all(postVotes.map((vote) => votesRepo.saveAggregateAndEvents(vote, vote.getDomainEvents())));
+  }
+
+  async setupWithExistingPosts (posts: Post[]) {
+    const postsModule = (this.composition.getModule('posts') as PostsModule);
+    const postsRepo = postsModule.getPostsRepository();
+    return Promise.all(posts.map((post) => postsRepo.saveAggregateAndEvents(post, post.getDomainEvents())));
   }
 
   // Deprecated (auth/identity is moving to an external service)
