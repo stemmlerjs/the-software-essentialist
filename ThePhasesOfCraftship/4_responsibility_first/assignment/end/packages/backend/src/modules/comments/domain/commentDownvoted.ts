@@ -15,7 +15,7 @@ export class CommentDownvoted extends DomainEvent {
     status?: DomainEventStatus,
     createdAt?: string
   ) {
-    super('CommentUpvoted', props, props.commentId, id, retries, status, createdAt);
+    super('CommentDownvoted', props, props.commentId, id, retries, status, createdAt);
   }
 
   public static create (props: CommentDownvotedEventProps) {

@@ -36,8 +36,7 @@ export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputati
     // - all comment upvotes not owned by this member (score)
     // - all post upvotes not owned by this member (score)
     let newScore = commentVotesRoundup.getScore() 
-      + postVotesRoundup.getScore()
-      + memberOrNull.reputationScore;
+      + postVotesRoundup.getScore();
 
     // This is another great example and reason for why we need read models.
     // More optimized queries.

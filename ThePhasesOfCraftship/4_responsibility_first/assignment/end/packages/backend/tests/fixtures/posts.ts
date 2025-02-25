@@ -6,6 +6,7 @@ import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databas
 import { setupMember } from "./members";
 import { Post } from "@dddforum/backend/src/modules/posts/domain/post";
 import { PostVote } from "@dddforum/backend/src/modules/posts/domain/postVote";
+import { ValidationError } from "@dddforum/shared/src/errors";
 
 export async function setupPost (apiClient: APIClient, member: Member, authToken: string) {
   let postData: CreatePostInput = {
@@ -29,7 +30,7 @@ async function _setupPost (fixture: DatabaseFixture, member: Member) {
     postType: "text",
     content: 'This is a new text post that I am creating!'
   })
-  if (postOrError instanceof Post) {
+  if (postOrError instanceof ValidationError) {
     throw new Error('validation error creating post')
   }
   const validatedPost = postOrError as Post;
@@ -60,6 +61,9 @@ export async function setupLevel2MemberWithUpvotedPost ({ fixture, upvoteCount }
   await setupVotesOnPost(fixture, { post, upvoteCount });
 
   // TODO: Assert that the post has the correct number of votes
+  const count = await fixture['composition'].getDatabase().getConnection().postVote.count({ where: { postId: post.id, value: 1 } })
+  console.log('count!', count);
+  
   // TODO: Assert that the member is level 2
   // TODO: Assert that the current member score of this member is correct based on the votes
   

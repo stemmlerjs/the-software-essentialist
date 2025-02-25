@@ -1,6 +1,7 @@
 import { createUsersAPI } from "./users";
 import { createMarketingAPI } from "./marketing";
 import { createPostsAPI } from "./posts";
+import { createVotesAPI } from "./votes";
 
 export type Error<U> = {
   message?: string;
@@ -18,6 +19,7 @@ export const createAPIClient = (apiURL: string) => {
     users: createUsersAPI(apiURL),
     marketing: createMarketingAPI(apiURL),
     posts: createPostsAPI(apiURL),
+    votes: createVotesAPI(apiURL),
   };
 };
 

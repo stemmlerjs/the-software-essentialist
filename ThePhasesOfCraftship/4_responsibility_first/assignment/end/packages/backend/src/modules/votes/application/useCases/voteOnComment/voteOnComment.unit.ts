@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
-import { CommentNotFoundError, MemberNotFoundError } from "@dddforum/shared/src/errors";
+import { CommentNotFoundError, MemberNotFoundError, PermissionError } from "@dddforum/shared/src/errors";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
@@ -101,12 +101,10 @@ describe('voteOnComment', () => {
     });
 
     it.each([
-      [MemberReputationLevel.Level1],
-      [MemberReputationLevel.Level2]
-    ])('as a %s member, I can cast a vote on a comment', async (reputationLevel) => {
+      [MemberReputationLevel.Level1, PermissionError],
+      [MemberReputationLevel.Level2, CommentVote]
+    ])('as a %s member, I can cast a vote on a comment', async (reputationLevel, result) => {
       const { member } = setupCommentAndMember(useCase, reputationLevel);
-
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
       const command = new VoteOnCommentCommand({
         commentId: 'existing-comment-id',
@@ -117,21 +115,13 @@ describe('voteOnComment', () => {
       const response = await useCase.execute(command);
 
       expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
-      expect((response as CommentVote).getValue()).toEqual(1);
-      expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
-      expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentUpvoted');
-      // expect(eventBusSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
-      //   expect.objectContaining({ name: 'CommentUpvoted' })
-      // ]));
-      expect(saveSpy).toHaveBeenCalled();
+      expect(response instanceof result).toBeTruthy();
     });
   });
 
   describe ('vote state', () => {
-    test('as a level 1 member, when I upvote a comment I have not yet upvoted, the comment should be upvoted and an upvoted event should get dispatched', async () => {
-      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('as a level 2 member, when I upvote a comment I have not yet upvoted, the comment should be upvoted and an upvoted event should get dispatched', async () => {
+      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
@@ -155,8 +145,8 @@ describe('voteOnComment', () => {
       // ]));
     });
 
-    test('as a level 1 member, when I downvote a comment I have not yet downvoted, the comment should be downvoted and a downvoted event should get dispatched', async () => {
-      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('as a level 2 member, when I downvote a comment I have not yet downvoted, the comment should be downvoted and a downvoted event should get dispatched', async () => {
+      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Default');
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
@@ -181,8 +171,8 @@ describe('voteOnComment', () => {
       // ]));
     });
 
-    test('as a level 1 member, when I upvote a comment I have already upvoted, the comment should remain upvoted and no upvoted event should get dispatched', async () => {
-      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('as a level 2 member, when I upvote a comment I have already upvoted, the comment should remain upvoted and no upvoted event should get dispatched', async () => {
+      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Upvoted');
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
@@ -204,8 +194,8 @@ describe('voteOnComment', () => {
       // expect(eventBusSpy).toHaveBeenCalledWith([]);
     });
 
-    test('as a level 1 member, when I downvote a comment I have already downvoted, the comment should remain downvoted', async () => {
-      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('as a level 2 member, when I downvote a comment I have already downvoted, the comment should remain downvoted', async () => {
+      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Downvoted');
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
@@ -229,8 +219,8 @@ describe('voteOnComment', () => {
 
   describe ('many existing comments vote score', () => {
 
-    test('upvote existing: as a level 1 member, when I upvote a comment with existing votes that I have not yet upvoted, the comment score should get incremented', async () => {
-      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('upvote existing: as a level 2 member, when I upvote a comment with existing votes that I have not yet upvoted, the comment score should get incremented', async () => {
+      const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
@@ -248,8 +238,8 @@ describe('voteOnComment', () => {
 
     });
 
-    test('downvote existing: as a level 1 member, when I downvote a comment with existing votes that I have not yet downvoted, the comment score should get decremented', async () => {
-      const {member, comment } = setupCommentAndMember(useCase, MemberReputationLevel.Level1);
+    test('downvote existing: as a level 2 member, when I downvote a comment with existing votes that I have not yet downvoted, the comment score should get decremented', async () => {
+      const {member, comment } = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 

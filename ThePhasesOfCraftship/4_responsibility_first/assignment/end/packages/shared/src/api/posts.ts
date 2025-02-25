@@ -27,11 +27,6 @@ export type PostDTO = {
   lastUpdated: string;
 };
 
-export type VoteDTO = {
-  id: string;
-  voteType: string;
-}
-
 export type CommentDTO = {
   id: string;
   text: string;
@@ -62,20 +57,6 @@ export type CreatePostInput = {
   memberId: string;
   content?: string;
   link?: string;
-}
-
-export type VoteType = 'upvote' | 'downvote';
-
-export type VoteOnCommentInput = {
-  commentId: string;
-  voteType: VoteType;
-  memberId: string;
-}
-
-export type VoteOnPostInput = {
-  postId: string;
-  voteType: VoteType;
-  memberId: string;
 }
 
 export const createPostsAPI = (apiURL: string) => {
@@ -110,19 +91,6 @@ export const createPostsAPI = (apiURL: string) => {
       } catch (err) {
         //@ts-expect-error
         return err.response.data as GetPostByIdAPIResponse;
-      }
-    },
-    voteOnPost: async (command: VoteOnPostInput, authToken: string): Promise<APIResponse<VoteDTO, ServerError>> => {
-      try {
-        const successResponse = await axios.post(`${apiURL}/posts/${command.postId}/vote`, command, {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        });
-        return successResponse.data as APIResponse<VoteDTO, ServerError>;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as APIResponse<VoteDTO, ServerError>;
       }
     }
   };

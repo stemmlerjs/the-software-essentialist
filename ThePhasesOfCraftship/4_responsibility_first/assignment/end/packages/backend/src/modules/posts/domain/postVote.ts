@@ -1,9 +1,10 @@
-import { VoteType } from "@dddforum/shared/src/api/posts";
+
 import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";
+import { PostVoteDTO, VoteType } from "@dddforum/shared/src/api/votes";
 
 export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
@@ -94,5 +95,13 @@ export class PostVote extends AggregateRoot {
       postId: postId,
       voteState: 'Default'
     });
+  }
+
+  public toDTO (): PostVoteDTO {
+    return {
+      memberId: this.props.memberId,
+      postId: this.props.postId,
+      voteType: this.props.voteState === 'Upvoted' ? 'upvote' : 'downvote'
+    }
   }
 }

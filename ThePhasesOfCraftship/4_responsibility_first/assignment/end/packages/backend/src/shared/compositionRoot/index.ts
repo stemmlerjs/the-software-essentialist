@@ -160,6 +160,7 @@ export class CompositionRoot {
     this.marketingModule.mountRouter(this.webServer);
     this.usersModule.mountRouter(this.webServer);
     this.postsModule.mountRouter(this.webServer);
+    this.votesModule.mountRouter(this.webServer)
   }
 
   private createDBConnection() {

@@ -1,9 +1,10 @@
-import { VoteType } from "@dddforum/shared/src/api/posts";
+
 import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
 import { ValidationError } from "@dddforum/shared/src/errors";
 import { randomUUID } from "crypto";
 import { CommentUpvoted } from "./commentUpvoted";
 import { CommentDownvoted } from "./commentDownvoted";
+import { VoteType } from "@dddforum/shared/src/api/votes";
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 

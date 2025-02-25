@@ -19,14 +19,18 @@ export class ProductionVotesRepository implements VoteRepository {
       }),
       this.prisma.commentVote.count({
         where: { 
-          memberId,
+          commentBelongsTo: {
+            memberId,
+          },
           value: 1
         },
       }),
       this.prisma.commentVote.count({
         where: { 
-          memberId,
-          value: 1
+          commentBelongsTo: {
+            memberId,
+          },
+          value: -1
         },
       })
     ])
@@ -35,37 +39,47 @@ export class ProductionVotesRepository implements VoteRepository {
       memberId, allCommentsCount, allCommentsUpvoteCount, allCommentsDownvoteCount
     });
 
-    console.log(roundup)
-
     return roundup;
   }
 
   async getMemberPostVotesRoundup(memberId: string): Promise<MemberPostVotesRoundup> {
-    const [allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount] = await Promise.all([
-      this.prisma.postVote.count({
-        where: { memberId },
-      }),
-      this.prisma.postVote.count({
-        where: { 
-          memberId,
-          value: 1
-        },
-      }),
-      this.prisma.postVote.count({
-        where: { 
-          memberId,
-          value: 1
-        },
-      })
-    ])
-
-    const roundup = MemberPostVotesRoundup.toDomain({
-      memberId, allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount
-    });
-
-    console.log(roundup)
-
-    return roundup;
+    try {
+      const [allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount] = await Promise.all([
+        this.prisma.postVote.count({
+          where: { 
+            postBelongsTo: {
+              memberId
+            }
+          },
+        }),
+        this.prisma.postVote.count({
+          where: { 
+            postBelongsTo: {
+              memberId
+            },
+            value: 1
+          },
+        }),
+        this.prisma.postVote.count({
+          where: { 
+            postBelongsTo: {
+              memberId
+            },
+            value: -1
+          },
+        })
+      ])
+  
+      const roundup = MemberPostVotesRoundup.toDomain({
+        memberId, allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount
+      });
+  
+      return roundup;
+    } catch (err) {
+      console.log(err);
+      throw new Error('Error getting member post votes roundup');
+      
+    }
   }
   
   async findVoteByMemberAndCommentId(memberId: string, commentId: string): Promise<CommentVote | null> {

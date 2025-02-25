@@ -1,14 +1,43 @@
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { randomUUID } from "crypto";
+
+import { DomainEvent, DomainEventStatus } from "@dddforum/shared/src/core/domainEvent";
 import { MemberReputationLevel } from "./member";
+import { Event as EventModel } from '@prisma/client'
+
+interface MemberReputationLevelUpgradedEventProps {
+  memberId: string;
+  newLevel: MemberReputationLevel;
+  newRepuationScore: number;
+}
 
 export class MemberReputationLevelUpgraded extends DomainEvent {
-  constructor (
-    public readonly memberId: string,
-    public readonly newLevel: MemberReputationLevel,
-    public readonly id: string = randomUUID(),
-    public readonly date: Date = new Date()
-    ) {
-      super(id, date, 'MemberReputationLevelUpgraded');
-    }
+  private constructor(
+    props: MemberReputationLevelUpgradedEventProps,
+    id?: string,
+    retries?: number, 
+    status?: DomainEventStatus,
+    createdAt?: string
+  ) {
+    super('MemberReputationLevelUpgraded', props, props.memberId, id, retries, status, createdAt);
+  }
+
+  public static create (props: MemberReputationLevelUpgradedEventProps) {
+    return new MemberReputationLevelUpgraded(props);
+  }
+
+  public static toDomain (eventModel: EventModel): MemberReputationLevelUpgraded {
+    const serializedData = JSON.parse(eventModel.data) as MemberReputationLevelUpgradedEventProps
+
+    // Validate this data here using zod or something
+
+    return new MemberReputationLevelUpgraded(
+      {
+        memberId: serializedData.memberId,
+        newLevel: serializedData.newLevel,
+        newRepuationScore: serializedData.newRepuationScore
+      }, 
+      eventModel.id, eventModel.retries, 
+      eventModel.status as DomainEventStatus, 
+      eventModel.dateCreated.toISOString()
+    )
+  }
 }

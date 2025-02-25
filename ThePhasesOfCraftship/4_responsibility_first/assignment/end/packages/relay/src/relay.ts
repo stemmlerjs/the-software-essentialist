@@ -7,6 +7,7 @@ import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
 export class Relay {
   private queue: DomainEvent[];
   private isProcessing = false;
+  private static QUEUE_PROCESS_INTERVAL = 2000;
 
   constructor (
     private outboxTable: EventOutboxTable, 
@@ -44,25 +45,31 @@ export class Relay {
       return;
     }
 
-    const event = this.queue.shift();
-    if (!event) {
-      return;
+    this.isProcessing = true;
+
+    while (this.queue.length > 0) {
+      const event = this.queue.shift();
+      
+      if (!event) {
+        continue;
+      }
+
+      try {
+        // Attempt to write it to RabbitMQ 
+        await this.publishToRabbitMQ(event);
+
+        // Mark it as published and save the event
+        event.markPublished();
+        await this.outboxTable.save([event]);
+      } catch (error) {
+        event.recordFailureToProcess();
+        // Increment the retries and save the event
+        await this.outboxTable.save([event]);
+      }
     }
 
-    try {
-      // Attempt to write it to RabbitMQ 
-      await this.publishToRabbitMQ(event);
-
-      // Mark it as published and save the event
-      event.markPublished();
-      await this.outboxTable.save([event]);
-    } catch (error) {
-      event.recordFailureToProcess();
-      // Increment the retries and save the event
-      await this.outboxTable.save([event]);
-    }
     this.isProcessing = false;
-  }
+    }
 
   private async publishToRabbitMQ(event: DomainEvent): Promise<void> {
     console.log(`Publishing event to Message Broker: ${event.name} ${JSON.stringify(event.data)}`);

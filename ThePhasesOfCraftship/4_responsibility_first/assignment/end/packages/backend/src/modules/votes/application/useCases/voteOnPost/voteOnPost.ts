@@ -1,6 +1,6 @@
 
 import { CommentNotFoundError, MemberNotFoundError, PermissionError, PostNotFoundError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
-import { UseCase } from "@dddforum/shared/src/core/useCase";
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/shared/src/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
 import { CanVoteOnPostPolicy } from "./canVoteOnPost";
@@ -9,7 +9,7 @@ import { PostVote } from "../../../../posts/domain/postVote";
 import { PostsRepository } from "../../../../posts/repos/ports/postsRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
 
-type VoteOnPostResponse = PostVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
+type VoteOnPostResponse = UseCaseResponse<PostVote | undefined, ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError>
 
 export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse> {
 
@@ -30,15 +30,15 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
     ]);
 
     if (memberOrNull === null) {
-      return new MemberNotFoundError();
+      return fail(new MemberNotFoundError());
     }
 
     if (postOrNull === null) {
-      return new PostNotFoundError();
+      return fail(new PostNotFoundError());
     }
 
     if (!CanVoteOnPostPolicy.isAllowed(memberOrNull)) {
-      return new PermissionError();
+      return fail(new PermissionError());
     }
 
     if (existingVoteOrNull) {
@@ -48,7 +48,7 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
       let postVoteOrError = PostVote.create(memberId, postId);
 
       if (postVoteOrError instanceof ValidationError) {
-        return postVoteOrError;
+        return fail(postVoteOrError);
       }
       postVote = postVoteOrError;
     }
@@ -60,11 +60,11 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
       
       await this.voteRepository.saveAggregateAndEvents(postVote, domainEvents);
 
-      return postVote;
+      return success(postVote);
       
     } catch (error) {
       console.log(error);
-      return new ServerError();
+      return fail(new ServerError());
     }
   }
 }

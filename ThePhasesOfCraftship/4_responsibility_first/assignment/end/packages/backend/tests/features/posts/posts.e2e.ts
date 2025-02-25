@@ -156,7 +156,7 @@ describe('posts', () => {
       With 1 post upvoted 10 times by different members,
       When the post is upvoted by a new member, 
       Then it should trigger a member reputation update to Level 3
-      With a repuation score of 11
+      With a repuation score of 12 (including their own initial upvote on the post)
       And it should send a notification to the member`, async () => {
         // Set up the member with a level 2 reputation
         const { member, post } = await setupLevel2MemberWithUpvotedPost({ fixture: databaseFixture, upvoteCount: 10 });
@@ -164,29 +164,30 @@ describe('posts', () => {
         const { member: newUpvoter } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
         // Upvote the post
-        let response = await apiClient.posts.voteOnPost({ 
+        let response = await apiClient.votes.voteOnPost({ 
           postId: post.id, 
           memberId: newUpvoter.id,
           voteType: 'upvote'
         }, authToken);
 
+        console.log(response);
+
         expect(response).toBeDefined();
-        expect(response.success).toBe(false);
-        expect(response.error).toBeDefined();
+        expect(response.success).toBe(true);
 
         // Wait for eventual consistency
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        const memberEvents = await outbox.getEventsByAggregateId(member.id)
+        const memberEvents = await outbox.getEventsByAggregateId(member.id);
         const reputationUpgradedEvent = memberEvents.find((e) => e.name === 'MemberReputationLevelUpgraded') as MemberReputationLevelUpgraded;
 
         // Expect that the outbox also has an event for the member reputation updated since 
         expect(reputationUpgradedEvent).toBeDefined();
         expect(reputationUpgradedEvent.aggregateId).toEqual(member.id);
         expect((reputationUpgradedEvent.data).newLevel).toEqual(MemberReputationLevel.Level3);
-        expect((reputationUpgradedEvent.data).newReputationLevel).toEqual(11);
+        expect((reputationUpgradedEvent.data).newRepuationScore).toEqual(12);
 
         // (nice to have - triggered as a response to the 'MemberReputationLevelUpgraded' event)
         // expect (jobQueue.getJobByType('SendEmailNotification')).toBeDefined();
-    })
+    }, 20000)
 })

@@ -26,7 +26,7 @@ export class Member extends AggregateRoot {
   public static REPUTATION_SCORE_THRESHOLD = {
     Level1: 5,
     Level2: 10,
-    Level3: undefined
+    Level3: Infinity
   }
 
   private props: MemberProps;
@@ -53,15 +53,20 @@ export class Member extends AggregateRoot {
   }
 
   updateReputationScore (newScore: number) {
-    const oldScore = this.props.reputationScore;
     this.props.reputationScore = newScore;
 
-    if (oldScore < Member.REPUTATION_SCORE_THRESHOLD.Level1 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level1) {
-      this.props.reputationLevel = MemberReputationLevel.Level1;
-      this.domainEvents.push(new MemberReputationLevelUpgraded(this.id, this.reputationLevel));
-    } else if (oldScore < Member.REPUTATION_SCORE_THRESHOLD.Level2 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level2) {
+    if (this.reputationLevel === MemberReputationLevel.Level1 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level1) {
       this.props.reputationLevel = MemberReputationLevel.Level2;
-      this.domainEvents.push(new MemberReputationLevelUpgraded(this.id, this.reputationLevel));
+      const event = MemberReputationLevelUpgraded.create({ memberId: this.id, newLevel: this.reputationLevel, newRepuationScore: newScore });
+      this.domainEvents.push(event);
+      return;
+    }
+
+    if (this.reputationLevel === MemberReputationLevel.Level2 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level2) {
+      this.props.reputationLevel = MemberReputationLevel.Level3;
+      const event = MemberReputationLevelUpgraded.create({ memberId: this.id, newLevel: this.reputationLevel, newRepuationScore: newScore });
+      this.domainEvents.push(event);
+      return;
     }
   }
 

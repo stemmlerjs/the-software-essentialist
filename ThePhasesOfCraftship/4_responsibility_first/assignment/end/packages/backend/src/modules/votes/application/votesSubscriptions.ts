@@ -27,7 +27,6 @@ export class VotesSubscriptions {
 
   async onPostCreatedCastInitialUpvote (event: PostCreated) {
     try {
-      console.log('casting initial vote on post')
       const command = new VoteOnPostCommand({
         postId: event.data.postId,
         voteType: 'upvote',

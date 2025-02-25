@@ -1,4 +1,5 @@
-import { VoteOnCommentInput, VoteOnPostInput } from "@dddforum/shared/src/api/posts";
+
+import { VoteOnCommentInput, VoteOnPostInput } from "@dddforum/shared/src/api/votes";
 import { MissingRequestParamsException } from "../../shared/exceptions";
 import { Request } from "express";
 

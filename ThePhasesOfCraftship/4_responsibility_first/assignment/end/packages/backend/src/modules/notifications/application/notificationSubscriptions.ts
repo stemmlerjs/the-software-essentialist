@@ -16,7 +16,7 @@ export class NotificationsSubscriptions {
   async onMemberReputationLevelUpgraded(event: MemberReputationLevelUpgraded) {
     try {
       const command = new SendNotificationCommand({
-        memberId: event.memberId,
+        memberId: event.data.memberId,
         correspondingEventName: 'MemberReputationLevelUpgraded'
       });
       await this.notificationService.sendNotification(command)
