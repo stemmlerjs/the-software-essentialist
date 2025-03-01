@@ -23,6 +23,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "inquirer": "^8.2.6"
+    "@types/play-sound": "^1.1.2",
+    "inquirer": "^8.2.6",
+    "play-sound": "^1.1.6"
   }
 }
