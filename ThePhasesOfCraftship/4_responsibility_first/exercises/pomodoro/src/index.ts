@@ -1,8 +1,11 @@
 import inquirer from 'inquirer';
 import player from 'play-sound';
-import { Clock } from './clock';
 import { Console } from './console';
-import { TimerScreen, PromptScreen } from './screen';
+import { TimerScreen } from './screen';
+import { EventEmitter } from './events';
+import { Events, SecondElapsedEvent, SessionEndedEvent } from './pomodoro-events';
+import { CommandHandler } from './command-handler';
+import { PomodoroApp } from './pomodoro-app';
 
 const audioPlayer = player({});
 
@@ -13,30 +16,37 @@ function formatTime(seconds: number): string {
 }
 
 class PomodoroConsoleApp {
-  private readonly WORK_MINUTES = 25;
-  private readonly BREAK_MINUTES = 5;
-  private clock: Clock;
   private console: Console;
-  private unsubscribe: (() => void) | null = null;
+  private events: EventEmitter;
+  private app: PomodoroApp;
+  private commandHandler: CommandHandler;
 
   constructor() {
-    this.clock = new Clock(() => {
-      this.playNotification().catch(console.error);
+    this.events = new EventEmitter();
+    this.app = new PomodoroApp(this.events);
+    
+    this.commandHandler = new CommandHandler(
+      this.app,
+      () => this.cleanup()
+    );
+
+    this.console = new Console(this.commandHandler);
+    this.setupEventHandlers();
+  }
+
+  private setupEventHandlers() {
+    this.events.on<SecondElapsedEvent>(Events.SECOND_ELAPSED, (event) => {
+      const screen = new TimerScreen(
+        event.label,
+        formatTime(event.secondsRemaining),
+        event.isPaused
+      );
+      this.console.render(screen);
     });
 
-    this.console = new Console((key) => {
-      if (key.ctrl && key.name === 'c') {
-        this.cleanup();
-        process.exit(0);
-      } else if (key.name === 'p') {
-        if (this.clock.isPausedState()) {
-          this.clock.resume();
-        } else {
-          this.clock.pause();
-        }
-      } else if (key.name === 's') {
-        this.cleanup();
-        process.exit(0);
+    this.events.on<SessionEndedEvent>(Events.SESSION_ENDED, async (event) => {
+      if (event.reason === 'completed') {
+        await this.playNotification();
       }
     });
   }
@@ -50,27 +60,37 @@ class PomodoroConsoleApp {
     });
   }
 
-  private async startTimer(durationInMinutes: number, label: string): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.unsubscribe = this.clock.subscribe((seconds) => {
-        const screen = new TimerScreen(
-          label,
-          formatTime(seconds),
-          this.clock.isPausedState()
-        );
-        this.console.render(screen);
-      });
+  async startPomodoro() {
+    console.clear();
+    
+    const answer = await inquirer.prompt([{
+      type: 'list',
+      name: 'action',
+      message: 'Ready to start some pomodoros?',
+      choices: [
+        { name: 'Yes (y)', value: 'start', key: 'y' },
+        { name: 'Quit (q)', value: 'quit', key: 'q' }
+      ]
+    }]);
 
-      this.clock.setOnComplete(() => {
-        if (this.unsubscribe) {
-          this.unsubscribe();
-          this.unsubscribe = null;
-        }
-        resolve();
-      });
+    if (answer.action === 'start') {
+      await this.app.startWorkPeriod();
 
-      this.clock.start(durationInMinutes);
-    });
+      const startBreak = await this.promptForBreak();
+      
+      if (startBreak) {
+        await this.app.startBreakPeriod();
+        console.log('Break completed! Great job!');
+      }
+    } else {
+      console.log('Maybe next time!');
+      process.exit(0);
+    }
+  }
+
+  cleanup() {
+    this.app.cleanup();
+    this.console.cleanup();
   }
 
   private async promptForBreak(): Promise<boolean> {
@@ -87,47 +107,6 @@ class PomodoroConsoleApp {
     ]);
 
     return answer.action === 'start';
-  }
-
-  async startPomodoro() {
-    console.clear();
-    
-    const answer = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: 'Ready to start some pomodoros?',
-        choices: [
-          { name: 'Yes (y)', value: 'start', key: 'y' },
-          { name: 'Quit (q)', value: 'quit', key: 'q' }
-        ]
-      }
-    ]);
-
-    if (answer.action === 'start') {
-      // Work period
-      await this.startTimer(this.WORK_MINUTES, 'Work Period');
-
-      // Prompt for break
-      const startBreak = await this.promptForBreak();
-      
-      if (startBreak) {
-        // Break period
-        await this.startTimer(this.BREAK_MINUTES, 'Break Time');
-        console.log('Break completed! Great job!');
-      }
-    } else {
-      console.log('Maybe next time!');
-      process.exit(0);
-    }
-  }
-
-  cleanup() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-    this.clock.stop();
-    this.console.cleanup();
   }
 }
 

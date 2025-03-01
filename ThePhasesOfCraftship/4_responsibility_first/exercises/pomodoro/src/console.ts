@@ -1,12 +1,12 @@
 import readline from 'readline';
 import { Screen } from './screen';
-
-export type KeyHandler = (key: { name: string; ctrl: boolean }) => void;
+import { PauseCommand, StopCommand, QuitCommand } from './commands';
+import { CommandHandler } from './command-handler';
 
 export class Console {
   private removeKeyHandlers: (() => void) | null = null;
 
-  constructor(private readonly keyHandler: KeyHandler) {
+  constructor(private commandHandler: CommandHandler) {
     this.setupKeyHandlers();
   }
 
@@ -16,17 +16,15 @@ export class Console {
     }
     readline.emitKeypressEvents(process.stdin);
 
-    const handler = (str: string, key: { name: string; ctrl: boolean }) => {
-      this.keyHandler(key);
-    };
-
-    process.stdin.on('keypress', handler);
-    this.removeKeyHandlers = () => {
-      process.stdin.removeListener('keypress', handler);
-      if (process.stdin.isTTY) {
-        process.stdin.setRawMode(false);
+    process.stdin.on('keypress', (str: string, key: { name: string; ctrl: boolean }) => {
+      if (key.ctrl && key.name === 'c') {
+        this.commandHandler.handle(new QuitCommand());
+      } else if (key.name === 'p') {
+        this.commandHandler.handle(new PauseCommand(false));
+      } else if (key.name === 's') {
+        this.commandHandler.handle(new StopCommand());
       }
-    };
+    });
   }
 
   render(screen: Screen) {
@@ -40,13 +38,3 @@ export class Console {
     }
   }
 } 
-
-
-const c = new Console((key) => {
-  const quitDetected = key.ctrl && key.name === "c";
-  if (quitDetected) {
-    process.exit(0)
-  }
-  
-  console.log(key)
-})
