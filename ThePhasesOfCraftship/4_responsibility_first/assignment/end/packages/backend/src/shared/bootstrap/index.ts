@@ -1,13 +1,14 @@
+
 import { CompositionRoot } from "../compositionRoot";
 import { Config } from "../config";
-
 const config = new Config("start");
 
-const composition = CompositionRoot.createCompositionRoot(config);
-
 export async function bootstrap() {
+  const composition = CompositionRoot.createCompositionRoot(config);
   return composition.start();
 }
+
+
 
 // const webServer = composition.getWebServer();
 // const dbConnection = composition.getDatabase();

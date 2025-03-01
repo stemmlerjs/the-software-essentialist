@@ -38,6 +38,7 @@ export class CreateMember implements UseCase<CreateMemberCommand, CreateMemberRe
     let existingMember: Member | null =  null;
 
     let validUserIdentityOrNull = await this.userService.getUserById(userId);
+
     if (validUserIdentityOrNull instanceof NotFoundError) {
       // The user does not exist in our identity provider, therefore the request should fail
       return fail(new UserIdentityNotFound())

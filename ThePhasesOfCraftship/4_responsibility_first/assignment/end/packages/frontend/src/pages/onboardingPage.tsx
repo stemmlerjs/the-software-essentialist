@@ -1,24 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { getAuth } from 'firebase/auth';
 import { Layout } from '../shared/components/layout';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
 import { useApi } from '../shared/api/apiClient';
+import { usersRepository } from '../main';
 
 export const OnboardingPage = () => {
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth0();
+  const auth = getAuth();
+  const user = auth.currentUser;
   const navigate = useNavigate();
   const api = useApi();
+  
 
   // Log auth details if available
   if (user) {
     console.log('Auth user details:', {
       email: user.email,
-      name: user.name,
-      sub: user.sub,
+      name: user.displayName,
+      uid: user.uid,
       isAuthenticated: true
     });
   }
@@ -30,13 +33,15 @@ export const OnboardingPage = () => {
     setIsSubmitting(true);
 
     try {
+      // Get fresh ID token
+      const idToken = await user?.getIdToken();
+      
+      
       let response = await api.members.create({
         username,
         email: user?.email || '',
-        allowMarketingEmails: allowMarketing
-      });
-
-      console.log(response)
+        userId: user?.uid || ''
+      }, idToken);
 
       if (response.success) {
         navigate('/');
@@ -44,6 +49,7 @@ export const OnboardingPage = () => {
       
     } catch (error) {
       console.error('Failed to create member:', error);
+    } finally {
       setIsSubmitting(false);
     }
   };

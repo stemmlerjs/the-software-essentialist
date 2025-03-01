@@ -1,17 +1,29 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
+import { registrationPresenter } from '../main';
+import { useNavigate } from 'react-router-dom';
 
 export const RegisterPage = () => {
-  const { loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
+  const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
-    loginWithRedirect({
-      authorizationParams: {
-        screen_hint: "signup",
+    const signIn = async () => {
+      if (!signingIn) {
+        setSigningIn(true);
+        try {
+          await registrationPresenter.registerWithGoogle(navigate);
+        } catch (error) {
+          console.error('Auth error:', error);
+          // Optionally reset signingIn state if needed
+          setSigningIn(false);
+        }
       }
-    });
-  }, []);
+    };
+
+    signIn();
+  }, [signingIn]);
 
   return <OverlaySpinner isActive={true} />;
 };

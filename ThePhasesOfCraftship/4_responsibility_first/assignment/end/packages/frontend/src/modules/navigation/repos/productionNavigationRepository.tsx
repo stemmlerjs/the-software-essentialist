@@ -1,10 +1,13 @@
+import { makeAutoObservable } from "mobx";
 import { NavigationDm } from "../domain/navigationDm";
 import { NavigationRepository } from "./navigationRepository";
+import { NavigateFunction } from "react-router-dom";
 
 export class ProductionNavigationRepository implements NavigationRepository {
   public navigationDm: NavigationDm;
 
   constructor () {
+    makeAutoObservable(this);
     this.navigationDm = new NavigationDm({ pathname: window.location.pathname })
     this.subscribeToBrowserNavigationChanges();
   }
@@ -24,11 +27,10 @@ export class ProductionNavigationRepository implements NavigationRepository {
     this.navigationDm = new NavigationDm({ pathname: window.location.pathname });
   }
 
-  goTo (path: string, options?: { inSeconds: number }): void {
-    setTimeout(() => { 
-      window.history.pushState({}, '', path);
-      this.navigationDm = new NavigationDm({ pathname: path });
-    }, options?.inSeconds || 0);
+  goTo (path: string, navigate?: NavigateFunction): void {
+    this.navigationDm = new NavigationDm({ pathname: path });
+    if (navigate) return navigate(path);
+    window.history.pushState({}, '', path); 
   }
 
 }

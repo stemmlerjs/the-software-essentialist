@@ -1,22 +1,22 @@
-import { Config } from "../../../../shared/config";
-import ExpressJwt, { expressjwt } from 'express-jwt'
-import jwksRsa from 'jwks-rsa'
+import { auth } from 'firebase-admin';
+import { Request, Response, NextFunction } from 'express';
+import { Config } from '../../../../shared/config';
 
-export function createJwtCheck (config: Config) {
-  const checkJwt = expressjwt({
-    // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
-    secret: jwksRsa.expressJwtSecret({
-      cache: true,
-      rateLimit: true,
-      jwksRequestsPerMinute: 5,
-      jwksUri: `https://${config.auth0.domain}/.well-known/jwks.json`
-    }) as ExpressJwt.GetVerificationKey,
-  
-    // Validate the audience and the issuer.
-    audience: config.auth0.audience,
-    issuer: `https://${config.auth0.domain}/`,
-    algorithms: ['RS256']
-  });
+export function createJwtCheck(config: Config) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
 
-  return checkJwt
+    const token = authHeader.split('Bearer ')[1];
+    try {
+      const decodedToken = await auth().verifyIdToken(token);
+      (req as any).user = decodedToken;
+      
+      next();
+    } catch (error) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+  };
 }

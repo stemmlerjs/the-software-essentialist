@@ -58,6 +58,10 @@ export class CompositionRoot {
     await this.dbConnection.connect();
     await this.webServer.start();
     await this.eventBus.initialize();
+
+    // TODO: 
+    // await this.firebaseAuth.initialize(); // todo: make this pass, create all 
+    // the nodes at the bottom of the tree.
     
     // Connect modules starting with the root modules (generic)
     this.usersModule = this.createUsersModule();
@@ -160,7 +164,7 @@ export class CompositionRoot {
     this.marketingModule.mountRouter(this.webServer);
     this.membersModule.mountRouter(this.webServer);
     this.postsModule.mountRouter(this.webServer);
-    this.votesModule.mountRouter(this.webServer)
+    this.votesModule.mountRouter(this.webServer);
   }
 
   private createDBConnection() {

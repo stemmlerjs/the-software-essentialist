@@ -14,6 +14,9 @@ export class ProductionUsersRepository implements UsersRepository {
     this.api = api;
     this.currentUser = this.loadInitialUserState();
   }
+  save(user: UserDm): void {
+    this.currentUser = user;
+  }
 
   private loadInitialUserState () {
     // not implemented;

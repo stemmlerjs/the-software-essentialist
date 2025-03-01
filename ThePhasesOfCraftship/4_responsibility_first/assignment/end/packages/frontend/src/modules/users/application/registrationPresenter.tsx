@@ -1,10 +1,16 @@
 
-import { CreateUserErrors, CreateUserParams, CreateUserResponse, EmailAlreadyInUseError, UsernameAlreadyTakenError } from "@dddforum/shared/src/api/users";
+import { CreateUserParams, CreateUserResponse, EmailAlreadyInUseError, UsernameAlreadyTakenError } from "@dddforum/shared/src/api/users";
 import { ToastService } from "../../../shared/services/toastService";
 import { UsersRepository } from "../repos/usersRepo";
 import { MarketingService } from "../../../shared/services/marketingService";
 import { NavigationRepository } from "../../navigation/repos/navigationRepository";
-import { ServerError, ValidationError } from "@dddforum/shared/src/api";
+
+import { getAuth, signInWithPopup, GoogleAuthProvider, UserCredential } from 'firebase/auth';
+import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { UserDm } from "../domain/userDm";
+import { NavigateFunction } from "react-router-dom";
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
 type ValidationResult = {
   success: boolean;
@@ -28,6 +34,19 @@ export class RegistrationPresenter {
 
   }
 
+  async registerWithGoogle (navigate: NavigateFunction) {
+    try {
+      const userCredential: UserCredential = await signInWithPopup(auth, provider);
+      let userDm = UserDm.fromFirebaseCredentials(userCredential);
+      this.usersRepository.save(userDm);
+      // Handle successful sign in
+      this.navigationRepository.goTo('/onboarding', navigate)
+
+    } catch (err) {
+      console.error('Auth error:', err);
+    }
+  }
+
   async submitForm (input: CreateUserParams, allowMarketingEmails: boolean, callbacks?: { 
     onStart: () => void, 
     onSuccess: () => void, 
@@ -40,7 +59,7 @@ export class RegistrationPresenter {
     if (!validationResult.success) {
       // Show an error toast (for invalid input)
       this.toastService.showError(validationResult.errorMessage as string);
-      return 'ValidationError';
+      return new ValidationError()
     }
 
     callbacks?.onStart();
@@ -49,7 +68,7 @@ export class RegistrationPresenter {
       const response = await this.usersRepository.register(input);
       
       if (!response.success) {
-        switch (response.error.code) {
+        switch (response.error?.code) {
           case "UsernameAlreadyTaken":
             callbacks?.onFailure()
             this.toastService.showError('Account already exists');
@@ -60,7 +79,7 @@ export class RegistrationPresenter {
             return 'EmailAlreadyInUse';
           default:
             // Client processing error
-            throw new Error('Unknown error: ' + response.error.code)
+            throw new Error('Unknown error: ' + response.error)
         }
       }
       
@@ -73,7 +92,7 @@ export class RegistrationPresenter {
       // Show the toast
       this.toastService.showSuccess('Success! Redirecting home.')
       // In 3 seconds, redirect to the main page
-      this.navigationRepository.goTo('/', { inSeconds: 3000 });
+      this.navigationRepository.goTo('/');
 
       return response;
 
@@ -82,7 +101,7 @@ export class RegistrationPresenter {
       callbacks?.onFailure();
       // Show the toast (for unknown error)
       this.toastService.showError('Some backend error occurred')
-      return 'ServerError';
+      return new ServerError()
     }
   }
 }

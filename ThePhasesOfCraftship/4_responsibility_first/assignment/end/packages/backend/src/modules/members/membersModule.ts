@@ -17,14 +17,14 @@ export class MembersModule extends ApplicationModule {
   private membersController: MembersController;
 
   private constructor(
-    private db: Database,
+    db: Database,
     private eventOutbox: EventOutboxTable,
     private usersService: UserIdentityService,
     config: Config,
   ) {
     super(config);
     // Create the tree in reverse (repos, services, controllers)
-    this.membersRepository = this.createMembersRepository();
+    this.membersRepository = this.createMembersRepository(db);
     this.memberService = this.createMembersService();
     this.membersController = this.createMembersController(config);
   }
@@ -41,8 +41,8 @@ export class MembersModule extends ApplicationModule {
     return this.membersRepository;
   }
   
-  createMembersRepository () {
-    return new ProductionMembersRepository(this.db.getConnection(), this.eventOutbox)
+  createMembersRepository (db: Database) {
+    return new ProductionMembersRepository(db.getConnection(), this.eventOutbox)
   }
 
   getMembersRepository () {

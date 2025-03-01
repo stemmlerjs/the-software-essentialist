@@ -9,8 +9,18 @@ export class ProductionMembersRepository implements MembersRepository {
   constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
     
   }
-  getMemberByUserId(userId: string): Promise<Member | null> {
-    throw new Error("Method not implemented.");
+  
+  async getMemberByUserId(userId: string): Promise<Member | null> {
+    console.log(this.prisma.member, this.prisma)
+    const memberData = await this.prisma.member.findUnique({
+      where: { userId: userId },
+    });
+
+    if (!memberData) {
+      return null;
+    }
+
+    return Member.toDomain(memberData);
   }
 
   saveAggregateAndEvents(member: Member, events: DomainEvent[]): Promise<void> {
