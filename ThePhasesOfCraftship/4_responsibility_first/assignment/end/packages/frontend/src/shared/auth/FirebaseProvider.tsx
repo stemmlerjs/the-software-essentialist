@@ -1,34 +1,47 @@
-import { PropsWithChildren, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useContext, useEffect, ReactNode } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  // Add other config as needed
-};
+import { firebaseConfig } from '../../config';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores/StoreContext';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const auth = getAuth(app);
 
-export const FirebaseProvider = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate();
+const FirebaseContext = createContext(auth);
+
+export const useFirebase = () => useContext(FirebaseContext);
+
+interface FirebaseProviderProps {
+  children: ReactNode;
+}
+
+export const FirebaseProvider = observer(({ children }: FirebaseProviderProps) => {
+  const { auth: authStore } = useStore();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in
-        if (window.location.pathname === '/callback') {
-          navigate('/onboarding');
+        const idToken = await user.getIdToken();
+        // Update auth store with user info
+        const currentUser = await authStore.getCurrentUser();
+        if (currentUser) {
+          authStore.setCurrentUser(currentUser);
         }
+      } else {
+        // User is signed out
+        authStore.setCurrentUser(null);
       }
     });
 
     return () => unsubscribe();
-  }, [navigate]);
+  }, [authStore]);
 
-  return <>{children}</>;
-}; 
+  return (
+    <FirebaseContext.Provider value={auth}>
+      {children}
+    </FirebaseContext.Provider>
+  );
+}); 

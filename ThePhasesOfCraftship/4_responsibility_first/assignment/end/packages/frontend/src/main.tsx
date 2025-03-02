@@ -16,14 +16,22 @@ import { ProductionUsersRepository } from './modules/users/repos/productionUsers
 import { LocalStorage } from './shared/storage/localStorage';
 import { FirebaseService } from './modules/users/externalServices/firebaseService';
 import { NavigationService } from './shared/navigation/navigationService';
-import { AuthStore } from './shared/auth/authStore'
+import { AuthRepository } from './modules/users/repos/authRepository';
 import { OnboardingPresenter } from './modules/users/application/onboardingPresenter';
+import { ProductionMembersRepo } from './modules/members/repos/membersRepo';
+import { RootStore } from './stores/RootStore';
 
 const apiClient = createAPIClient('http://localhost:3000');
-const postsRepository = new FakePostsRepository(fakePostsData);
+
 const localStorage = new LocalStorage();
 const firebaseService = new FirebaseService();
+
+const authRepository = new AuthRepository(apiClient, localStorage, firebaseService);
+
 const usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
+const postsRepository = new FakePostsRepository(fakePostsData);
+const membersRepo = new ProductionMembersRepo()
+
 const navigationService = new NavigationService();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationService);
@@ -31,15 +39,19 @@ const toastService = new ToastService();
 const marketingService = new MarketingService();
 const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
 const onboardingPresenter = new OnboardingPresenter(
-  usersRepository, 
-  navigationService, 
-  firebaseService,
-  authStore
+  membersRepo,
+  navigationService,
+  firebaseService
+);
+
+const rootStore = new RootStore(
+  authRepository,
+  membersRepo
 );
 
 
+
 // Initialize stores
-const authStore = new AuthStore(usersRepository, firebaseService);
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -47,12 +59,16 @@ createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 
+
 export {
   apiClient,
+
+  rootStore,
   
   // Repositories
   postsRepository,
   usersRepository,
+  authRepository,
   
 
   // Presenters
@@ -66,5 +82,5 @@ export {
   toastService,
   navigationService,
   firebaseService,
-  authStore,
 }
+

@@ -16,6 +16,7 @@ export const MainPage = observer(() => {
   const [postView, setPostsView] = useState<PostsFilterValue>('popular');
 
   console.log(currentUser);
+  console.log('here');
 
   useEffect(() => {
     async function loadPosts() {

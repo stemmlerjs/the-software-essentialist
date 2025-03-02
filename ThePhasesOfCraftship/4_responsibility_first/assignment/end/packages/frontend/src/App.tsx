@@ -5,30 +5,28 @@ import { Route, Routes } from "react-router-dom";
 import { MainPage } from "./pages/mainPage";
 import { RegisterPage } from "./pages/registerPage";
 import { SpinnerProvider } from "./shared/contexts/spinnerContext";
-import { UserProvider } from "./shared/contexts/userContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./pages/onboardingPage";
-import { AuthProvider } from './shared/auth/authContext';
-import { authStore } from './main';
+import { ErrorBoundary } from "./shared/error/errorBoundary";
 
-function App() {
+const App = () => {
   return (
-    <SpinnerProvider>
-      <AuthProvider store={authStore}>
-        <UserProvider>
-          <BrowserRouter>
-            <FirebaseProvider>
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/join" element={<RegisterPage />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
-              </Routes>
-            </FirebaseProvider>
-          </BrowserRouter>
-        </UserProvider>
-      </AuthProvider>
-    </SpinnerProvider>
+    <ErrorBoundary>
+      <FirebaseProvider>
+      <SpinnerProvider>
+        <BrowserRouter>
+          
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/join" element={<RegisterPage />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+            </Routes>
+          
+        </BrowserRouter>
+      </SpinnerProvider>
+      </FirebaseProvider>
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;

@@ -5,14 +5,14 @@ import {
   signOut, 
   onAuthStateChanged,
   User as FirebaseUser,
-  signInWithPopup, GoogleAuthProvider, UserCredential
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  UserCredential
 } from 'firebase/auth';
-
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
 
 export class FirebaseService {
   private auth;
+  private provider;
 
   constructor() {
     const firebaseConfig = {
@@ -24,6 +24,7 @@ export class FirebaseService {
 
     const app = initializeApp(firebaseConfig);
     this.auth = getAuth(app);
+    this.provider = new GoogleAuthProvider();
   }
 
   public async isAuthenticated(): Promise<boolean> {
@@ -45,8 +46,8 @@ export class FirebaseService {
     });
   }
 
-  public async signInWithGoogle () {
-    return signInWithPopup(auth, provider);
+  public async signInWithGoogle(): Promise<UserCredential> {
+    return signInWithPopup(this.auth, this.provider);
   }
 
   public async signIn(email: string, password: string): Promise<FirebaseUser> {
