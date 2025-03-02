@@ -1,10 +1,12 @@
+
 import { useState } from 'react';
 import { Layout } from '../layout/layoutComponent';
 import { OverlaySpinner } from '../../shared/components/overlaySpinner';
 import { observer } from 'mobx-react-lite';
-import { OnboardingPresenter } from './onboardingPresenter';
+import { usePresenters } from '../../shared/contexts/presentersContext';
 
-export const OnboardingPage = observer(({ presenter }: { presenter: OnboardingPresenter }) => {
+export const OnboardingPage = observer(() => {
+  const { onboarding: presenter } = usePresenters()
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
 

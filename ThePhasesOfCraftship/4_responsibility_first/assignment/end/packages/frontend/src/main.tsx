@@ -11,7 +11,6 @@ import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
 
 import { ToastService } from './shared/services/toastService';
 import { MarketingService } from './shared/services/marketingService';
-import { ProductionUsersRepository } from './modules/users/repos/productionUsersRepo';
 import { LocalStorage } from './shared/storage/localStorage';
 import { FirebaseService } from './modules/users/externalServices/firebaseService';
 import { NavigationService } from './shared/navigation/navigationService';
@@ -24,44 +23,47 @@ import { configure } from "mobx"
 import { LayoutPresenter } from './modules/layout/layoutPresenter';
 import { MembersStore } from './stores/members/membersStore';
 import { RegistrationPresenter } from './modules/registration/registrationPresenter';
+import { Presenters } from './shared/contexts/presenters';
 
-configure({
-    enforceActions: "never",
-})
+configure({ enforceActions: "never" })
 
 const apiClient = createAPIClient('http://localhost:3000');
 
 const localStorage = new LocalStorage();
 const firebaseService = new FirebaseService();
-const authRepository = new AuthRepository(apiClient, localStorage, firebaseService);
-const usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
+const authRepository = new AuthRepository(localStorage, firebaseService);
 
-const membersStore = new MembersStore(
-
+const membersStore = new MembersStore();
+const authStore = new AuthStore(
+  authRepository,
+  firebaseService
 )
 
-const postsRepository = new FakePostsRepository(fakePostsData);
 const navigationService = new NavigationService();
-const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-const navLoginPresenter = new LayoutPresenter(usersRepository, membersStore);
-const toastService = new ToastService();
-const marketingService = new MarketingService();
-const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
+
 const onboardingPresenter = new OnboardingPresenter(
   membersStore,
   navigationService,
   firebaseService
 );
 
+const presenters = new Presenters(onboardingPresenter)
+
+const postsRepository = new FakePostsRepository(fakePostsData);
+
+const postsPresenter = new PostsPresenter(postsRepository, authRepository);
+const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
+const toastService = new ToastService();
+const marketingService = new MarketingService();
+const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
+
+
 const rootStore = new RootStore(
   authRepository,
   membersStore
 );
 
-const authStore = new AuthStore(
-  usersRepository,
-  firebaseService
-)
+
 
 // Initialize stores
 createRoot(document.getElementById('root')!).render(
@@ -78,10 +80,10 @@ export {
   rootStore,
   authStore,
   membersStore,
+  presenters,
   
   // Repositories
   postsRepository,
-  usersRepository,
   authRepository,
   
 

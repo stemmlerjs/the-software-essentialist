@@ -9,8 +9,9 @@ import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
 import { StoreProvider } from "./stores/root/StoreContext";
-import { authStore, onboardingPresenter, postsPresenter, registrationPresenter, rootStore } from "./main";
+import { authStore, postsPresenter, presenters, registrationPresenter, rootStore } from "./main";
 import { AuthProvider } from "./stores/auth/authContext";
+import { PresenterProvider } from "./shared/contexts/presentersContext";
 
 const App = () => {
   return (
@@ -18,15 +19,18 @@ const App = () => {
       <StoreProvider store={rootStore}>
         <AuthProvider store={authStore}>
         <FirebaseProvider>
-          <SpinnerProvider>
+        <PresenterProvider presenters={presenters}>
+        <SpinnerProvider>
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<PostsPage presenter={postsPresenter} />} />
                 <Route path="/join" element={<RegisterPage presenter={registrationPresenter} />} />
-                <Route path="/onboarding" element={<OnboardingPage presenter={onboardingPresenter} />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
               </Routes>
             </BrowserRouter>
           </SpinnerProvider>
+        </PresenterProvider>
+          
         </FirebaseProvider>
         </AuthProvider>
       </StoreProvider>
