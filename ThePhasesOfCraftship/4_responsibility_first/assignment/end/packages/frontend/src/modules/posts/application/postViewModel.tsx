@@ -41,7 +41,7 @@ export class PostViewModel {
     return this.props.memberUserName
   }
 
-  public static fromDomain(post: PostDm, currentUser: UserDm): PostViewModel {
+  public static fromDomain(post: PostDm, currentUser: UserDm | null): PostViewModel {
 
     return new PostViewModel({
       title: post.title,
@@ -51,7 +51,7 @@ export class PostViewModel {
       voteScore: post.voteScore,
       // Same for this.
       numComments: post.comments.length,
-      canCastVote: currentUser.canVote(),
+      canCastVote: currentUser ? currentUser.canVote() : false,
       memberUserName: post.member.username
     });
   }

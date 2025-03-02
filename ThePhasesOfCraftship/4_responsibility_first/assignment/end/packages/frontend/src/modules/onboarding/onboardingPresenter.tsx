@@ -1,11 +1,11 @@
 
 import { makeAutoObservable } from "mobx";
-import { NavigationService } from "../../../shared/navigation/navigationService";
-import { FirebaseService } from "../externalServices/firebaseService";
+import { NavigationService } from "../../shared/navigation/navigationService";
+import { FirebaseService } from "../users/externalServices/firebaseService";
 
-import { MemberDm } from "../../../stores/members/memberDm";
-import { apiClient } from "../../../main";
-import { MembersStore } from "../../../stores/members/membersStore";
+import { MemberDm } from "../../stores/members/memberDm";
+import { apiClient } from "../../main";
+import { MembersStore } from "../../stores/members/membersStore";
 
 interface OnboardingDetails {
   username: string;
@@ -74,7 +74,7 @@ export class OnboardingPresenter {
           userId: user.uid
         });
 
-        this.membersRepo.save(member);
+        this.membersStore.save(member);
         this.navigationService.goTo('/');
         return true;
       }

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { appSelectors, toClass } from '../../shared/selectors';
 import { navLoginPresenter } from '../../main';
 import { useEffect, useState } from 'react';
-import { UserLoginViewModel } from '../users/application/userLoginViewModel';
+import { UserLoginViewModel } from './userLoginViewModel';
 
 // All components which use observables must use 'observer'
 export const Layout = observer(({ children }: any) => {

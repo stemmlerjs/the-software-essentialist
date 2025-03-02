@@ -2,11 +2,11 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
-import { MainPage } from "./pages/mainPage";
-import { RegisterPage } from "./pages/registerPage";
+import { PostsPage } from "./modules/posts/postsPage";
+import { RegisterPage } from "./modules/registration/registerPage";
 import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
-import { OnboardingPage } from "./pages/onboardingPage";
+import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
 import { StoreProvider } from "./stores/root/StoreContext";
 import { authStore, onboardingPresenter, postsPresenter, registrationPresenter, rootStore } from "./main";
@@ -21,7 +21,7 @@ const App = () => {
           <SpinnerProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<MainPage presenter={postsPresenter} />} />
+                <Route path="/" element={<PostsPage presenter={postsPresenter} />} />
                 <Route path="/join" element={<RegisterPage presenter={registrationPresenter} />} />
                 <Route path="/onboarding" element={<OnboardingPage presenter={onboardingPresenter} />} />
               </Routes>

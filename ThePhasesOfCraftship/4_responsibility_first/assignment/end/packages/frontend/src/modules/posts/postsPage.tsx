@@ -2,15 +2,15 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { observe } from "mobx";
-import { PostViewModel } from "../modules/posts/application/postViewModel";
-import { PostsViewSwitcher } from "../modules/posts/components/postsViewSwitcher";
-import { PostsList } from "../modules/posts/components/postsList";
-import { Layout } from "../modules/layout/layout";
-import { PostsFilterValue } from "../modules/posts/application/searchFilterViewModel";
-import { useAuthStore } from "../shared/auth/useAuthStore";
-import { PostsPresenter } from "../modules/posts/application/postsPresenter";
+import { PostViewModel } from "./application/postViewModel";
+import { PostsViewSwitcher } from "./components/postsViewSwitcher";
+import { PostsList } from "./components/postsList";
+import { Layout } from "../layout/layoutComponent";
+import { PostsFilterValue } from "./application/searchFilterViewModel";
+import { useAuthStore } from "../../shared/auth/useAuthStore";
+import { PostsPresenter } from "./application/postsPresenter";
 
-export const MainPage = observer(({ presenter }: { presenter: PostsPresenter }) => {
+export const PostsPage = observer(({ presenter }: { presenter: PostsPresenter }) => {
   const { currentUser } = useAuthStore();
   const [posts, setPosts] = useState<PostViewModel[]>([]);
   const [postView, setPostsView] = useState<PostsFilterValue>('popular');

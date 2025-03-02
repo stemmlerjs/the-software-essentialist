@@ -1,10 +1,11 @@
-import { UsersRepository } from "../repos/usersRepo";
+
 import { UserCredential } from 'firebase/auth';
-import { UserDm } from "../domain/userDm";
 import { NavigateFunction } from "react-router-dom";
-import { FirebaseService } from "../externalServices/firebaseService";
-import { NavigationService } from "../../../shared/navigation/navigationService";
 import { makeAutoObservable, observe } from "mobx";
+import { UserDm } from '../users/domain/userDm';
+import { UsersRepository } from '../users/repos/usersRepo';
+import { NavigationService } from '../../shared/navigation/navigationService';
+import { FirebaseService } from '../users/externalServices/firebaseService';
 
 export class RegistrationPresenter {
 

@@ -9,7 +9,6 @@ import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
 // import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
 // import { fakeUserData } from './modules/users/__tests__/fakeUserData';
 
-import { RegistrationPresenter } from './modules/users/application/registrationPresenter';
 import { ToastService } from './shared/services/toastService';
 import { MarketingService } from './shared/services/marketingService';
 import { ProductionUsersRepository } from './modules/users/repos/productionUsersRepo';
@@ -17,13 +16,14 @@ import { LocalStorage } from './shared/storage/localStorage';
 import { FirebaseService } from './modules/users/externalServices/firebaseService';
 import { NavigationService } from './shared/navigation/navigationService';
 import { AuthRepository } from './modules/users/repos/authRepository';
-import { OnboardingPresenter } from './modules/users/application/onboardingPresenter';
+import { OnboardingPresenter } from './modules/onboarding/onboardingPresenter';
 
 import { RootStore } from './stores/root/RootStore';
 import { AuthStore } from './stores/auth/authStore';
 import { configure } from "mobx"
 import { LayoutPresenter } from './modules/layout/layoutPresenter';
 import { MembersStore } from './stores/members/membersStore';
+import { RegistrationPresenter } from './modules/registration/registrationPresenter';
 
 configure({
     enforceActions: "never",

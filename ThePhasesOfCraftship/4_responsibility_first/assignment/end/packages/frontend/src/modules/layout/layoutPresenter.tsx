@@ -1,5 +1,5 @@
 
-import { UserLoginViewModel } from "../users/application/userLoginViewModel";
+import { UserLoginViewModel } from "./userLoginViewModel";
 import { makeAutoObservable, reaction } from "mobx";
 import { UsersRepository } from "../users/repos/usersRepo";
 import { MembersStore } from "../../stores/members/membersStore";

@@ -1,9 +1,9 @@
 
 import { useEffect, useState } from 'react';
-import { OverlaySpinner } from '../shared/components/overlaySpinner';
+import { OverlaySpinner } from '../../shared/components/overlaySpinner';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { RegistrationPresenter } from '../modules/users/application/registrationPresenter';
+import { RegistrationPresenter } from './registrationPresenter';
 
 export const RegisterPage = observer(({ presenter }: { presenter: RegistrationPresenter }) => {
   const navigate = useNavigate();

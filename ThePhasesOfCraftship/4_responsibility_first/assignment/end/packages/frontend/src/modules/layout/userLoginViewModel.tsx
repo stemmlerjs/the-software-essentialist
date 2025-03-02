@@ -1,6 +1,6 @@
 
-import { MemberDm } from "../../../stores/members/memberDm";
-import { UserDm } from "../domain/userDm";
+import { MemberDm } from "../../stores/members/memberDm";
+import { UserDm } from "../users/domain/userDm";
 
 interface UserLoginViewModelProps {
   isAuthenticated: boolean;

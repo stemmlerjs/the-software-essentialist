@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Layout } from '../modules/layout/layout';
-import { OverlaySpinner } from '../shared/components/overlaySpinner';
+import { Layout } from '../layout/layoutComponent';
+import { OverlaySpinner } from '../../shared/components/overlaySpinner';
 import { observer } from 'mobx-react-lite';
-import { OnboardingPresenter } from '../modules/users/application/onboardingPresenter';
+import { OnboardingPresenter } from './onboardingPresenter';
 
 export const OnboardingPage = observer(({ presenter }: { presenter: OnboardingPresenter }) => {
   const [username, setUsername] = useState('');
