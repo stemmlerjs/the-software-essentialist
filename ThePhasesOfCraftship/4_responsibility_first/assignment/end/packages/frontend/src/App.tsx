@@ -8,23 +8,28 @@ import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./pages/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
+import { StoreProvider } from "./stores/root/StoreContext";
+import { authStore, rootStore } from "./main";
+import { AuthProvider } from "./stores/auth/authContext";
 
 const App = () => {
   return (
     <ErrorBoundary>
-      <FirebaseProvider>
-      <SpinnerProvider>
-        <BrowserRouter>
-          
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/join" element={<RegisterPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
-            </Routes>
-          
-        </BrowserRouter>
-      </SpinnerProvider>
-      </FirebaseProvider>
+      <StoreProvider store={rootStore}>
+        <AuthProvider store={authStore}>
+        <FirebaseProvider>
+          <SpinnerProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/join" element={<RegisterPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
+              </Routes>
+            </BrowserRouter>
+          </SpinnerProvider>
+        </FirebaseProvider>
+        </AuthProvider>
+      </StoreProvider>
     </ErrorBoundary>
   );
 };

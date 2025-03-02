@@ -1,5 +1,5 @@
+
 import { makeAutoObservable } from "mobx";
-import { AuthRepository } from "../repos/authRepository";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { FirebaseService } from "../externalServices/firebaseService";
 import { MembersRepo } from "../../members/repos/membersRepo";
@@ -8,12 +8,11 @@ import { apiClient } from "../../../main";
 
 interface OnboardingDetails {
   username: string;
-  email: string;
-  userId: string;
   allowMarketing: boolean;
 }
 
 export class OnboardingPresenter {
+
   // All presenters have state on them that can be used to help present the
   // components. We can use the data stored here with our tests as well since these
   // presenters are the Application Layer (3) functionality (RDD-First).
@@ -28,40 +27,50 @@ export class OnboardingPresenter {
     makeAutoObservable(this);
   }
 
+  testUpdateMember () {
+    console.log('test');
+    const member = new MemberDm({
+      id: 'asda',
+      username: 'khalil',
+      email: 'mtroidman@gmail',
+      userId: '2342343'
+    })
+    this.membersRepo.save(member)
+  }
+
   async registerMember(details: OnboardingDetails) {
     try {
       this.isSubmitting = true;
       this.error = null;
 
       const user = await this.firebaseService.getCurrentUser();
-      const idToken = await user?.getIdToken();
+      if (!user || !user.email) {
+        this.error = 'No authenticated user found';
+        return false;
+      }
+
+      const idToken = await user.getIdToken();
       if (!idToken) {
         throw new Error("No authentication token found");
       }
 
-      // Register member
       const registerMemberResponse = await apiClient.members.create({
         username: details.username,
-        email: details.email,
-        userId: details.userId
+        email: user.email,
+        userId: user.uid
       }, idToken);
 
-      // Handle marketing preferences if opted in
       if (details.allowMarketing) {
-        await apiClient.marketing.addEmailToList(details.email);
+        await apiClient.marketing.addEmailToList(user.email);
       }
 
       if (registerMemberResponse.success && registerMemberResponse.data) {
-        // Create and store member in repo
         const member = new MemberDm({
           id: registerMemberResponse.data.memberId,
           username: details.username,
-          email: details.email,
-          userId: details.userId
+          email: user.email,
+          userId: user.uid
         });
-        
-        // This should store the member to global state / store (just like every time
-        // we store something to the repo should).
 
         this.membersRepo.save(member);
         this.navigationService.goTo('/');

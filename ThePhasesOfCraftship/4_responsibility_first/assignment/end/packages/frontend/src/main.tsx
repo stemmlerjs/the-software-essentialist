@@ -18,23 +18,29 @@ import { FirebaseService } from './modules/users/externalServices/firebaseServic
 import { NavigationService } from './shared/navigation/navigationService';
 import { AuthRepository } from './modules/users/repos/authRepository';
 import { OnboardingPresenter } from './modules/users/application/onboardingPresenter';
-import { ProductionMembersRepo } from './modules/members/repos/membersRepo';
-import { RootStore } from './stores/RootStore';
+
+import { RootStore } from './stores/root/RootStore';
+import { AuthStore } from './stores/auth/authStore';
+import { ProductionMembersRepo } from './modules/members/repos/productionMembersRepo';
+import { configure } from "mobx"
+
+configure({
+    enforceActions: "never",
+})
 
 const apiClient = createAPIClient('http://localhost:3000');
 
 const localStorage = new LocalStorage();
 const firebaseService = new FirebaseService();
-
 const authRepository = new AuthRepository(apiClient, localStorage, firebaseService);
-
 const usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
-const postsRepository = new FakePostsRepository(fakePostsData);
+
 const membersRepo = new ProductionMembersRepo()
 
+const postsRepository = new FakePostsRepository(fakePostsData);
 const navigationService = new NavigationService();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationService);
+const navLoginPresenter = new NavLoginPresenter(usersRepository, membersRepo);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
@@ -49,10 +55,12 @@ const rootStore = new RootStore(
   membersRepo
 );
 
-
+const authStore = new AuthStore(
+  usersRepository,
+  firebaseService
+)
 
 // Initialize stores
-
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
@@ -63,7 +71,9 @@ createRoot(document.getElementById('root')!).render(
 export {
   apiClient,
 
+  // Global cross-cutting stores
   rootStore,
+  authStore,
   
   // Repositories
   postsRepository,

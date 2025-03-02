@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observe } from 'mobx';
-import { useAuth } from './authContext';
+import { useAuth } from '../../stores/auth/authContext';
 import { UserDm } from '../../modules/users/domain/userDm';
 
 export const useAuthStore = () => {

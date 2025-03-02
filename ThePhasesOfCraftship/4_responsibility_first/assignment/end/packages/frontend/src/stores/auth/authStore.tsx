@@ -65,36 +65,6 @@ export class AuthStore {
     }
   }
 
-  async register(memberDetails: any) {
-    try {
-      this.isLoading = true;
-      this.error = null;
-
-      // Get Firebase token
-      const token = await this.firebaseService.getCurrentUser();
-      
-      // Register with backend
-      const response = await this.usersRepository.register({
-        ...memberDetails,
-        idToken: token?.getIdToken()
-      });
-
-      if (response.success) {
-        // Update user with member details
-        const updatedUser = await this.usersRepository.getCurrentUser();
-        this.setCurrentUser(updatedUser);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      this.setError('Failed to register');
-      console.error('Registration error:', error);
-      return false;
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
   async signOut() {
     try {
       await this.firebaseService.signOut();

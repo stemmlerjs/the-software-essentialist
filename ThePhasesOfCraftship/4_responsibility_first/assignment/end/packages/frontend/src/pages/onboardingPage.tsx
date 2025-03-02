@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
 import { Layout } from '../shared/components/layout';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
 import { onboardingPresenter } from '../main';
@@ -9,22 +7,15 @@ import { observer } from 'mobx-react-lite';
 export const OnboardingPage = observer(() => {
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const navigate = useNavigate();
+
+  setTimeout(() => {
+    onboardingPresenter.testUpdateMember();
+  }, 2000)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!user) {
-      console.error('No authenticated user found');
-      return;
-    }
-
     await onboardingPresenter.registerMember({
       username,
-      email: user.email || '',
-      userId: user.uid,
       allowMarketing
     });
   };

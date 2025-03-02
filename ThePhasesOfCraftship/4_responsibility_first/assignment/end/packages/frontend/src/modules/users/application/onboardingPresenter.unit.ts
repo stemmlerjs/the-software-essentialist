@@ -2,7 +2,7 @@ import { OnboardingPresenter } from "./onboardingPresenter";
 import { UsersRepository } from "../repos/usersRepo";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { FirebaseService } from "../externalServices/firebaseService";
-import { AuthStore } from "../../../shared/auth/authStore";
+import { AuthStore } from "../../../stores/auth/authStore";
 
 describe('OnboardingPresenter', () => {
   let presenter: OnboardingPresenter;

@@ -1,11 +1,23 @@
+
 import logo from "../../../shared/assets/dddforumlogo.png";
 import { Link, useLocation } from "react-router-dom";
 import { appSelectors, toClass } from "../../../shared/selectors";
-import { useAuthStore } from '../../../shared/auth/useAuthStore';
 import { observer } from 'mobx-react-lite';
+import { navLoginPresenter } from "../../../main";
+import { useEffect, useState } from "react";
+import { UserLoginViewModel } from "../application/userLoginViewModel";
 
 export const Header = observer(() => {
-  const { currentUser, isAuthenticated, signOut } = useAuthStore();
+  const [vm, setVm] = useState<UserLoginViewModel>();
+
+  useEffect(() => {
+    navLoginPresenter.load((userLoginVm) => {
+      setVm(userLoginVm);
+    })
+    console.log('ran use effcect')
+  }, [navLoginPresenter])
+
+  console.log(vm?.isAuthenticated, vm?.username);
   const location = useLocation();
 
   return (
@@ -20,13 +32,13 @@ export const Header = observer(() => {
       </div>
       {location.pathname !== "/join" ? (
         <div id="header-action-button">
-          {isAuthenticated ? (
+          {vm?.isAuthenticated ? (
             <div>
               <div className={toClass(appSelectors.header.selector)}>
-                {currentUser?.username}
+                {vm.username}
               </div>
               <u>
-                <div onClick={signOut}>Logout</div>
+                <div onClick={navLoginPresenter.signOut}>Logout</div>
               </u>
             </div>
           ) : (

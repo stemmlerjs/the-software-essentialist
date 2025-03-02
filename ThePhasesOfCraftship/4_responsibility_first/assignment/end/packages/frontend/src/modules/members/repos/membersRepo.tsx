@@ -1,11 +1,9 @@
 import { MemberDm } from "../domain/memberDm";
 
-export class ProductionMembersRepo implements MembersRepo {
-  save (save: MemberDm): void {
-    
-  }
-}
+
 
 export interface MembersRepo {
+  member: MemberDm | null;
+  getCurrentMember (): Promise<MemberDm | null>;
   save (save: MemberDm): void;
 }

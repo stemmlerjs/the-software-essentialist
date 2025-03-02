@@ -1,12 +1,10 @@
 
-import { NavigationDm } from "../../../shared/navigation/domain/navigationDm";
+import { MemberDm } from "../../members/domain/memberDm";
 import { UserDm } from "../domain/userDm";
 
 interface UserLoginViewModelProps {
-  pathname: string;
   isAuthenticated: boolean;
   username: string | null;
-  linkText: "Join" | "Logout" | "";
 }
 
 export class UserLoginViewModel {
@@ -17,10 +15,6 @@ export class UserLoginViewModel {
     this.props = props;
   }
 
-  get pathname () {
-    return this.props.pathname;
-  }
-
   get isAuthenticated () {
     return this.props.isAuthenticated
   }
@@ -29,16 +23,11 @@ export class UserLoginViewModel {
     return this.props.username;
   }
 
-  get linkText () {
-    return this.props.linkText
-  }
-
-  public static fromDomain (user: UserDm | null, navigation: NavigationDm): UserLoginViewModel {
+  public static fromDomain (user: UserDm | null, member: MemberDm | null): UserLoginViewModel {
 
     const dm = new UserLoginViewModel({
-      pathname: navigation.pathname,
       isAuthenticated: user ? true : false,
-      username: user ? user.username : null,
+      username: member ? member.username : null
     });
 
     return dm

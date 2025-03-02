@@ -14,7 +14,6 @@ export class ProductionMembersRepository implements MembersRepository {
   }
   
   async getMemberByUserId(userId: string): Promise<Member | null> {
-    console.log(this.prisma.member)
     const memberData = await this.prisma.member.findUnique({
       where: { userId: userId },
     });
