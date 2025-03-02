@@ -1,6 +1,4 @@
-import { MemberDm } from "../domain/memberDm";
-
-
+import { MemberDm } from "./memberDm";
 
 export interface MembersRepo {
   member: MemberDm | null;

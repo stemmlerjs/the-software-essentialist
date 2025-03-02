@@ -1,5 +1,5 @@
 
-import { MemberDm } from "../../members/domain/memberDm";
+import { MemberDm } from "../../../stores/members/memberDm";
 import { UserDm } from "../domain/userDm";
 
 interface UserLoginViewModelProps {

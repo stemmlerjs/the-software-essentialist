@@ -5,7 +5,7 @@ import { observe } from "mobx";
 import { PostViewModel } from "../modules/posts/application/postViewModel";
 import { PostsViewSwitcher } from "../modules/posts/components/postsViewSwitcher";
 import { PostsList } from "../modules/posts/components/postsList";
-import { Layout } from "../shared/components/layout";
+import { Layout } from "../modules/layout/layout";
 import { PostsFilterValue } from "../modules/posts/application/searchFilterViewModel";
 import { useAuthStore } from "../shared/auth/useAuthStore";
 import { PostsPresenter } from "../modules/posts/application/postsPresenter";

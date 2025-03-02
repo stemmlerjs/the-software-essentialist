@@ -1,8 +1,8 @@
-import { makeAutoObservable } from "mobx";
-import { MemberDm } from "../domain/memberDm";
-import { MembersRepo } from "./membersRepo";
 
-export class ProductionMembersRepo implements MembersRepo {
+import { makeAutoObservable } from "mobx";
+import { MemberDm } from "./memberDm";
+
+export class MembersStore {
   public member: MemberDm | null;
 
   constructor () {
@@ -11,8 +11,7 @@ export class ProductionMembersRepo implements MembersRepo {
   }
 
   async getCurrentMember(): Promise<MemberDm | null> {
-    // TODO: Implement
-    return this.member
+    return this.member;
   }
 
   save (member: MemberDm): void {

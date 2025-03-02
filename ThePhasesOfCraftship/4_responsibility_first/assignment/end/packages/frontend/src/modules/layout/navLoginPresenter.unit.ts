@@ -1,10 +1,10 @@
 
 import { UserLoginViewModel } from '@dddforum/frontend/src/modules/users/application/userLoginViewModel';
 import { FakeNavigationRepository } from '../../navigation/repos/fakeNavigationRepository';
-import { FakeUsersRepository } from '../repos/fakeUsersRepo';
-import { fakeUserData } from '../__tests__/fakeUserData';
+import { FakeUsersRepository } from '../users/repos/fakeUsersRepo';
+import { fakeUserData } from '../users/__tests__/fakeUserData';
 import { NavLoginPresenter } from './navLoginPresenter';
-import { UsersRepository } from '../repos/usersRepo';
+import { UsersRepository } from '../users/repos/usersRepo';
 import { NavigationRepository } from '../../navigation/repos/navigationRepository';
 import { UserDTO } from '@dddforum/shared/src/api/users';
 

@@ -2,9 +2,9 @@
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { FirebaseService } from "../externalServices/firebaseService";
-import { MembersRepo } from "../../members/repos/membersRepo";
-import { MemberDm } from "../../members/domain/memberDm";
-import { apiClient } from "../../../main";
+import { MembersRepo } from "../../../stores/members/membersRepo";
+import { MemberDm } from "../../../stores/members/memberDm";
+import { apiClient, membersStore } from "../../../main";
 
 interface OnboardingDetails {
   username: string;
@@ -35,7 +35,8 @@ export class OnboardingPresenter {
       email: 'mtroidman@gmail',
       userId: '2342343'
     })
-    this.membersRepo.save(member)
+    membersStore.save(member);
+    console.log('saved member in onboarding presenter')
   }
 
   async registerMember(details: OnboardingDetails) {

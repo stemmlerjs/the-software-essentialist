@@ -8,7 +8,7 @@ import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository';
 import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
 // import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
 // import { fakeUserData } from './modules/users/__tests__/fakeUserData';
-import { NavLoginPresenter } from './modules/users/application/navLoginPresenter';
+
 import { RegistrationPresenter } from './modules/users/application/registrationPresenter';
 import { ToastService } from './shared/services/toastService';
 import { MarketingService } from './shared/services/marketingService';
@@ -21,8 +21,10 @@ import { OnboardingPresenter } from './modules/users/application/onboardingPrese
 
 import { RootStore } from './stores/root/RootStore';
 import { AuthStore } from './stores/auth/authStore';
-import { ProductionMembersRepo } from './modules/members/repos/productionMembersRepo';
+import { ProductionMembersRepo } from './stores/members/productionMembersRepo';
 import { configure } from "mobx"
+import { NavLoginPresenter } from './modules/layout/navLoginPresenter';
+import { MembersStore } from './stores/members/membersStore';
 
 configure({
     enforceActions: "never",
@@ -60,6 +62,10 @@ const authStore = new AuthStore(
   firebaseService
 )
 
+const membersStore = new MembersStore(
+
+)
+
 // Initialize stores
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -74,6 +80,7 @@ export {
   // Global cross-cutting stores
   rootStore,
   authStore,
+  membersStore,
   
   // Repositories
   postsRepository,
