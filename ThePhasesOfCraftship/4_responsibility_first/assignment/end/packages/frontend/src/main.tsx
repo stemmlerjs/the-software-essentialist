@@ -16,7 +16,8 @@ import { ProductionUsersRepository } from './modules/users/repos/productionUsers
 import { LocalStorage } from './shared/storage/localStorage';
 import { FirebaseService } from './modules/users/externalServices/firebaseService';
 import { NavigationService } from './shared/navigation/navigationService';
-import { AuthStore } from './shared/auth/authStore';
+import { AuthStore } from './shared/auth/authStore'
+import { OnboardingPresenter } from './modules/users/application/onboardingPresenter';
 
 const apiClient = createAPIClient('http://localhost:3000');
 const postsRepository = new FakePostsRepository(fakePostsData);
@@ -29,6 +30,13 @@ const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationServi
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
+const onboardingPresenter = new OnboardingPresenter(
+  usersRepository, 
+  navigationService, 
+  firebaseService,
+  authStore
+);
+
 
 // Initialize stores
 const authStore = new AuthStore(usersRepository, firebaseService);
@@ -51,6 +59,7 @@ export {
   postsPresenter,
   navLoginPresenter,
   registrationPresenter,
+  onboardingPresenter,
 
   // Services
   marketingService,

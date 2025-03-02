@@ -10,8 +10,11 @@ export type GetPostsParams = {
 };
 
 export type MemberDTO = {
+  userId: string;
   memberId: string
   username: string;
+  reputationLevel: string;
+  reputationScore: number;
 }
 
 export type PostDTO = {

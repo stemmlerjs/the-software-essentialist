@@ -6,7 +6,6 @@ import {
 import { CreateMemberInput } from "@dddforum/shared/src/api/members";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 
-
 export class CreateMemberCommand {
 
   constructor(public props: CreateMemberInput, ) {}

@@ -5,6 +5,8 @@ import { CreateMemberCommand } from './memberCommands';
 import { Config } from '../../shared/config';
 import { createJwtCheck } from '../users/externalServices/adapters/auth';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+import { CreateMemberAPIResponse } from '@dddforum/shared/src/api/members';
+import { Member } from './domain/member';
 
 export class MembersController {
   private router: express.Router;
@@ -32,7 +34,18 @@ export class MembersController {
     try {
       const command = CreateMemberCommand.create(req.user, req.body);
       const result = await this.memberService.createMember(command);
-      return res.status(200).json(result);
+
+      const response: CreateMemberAPIResponse = {
+        success: result.isSuccess(),
+        data: result.isSuccess() ? (result.getValue() as Member).toDTO() : undefined,
+        error: !result.isSuccess() ? result.getError() : undefined
+      };
+
+      if (result.isSuccess()) {
+        return res.status(200).json(response);
+      } else {
+        return res.status(400).json(response);
+      }
     } catch (err) {
       next(err);
     }

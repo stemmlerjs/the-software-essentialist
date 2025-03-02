@@ -5,6 +5,7 @@ import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
+import { MemberDTO } from "@dddforum/shared/src/api/posts";
 
 interface MemberProps {
   id: string;
@@ -112,6 +113,16 @@ export class Member extends AggregateRoot {
       reputationScore: this.props.reputationScore,
       reputationLevel: this.props.reputationLevel,
     }
+  }
+
+  public toDTO (): MemberDTO {
+    return {
+      userId: this.props.userId,
+      memberId: this.id,
+      username: this.props.username.value,
+      reputationLevel: this.props.reputationLevel,
+      reputationScore: this.props.reputationScore,
+    };
   }
 
 }

@@ -3,59 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { Layout } from '../shared/components/layout';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
-import { apiClient, usersRepository } from '../main';
+import { onboardingPresenter } from '../main';
+import { observer } from 'mobx-react-lite';
 
-export const OnboardingPage = () => {
+export const OnboardingPage = observer(() => {
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const navigate = useNavigate();
-  
-
-  // Log auth details if available
-  if (user) {
-    console.log('Auth user details:', {
-      email: user.email,
-      name: user.displayName,
-      uid: user.uid,
-      isAuthenticated: true
-    });
-  }
-
-  console.log('here')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Get fresh ID token
-      const idToken = await user?.getIdToken();
-      
-      
-      let response = await apiClient.members.create({
-        username,
-        email: user?.email || '',
-        userId: user?.uid || ''
-      }, idToken as string);
-
-      if (response.success) {
-        navigate('/');
-      }
-      
-    } catch (error) {
-      console.error('Failed to create member:', error);
-    } finally {
-      setIsSubmitting(false);
+    
+    if (!user) {
+      console.error('No authenticated user found');
+      return;
     }
+
+    await onboardingPresenter.registerMember({
+      username,
+      email: user.email || '',
+      userId: user.uid,
+      allowMarketing
+    });
   };
 
   return (
     <Layout>
       <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow">
         <h2 className="text-1xl mb-6">Complete Your Profile</h2>
+        {onboardingPresenter.error && (
+          <div className="error mb-4 text-red-500">
+            {onboardingPresenter.error}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-2">Username</label>
@@ -81,13 +63,13 @@ export const OnboardingPage = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded"
-            disabled={isSubmitting}
+            disabled={onboardingPresenter.isSubmitting}
           >
-            Complete Registration
+            {onboardingPresenter.isSubmitting ? 'Registering...' : 'Complete Registration'}
           </button>
         </form>
       </div>
-      <OverlaySpinner isActive={isSubmitting} />
+      <OverlaySpinner isActive={onboardingPresenter.isSubmitting} />
     </Layout>
   );
-}; 
+}); 

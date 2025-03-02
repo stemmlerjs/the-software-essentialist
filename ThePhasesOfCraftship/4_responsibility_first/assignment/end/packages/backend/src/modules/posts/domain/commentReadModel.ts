@@ -34,7 +34,10 @@ export class CommentReadModel {
       dateCreated: this.props.dateCreated,
       member: {
         memberId: this.props.member.id,
-        username: this.props.member.username
+        username: this.props.member.username,
+        userId: this.props.member.userId,
+        reputationLevel: this.props.member.reputationLevel,
+        reputationScore: this.props.member.reputationScore
       }
     }
   }

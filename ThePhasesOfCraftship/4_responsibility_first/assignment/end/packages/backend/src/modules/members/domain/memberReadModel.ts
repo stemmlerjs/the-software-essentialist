@@ -1,10 +1,12 @@
-
 import { MemberDTO } from "@dddforum/shared/src/api/posts";
 import { Member } from "@prisma/client";
 
 interface MemberReadModelProps {
   id: string;
   username: string;
+  userId: string;
+  reputationLevel: string;
+  reputationScore: number;
 }
 
 export class MemberReadModel {
@@ -22,10 +24,25 @@ export class MemberReadModel {
     return this.props.username;
   }
 
+  get userId () {
+    return this.props.userId;
+  }
+
+  get reputationLevel () {
+    return this.props.reputationLevel;
+  }
+
+  get reputationScore () {
+    return this.props.reputationScore;
+  }
+
   public static fromPrisma (member: Member) {
     return new MemberReadModel({
       id: member.id,
       username: member.username,
+      reputationLevel: member.reputationLevel,
+      reputationScore: member.reputationScore,
+      userId: member.userId
     });
   }
 
@@ -33,7 +50,10 @@ export class MemberReadModel {
   public toDTO (): MemberDTO {
     return {
       memberId: this.props.id,
-      username: this.props.username
+      username: this.props.username,
+      userId: this.props.userId,
+      reputationLevel: this.props.reputationLevel,
+      reputationScore: this.props.reputationScore
     }
   }
 }

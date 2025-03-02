@@ -11,7 +11,7 @@ export type Error<U> = {
 
 export type APIResponse<T, U> = {
   success: boolean;
-  data: T;
+  data?: T;
   error?: Error<U>;
 };
 
