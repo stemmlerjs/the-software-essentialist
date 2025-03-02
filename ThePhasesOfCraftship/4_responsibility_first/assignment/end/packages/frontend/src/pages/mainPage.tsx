@@ -6,11 +6,11 @@ import { PostViewModel } from "../modules/posts/application/postViewModel";
 import { PostsViewSwitcher } from "../modules/posts/components/postsViewSwitcher";
 import { PostsList } from "../modules/posts/components/postsList";
 import { Layout } from "../shared/components/layout";
-import { postsPresenter } from "../main";
 import { PostsFilterValue } from "../modules/posts/application/searchFilterViewModel";
 import { useAuthStore } from "../shared/auth/useAuthStore";
+import { PostsPresenter } from "../modules/posts/application/postsPresenter";
 
-export const MainPage = observer(() => {
+export const MainPage = observer(({ presenter }: { presenter: PostsPresenter }) => {
   const { currentUser } = useAuthStore();
   const [posts, setPosts] = useState<PostViewModel[]>([]);
   const [postView, setPostsView] = useState<PostsFilterValue>('popular');
@@ -20,14 +20,14 @@ export const MainPage = observer(() => {
 
   useEffect(() => {
     async function loadPosts() {
-      observe(postsPresenter, 'postVMs', (obj) => {
+      observe(presenter, 'postVMs', (obj) => {
         setPosts(obj.newValue);
       });
 
-      observe(postsPresenter, 'searchFilter', (obj) => {
+      observe(presenter, 'searchFilter', (obj) => {
         setPostsView(obj.newValue.value);
       });
-      await postsPresenter.load();
+      await presenter.load();
     }
     loadPosts();
   }, []);
@@ -36,7 +36,7 @@ export const MainPage = observer(() => {
     <Layout>
       <PostsViewSwitcher 
         postsView={postView}
-        onPostViewSelected={(newValue) => postsPresenter.switchSearchFilter(newValue)}
+        onPostViewSelected={(newValue) => presenter.switchSearchFilter(newValue)}
       />
       <PostsList
         posts={posts}

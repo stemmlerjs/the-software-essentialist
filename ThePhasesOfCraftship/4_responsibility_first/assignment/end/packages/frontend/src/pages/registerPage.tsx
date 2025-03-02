@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from 'react';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
-import { registrationPresenter } from '../main';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { RegistrationPresenter } from '../modules/users/application/registrationPresenter';
 
-export const RegisterPage = () => {
+export const RegisterPage = observer(({ presenter }: { presenter: RegistrationPresenter }) => {
   const navigate = useNavigate();
   const [signingIn, setSigningIn] = useState(false);
 
@@ -13,7 +14,7 @@ export const RegisterPage = () => {
       if (!signingIn) {
         setSigningIn(true);
         try {
-          await registrationPresenter.registerWithGoogle(navigate);
+          await presenter.registerWithGoogle(navigate);
         } catch (error) {
           console.error('Auth error:', error);
           // Optionally reset signingIn state if needed
@@ -26,4 +27,4 @@ export const RegisterPage = () => {
   }, [signingIn]);
 
   return <OverlaySpinner isActive={true} />;
-};
+})

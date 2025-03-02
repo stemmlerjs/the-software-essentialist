@@ -9,7 +9,7 @@ import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./pages/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
 import { StoreProvider } from "./stores/root/StoreContext";
-import { authStore, rootStore } from "./main";
+import { authStore, onboardingPresenter, postsPresenter, registrationPresenter, rootStore } from "./main";
 import { AuthProvider } from "./stores/auth/authContext";
 
 const App = () => {
@@ -21,9 +21,9 @@ const App = () => {
           <SpinnerProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/join" element={<RegisterPage />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
+                <Route path="/" element={<MainPage presenter={postsPresenter} />} />
+                <Route path="/join" element={<RegisterPage presenter={registrationPresenter} />} />
+                <Route path="/onboarding" element={<OnboardingPage presenter={onboardingPresenter} />} />
               </Routes>
             </BrowserRouter>
           </SpinnerProvider>

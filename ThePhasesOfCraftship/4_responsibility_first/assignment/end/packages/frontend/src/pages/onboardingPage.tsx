@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Layout } from '../shared/components/layout';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
-import { onboardingPresenter } from '../main';
 import { observer } from 'mobx-react-lite';
+import { OnboardingPresenter } from '../modules/users/application/onboardingPresenter';
 
-export const OnboardingPage = observer(() => {
+export const OnboardingPage = observer(({ presenter }: { presenter: OnboardingPresenter }) => {
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
 
   setTimeout(() => {
-    onboardingPresenter.testUpdateMember();
+    presenter.testUpdateMember();
   }, 2000)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onboardingPresenter.registerMember({
+    await presenter.registerMember({
       username,
       allowMarketing
     });
@@ -24,9 +24,9 @@ export const OnboardingPage = observer(() => {
     <Layout>
       <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow">
         <h2 className="text-1xl mb-6">Complete Your Profile</h2>
-        {onboardingPresenter.error && (
+        {presenter.error && (
           <div className="error mb-4 text-red-500">
-            {onboardingPresenter.error}
+            {presenter.error}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -54,13 +54,13 @@ export const OnboardingPage = observer(() => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded"
-            disabled={onboardingPresenter.isSubmitting}
+            disabled={presenter.isSubmitting}
           >
-            {onboardingPresenter.isSubmitting ? 'Registering...' : 'Complete Registration'}
+            {presenter.isSubmitting ? 'Registering...' : 'Complete Registration'}
           </button>
         </form>
       </div>
-      <OverlaySpinner isActive={onboardingPresenter.isSubmitting} />
+      <OverlaySpinner isActive={presenter.isSubmitting} />
     </Layout>
   );
 }); 
