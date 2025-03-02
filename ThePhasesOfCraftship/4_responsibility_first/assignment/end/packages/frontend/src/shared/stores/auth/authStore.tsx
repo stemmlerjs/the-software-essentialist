@@ -1,8 +1,9 @@
+
 import { makeAutoObservable } from 'mobx';
-import { UserDm } from '../../modules/users/domain/userDm';
-import { UsersRepository } from '../../modules/users/repos/usersRepo';
-import { FirebaseService } from '../../modules/users/externalServices/firebaseService';
 import { NavigateFunction } from 'react-router-dom';
+import { UserDm } from '../../../modules/users/domain/userDm';
+import { UsersRepository } from '../../../modules/users/repos/usersRepo';
+import { FirebaseService } from '../../../modules/users/externalServices/firebaseService';
 
 export class AuthStore {
   currentUser: UserDm | null = null;
@@ -43,7 +44,7 @@ export class AuthStore {
     return !!this.currentUser?.isAuthenticated();
   }
 
-  async signInWithGoogle(navigate: NavigateFunction) {
+  async signInWithGoogle (navigate: NavigateFunction) {
     try {
       this.isLoading = true;
       this.error = null;

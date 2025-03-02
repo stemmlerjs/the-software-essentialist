@@ -17,13 +17,13 @@ import { NavigationService } from './shared/navigation/navigationService';
 import { AuthRepository } from './modules/users/repos/authRepository';
 import { OnboardingPresenter } from './modules/onboarding/onboardingPresenter';
 
-import { RootStore } from './stores/root/RootStore';
-import { AuthStore } from './stores/auth/authStore';
 import { configure } from "mobx"
 import { LayoutPresenter } from './modules/layout/layoutPresenter';
-import { MembersStore } from './stores/members/membersStore';
 import { RegistrationPresenter } from './modules/registration/registrationPresenter';
 import { Presenters } from './shared/contexts/presenters';
+import { MembersStore } from './shared/stores/members/membersStore';
+import { AuthStore } from './shared/stores/auth/authStore';
+import { RootStore } from './shared/stores/root/RootStore';
 
 configure({ enforceActions: "never" })
 
@@ -47,7 +47,10 @@ const onboardingPresenter = new OnboardingPresenter(
   firebaseService
 );
 
-const presenters = new Presenters(onboardingPresenter)
+const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
+
+
+const presenters = new Presenters(onboardingPresenter, registrationPresenter)
 
 const postsRepository = new FakePostsRepository(fakePostsData);
 
@@ -55,15 +58,12 @@ const postsPresenter = new PostsPresenter(postsRepository, authRepository);
 const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
-const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
 
 
 const rootStore = new RootStore(
   authRepository,
   membersStore
 );
-
-
 
 // Initialize stores
 createRoot(document.getElementById('root')!).render(

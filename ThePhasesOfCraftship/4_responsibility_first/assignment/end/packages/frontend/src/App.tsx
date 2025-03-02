@@ -8,10 +8,10 @@ import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
-import { StoreProvider } from "./stores/root/StoreContext";
-import { authStore, postsPresenter, presenters, registrationPresenter, rootStore } from "./main";
-import { AuthProvider } from "./stores/auth/authContext";
+import { authStore, postsPresenter, presenters, rootStore } from "./main";
 import { PresenterProvider } from "./shared/contexts/presentersContext";
+import { StoreProvider } from "./shared/stores/root/StoreContext";
+import { AuthProvider } from "./shared/stores/auth/authContext";
 
 const App = () => {
   return (
@@ -20,17 +20,16 @@ const App = () => {
         <AuthProvider store={authStore}>
         <FirebaseProvider>
         <PresenterProvider presenters={presenters}>
-        <SpinnerProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<PostsPage presenter={postsPresenter} />} />
-                <Route path="/join" element={<RegisterPage presenter={registrationPresenter} />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
-              </Routes>
-            </BrowserRouter>
-          </SpinnerProvider>
-        </PresenterProvider>
-          
+          <SpinnerProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<PostsPage presenter={postsPresenter} />} />
+                  <Route path="/join" element={<RegisterPage />} />
+                  <Route path="/onboarding" element={<OnboardingPage />} />
+                </Routes>
+              </BrowserRouter>
+            </SpinnerProvider>
+          </PresenterProvider>
         </FirebaseProvider>
         </AuthProvider>
       </StoreProvider>

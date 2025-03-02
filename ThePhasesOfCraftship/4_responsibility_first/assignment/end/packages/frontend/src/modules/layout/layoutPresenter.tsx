@@ -2,7 +2,7 @@
 import { UserLoginViewModel } from "./userLoginViewModel";
 import { makeAutoObservable, reaction } from "mobx";
 import { UsersRepository } from "../users/repos/usersRepo";
-import { MembersStore } from "../../stores/members/membersStore";
+import { MembersStore } from "../../shared/stores/members/membersStore";
 
 export class LayoutPresenter {
   // Declare a view model. This is what the component will use to 

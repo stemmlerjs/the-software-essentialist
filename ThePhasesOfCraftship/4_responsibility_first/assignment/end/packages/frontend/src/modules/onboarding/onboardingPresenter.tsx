@@ -2,10 +2,10 @@
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../shared/navigation/navigationService";
 import { FirebaseService } from "../users/externalServices/firebaseService";
-
-import { MemberDm } from "../../stores/members/memberDm";
 import { apiClient } from "../../main";
-import { MembersStore } from "../../stores/members/membersStore";
+import { MembersStore } from "../../shared/stores/members/membersStore";
+import { MemberDm } from "../../shared/stores/members/memberDm";
+
 
 interface OnboardingDetails {
   username: string;
@@ -29,7 +29,6 @@ export class OnboardingPresenter {
   }
 
   testUpdateMember () {
-    console.log('test');
     const member = new MemberDm({
       id: 'asda',
       username: 'khalil',
