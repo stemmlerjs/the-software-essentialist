@@ -19,7 +19,6 @@ export class MembersModule extends ApplicationModule {
   private constructor(
     db: Database,
     private eventOutbox: EventOutboxTable,
-    private usersService: UserIdentityService,
     config: Config,
   ) {
     super(config);
@@ -34,7 +33,7 @@ export class MembersModule extends ApplicationModule {
   }
 
   createMembersService () {
-    return new MemberService(this.membersRepository, this.usersService);
+    return new MemberService(this.membersRepository);
   }
 
   getMemberRepository () {
@@ -53,7 +52,7 @@ export class MembersModule extends ApplicationModule {
     webServer.mountRouter("/members", this.membersController.getRouter());
   }
   
-  public static build(db: Database, eventOutbox: EventOutboxTable, usersService: UserIdentityService, config: Config) {
-    return new MembersModule(db, eventOutbox, usersService, config);
+  public static build(db: Database, eventOutbox: EventOutboxTable, config: Config) {
+    return new MembersModule(db, eventOutbox, config);
   }
 }

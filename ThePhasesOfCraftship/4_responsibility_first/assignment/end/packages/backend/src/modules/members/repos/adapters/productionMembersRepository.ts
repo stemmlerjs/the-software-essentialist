@@ -6,12 +6,15 @@ import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutbox
 
 export class ProductionMembersRepository implements MembersRepository {
 
-  constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
+  constructor (
+    private prisma: PrismaClient, 
+    private eventsTable: EventOutboxTable
+  ) {
     
   }
   
   async getMemberByUserId(userId: string): Promise<Member | null> {
-    console.log(this.prisma.member, this.prisma)
+    console.log(this.prisma.member)
     const memberData = await this.prisma.member.findUnique({
       where: { userId: userId },
     });

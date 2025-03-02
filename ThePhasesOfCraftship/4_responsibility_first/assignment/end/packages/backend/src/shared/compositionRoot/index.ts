@@ -58,10 +58,6 @@ export class CompositionRoot {
     await this.dbConnection.connect();
     await this.webServer.start();
     await this.eventBus.initialize();
-
-    // TODO: 
-    // await this.firebaseAuth.initialize(); // todo: make this pass, create all 
-    // the nodes at the bottom of the tree.
     
     // Connect modules starting with the root modules (generic)
     this.usersModule = this.createUsersModule();
@@ -94,7 +90,6 @@ export class CompositionRoot {
     return MembersModule.build(
       this.dbConnection, 
       this.eventsOutboxTable, 
-      this.usersModule.getUsersService(),
       this.config
     );
   }
@@ -168,9 +163,6 @@ export class CompositionRoot {
   }
 
   private createDBConnection() {
-    if (this.shouldBuildFakeRepository()) {
-      return new FakeDatabase();
-    }
     const dbConnection = new PrismaDatabase();
     if (!this.dbConnection) {
       this.dbConnection = dbConnection;

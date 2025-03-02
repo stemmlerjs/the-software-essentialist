@@ -3,8 +3,7 @@ import { fail, success, UseCase, UseCaseResponse } from "@dddforum/shared/src/co
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
 import { CreateMemberCommand } from "../../../memberCommands";
-import { UserIdentityService } from "../../../../users/application/userIdentityService";
-import { NotFoundError, ValidationError } from "@dddforum/shared/src/errors";
+import {  ValidationError } from "@dddforum/shared/src/errors";
 
 // Improvement: These errors can be generalized as 'NotFound' errors, like 'MemberNotFound', 'CommentNotFound', etc.
 // This way, we can have a single error type for all 'NotFound' errors.
@@ -29,20 +28,12 @@ type CreateMemberResponse = UseCaseResponse<Member | undefined, ValidationError 
 
 export class CreateMember implements UseCase<CreateMemberCommand, CreateMemberResponse> {
   constructor(
-    private userService: UserIdentityService,
     private memberRepository: MembersRepository
   ) {}
 
   async execute(request: CreateMemberCommand): Promise<CreateMemberResponse> {
     const { username, userId } = request.props;
     let existingMember: Member | null =  null;
-
-    let validUserIdentityOrNull = await this.userService.getUserById(userId);
-
-    if (validUserIdentityOrNull instanceof NotFoundError) {
-      // The user does not exist in our identity provider, therefore the request should fail
-      return fail(new UserIdentityNotFound())
-    }
 
     // Check if user already exists; if they do, then we will just return 
     // them and not do anything else. All good.

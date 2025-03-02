@@ -17,7 +17,10 @@ export class PrismaDatabase implements Database {
   }
 
   async connect() {
+    console.log('Starting the database connection...')
     await this.connection.$connect();
+    await this.connection.$queryRaw`SELECT 1 + 1 AS result`;
+    console.log('Connected to the prisma database')
   }
 }
 
