@@ -37,24 +37,26 @@ const firebaseService = new FirebaseService();
 const authRepository = new AuthRepository(apiClient, localStorage, firebaseService);
 const usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
 
-const membersRepo = new ProductionMembersRepo()
+const membersStore = new MembersStore(
+
+)
 
 const postsRepository = new FakePostsRepository(fakePostsData);
 const navigationService = new NavigationService();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-const navLoginPresenter = new NavLoginPresenter(usersRepository, membersRepo);
+const navLoginPresenter = new NavLoginPresenter(usersRepository, membersStore);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
 const onboardingPresenter = new OnboardingPresenter(
-  membersRepo,
+  membersStore,
   navigationService,
   firebaseService
 );
 
 const rootStore = new RootStore(
   authRepository,
-  membersRepo
+  membersStore
 );
 
 const authStore = new AuthStore(
@@ -62,9 +64,7 @@ const authStore = new AuthStore(
   firebaseService
 )
 
-const membersStore = new MembersStore(
 
-)
 
 // Initialize stores
 createRoot(document.getElementById('root')!).render(
