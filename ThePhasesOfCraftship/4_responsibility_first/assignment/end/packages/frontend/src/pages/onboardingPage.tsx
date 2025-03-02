@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { Layout } from '../shared/components/layout';
 import { OverlaySpinner } from '../shared/components/overlaySpinner';
-import { useApi } from '../shared/api/apiClient';
-import { usersRepository } from '../main';
+import { apiClient, usersRepository } from '../main';
 
 export const OnboardingPage = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +12,6 @@ export const OnboardingPage = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const navigate = useNavigate();
-  const api = useApi();
   
 
   // Log auth details if available
@@ -37,11 +35,11 @@ export const OnboardingPage = () => {
       const idToken = await user?.getIdToken();
       
       
-      let response = await api.members.create({
+      let response = await apiClient.members.create({
         username,
         email: user?.email || '',
         userId: user?.uid || ''
-      }, idToken);
+      }, idToken as string);
 
       if (response.success) {
         navigate('/');
@@ -57,7 +55,7 @@ export const OnboardingPage = () => {
   return (
     <Layout>
       <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow">
-        <h1 className="text-2xl mb-6">Complete Your Profile</h1>
+        <h2 className="text-1xl mb-6">Complete Your Profile</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-2">Username</label>

@@ -1,4 +1,5 @@
 
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { observe } from "mobx";
 import { PostViewModel } from "../modules/posts/application/postViewModel";
@@ -7,10 +8,14 @@ import { PostsList } from "../modules/posts/components/postsList";
 import { Layout } from "../shared/components/layout";
 import { postsPresenter } from "../main";
 import { PostsFilterValue } from "../modules/posts/application/searchFilterViewModel";
+import { useAuthStore } from "../shared/auth/useAuthStore";
 
-export const MainPage = () => {
+export const MainPage = observer(() => {
+  const { currentUser } = useAuthStore();
   const [posts, setPosts] = useState<PostViewModel[]>([]);
   const [postView, setPostsView] = useState<PostsFilterValue>('popular');
+
+  console.log(currentUser);
 
   useEffect(() => {
     async function loadPosts() {
@@ -37,4 +42,4 @@ export const MainPage = () => {
       />
     </Layout>
   );
-};
+});

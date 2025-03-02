@@ -13,7 +13,7 @@ export function createJwtCheck(config: Config) {
     try {
       const decodedToken = await auth().verifyIdToken(token);
       (req as any).user = decodedToken;
-      
+
       next();
     } catch (error) {
       return res.status(401).json({ error: 'Invalid token' });

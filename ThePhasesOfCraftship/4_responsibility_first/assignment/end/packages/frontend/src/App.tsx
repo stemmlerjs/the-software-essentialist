@@ -8,21 +8,25 @@ import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { UserProvider } from "./shared/contexts/userContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./pages/onboardingPage";
+import { AuthProvider } from './shared/auth/authContext';
+import { authStore } from './main';
 
 function App() {
   return (
     <SpinnerProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <FirebaseProvider>
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/join" element={<RegisterPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
-            </Routes>
-          </FirebaseProvider>
-        </BrowserRouter>
-      </UserProvider>
+      <AuthProvider store={authStore}>
+        <UserProvider>
+          <BrowserRouter>
+            <FirebaseProvider>
+              <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/join" element={<RegisterPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
+              </Routes>
+            </FirebaseProvider>
+          </BrowserRouter>
+        </UserProvider>
+      </AuthProvider>
     </SpinnerProvider>
   );
 }

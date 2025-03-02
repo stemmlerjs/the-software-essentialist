@@ -1,5 +1,5 @@
 
-import { NavigationDm } from "../../navigation/domain/navigationDm"
+import { NavigationDm } from "../../../shared/navigation/domain/navigationDm";
 import { UserDm } from "../domain/userDm";
 
 interface UserLoginViewModelProps {
@@ -34,19 +34,13 @@ export class UserLoginViewModel {
   }
 
   public static fromDomain (user: UserDm | null, navigation: NavigationDm): UserLoginViewModel {
-    const shouldRenderJoinText = () => {
-      return !user && navigation.pathname !== '/join'
-    }
-    
-    const shouldRenderLogoutText = () => {
-      return user && navigation.pathname !== '/join'
-    }
 
-    return new UserLoginViewModel({
+    const dm = new UserLoginViewModel({
       pathname: navigation.pathname,
       isAuthenticated: user ? true : false,
       username: user ? user.username : null,
-      linkText: shouldRenderJoinText() ? 'Join' : shouldRenderLogoutText() ? 'Logout' : '',
     });
+
+    return dm
   }
 }

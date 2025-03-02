@@ -1,18 +1,22 @@
 
+import { createAPIClient } from "@dddforum/shared/src/api";
 import { MarketingService } from "../../../shared/services/marketingService";
-import { ToastService } from "../../../shared/services/toastService";
-import { FakeNavigationRepository } from "../../navigation/repos/fakeNavigationRepository";
-import { FakeUsersRepository } from "../repos/fakeUsersRepo";
+import { FirebaseService } from "../externalServices/firebaseService";
+import { ProductionUsersRepository } from "../repos/productionUsersRepo";
 import { RegistrationPresenter } from "./registrationPresenter";
+import { LocalStorage } from "../../../shared/storage/localStorage";
+import { NavigationService } from "../../../shared/navigation/navigationService";
 
 describe('registrationPresenter', () => {
 
-  let toastService = new ToastService()
-  let usersRepository = new FakeUsersRepository(null);
+  let apiClient = createAPIClient('http://localhost:3000');
+  let localStorage = new LocalStorage();
+  let firebaseService = new FirebaseService();
+  let usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
   let marketingService = new MarketingService();
-  let navigationRepository = new FakeNavigationRepository('/join');
+  let navigationService = new NavigationService();
 
-  let registrationPresenter = new RegistrationPresenter(toastService, usersRepository, marketingService, navigationRepository);
+  let registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
   
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,15 +1,15 @@
 
 import { UserLoginViewModel } from "./userLoginViewModel";
-import { NavigationRepository } from "../../navigation/repos/navigationRepository";
 import { makeAutoObservable, observe } from "mobx";
 import { UsersRepository } from "../repos/usersRepo";
+import { NavigationService } from "../../../shared/navigation/navigationService";
 
 export class NavLoginPresenter {
   public userLogin: UserLoginViewModel | null;
 
   constructor(
     public usersRepository: UsersRepository,
-    private navigationRepository: NavigationRepository,
+    private navigationService: NavigationService,
   ) {
     makeAutoObservable(this);
     this.setupSubscriptions();
@@ -18,14 +18,16 @@ export class NavLoginPresenter {
 
   private setupSubscriptions () {
     observe(this.usersRepository, 'currentUser', (userDm) => {
-      const navigation = this.navigationRepository.getCurrentNavigation();
+      const navigation = this.navigationService.getCurrentNavigation();
       this.userLogin = UserLoginViewModel.fromDomain(userDm.newValue, navigation);
     });
   }
 
   async load(callback?: (userLogin: UserLoginViewModel) => void) {
     let user = await this.usersRepository.getCurrentUser();
-    let navigation = await this.navigationRepository.getCurrentNavigation();
+    let navigation = await this.navigationService.getCurrentNavigation();
+
+    console.log(user);
 
     this.userLogin = UserLoginViewModel.fromDomain(user, navigation);
 

@@ -1,7 +1,6 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { CreateUserBuilder } from "@dddforum/shared/tests/support/builders/createUserBuilder";
 import { CreateUserParams } from "@dddforum/shared/src/api/users";
 import { Pages } from '../../support/pages/pages';
 
@@ -12,6 +11,24 @@ import { DatabaseFixture } from '@dddforum/shared/tests/support/fixtures/databas
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), { tagFilter: '@frontend' });
 
+/**
+ * 
+ * TODO:
+ * New registration
+ * 
+ * As a user, when I go to the register page 
+ * and I register with google 
+ * then I should have created an account
+ * and I should be redirected to the onboarding page
+ * and I should have my details stored in local storage
+ * 
+ * As a user who has already registered with google
+ * But who has not yet completed my onboarding
+ * When I come back to the website, since my details are stored in local storage
+ * I should be redirected back to the onboarding page to complete my profile
+ * 
+ * As a user who has already completed my 
+ */
 
 defineFeature(feature, (test) => {
   let app: App
@@ -20,6 +37,11 @@ defineFeature(feature, (test) => {
   let user: CreateUserParams;
   let users: CreateUserParams[];
   let databaseFixture: DatabaseFixture
+
+  test('', () => {
+    localStorage = composition.getLocalStorage();
+    localStorage.get('user')
+  })
 
 
   beforeAll(async () => {

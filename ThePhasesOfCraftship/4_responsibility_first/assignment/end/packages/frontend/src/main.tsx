@@ -9,21 +9,29 @@ import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
 // import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
 // import { fakeUserData } from './modules/users/__tests__/fakeUserData';
 import { NavLoginPresenter } from './modules/users/application/navLoginPresenter';
-import { ProductionNavigationRepository } from './modules/navigation/repos/productionNavigationRepository';
 import { RegistrationPresenter } from './modules/users/application/registrationPresenter';
 import { ToastService } from './shared/services/toastService';
 import { MarketingService } from './shared/services/marketingService';
 import { ProductionUsersRepository } from './modules/users/repos/productionUsersRepo';
+import { LocalStorage } from './shared/storage/localStorage';
+import { FirebaseService } from './modules/users/externalServices/firebaseService';
+import { NavigationService } from './shared/navigation/navigationService';
+import { AuthStore } from './shared/auth/authStore';
 
 const apiClient = createAPIClient('http://localhost:3000');
 const postsRepository = new FakePostsRepository(fakePostsData);
-const usersRepository = new ProductionUsersRepository(apiClient);
-const navigationRepository = new ProductionNavigationRepository();
+const localStorage = new LocalStorage();
+const firebaseService = new FirebaseService();
+const usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
+const navigationService = new NavigationService();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationRepository);
+const navLoginPresenter = new NavLoginPresenter(usersRepository, navigationService);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
-const registrationPresenter = new RegistrationPresenter(toastService, usersRepository, marketingService, navigationRepository);
+const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
+
+// Initialize stores
+const authStore = new AuthStore(usersRepository, firebaseService);
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -37,7 +45,7 @@ export {
   // Repositories
   postsRepository,
   usersRepository,
-  navigationRepository,
+  
 
   // Presenters
   postsPresenter,
@@ -46,5 +54,8 @@ export {
 
   // Services
   marketingService,
-  toastService
+  toastService,
+  navigationService,
+  firebaseService,
+  authStore,
 }

@@ -1,107 +1,67 @@
-
-import { CreateUserParams, CreateUserResponse, EmailAlreadyInUseError, UsernameAlreadyTakenError } from "@dddforum/shared/src/api/users";
-import { ToastService } from "../../../shared/services/toastService";
 import { UsersRepository } from "../repos/usersRepo";
-import { MarketingService } from "../../../shared/services/marketingService";
-import { NavigationRepository } from "../../navigation/repos/navigationRepository";
-
-import { getAuth, signInWithPopup, GoogleAuthProvider, UserCredential } from 'firebase/auth';
-import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { UserCredential } from 'firebase/auth';
 import { UserDm } from "../domain/userDm";
 import { NavigateFunction } from "react-router-dom";
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
-
-type ValidationResult = {
-  success: boolean;
-  errorMessage?: string;
-}
-
-function validateForm (input: CreateUserParams): ValidationResult {
-  if (input.email.indexOf('@') === -1) return { success: false, errorMessage: "Email invalid" };
-  if (input.username.length < 2) return { success: false, errorMessage: "Username invalid" };
-  return { success: true }
-}
+import { FirebaseService } from "../externalServices/firebaseService";
+import { NavigationService } from "../../../shared/navigation/navigationService";
+import { makeAutoObservable, observe } from "mobx";
 
 export class RegistrationPresenter {
 
-  constructor (
-    public toastService: ToastService,
-    public usersRepository: UsersRepository,
-    public marketingService: MarketingService,
-    public navigationRepository: NavigationRepository
-  ) {
+  public user: UserDm | null;
 
+  constructor (
+    public usersRepository: UsersRepository,
+    public navigationService: NavigationService,
+    public firebaseService: FirebaseService
+  ) {
+    makeAutoObservable(this);
+    this.setupSubscriptions();
+    this.user = null;
   }
+
+  private setupSubscriptions () {
+    observe(this.usersRepository, 'currentUser', (userDm) => {
+      this.user = userDm.newValue;
+    });
+  }
+
+  async load(callback?: (user: UserDm | null) => void) {
+    let user = await this.usersRepository.getCurrentUser();
+    this.user = user;
+    callback && callback(this.user);
+  }
+
+  /**
+   * @description This method registers the user and stores them in local state by using the userRepository.
+   * We can integration test this functionality with various scenarios - for example, if the user is already 
+   * registered and we have them stored to local state, skip re-registering with Google.
+   */
 
   async registerWithGoogle (navigate: NavigateFunction) {
     try {
-      const userCredential: UserCredential = await signInWithPopup(auth, provider);
-      let userDm = UserDm.fromFirebaseCredentials(userCredential);
+      // Check if user is already authenticated
+      const currentUser = await this.usersRepository.getCurrentUser();
+      console.log('currentuser', currentUser);
+      if (currentUser?.isAuthenticated()) {
+        // If already authenticated, just navigate to onboarding
+        this.navigationService.goTo('/onboarding', navigate);
+        return;
+      }
+
+      // Attempt Google sign in
+      const userCredential: UserCredential = await this.firebaseService.signInWithGoogle();
+      
+      // Create and save user domain model
+      const userDm = UserDm.fromFirebaseCredentials(userCredential);
       this.usersRepository.save(userDm);
-      // Handle successful sign in
-      this.navigationRepository.goTo('/onboarding', navigate)
+      
+      // Navigate to onboarding
+      this.navigationService.goTo('/onboarding', navigate);
 
     } catch (err) {
       console.error('Auth error:', err);
-    }
-  }
-
-  async submitForm (input: CreateUserParams, allowMarketingEmails: boolean, callbacks?: { 
-    onStart: () => void, 
-    onSuccess: () => void, 
-    onFailure: () => void 
-  }): Promise<CreateUserResponse | ValidationError | UsernameAlreadyTakenError | EmailAlreadyInUseError | ServerError> {
-    // Validate the form
-    const validationResult = validateForm(input);
-
-    // If the form is invalid
-    if (!validationResult.success) {
-      // Show an error toast (for invalid input)
-      this.toastService.showError(validationResult.errorMessage as string);
-      return new ValidationError()
-    }
-
-    callbacks?.onStart();
-
-    try {
-      const response = await this.usersRepository.register(input);
-      
-      if (!response.success) {
-        switch (response.error?.code) {
-          case "UsernameAlreadyTaken":
-            callbacks?.onFailure()
-            this.toastService.showError('Account already exists');
-            return 'UsernameAlreadyTaken'
-          case "EmailAlreadyInUse":
-            callbacks?.onFailure()
-            this.toastService.showError('Email already in use');
-            return 'EmailAlreadyInUse';
-          default:
-            // Client processing error
-            throw new Error('Unknown error: ' + response.error)
-        }
-      }
-      
-      if (allowMarketingEmails) {
-        await this.marketingService.addEmailToList(input.email);
-      }
-
-      // Stop the loading spinner
-      callbacks?.onSuccess();
-      // Show the toast
-      this.toastService.showSuccess('Success! Redirecting home.')
-      // In 3 seconds, redirect to the main page
-      this.navigationRepository.goTo('/');
-
-      return response;
-
-    } catch (err) {
-      // If the call failed, stop the spinner
-      callbacks?.onFailure();
-      // Show the toast (for unknown error)
-      this.toastService.showError('Some backend error occurred')
-      return new ServerError()
+      // Don't navigate on error
     }
   }
 }

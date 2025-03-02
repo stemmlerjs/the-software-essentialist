@@ -4,6 +4,7 @@ import { ErrorRequestHandler } from 'express';
 import { CreateMemberCommand } from './memberCommands';
 import { Config } from '../../shared/config';
 import { createJwtCheck } from '../users/externalServices/adapters/auth';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 export class MembersController {
   private router: express.Router;
@@ -29,7 +30,7 @@ export class MembersController {
 
   private async createMember(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      const command = CreateMemberCommand.fromRequest(req.body);
+      const command = CreateMemberCommand.create(req.user, req.body);
       const result = await this.memberService.createMember(command);
       return res.status(200).json(result);
     } catch (err) {

@@ -1,7 +1,6 @@
-
 import { Users } from "@dddforum/shared/src/api";
 import { MemberRoles } from "@dddforum/shared/src/api/members";
-import { UserCredential } from "firebase/auth";
+import { User, UserCredential } from "firebase/auth";
 import { makeAutoObservable } from "mobx";
 
 interface UserDmProps {
@@ -53,5 +52,33 @@ export class UserDm {
 
   public get username () {
     return this.props.username;
+  }
+
+  public toLocalStorage() {
+    return {
+      isAuthenticated: this.props.isAuthenticated,
+      username: this.props.username,
+      userRoles: this.props.userRoles
+    };
+  }
+
+  public static fromLocalStorage(rawUser: {
+    isAuthenticated: boolean;
+    username?: string;
+    userRoles: string[];
+  }): UserDm {
+    return new UserDm({
+      isAuthenticated: rawUser.isAuthenticated,
+      username: rawUser.username,
+      userRoles: rawUser.userRoles || []
+    });
+  }
+
+  public static fromFirebaseUser(user: User): UserDm {
+    return new UserDm({
+      isAuthenticated: true,
+      username: user.email || undefined,
+      userRoles: []  // Firebase doesn't store roles, we get those from our backend
+    });
   }
 }
