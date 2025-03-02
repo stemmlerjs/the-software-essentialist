@@ -5,25 +5,20 @@ import logo from "../../shared/assets/dddforumlogo.png";
 import { Link, useLocation } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { appSelectors, toClass } from '../../shared/selectors';
-import { membersStore, navLoginPresenter } from '../../main';
+import { navLoginPresenter } from '../../main';
 import { useEffect, useState } from 'react';
 import { UserLoginViewModel } from '../users/application/userLoginViewModel';
 
+// All components which use observables must use 'observer'
 export const Layout = observer(({ children }: any) => {
-
-  const [vm, setVm] = useState<UserLoginViewModel>();
+  const location = useLocation();
+  const [vm, setVmToLocalState] = useState<UserLoginViewModel>();
 
   useEffect(() => {
     navLoginPresenter.load((userLoginVm) => {
-      setVm(userLoginVm);
+      setVmToLocalState(userLoginVm);
     })
-    console.log('ran use effcect')
-  }, [navLoginPresenter])
-
-  console.log(vm?.isAuthenticated, vm?.username);
-  const location = useLocation();
-
-  console.log('layout value of this...', vm?.username)
+  }, [navLoginPresenter.userLogin]) // We observe the view model in the presenter
 
   return (
     <>
@@ -38,10 +33,10 @@ export const Layout = observer(({ children }: any) => {
         </div>
         {location.pathname !== "/join" ? (
           <div id="header-action-button">
-            {membersStore.member && membersStore.member.username ? (
+            {vm?.isAuthenticated ? (
               <div>
                 <div className={toClass(appSelectors.header.selector)}>
-                  {membersStore.member.username}
+                  {vm.username}
                 </div>
                 <u>
                   <div onClick={navLoginPresenter.signOut}>Logout</div>

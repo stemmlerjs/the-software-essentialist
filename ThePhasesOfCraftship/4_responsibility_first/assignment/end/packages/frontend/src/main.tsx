@@ -21,9 +21,8 @@ import { OnboardingPresenter } from './modules/users/application/onboardingPrese
 
 import { RootStore } from './stores/root/RootStore';
 import { AuthStore } from './stores/auth/authStore';
-import { ProductionMembersRepo } from './stores/members/productionMembersRepo';
 import { configure } from "mobx"
-import { NavLoginPresenter } from './modules/layout/navLoginPresenter';
+import { LayoutPresenter } from './modules/layout/layoutPresenter';
 import { MembersStore } from './stores/members/membersStore';
 
 configure({
@@ -44,7 +43,7 @@ const membersStore = new MembersStore(
 const postsRepository = new FakePostsRepository(fakePostsData);
 const navigationService = new NavigationService();
 const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-const navLoginPresenter = new NavLoginPresenter(usersRepository, membersStore);
+const navLoginPresenter = new LayoutPresenter(usersRepository, membersStore);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
@@ -63,8 +62,6 @@ const authStore = new AuthStore(
   usersRepository,
   firebaseService
 )
-
-
 
 // Initialize stores
 createRoot(document.getElementById('root')!).render(

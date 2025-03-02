@@ -3,7 +3,7 @@ import { UserLoginViewModel } from '@dddforum/frontend/src/modules/users/applica
 import { FakeNavigationRepository } from '../../navigation/repos/fakeNavigationRepository';
 import { FakeUsersRepository } from '../users/repos/fakeUsersRepo';
 import { fakeUserData } from '../users/__tests__/fakeUserData';
-import { NavLoginPresenter } from './navLoginPresenter';
+import { NavLoginPresenter } from './layoutPresenter';
 import { UsersRepository } from '../users/repos/usersRepo';
 import { NavigationRepository } from '../../navigation/repos/navigationRepository';
 import { UserDTO } from '@dddforum/shared/src/api/users';
