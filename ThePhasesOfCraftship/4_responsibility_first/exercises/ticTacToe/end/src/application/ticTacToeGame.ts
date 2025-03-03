@@ -48,11 +48,6 @@ export class TicTacToe {
     await this.repository.clear();
   }
 
-  static async loadGame(repository: GameRepository): Promise<TicTacToe> {
-    const events = await repository.load();
-    return new TicTacToe(events, repository);
-  }
-
   getState(): GameStateData {
     return this.state.getSnapshot();
   }

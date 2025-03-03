@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { TicTacToe } from '../../application/ticTacToeGame';
-import { Position } from '../../domain/types';
+import { GameEvent, Position } from '../../domain/types';
 import { config } from '../../config';
 import { FileSystemGameRepository } from '../outgoing/filesystemGameRepository';
 
@@ -10,9 +10,14 @@ export class GameRunnerCLI {
 
   public static async create(resume: boolean) {
     const repository = new FileSystemGameRepository();
-    const game = resume 
-      ? await TicTacToe.loadGame(repository) 
-      : new TicTacToe([], repository);
+    let events: GameEvent[] = [];
+    
+    if (resume) {
+      events = await repository.load();
+    }
+
+    const game = new TicTacToe(events, repository);
+
     return new GameRunnerCLI(game);
   }
 
