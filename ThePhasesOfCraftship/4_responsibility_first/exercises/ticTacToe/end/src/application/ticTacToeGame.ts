@@ -1,14 +1,14 @@
 import { GameState, GameStateData } from '../domain/gameState';
 import { GameEvent, Position } from '../domain/types';
-import { GameEventStore } from '../infra/outgoing/gameEventStore';
 import { GameRepository } from '../infra/outgoing/gameRepository';
 import { GameEventCoordinator } from './gameEventCoordinator';
+import { GameEvents } from './gameEvents';
 import { GameEventSubscriptions } from './gameEventSubscriptions';
 
 // Application / Controller (command-based)
 export class TicTacToe {
   private state: GameState;
-  private eventStore: GameEventStore;
+  private gameEvents: GameEvents;
   private eventCoordinator: GameEventCoordinator;
 
   constructor(
@@ -16,9 +16,11 @@ export class TicTacToe {
     private repository: GameRepository
   ) {
     this.state = new GameState();
-    this.eventStore = new GameEventStore(events, repository);
-    this.eventCoordinator = new GameEventCoordinator(this.eventStore);
+    this.gameEvents = new GameEvents(events);
+
+    this.eventCoordinator = new GameEventCoordinator(this.gameEvents);
     this.eventCoordinator.addObserver(new GameEventSubscriptions(this.state));
+
     this.replayEvents(events);
   }
 
@@ -41,7 +43,8 @@ export class TicTacToe {
   }
 
   async saveGame() {
-    await this.eventCoordinator.save();
+    const events = this.gameEvents.getAll()
+    await this.repository.save(events);
   }
 
   async clearGame() {
