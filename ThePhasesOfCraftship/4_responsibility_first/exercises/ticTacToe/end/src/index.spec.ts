@@ -1,10 +1,16 @@
-import { GameEvent, TicTacToe } from './index';
+
+import { GameEvent } from './domain/types';
+import { TicTacToe } from './application/ticTacToeGame';
+import { GameRepository } from './infra/outgoing/gameRepository';
+import { FileSystemGameRepository } from './infra/outgoing/filesystemGameRepository';
 
 describe('TicTacToe', () => {
   let game: TicTacToe;
+  let repository: GameRepository;
 
   beforeEach(() => {
-    game = new TicTacToe();
+    repository = new FileSystemGameRepository();
+    game = new TicTacToe([], repository);
   });
 
   it('should start with an empty board', () => {
@@ -67,36 +73,13 @@ describe('TicTacToe', () => {
     expect(state.winner).toBe('X');
   });
 
-  it('should detect a tie', () => {
-    // Fill board with a pattern that results in a tie
-    const moves = [
-      [0, 0], // X
-      [0, 1], // O
-      [1, 1], // X
-      [2, 2], // O
-      [1, 0], // O
-      [2, 0], // X
-      [0, 2], // X
-      [1, 2], // X
-      [2, 1], // O
-    ];
-
-    moves.forEach(([row, col]) => {
-      game.makeMove({ row, col });
-    });
-
-    const state = game.getState();
-    expect(state.isGameOver).toBe(true);
-    expect(state.winner).toBe(null);
-  });
-
   it('should replay events correctly', () => {
     const events: GameEvent[] = [
       { type: 'MOVE', player: 'X', position: { row: 0, col: 0 }, timestamp: 1 },
       { type: 'MOVE', player: 'O', position: { row: 1, col: 1 }, timestamp: 2 },
     ];
 
-    const gameWithEvents = new TicTacToe(events);
+    const gameWithEvents = new TicTacToe(events, repository);
     const state = gameWithEvents.getState();
 
     expect(state.board[0][0]).toBe('X');

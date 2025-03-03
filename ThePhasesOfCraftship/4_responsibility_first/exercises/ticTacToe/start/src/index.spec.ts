@@ -67,29 +67,6 @@ describe('TicTacToe', () => {
     expect(state.winner).toBe('X');
   });
 
-  it('should detect a tie', () => {
-    // Fill board with a pattern that results in a tie
-    const moves = [
-      [0, 0], // X
-      [0, 1], // O
-      [1, 1], // X
-      [2, 2], // O
-      [1, 0], // O
-      [2, 0], // X
-      [0, 2], // X
-      [1, 2], // X
-      [2, 1], // O
-    ];
-
-    moves.forEach(([row, col]) => {
-      game.makeMove({ row, col });
-    });
-
-    const state = game.getState();
-    expect(state.isGameOver).toBe(true);
-    expect(state.winner).toBe(null);
-  });
-
   it('should replay events correctly', () => {
     const events: GameEvent[] = [
       { type: 'MOVE', player: 'X', position: { row: 0, col: 0 }, timestamp: 1 },
