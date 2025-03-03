@@ -5,7 +5,7 @@ import { GameRepository } from '../infra/outgoing/gameRepository';
 import { GameEventCoordinator } from './gameEventCoordinator';
 import { GameEventSubscriptions } from './gameEventSubscriptions';
 
-// Application / Controller
+// Application / Controller (command-based)
 export class TicTacToe {
   private state: GameState;
   private eventStore: GameEventStore;

@@ -2,7 +2,7 @@ import { GameEvent } from '../domain/types';
 import { GameEventSubscription } from './gameEventSubscriptions';
 import { GameEventStore } from '../infra/outgoing/gameEventStore';
 
-// Coordinator
+// Coordinator (coordinates)
 export class GameEventCoordinator {
   private observers: GameEventSubscription[] = [];
 

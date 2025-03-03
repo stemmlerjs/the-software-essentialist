@@ -6,7 +6,7 @@ export interface GameEventSubscription {
   onEvent(event: GameEvent): void;
 }
 
-// Coordina
+// Controller (event-based)
 export class GameEventSubscriptions implements GameEventSubscription {
   constructor(private state: GameState) {}
 

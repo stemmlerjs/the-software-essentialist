@@ -1,6 +1,8 @@
 import { Cell, Position } from './types';
 import { config } from '../config';
 
+
+// Information holder
 export class Board {
   private cells: Cell[][];
 
