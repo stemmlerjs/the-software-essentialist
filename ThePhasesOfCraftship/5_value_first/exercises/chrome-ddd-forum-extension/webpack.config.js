@@ -22,7 +22,10 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'public', to: '.' }
+        { from: 'public', to: '.' },
+        { from: 'src/content.js', to: '.' },
+        { from: 'src/background.js', to: '.' },
+        { from: 'public/icons', to: 'icons' } // Ensure icons are copied
       ],
     }),
   ],
