@@ -22,14 +22,14 @@ const Popup = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
-      const activeTab = tabs[0];
-      setTitle(activeTab.title || '');
-    });
+    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
+    //   const activeTab = tabs[0];
+    //   setTitle(activeTab.title || '');
+    // });
 
-    firebase.auth().onAuthStateChanged((user) => {
-      setUser(user);
-    });
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   setUser(user);
+    // });
   }, []);
 
   const handleLogin = () => {
