@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "dev": "webpack serve --mode development --open"
+    "dev": "webpack serve --mode development --open",
+    "start-server": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,8 @@
     "firebase": "^8.6.8",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6"
   },
   "devDependencies": {
     "ts-loader": "^9.2.3",

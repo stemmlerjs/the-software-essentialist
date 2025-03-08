@@ -5,7 +5,8 @@
   "description": "Publish links to your custom blog.",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "identity"
   ],
   "background": {
     "service_worker": "background.js"
@@ -28,5 +29,12 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "oauth2": {
+    "client_id": "566709579602-tdl67tpdqq9jsenrteljc6n136p146ac.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/userinfo.profile"]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
