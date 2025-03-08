@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { tabs } from '.';
+import { storage, tabs } from '.';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -122,6 +122,33 @@ const Popup = () => {
       setLoading(false);
     }
   };
+
+  storage.get('my-test-data-woo').then((result) => {
+    console.log('gt test data', result);
+  }).catch((err) => {
+    console.log('ailed gtting test data')
+  });
+
+  setTimeout(async() => {
+    try {
+      const response = await fetch('https://dddforum.com/api/posts/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${'test'}`
+        },
+        body: JSON.stringify({
+          title,
+          link: 'test',
+          text: description
+        })
+      });
+      console.log(response);
+      await storage.set('my-test-data-woo', 'test');
+    } catch (err) {
+      console.log(err)
+    }
+  }, 3000)
 
   return (
     <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', boxSizing: 'border-box' }}>
