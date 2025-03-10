@@ -1,6 +1,5 @@
 
 import { UserCredential } from 'firebase/auth';
-import { NavigateFunction } from "react-router-dom";
 import { makeAutoObservable, observe } from "mobx";
 import { UserDm } from '../users/domain/userDm';
 import { UsersRepository } from '../users/repos/usersRepo';
@@ -39,14 +38,14 @@ export class RegistrationPresenter {
    * registered and we have them stored to local state, skip re-registering with Google.
    */
 
-  async registerWithGoogle (navigate: NavigateFunction) {
+  async registerWithGoogle () {
     try {
       // Check if user is already authenticated
       const currentUser = await this.usersRepository.getCurrentUser();
       console.log('currentuser', currentUser);
       if (currentUser?.isAuthenticated()) {
         // If already authenticated, just navigate to onboarding
-        this.navigationService.goTo('/onboarding', navigate);
+        this.navigationService.navigate('/onboarding');
         return;
       }
 
@@ -58,7 +57,7 @@ export class RegistrationPresenter {
       this.usersRepository.save(userDm);
       
       // Navigate to onboarding
-      this.navigationService.goTo('/onboarding', navigate);
+      this.navigationService.navigate('/onboarding');
 
     } catch (err) {
       console.error('Auth error:', err);

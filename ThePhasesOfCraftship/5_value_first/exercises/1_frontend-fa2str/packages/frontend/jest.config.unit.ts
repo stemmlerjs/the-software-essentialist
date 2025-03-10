@@ -4,14 +4,16 @@ import { pathsToModuleNameMapper } from 'ts-jest';
 
 import { compilerOptions } from '../../tsconfig.json';
 
-export default async (): Promise<JestConfigWithTsJest> => ({
-  displayName: 'Frontend (Unit)',
-  testMatch: ['**/@(src|tests)/**/*.@(unit).*'],
-  transform: {
-    '^.+\\.(t|j)sx?$': ['ts-jest', { diagnostics: false }],
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
   },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: path.resolve(__dirname, '../../'),
-  }),
-  passWithNoTests: true
-});
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json'
+    }
+  }
+};

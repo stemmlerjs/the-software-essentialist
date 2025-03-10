@@ -2,12 +2,7 @@ import { APIClient, Posts } from "@dddforum/shared/src/api";
 import { makeAutoObservable } from "mobx";
 import { PostDm } from "../domain/postDm";
 import { AuthRepository } from "../../users/repos/authRepository";
-
-export interface PostsRepository {
-  postsDm: PostDm[];
-  getPosts(query?: Posts.GetPostsQueryOption): Promise<PostDm[]>;
-  create(command: Posts.CreatePostInput): Promise<PostDm>;
-}
+import { PostsRepository } from "./postsRepository";
 
 export class ProductionPostsRepository implements PostsRepository {
   public postsDm: PostDm[];
@@ -20,8 +15,8 @@ export class ProductionPostsRepository implements PostsRepository {
     this.postsDm = [];
   }
 
-  async getPosts(query?: Posts.GetPostsQueryOption): Promise<PostDm[]> {
-    const getPostsResponse = await this.api.posts.getPosts(query ?? 'popular');
+  async getPosts(query?: Posts.Queries.GetPostsQuery): Promise<PostDm[]> {
+    const getPostsResponse = await this.api.posts.getPosts({ sort: query?.sort ?? 'popular' });
     const postDTOs = getPostsResponse.data;
     if (!postDTOs) {
       return [];
@@ -30,12 +25,9 @@ export class ProductionPostsRepository implements PostsRepository {
     return this.postsDm;
   }
 
-  async create(command: Posts.CreatePostInput): Promise<PostDm> {
+  async create(command: Posts.Commands.CreatePostsCommand): Promise<PostDm> {
     const authToken = this.authRepository.getToken() ?? '';
-    const response = await this.api.posts.create({
-      ...command,
-      postType: command.link ? 'link' : 'text'
-    }, authToken);
+    const response = await this.api.posts.create(command, authToken);
     if (!response.data) {
       throw new Error('Failed to create post');
     }

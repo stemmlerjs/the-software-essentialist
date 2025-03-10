@@ -27,7 +27,7 @@ export class ProductionNavigationRepository implements NavigationRepository {
     this.navigationDm = new NavigationDm({ pathname: window.location.pathname });
   }
 
-  goTo (path: string, navigate?: NavigateFunction): void {
+  navigate (path: string, navigate?: NavigateFunction): void {
     this.navigationDm = new NavigationDm({ pathname: path });
     if (navigate) return navigate(path);
     window.history.pushState({}, '', path); 

@@ -8,7 +8,7 @@ import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
-import { authStore, postsPresenter, presenters, rootStore } from "./main";
+import { authStore, presenters, rootStore } from "./main";
 import { PresenterProvider } from "./shared/contexts/presentersContext";
 import { StoreProvider } from "./shared/stores/root/StoreContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";

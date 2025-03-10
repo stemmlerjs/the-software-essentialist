@@ -12,20 +12,21 @@ export class FakePostsRepository implements PostsRepository {
     this.postsDm = fakePostsData.map(postDTO => PostDm.fromDTO(postDTO));
   }
 
-  async getPosts(query?: Posts.GetPostsQueryOption): Promise<PostDm[]> {
-    if (query === "recent") {
+  async getPosts(query?: Posts.Queries.GetPostsQuery): Promise<PostDm[]> {
+    if (query?.sort === "recent") {
       return this.postsDm.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
-    } else if (query === "popular") {
+    } else if (query?.sort === "popular") {
       return this.postsDm.sort((a, b) => b.voteScore - a.voteScore);
     }
     return this.postsDm;
   }
 
-  async create(command: Posts.CreatePostInput): Promise<PostDm> {
+  async create(command: Posts.Commands.CreatePostsCommand): Promise<PostDm> {
+    const props = command.getProps();
     const newPost = new PostDm({
-      title: command.title,
-      content: command.content || '',
-      memberId: "fake-member",
+      title: props.title,
+      content: props.content || '',
+      memberId: "fake-member", 
       memberUsername: "fake-user"
     });
     this.postsDm.push(newPost);

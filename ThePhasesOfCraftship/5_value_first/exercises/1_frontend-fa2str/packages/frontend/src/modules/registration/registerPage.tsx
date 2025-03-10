@@ -7,7 +7,7 @@ import { usePresenters } from '../../shared/contexts/presentersContext';
 
 export const RegisterPage = observer(() => {
   const { registration: presenter } = usePresenters()
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // TODO: get this to the presenter with dep injection
   const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export const RegisterPage = observer(() => {
       if (!signingIn) {
         setSigningIn(true);
         try {
-          await presenter.registerWithGoogle(navigate);
+          await presenter.registerWithGoogle();
         } catch (error) {
           console.error('Auth error:', error);
           // Optionally reset signingIn state if needed

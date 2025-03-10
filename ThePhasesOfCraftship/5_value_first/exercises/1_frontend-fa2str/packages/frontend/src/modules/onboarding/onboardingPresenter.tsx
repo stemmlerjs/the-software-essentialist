@@ -1,4 +1,3 @@
-
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../shared/navigation/navigationService";
 import { FirebaseService } from "../users/externalServices/firebaseService";
@@ -74,7 +73,7 @@ export class OnboardingPresenter {
         });
 
         this.membersStore.save(member);
-        this.navigationService.goTo('/');
+        this.navigationService.navigate('/');
         return true;
       }
       

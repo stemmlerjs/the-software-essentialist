@@ -1,7 +1,9 @@
 import React from 'react'
-import { createRoot } from 'react-dom/client';
-import App from './App'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
 import './index.css'
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from './config.ts';
 import { createAPIClient } from '@dddforum/shared/src/api';
 import { PostsPresenter } from './modules/posts/application/postsPresenter';
 import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository';
@@ -77,8 +79,11 @@ const rootStore = new RootStore(
   membersStore
 );
 
+// Initialize Firebase
+initializeApp(firebaseConfig);
+
 // Initialize stores
-createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,

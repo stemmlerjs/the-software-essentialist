@@ -2,8 +2,8 @@ import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
-import { PostDm } from "../../posts/domain/postDm";
 import { Posts } from "@dddforum/shared/src/api";
+import { ApplicationErrors } from "@dddforum/shared/src/errors";
 
 export class SubmissionPresenter {
   isSubmitting = false;
@@ -17,18 +17,23 @@ export class SubmissionPresenter {
     makeAutoObservable(this);
   }
 
-  submit = async (data: Posts.CreatePostInput) => {
+  submit = async (data: Posts.Commands.CreatePostInput) => {
     try {
       if (!this.authRepository.isAuthenticated()) {
         this.navigationService.navigate('/join');
         return;
       }
 
-      // Create the domain object here
-      const createPostCommandOrError = Posts.createPostsAPI
+      // Validate the creation of the command right here
+      const commandOrError = Posts.Commands.CreatePostsCommand.create(data);
 
+      // TODO: Improve this by just using isSuccess() and .getError()
+      if (commandOrError instanceof ApplicationErrors.ValidationError) {
+        // Present the error
+        this.error = commandOrError.message;
+        return;
+      }
       
-
       // If it has validation errors, return the error
       // Notice how this is exactly the same as the backend. In fact, many
       // of the domain objects could be reused across the front and the back
@@ -40,10 +45,7 @@ export class SubmissionPresenter {
       this.isSubmitting = true;
       this.error = null;
 
-      await this.postsRepository.create({
-        ...data,
-        postType: 'text',
-      });
+      await this.postsRepository.create(commandOrError);
       
       this.navigationService.navigate('/');
     } catch (error) {
