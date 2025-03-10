@@ -2,12 +2,14 @@
   "name": "@dddforum/shared",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc -b tsconfig.build.json",
-    "test:unit": "jest -c jest.config.unit.ts",
-    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
+    "prebuild": "cd ../backend && npm run generate",
+    "build": "npm run clean && tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest --config jest.config.js"
   },
   "keywords": [],
   "author": "",

@@ -15,11 +15,23 @@ export class FirebaseService {
   private provider;
 
   constructor() {
+    const requiredEnvVars = [
+      'VITE_FIREBASE_API_KEY',
+      'VITE_FIREBASE_AUTH_DOMAIN', 
+      'VITE_FIREBASE_PROJECT_ID'
+    ];
+
+    requiredEnvVars.forEach(envVar => {
+      if (!import.meta.env[envVar]) {
+        console.log(`Missing required environment variable: ${envVar}`)
+        throw new Error(`Missing required environment variable: ${envVar}`);
+      }
+    });
+
     const firebaseConfig = {
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
       projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      // ... other config
     };
 
     const app = initializeApp(firebaseConfig);

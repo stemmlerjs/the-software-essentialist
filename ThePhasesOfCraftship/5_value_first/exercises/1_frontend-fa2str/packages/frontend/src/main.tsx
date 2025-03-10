@@ -1,9 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import { createRoot } from 'react-dom/client';
+import App from './App'
 import './index.css'
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from './config.ts';
 import { createAPIClient } from '@dddforum/shared/src/api';
 import { PostsPresenter } from './modules/posts/application/postsPresenter';
 import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository';
@@ -31,59 +29,58 @@ import { ProductionPostsRepository } from './modules/posts/repos/productionPosts
 
 configure({ enforceActions: "never" })
 
-const apiClient = createAPIClient('http://localhost:3000');
+// const apiClient = createAPIClient('http://localhost:3000');
 
 const localStorage = new LocalStorage();
 const firebaseService = new FirebaseService();
-const authRepository = new AuthRepository(localStorage, firebaseService);
+const authRepository = new AuthRepository(localStorage, 
+  firebaseService
+);
 
 const membersStore = new MembersStore();
-const authStore = new AuthStore(
-  authRepository,
-  firebaseService
-)
+// const authStore = new AuthStore(
+//   authRepository,
+//   firebaseService
+// )
 
-const navigationService = new NavigationService();
+// const navigationService = new NavigationService();
 
-const onboardingPresenter = new OnboardingPresenter(
-  membersStore,
-  navigationService,
-  firebaseService
-);
+// const onboardingPresenter = new OnboardingPresenter(
+//   membersStore,
+//   navigationService,
+//   firebaseService
+// );
 
-const postsRepository = new ProductionPostsRepository(apiClient, authRepository);
-const postsPresenter = new PostsPresenter(postsRepository, authRepository);
+// const postsRepository = new ProductionPostsRepository(apiClient, authRepository);
+// const postsPresenter = new PostsPresenter(postsRepository, authRepository);
 
-const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
+// const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
 
-const submissionPresenter = new SubmissionPresenter(
-  authRepository,
-  navigationService,
-  postsRepository
-);
+// const submissionPresenter = new SubmissionPresenter(
+//   authRepository,
+//   navigationService,
+//   postsRepository
+// );
 
-const presenters = new Presenters(
-  onboardingPresenter, 
-  registrationPresenter, 
-  postsPresenter,
-  submissionPresenter
-);
+// const presenters = new Presenters(
+//   onboardingPresenter, 
+//   registrationPresenter, 
+//   postsPresenter,
+//   submissionPresenter
+// );
 
-const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
-const toastService = new ToastService();
-const marketingService = new MarketingService();
+// const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
+// const toastService = new ToastService();
+// const marketingService = new MarketingService();
 
 
 const rootStore = new RootStore(
-  authRepository,
+  // authRepository,
   membersStore
 );
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
-
 // Initialize stores
-ReactDOM.createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
@@ -91,30 +88,30 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 
 export {
-  apiClient,
+  // apiClient,
 
   // Global cross-cutting stores
   rootStore,
-  authStore,
-  membersStore,
-  presenters,
+  // authStore,
+  // membersStore,
+  // presenters,
   
-  // Repositories
-  postsRepository,
-  authRepository,
+  // // Repositories
+  // postsRepository,
+  // authRepository,
   
 
-  // Presenters
-  postsPresenter,
-  navLoginPresenter,
-  registrationPresenter,
-  onboardingPresenter,
-  submissionPresenter,
+  // // Presenters
+  // postsPresenter,
+  // navLoginPresenter,
+  // registrationPresenter,
+  // onboardingPresenter,
+  // submissionPresenter,
 
-  // Services
-  marketingService,
-  toastService,
-  navigationService,
-  firebaseService,
+  // // Services
+  // marketingService,
+  // toastService,
+  // navigationService,
+  // firebaseService,
 }
 

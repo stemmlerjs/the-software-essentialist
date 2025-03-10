@@ -5,7 +5,7 @@ import { Request } from 'express'
 import { MemberDTO } from "./members";
 import { CommentDTO } from "./comments";
 import { ApplicationErrors } from "../errors/application";
-import { GenericApplicationOrServerError } from "../errors";
+import { GenericApplicationOrServerError, ServerErrors } from "../errors";
 
 export namespace Queries {
 
@@ -27,10 +27,15 @@ export namespace Queries {
     }
   }
 
-  export type GetPostsQueryInput = { sort: 'popular' | 'recent'; }
+  export type GetPostsQueryOption = 'popular' | 'recent';
+  export type GetPostsQueryInput = { sort: GetPostsQueryOption }
   export class GetPostsQuery {
 
     constructor(private props: GetPostsQueryInput) {}
+
+    public static create (option: GetPostsQueryOption) {
+      return new GetPostsQuery({ sort: option })
+    }
   
     static fromRequest(query: Request["query"]) {
       const { sort } = query;
@@ -135,11 +140,11 @@ export type PostsAPIResponse =
 export const createPostsAPI = (apiURL: string) => {
 
   return {
-    create: async (command: Commands.CreatePostInput, authToken: string): Promise<CreatePostAPIResponse> => {
+    create: async (command: Commands.CreatePostsCommand, authToken: string): Promise<CreatePostAPIResponse> => {
       try {
         const successResponse = await axios.post(
           `${apiURL}/posts/new`, 
-          command, 
+          command.getProps(), 
           getAuthHeaders(authToken)
         );
         return successResponse.data as CreatePostAPIResponse;

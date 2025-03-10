@@ -8,17 +8,19 @@ import { SpinnerProvider } from "./shared/contexts/spinnerContext";
 import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
-import { authStore, presenters, rootStore } from "./main";
+
 import { PresenterProvider } from "./shared/contexts/presentersContext";
 import { StoreProvider } from "./shared/stores/root/StoreContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";
 import { SubmissionPage } from "./modules/submission/submissionPage";
+import { rootStore } from "./main";
 
 const App = () => {
   return (
     <ErrorBoundary>
       <StoreProvider store={rootStore}>
-        <AuthProvider store={authStore}>
+        <div>test</div>
+        {/* <AuthProvider store={authStore}>
           <FirebaseProvider>
             <PresenterProvider presenters={presenters}>
               <SpinnerProvider>
@@ -33,7 +35,7 @@ const App = () => {
               </SpinnerProvider>
             </PresenterProvider>
           </FirebaseProvider>
-        </AuthProvider>
+        </AuthProvider> */}
       </StoreProvider>
     </ErrorBoundary>
   );

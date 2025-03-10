@@ -2,7 +2,7 @@
 import { UserDm } from "../domain/userDm";
 
 export interface UsersRepository {
-  save (user: UserDm): void;
   currentUser: UserDm | null;
+  save (user: UserDm): void;
   getCurrentUser (): Promise<UserDm | null>;
 }

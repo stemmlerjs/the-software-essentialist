@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 // Todo: clean these custom exceptions
 // TODO: Implement proper errors for all of these
 // TODO: Move all of thesen to shared
-import { ApplicationError, ApplicationErrorName } from "@dddforum/shared/src/errors";
+import { ApplicationError } from "@dddforum/shared/src/errors";
 
 type ErrorAPIResponse = {
   success: false;

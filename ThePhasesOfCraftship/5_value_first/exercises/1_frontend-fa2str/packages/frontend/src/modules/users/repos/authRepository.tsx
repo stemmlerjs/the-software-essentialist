@@ -111,4 +111,5 @@ export class AuthRepository implements UsersRepository {
     // TODO: we should use authToken instead lik the static method defined
     return this.localStorage.retrieve('currentUser');
   }
-} 
+
+}
