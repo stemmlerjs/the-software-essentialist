@@ -1,0 +1,22 @@
+{
+  "name": "@dddforum/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -b tsconfig.build.json",
+    "test:unit": "jest -c jest.config.unit.ts",
+    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "nats": "^2.29.2"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.6"
+  }
+}

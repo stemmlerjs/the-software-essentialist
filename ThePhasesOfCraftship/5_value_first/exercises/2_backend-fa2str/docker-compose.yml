@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  nats:
+    image: nats:latest
+    container_name: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    environment:
+      - NATS_USER=user
+      - NATS_PASSWORD=password
+    command: ["-js", "--store_dir", "/data/jetstream"]
+    volumes:
+      - ./nats-data:/data/jetstream
+
+# After starting the container, NATS with JetStream is now accessible at 
+# nats://127.0.0.1:4222 for client connections and 
+# http://127.0.0.1:8222 for monitoring.
+

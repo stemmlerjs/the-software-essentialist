@@ -1,0 +1,84 @@
+import axios from "axios";
+import { APIResponse } from ".";
+import { GenericErrors, ServerError } from "../errors";
+
+export type ValidatedUser = {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
+export type CreateUserParams = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+};
+
+export type UserDTO = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+};
+export type EmailAlreadyInUseError = "EmailAlreadyInUse";
+export type UsernameAlreadyTakenError = "UsernameAlreadyTaken";
+export type CreateUserErrors =
+  | GenericErrors
+  | EmailAlreadyInUseError
+  | UsernameAlreadyTakenError;
+export type CreateUserResponse = APIResponse<UserDTO, CreateUserErrors>;
+
+export type UserNotFoundError = "UserNotFound";
+export type GetUserByEmailErrors = ServerError | UserNotFoundError;
+export type GetUserByEmailResponse = APIResponse<UserDTO, GetUserByEmailErrors>;
+export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;
+
+export type UserResponse = APIResponse<
+  CreateUserResponse | 
+  GetUserByEmailResponse | null,
+  GetUserErrors
+>;
+
+// TODO: implement
+type AuthenticateResponse = any;
+
+export const createUsersAPI = (apiURL: string) => {
+  return {
+    authenticate: async (code: string): Promise<CreateUserResponse> => {
+      try {
+        const successResponse = await axios.post(`${apiURL}/users/authenticate`, {
+          code
+        });
+        return successResponse.data as AuthenticateResponse;
+      } catch (err) {
+        //@ts-ignore
+        return err.response.data as AuthenticateResponse;
+      }
+    },
+    register: async (input: CreateUserParams): Promise<CreateUserResponse> => {
+      try {
+        const successResponse = await axios.post(`${apiURL}/users/new`, {
+          ...input,
+        });
+        return successResponse.data as CreateUserResponse;
+      } catch (err) {
+        //@ts-ignore
+        return err.response.data as CreateUserResponse;
+      }
+    },
+    getUserByEmail: async (email: string): Promise<GetUserByEmailResponse> => {
+      try {
+        const successResponse = await axios.get(`${apiURL}/users/${email}`);
+        return successResponse.data as GetUserByEmailResponse;
+      } catch (err) {
+        //@ts-ignore
+        return err.response.data as GetUserByEmailResponse;
+      }
+    },
+  };
+};
