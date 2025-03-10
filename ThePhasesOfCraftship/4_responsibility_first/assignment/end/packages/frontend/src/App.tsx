@@ -23,7 +23,7 @@ const App = () => {
           <SpinnerProvider>
               <BrowserRouter>
                 <Routes>
-                  <Route path="/" element={<PostsPage presenter={postsPresenter} />} />
+                  <Route path="/" element={<PostsPage />} />
                   <Route path="/join" element={<RegisterPage />} />
                   <Route path="/onboarding" element={<OnboardingPage />} />
                 </Routes>

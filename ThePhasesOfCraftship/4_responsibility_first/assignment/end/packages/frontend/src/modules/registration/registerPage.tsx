@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { OverlaySpinner } from '../../shared/components/overlaySpinner';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { RegistrationPresenter } from './registrationPresenter';
+import { usePresenters } from '../../shared/contexts/presentersContext';
 
-export const RegisterPage = observer(({ presenter }: { presenter: RegistrationPresenter }) => {
+export const RegisterPage = observer(() => {
+  const { registration: presenter } = usePresenters()
   const navigate = useNavigate();
   const [signingIn, setSigningIn] = useState(false);
 

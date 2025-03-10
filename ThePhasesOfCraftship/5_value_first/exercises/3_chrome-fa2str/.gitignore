@@ -3,4 +3,3 @@ build
 dist
 .vscode
 .env
-service-key.json

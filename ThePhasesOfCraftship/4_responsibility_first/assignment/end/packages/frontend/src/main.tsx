@@ -47,14 +47,14 @@ const onboardingPresenter = new OnboardingPresenter(
   firebaseService
 );
 
+const postsRepository = new FakePostsRepository(fakePostsData);
+const postsPresenter = new PostsPresenter(postsRepository, authRepository);
+
 const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
 
 
-const presenters = new Presenters(onboardingPresenter, registrationPresenter)
+const presenters = new Presenters(onboardingPresenter, registrationPresenter, postsPresenter)
 
-const postsRepository = new FakePostsRepository(fakePostsData);
-
-const postsPresenter = new PostsPresenter(postsRepository, authRepository);
 const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
 const toastService = new ToastService();
 const marketingService = new MarketingService();

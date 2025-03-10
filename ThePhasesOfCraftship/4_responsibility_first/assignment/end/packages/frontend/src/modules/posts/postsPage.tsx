@@ -8,9 +8,10 @@ import { PostsList } from "./components/postsList";
 import { Layout } from "../layout/layoutComponent";
 import { PostsFilterValue } from "./application/searchFilterViewModel";
 import { useAuthStore } from "../../shared/auth/useAuthStore";
-import { PostsPresenter } from "./application/postsPresenter";
+import { usePresenters } from "../../shared/contexts/presentersContext";
 
-export const PostsPage = observer(({ presenter }: { presenter: PostsPresenter }) => {
+export const PostsPage = observer(() => {
+  const { posts: presenter } = usePresenters()
   const { currentUser } = useAuthStore();
   const [posts, setPosts] = useState<PostViewModel[]>([]);
   const [postView, setPostsView] = useState<PostsFilterValue>('popular');
