@@ -1,7 +1,7 @@
 
 // TODO: need to move these around. this should not know about this.
 import { Prisma, PrismaClient, Event as PrismaEventModel } from "@prisma/client";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent } from "@dddforum/core"
 
 export class EventOutboxTable {
   constructor (private prisma: PrismaClient) {

@@ -1,7 +1,17 @@
 import { randomUUID } from "crypto";
-import { Event as PrismaEventModel } from "@prisma/client";
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
+
+// Define the expected structure instead of importing from Prisma
+export interface EventModel {
+  id: string;
+  name: string;
+  data: string;
+  aggregateId: string;
+  retries: number;
+  status: string;
+  dateCreated: Date;
+}
 
 export class DomainEvent {
 
@@ -47,15 +57,15 @@ export class DomainEvent {
     return JSON.stringify(this);
   }
 
-  public static toDomain(prismaEventModel: PrismaEventModel): DomainEvent {
+  public static toDomain(eventModel: EventModel): DomainEvent {
     return new DomainEvent(
-      prismaEventModel.name,
-      JSON.parse(prismaEventModel.data),
-      prismaEventModel.aggregateId,
-      prismaEventModel.id,
-      prismaEventModel.retries,
-      prismaEventModel.status as DomainEventStatus,
-      prismaEventModel.dateCreated.toISOString()
+      eventModel.name,
+      JSON.parse(eventModel.data),
+      eventModel.aggregateId,
+      eventModel.id,
+      eventModel.retries,
+      eventModel.status as DomainEventStatus,
+      eventModel.dateCreated.toISOString()
     );
   }
 }
