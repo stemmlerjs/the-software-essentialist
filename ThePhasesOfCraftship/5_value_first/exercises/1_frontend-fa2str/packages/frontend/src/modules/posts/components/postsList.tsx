@@ -21,8 +21,8 @@ export const PostsList = ({ posts }: { posts: PostViewModel[] }) => (
           <div className="post-item-title">{post.title}</div>
           <div className="post-item-details">
           <div>{moment(post.dateCreated).fromNow()}</div>
-          <Link to={`/member/${post.memberUserName}`}>
-            by {post.memberUserName}
+          <Link to={`/member/${post.memberUsername}`}>
+            by {post.memberUsername}
           </Link>
           <div>
             {post.numComments}{" "}

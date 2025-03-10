@@ -7,18 +7,18 @@ import { observer } from 'mobx-react-lite';
 import { appSelectors, toClass } from '../../shared/selectors';
 import { navLoginPresenter } from '../../main';
 import { useEffect, useState } from 'react';
-import { UserLoginViewModel } from './userLoginViewModel';
+import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
 
 // All components which use observables must use 'observer'
 export const Layout = observer(({ children }: any) => {
   const location = useLocation();
-  const [vm, setVmToLocalState] = useState<UserLoginViewModel>();
+  const [vm, setVmToLocalState] = useState<UserLoginLayoutViewModel>();
 
   useEffect(() => {
     navLoginPresenter.load((userLoginVm) => {
       setVmToLocalState(userLoginVm);
     })
-  }, [navLoginPresenter.userLogin]) // We observe the view model in the presenter
+  }, [navLoginPresenter.userLoginVm]) // We observe the view model in the presenter
 
   return (
     <>

@@ -2,16 +2,16 @@
 import { MemberDm } from "../../shared/stores/members/memberDm";
 import { UserDm } from "../users/domain/userDm";
 
-interface UserLoginViewModelProps {
+interface UserLoginLayoutViewModelProps {
   isAuthenticated: boolean;
   username: string | null;
 }
 
-export class UserLoginViewModel {
+export class UserLoginLayoutViewModel {
 
-  private props: UserLoginViewModelProps
+  private props: UserLoginLayoutViewModelProps
 
-  constructor(props: UserLoginViewModelProps) {
+  constructor(props: UserLoginLayoutViewModelProps) {
     this.props = props;
   }
 
@@ -23,9 +23,9 @@ export class UserLoginViewModel {
     return this.props.username;
   }
 
-  public static fromDomain (user: UserDm | null, member: MemberDm | null): UserLoginViewModel {
+  public static fromDomain (user: UserDm | null, member: MemberDm | null): UserLoginLayoutViewModel {
 
-    const dm = new UserLoginViewModel({
+    const dm = new UserLoginLayoutViewModel({
       isAuthenticated: user ? true : false,
       username: member ? member.username : null
     });

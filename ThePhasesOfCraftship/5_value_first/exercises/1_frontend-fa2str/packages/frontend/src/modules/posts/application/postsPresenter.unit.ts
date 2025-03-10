@@ -2,17 +2,30 @@
 import { PostsPresenter } from "./postsPresenter";
 import { PostViewModel } from "./postViewModel";
 import { FakePostsRepository } from "../repos/fakePostsRepository";
-import { FakeUsersRepository } from "../../users/repos/fakeUsersRepo";
 import { fakePostsData } from "../__tests__/fakePostsData";
 import { fakeUserData } from "../../users/__tests__/fakeUserData";
 import { SearchFilterViewModel } from "./searchFilterViewModel";
+import { ProductionUsersRepository } from "../../users/repos/productionUsersRepo";
+import { createAPIClient } from "@dddforum/shared/src/api";
+import { LocalStorage } from "../../../shared/storage/localStorage";
+import { FirebaseService } from "../../users/externalServices/firebaseService";
 
 describe('PostsPresenter', () => {
 
+  const mockedApi = createAPIClient('');
+  const mockedLocalStorage = new LocalStorage();
+  const mockedFirebase = new FirebaseService(); // TODO: use "mocked" for the name on all tests
+
+  let loadedPostsVm: PostViewModel[] = [];
+  let postsRepository = new FakePostsRepository(fakePostsData);
+  let usersRepository = new ProductionUsersRepository(mockedApi, mockedLocalStorage, mockedFirebase);
+
+  beforeEach(() => {
+    // Todo: set this up
+  })
+
   it ('can render a list of posts', async () => {
-    let loadedPostsVm: PostViewModel[] = [];
-    let postsRepository = new FakePostsRepository(fakePostsData);
-    let usersRepository = new FakeUsersRepository(fakeUserData);
+    
 
     let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 
@@ -31,8 +44,6 @@ describe('PostsPresenter', () => {
   it ('can switch between popular posts and new posts', async () => {
     let loadedPostsVm: PostViewModel[] = [];
     let activeSearchFilter: SearchFilterViewModel = new SearchFilterViewModel('popular');
-    let postsRepository = new FakePostsRepository(fakePostsData);
-    let usersRepository = new FakeUsersRepository(fakeUserData);
 
     let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 
@@ -59,10 +70,12 @@ describe('PostsPresenter', () => {
   });
 
   it ('does not let level 1 users cast votes', async () => {
+    // TODO: implement the rest of these
     // Implement this
   });
 
   it('does let level 2 users cast votes', async () => {
+    // TODO: implement the rest of these
     // Implement this
   });
 })

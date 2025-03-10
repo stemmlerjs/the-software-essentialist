@@ -6,27 +6,15 @@ interface PostDmProps {
   link?: string;
   memberId: string;
   memberUsername: string;
-  dateCreated?: string;
+  dateCreated: string;
   voteScore?: number;
+  numComments: number;
 }
 
 export class PostDm {
-  title: string;
-  content: string;
-  link: string;
-  memberId: string;
-  memberUsername: string;
-  dateCreated: string;
-  voteScore: number;
 
-  constructor(props: PostDmProps) {
-    this.title = props.title;
-    this.content = props.content || '';
-    this.link = props.link || '';
-    this.memberId = props.memberId;
-    this.memberUsername = props.memberUsername;
-    this.dateCreated = props.dateCreated || new Date().toISOString();
-    this.voteScore = props.voteScore || 0;
+  constructor(public props: PostDmProps) {
+
   }
 
   static fromDTO(dto: PostDTO): PostDm {
@@ -37,7 +25,8 @@ export class PostDm {
       memberId: dto.member.memberId,
       memberUsername: dto.member.username,
       dateCreated: dto.dateCreated,
-      voteScore: dto.voteScore
+      voteScore: dto.voteScore,
+      numComments: dto.comments.length
     });
   }
 }

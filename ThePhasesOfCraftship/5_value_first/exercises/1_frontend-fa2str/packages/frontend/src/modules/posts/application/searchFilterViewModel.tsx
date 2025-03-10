@@ -1,6 +1,6 @@
-import { GetPostsQueryOption } from "@dddforum/shared/src/api/posts";
+import { Queries } from "@dddforum/shared/src/api/posts";
 
-export type PostsFilterValue = GetPostsQueryOption;
+export type PostsFilterValue = Queries.GetPostsQueryOption;
 
 export class SearchFilterViewModel {
   private _value: PostsFilterValue;

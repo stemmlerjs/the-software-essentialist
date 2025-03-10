@@ -1,13 +1,13 @@
 
-import { UserLoginViewModel } from "./userLoginViewModel";
 import { makeAutoObservable, reaction } from "mobx";
 import { UsersRepository } from "../users/repos/usersRepo";
 import { MembersStore } from "../../shared/stores/members/membersStore";
+import { UserLoginLayoutViewModel } from "./userLoginLayoutVm";
 
 export class LayoutPresenter {
   // Declare a view model. This is what the component will use to 
   // render properly. Keep this as flat as possible.
-  public userLogin: UserLoginViewModel | null;
+  public userLoginVm: UserLoginLayoutViewModel | null;
 
   constructor(
     // Here we have 'stores' or 'repos'. At the end of the day, they are the 
@@ -26,7 +26,7 @@ export class LayoutPresenter {
     // In the constructor, we also always do these 3 things. make auto observable, 
     // setup subscriptions, and initialize the view model with null.
     this.setupSubscriptions();
-    this.userLogin = null;
+    this.userLoginVm = null;
   }
 
   // What is a subscription? A subscription is how we create the view model.
@@ -44,25 +44,25 @@ export class LayoutPresenter {
         // Again, as soon as this happens, because the component subscribes to the
         // view model within the presenter with 'useEffect', that's what will trigger
         // the re-render.
-        const newUserLogin = UserLoginViewModel.fromDomain(user, member);
+        const newUserLogin = UserLoginLayoutViewModel.fromDomain(user, member);
         // Only update if the value has changed
         // Note: we may need to introduce a 'compareTo' on these view models.
         // That would make for a good base class.
-        if (this.userLogin !== newUserLogin) {
-          this.userLogin = newUserLogin;
+        if (this.userLoginVm !== newUserLogin) {
+          this.userLoginVm = newUserLogin;
         }
       }
     );
   }
 
   // This is the last part 
-  async load(callback?: (userLogin: UserLoginViewModel) => void) {
-    if (this.userLogin === null) {
+  async load(callback?: (userLoginVm: UserLoginLayoutViewModel) => void) {
+    if (this.userLoginVm === null) {
       let user = await this.usersRepository.getCurrentUser();
       let member = await this.membersRepository.getCurrentMember();
 
-      console.log('new userlogin', UserLoginViewModel.fromDomain(user, member))
-      this.userLogin = UserLoginViewModel.fromDomain(user, member);
+      console.log('new userlogin', UserLoginLayoutViewModel.fromDomain(user, member))
+      this.userLoginVm = UserLoginLayoutViewModel.fromDomain(user, member);
     }
 
     // Why do we return via callback and via promise? This is a conventional presenter
@@ -70,8 +70,8 @@ export class LayoutPresenter {
     // library and regardless of the context (ie: we may be running production code, or
     // we may be writing a test). This pattern allows us to handle both and to synchronize
     // the way that we do them so that we can use TDD to drive our implementations.
-    callback && callback(this.userLogin);
-    return this.userLogin;
+    callback && callback(this.userLoginVm);
+    return this.userLoginVm;
   }
 
   // Finally, because presenters are effectively Application Level 3 abstractions,

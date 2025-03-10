@@ -8,6 +8,7 @@ export interface PostViewModelProps {
   dateCreated: string;
   memberUsername: string;
   voteScore: number;
+  numComments: number;
 }
 
 export class PostViewModel {
@@ -41,14 +42,25 @@ export class PostViewModel {
     return this.props.memberUsername;
   }
 
+  get numComments (): number {
+    return this.props.numComments
+  }
+
+  get canCastVote (): boolean {
+    // TODO: implement this again! use the user state and member
+    return false;
+  }
+
   public static fromDomain(post: PostDm, user: UserDm | null): PostViewModel {
+    const postProps = post.props;
     const props: PostViewModelProps = {
-      title: post.title,
-      content: post.content,
-      link: post.link,
-      dateCreated: post.dateCreated,
-      memberUsername: post.memberUsername,
-      voteScore: post.voteScore
+      title: postProps.title,
+      content: postProps.content,
+      link: postProps.link,
+      dateCreated: postProps.dateCreated,
+      memberUsername: postProps.memberUsername,
+      voteScore: postProps.voteScore || 0,
+      numComments: postProps.numComments
     };
     return new PostViewModel(props);
   }

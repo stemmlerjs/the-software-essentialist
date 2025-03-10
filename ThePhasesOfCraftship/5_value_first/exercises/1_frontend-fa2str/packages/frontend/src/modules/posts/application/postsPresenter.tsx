@@ -4,6 +4,7 @@ import { PostViewModel } from "./postViewModel";
 import { PostsRepository } from "../repos/postsRepository";
 import { UsersRepository } from "../../users/repos/usersRepo";
 import { PostsFilterValue, SearchFilterViewModel } from "./searchFilterViewModel";
+import { Posts } from "@dddforum/shared/src/api";
 
 export class PostsPresenter {
   postVMs: PostViewModel[];
@@ -28,7 +29,8 @@ export class PostsPresenter {
     });
 
     observe(this, 'searchFilter', async (filter) => {
-      const postDms = await this.postsRepository.getPosts(filter.newValue.value);
+      const query = Posts.Queries.GetPostsQuery.create(filter.newValue.value)
+      const postDms = await this.postsRepository.getPosts(query);
       const currentUser = await this.usersRepository.getCurrentUser();
       this.postVMs = postDms.map(postDm => PostViewModel.fromDomain(postDm, currentUser));
     })

@@ -14,9 +14,13 @@ export class FakePostsRepository implements PostsRepository {
 
   async getPosts(query?: Posts.Queries.GetPostsQuery): Promise<PostDm[]> {
     if (query?.sort === "recent") {
-      return this.postsDm.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
+      return this.postsDm.sort((a, b) => {
+        const dateA = a.props.dateCreated || new Date().toISOString();
+        const dateB = b.props.dateCreated || new Date().toISOString();
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
     } else if (query?.sort === "popular") {
-      return this.postsDm.sort((a, b) => b.voteScore - a.voteScore);
+      return this.postsDm.sort((a, b) => (b.props.voteScore || 0) - (a.props.voteScore || 0));
     }
     return this.postsDm;
   }
@@ -26,8 +30,11 @@ export class FakePostsRepository implements PostsRepository {
     const newPost = new PostDm({
       title: props.title,
       content: props.content || '',
-      memberId: "fake-member", 
-      memberUsername: "fake-user"
+      memberId: "fake-member",
+      memberUsername: "fake-user",
+      numComments: 0,
+      dateCreated: new Date().toISOString(),
+      voteScore: 0
     });
     this.postsDm.push(newPost);
     return newPost;
