@@ -1,0 +1,12 @@
+{
+  "name": "@dddforum/core",
+  "version": "1.0.0",
+  "description": "Core classes and utilities used throughout",
+  "exports": {
+      ".": "./src/index.ts"
+  },
+  "scripts": {
+      "typecheck": "tsc --noEmit",
+      "test:unit": "jest -c jest.config.unit.ts"
+  }
+}

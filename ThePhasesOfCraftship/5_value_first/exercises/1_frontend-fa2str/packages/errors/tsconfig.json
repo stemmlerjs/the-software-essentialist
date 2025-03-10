@@ -1,15 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["node", "jest"],
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
-    "declaration": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES2020"
+      "rootDir": "./src",
+      "outDir": "./dist",
+      "module": "NodeNext",
+      "moduleResolution": "nodenext",
+      "target": "ESNext",
+      "types": ["node", "jest"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"], // Include the source files
+  "exclude": ["node_modules", "dist"],
 }

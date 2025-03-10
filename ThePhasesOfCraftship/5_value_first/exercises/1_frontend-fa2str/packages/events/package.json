@@ -1,12 +1,10 @@
 {
-  "name": "@dddforum/errors",
+  "name": "@dddforum/events",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./application": "./src/application.ts",
-    "./server": "./src/server.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "clean": "rimraf dist",

@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
-    "@dddforum/shared": "file:../shared",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "axios": "^1.6.2",

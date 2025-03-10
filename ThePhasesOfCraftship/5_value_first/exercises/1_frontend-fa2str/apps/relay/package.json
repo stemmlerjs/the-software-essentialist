@@ -28,7 +28,6 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
-    "@dddforum/shared": "file:../shared",
     "@prisma/client": "^4.16.0"
   }
 }

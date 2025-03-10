@@ -8,14 +8,8 @@
     "test": "jest"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./members": {
-      "types": "./dist/members.d.ts",
-      "default": "./dist/members.js"
-    }
+    ".": "./src/index.ts",
+    "./members": "./src/members.ts"
   },
   "dependencies": {
     "@dddforum/errors": "file:../errors"

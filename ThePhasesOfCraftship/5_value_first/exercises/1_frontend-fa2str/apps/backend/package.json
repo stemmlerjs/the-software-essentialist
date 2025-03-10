@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b tsconfig.json && npm run generate",
-    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
-    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
-    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
-    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate",
+    
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "lint": "eslint . --ext .ts --fix",
@@ -43,7 +40,6 @@
     "supertest": "^7.0.0"
   },
   "dependencies": {
-    "@dddforum/shared": "file:../shared",
     "@prisma/client": "^4.16.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
