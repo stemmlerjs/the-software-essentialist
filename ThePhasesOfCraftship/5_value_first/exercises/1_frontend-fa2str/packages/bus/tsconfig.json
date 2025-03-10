@@ -6,7 +6,8 @@
       "module": "NodeNext",
       "moduleResolution": "nodenext",
       "target": "ESNext",
-      "types": ["node", "jest"]
+      "types": ["node", "jest"],
+      "skipLibCheck": true
   },
   "include": ["src/**/*"], // Include the source files
   "exclude": ["node_modules", "dist"],

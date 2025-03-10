@@ -1,6 +1,6 @@
 import { EventBus } from './eventBus'; 
 import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
-import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
+import { DomainEvent } from '@dddforum/core';
 
 class TestEvent extends DomainEvent {
   constructor(public data: string) {

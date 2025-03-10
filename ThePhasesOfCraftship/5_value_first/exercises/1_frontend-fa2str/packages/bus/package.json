@@ -1,5 +1,6 @@
 {
-  "name": "@dddforum/events",
+  "name": "@dddforum/bus",
+  "description": "Event bus to subscribe and write to.",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,6 +11,10 @@
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "test": "jest"
+  },
+  "dependencies": {
+    "@dddforum/core": "*",
+    "nats": "^2.29.2"
   },
   "keywords": [],
   "author": "",

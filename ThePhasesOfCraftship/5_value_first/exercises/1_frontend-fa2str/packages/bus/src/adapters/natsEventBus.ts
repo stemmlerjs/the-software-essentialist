@@ -1,4 +1,4 @@
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent } from "@dddforum/core";
 import { EventBus } from "../ports/eventBus";
 import { connect, NatsConnection, Subscription } from "nats";
 

@@ -236,6 +236,15 @@ importers:
         specifier: file:../errors
         version: file:packages/errors
 
+  packages/bus:
+    dependencies:
+      '@dddforum/core':
+        specifier: '*'
+        version: link:../core
+      nats:
+        specifier: ^2.29.2
+        version: 2.29.2
+
   packages/core: {}
 
   packages/database:
@@ -249,7 +258,11 @@ importers:
 
   packages/errors: {}
 
-  packages/events: {}
+  packages/outbox:
+    dependencies:
+      '@dddforum/core':
+        specifier: '*'
+        version: link:../core
 
 packages:
 
@@ -6970,6 +6983,13 @@ packages:
       - supports-color
     dev: true
 
+  /nats@2.29.2:
+    resolution: {integrity: sha512-HfzEZa/67fAmRXchLv/sFGeZFF27TRf6kuNbuze2+Md+0M4xADoiUf7YColV9CMjlf2nIkFPnlXcpOTdtlhbPg==}
+    engines: {node: '>= 14.0.0'}
+    dependencies:
+      nkeys.js: 1.1.0
+    dev: false
+
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -6987,6 +7007,13 @@ packages:
   /nice-try@1.0.5:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
     dev: true
+
+  /nkeys.js@1.1.0:
+    resolution: {integrity: sha512-tB/a0shZL5UZWSwsoeyqfTszONTt4k2YS0tuQioMOD180+MbombYVgzDUYHlx+gejYK6rgf08n/2Df99WY0Sxg==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      tweetnacl: 1.0.3
+    dev: false
 
   /node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -8754,6 +8781,10 @@ packages:
       turbo-windows-64: 2.4.4
       turbo-windows-arm64: 2.4.4
     dev: true
+
+  /tweetnacl@1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
+    dev: false
 
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}

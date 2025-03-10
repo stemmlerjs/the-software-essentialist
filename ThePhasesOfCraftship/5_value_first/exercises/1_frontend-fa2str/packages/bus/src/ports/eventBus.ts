@@ -1,4 +1,4 @@
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent } from "@dddforum/core";
 
 export interface EventBus {
   publishEvents(events: DomainEvent[]): void;
