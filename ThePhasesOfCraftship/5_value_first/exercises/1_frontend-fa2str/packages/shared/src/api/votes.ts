@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APIResponse } from ".";
-import { ServerError } from "../errors";
+import { GenericApplicationOrServerError } from '../errors';
 
 export type VoteType = 'upvote' | 'downvote';
 
@@ -22,7 +22,7 @@ export type PostVoteDTO = {
   voteType: VoteType;
 }
 
-export type VoteOnPostAPIResponse = APIResponse<PostVoteDTO, ServerError>
+export type VoteOnPostAPIResponse = APIResponse<PostVoteDTO, GenericApplicationOrServerError>
 
 export const createVotesAPI = (apiUrl: string) => {
   return {
@@ -33,10 +33,11 @@ export const createVotesAPI = (apiUrl: string) => {
             Authorization: `Bearer ${authToken}`
           }
         });
-        return successResponse.data as APIResponse<PostVoteDTO, ServerError>;
+        return successResponse.data as APIResponse<PostVoteDTO, GenericApplicationOrServerError>;
       } catch (err) {
+        // TODO: Don't do this, type it strictly. Fix for all
         //@ts-expect-error
-        return err.response.data as APIResponse<PostVoteDTO, ServerError>;
+        return err.response.data as APIResponse<PostVoteDTO, GenericApplicationOrServerError>;
       }
     }
   }

@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./../dev.db" // Replace with your SQLite file path
+}
+
+// Todo: get rid of user from here - get user details from an external service (e.g. Auth0)
+// model User {
+//   id        String @id @default(uuid())
+//   email     String @unique
+//   firstName String
+//   lastName  String
+//   password  String
+
+//   // Define a one-to-one relationship with Member
+//   member    Member?
+// }
+
+// Use custom validation in your application code to ensure correct values
+
+model Member {
+  id    String @id @default(uuid())
+
+  userId String @unique // relation scalar field (used in the `@relation` attribute above)
+  posts Post[]
+  postVotes PostVote[]
+  commentVotes CommentVote[]
+  comments  Comment[]
+  username  String @unique
+  reputationScore Int @default(0)
+  reputationLevel String
+
+  dateCreated    DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
+}
+  
+model Post {
+  id             String    @id @default(uuid())
+  memberPostedBy Member    @relation(fields: [memberId], references: [id])
+  memberId       String // Foreign key to the Member table
+  postType       String // 'Text' or 'Link'
+  title          String
+  content        String?
+  link           String?
+  comments       Comment[]
+  dateCreated    DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
+  postVotes      PostVote[]
+  voteScore      Int       @default(0)
+}
+
+model Comment {
+  id     String @id @default(uuid())
+
+  // Foreign key relation to the Post table
+  postId String // Foreign key to the Post table
+  post   Post @relation(fields: [postId], references: [id])
+  text String
+
+  memberId        String // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id]) 
+
+  parentCommentId    String?
+  parentComment Comment? @relation("Replies", fields: [parentCommentId], references: [id])
+  replyComments Comment[] @relation("Replies")
+
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
+  commentVotes CommentVote[]
+  voteScore      Int       @default(0)
+}
+
+model PostVote {
+  id            String @id @default(uuid())
+
+  postId        String // Foreign key to the Post table
+  postBelongsTo Post @relation(fields: [postId], references: [id])
+
+  memberId        String // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  value  Int       @default(0)
+
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
+
+  @@unique([memberId, postId])
+}
+
+model CommentVote {
+  id            String @id @default(uuid())
+
+  commentId     String // Foreign key to the Comment table
+  commentBelongsTo Comment @relation(fields: [commentId], references: [id])
+
+  memberId        String // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  value  Int       @default(0)
+
+  dateCreated  DateTime  @default(now())
+  lastUpdated    DateTime  @updatedAt
+
+  @@unique([memberId, commentId])
+}
+
+model Event {
+  id            String   @id @default(uuid())
+  aggregateId   String
+  name          String
+  status        String   @default("INITIAL")
+  retries          Int     @default(0)
+  data          String
+  dateCreated   DateTime @default(now())
+  lastUpdated   DateTime @updatedAt
+}

@@ -1,4 +1,3 @@
-
 import { makeAutoObservable } from "mobx";
 import { UserDm } from "../domain/userDm";
 import { LocalStorage } from "../../../shared/storage/localStorage";
@@ -6,6 +5,7 @@ import { FirebaseService } from "../externalServices/firebaseService";
 import { UsersRepository } from "./usersRepo";
 
 export class AuthRepository implements UsersRepository {
+  private readonly TOKEN_KEY = 'auth_token';
   currentUser: UserDm | null = null;
   isLoading: boolean = true;
   error: string | null = null;
@@ -39,7 +39,7 @@ export class AuthRepository implements UsersRepository {
     this.error = error;
   }
 
-  get isAuthenticated() {
+  isAuthenticated() {
     return !!this.currentUser;
   }
 
@@ -105,5 +105,10 @@ export class AuthRepository implements UsersRepository {
         userRoles: [] 
       });
     }
+  }
+
+  getToken(): string | null {
+    // TODO: we should use authToken instead lik the static method defined
+    return this.localStorage.retrieve('currentUser');
   }
 } 

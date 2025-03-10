@@ -1,8 +1,7 @@
 
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
-import { MemberDTO } from "./posts";
-import { ServerError } from "../errors";
+import { GenericApplicationOrServerError } from "../errors";
 
 export const MemberRoles = {
   Level1: 'Level1',
@@ -15,8 +14,18 @@ export type CreateMemberInput = {
   userId: string;
 }
 
-// TODO: Fix all types for errors
-type CreateMemberErrors = ServerError
+export type MemberDTO = {
+  userId: string;
+  memberId: string
+  username: string;
+  reputationLevel: string;
+  reputationScore: number;
+}
+
+type CreateMemberErrors = 
+  // TODO: put any specific application types of errors here; see users.ts
+  GenericApplicationOrServerError
+
 
 export type CreateMemberAPIResponse = APIResponse<MemberDTO, CreateMemberErrors>
 

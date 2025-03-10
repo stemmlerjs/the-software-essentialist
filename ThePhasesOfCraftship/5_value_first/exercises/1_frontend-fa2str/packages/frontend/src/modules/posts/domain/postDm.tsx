@@ -1,62 +1,43 @@
-import { Posts } from "@dddforum/shared/src/api";
+import { PostDTO } from "@dddforum/shared/src/api/posts";
 
 interface PostDmProps {
-  id: string;
   title: string;
-  dateCreated: string;
-  member: {
-    memberId: string;
-    username: string;
-  }
-  voteScore: number;
-  comments: Comment[]
+  content?: string;
+  link?: string;
+  memberId: string;
+  memberUsername: string;
+  dateCreated?: string;
+  voteScore?: number;
 }
 
-export type Vote = {
-  id: number;
-  postId: number;
-  voteType: "Upvote" | "Downvote";
-};
-
-export type Comment = {};
-
 export class PostDm {
+  title: string;
+  content: string;
+  link: string;
+  memberId: string;
+  memberUsername: string;
+  dateCreated: string;
+  voteScore: number;
 
-  private props: PostDmProps;
-
-  constructor (props: PostDmProps) {
-    this.props = props;
+  constructor(props: PostDmProps) {
+    this.title = props.title;
+    this.content = props.content || '';
+    this.link = props.link || '';
+    this.memberId = props.memberId;
+    this.memberUsername = props.memberUsername;
+    this.dateCreated = props.dateCreated || new Date().toISOString();
+    this.voteScore = props.voteScore || 0;
   }
 
-  get title () {
-    return this.props.title;
-  }
-
-  get dateCreated () {
-    return this.props.dateCreated;
-  }
-
-  get member () {
-    return this.props.member
-  }
-
-  get voteScore () {
-    return this.props.voteScore;
-  }
-
-  get comments () {
-    return this.props.comments;
-  }
-  
-  public static fromDTO (postDTO: Posts.PostDTO) {
+  static fromDTO(dto: PostDTO): PostDm {
     return new PostDm({
-      id: postDTO.id,
-      title: postDTO.title,
-      dateCreated: postDTO.dateCreated,
-      member: postDTO.member,
-      voteScore: postDTO.voteScore,
-      comments: postDTO.comments
+      title: dto.title,
+      content: dto.content,
+      link: dto.link,
+      memberId: dto.member.memberId,
+      memberUsername: dto.member.username,
+      dateCreated: dto.dateCreated,
+      voteScore: dto.voteScore
     });
   }
-
 }

@@ -12,25 +12,27 @@ import { authStore, postsPresenter, presenters, rootStore } from "./main";
 import { PresenterProvider } from "./shared/contexts/presentersContext";
 import { StoreProvider } from "./shared/stores/root/StoreContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";
+import { SubmissionPage } from "./modules/submission/submissionPage";
 
 const App = () => {
   return (
     <ErrorBoundary>
       <StoreProvider store={rootStore}>
         <AuthProvider store={authStore}>
-        <FirebaseProvider>
-        <PresenterProvider presenters={presenters}>
-          <SpinnerProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<PostsPage />} />
-                  <Route path="/join" element={<RegisterPage />} />
-                  <Route path="/onboarding" element={<OnboardingPage />} />
-                </Routes>
-              </BrowserRouter>
-            </SpinnerProvider>
-          </PresenterProvider>
-        </FirebaseProvider>
+          <FirebaseProvider>
+            <PresenterProvider presenters={presenters}>
+              <SpinnerProvider>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<PostsPage />} />
+                    <Route path="/join" element={<RegisterPage />} />
+                    <Route path="/onboarding" element={<OnboardingPage />} />
+                    <Route path="/submit" element={<SubmissionPage />} />
+                  </Routes>
+                </BrowserRouter>
+              </SpinnerProvider>
+            </PresenterProvider>
+          </FirebaseProvider>
         </AuthProvider>
       </StoreProvider>
     </ErrorBoundary>

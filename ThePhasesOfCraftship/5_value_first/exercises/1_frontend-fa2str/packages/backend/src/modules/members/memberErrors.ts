@@ -1,0 +1,54 @@
+import { Request, Response, NextFunction } from "express";
+
+// Todo: clean these custom exceptions
+// TODO: Implement proper errors for all of these
+// TODO: Move all of thesen to shared
+import { ApplicationError, ApplicationErrorName } from "@dddforum/shared/src/errors";
+
+type ErrorAPIResponse = {
+  success: false;
+  data: undefined;
+  error: {
+    message: string;
+    code: ApplicationErrorName
+  }
+}
+
+export function membersErrorHandler(
+  error: Error,
+  _: Request,
+  res: Response,
+  _next: NextFunction,
+): Response<ErrorAPIResponse> { // Updated return type
+
+  switch ((error as ApplicationError).name) {
+    case "PermissionError":
+      return res.status(403).json({
+        success: false,
+        data: undefined,
+        error: {
+          code: error.name,
+          message: error.message,
+        }
+      });
+    case "ValidationError":
+      return res.status(400).json({
+        success: false,
+        data: undefined,
+        error: {
+          code: error.name,
+          message: error.message,
+        }
+      } as ErrorAPIResponse);
+    case 'ServerError':
+    default:
+      return res.status(500).json({
+        success: false,
+        data: undefined,
+        error: {
+          code: error.name,
+          message: error.message,
+        }
+      } as ErrorAPIResponse);
+  }
+}

@@ -24,6 +24,8 @@ import { Presenters } from './shared/contexts/presenters';
 import { MembersStore } from './shared/stores/members/membersStore';
 import { AuthStore } from './shared/stores/auth/authStore';
 import { RootStore } from './shared/stores/root/RootStore';
+import { SubmissionPresenter } from './modules/submission/application/submissionPresenter';
+import { ProductionPostsRepository } from './modules/posts/repos/productionPostsRepository';
 
 configure({ enforceActions: "never" })
 
@@ -47,13 +49,23 @@ const onboardingPresenter = new OnboardingPresenter(
   firebaseService
 );
 
-const postsRepository = new FakePostsRepository(fakePostsData);
+const postsRepository = new ProductionPostsRepository(apiClient, authRepository);
 const postsPresenter = new PostsPresenter(postsRepository, authRepository);
 
 const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
 
+const submissionPresenter = new SubmissionPresenter(
+  authRepository,
+  navigationService,
+  postsRepository
+);
 
-const presenters = new Presenters(onboardingPresenter, registrationPresenter, postsPresenter)
+const presenters = new Presenters(
+  onboardingPresenter, 
+  registrationPresenter, 
+  postsPresenter,
+  submissionPresenter
+);
 
 const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
 const toastService = new ToastService();
@@ -92,6 +104,7 @@ export {
   navLoginPresenter,
   registrationPresenter,
   onboardingPresenter,
+  submissionPresenter,
 
   // Services
   marketingService,

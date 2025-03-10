@@ -1,6 +1,6 @@
 import axios from "axios";
 import { APIResponse } from ".";
-import { GenericErrors, ServerError } from "../errors";
+import { GenericApplicationOrServerError } from "../errors";
 
 export type ValidatedUser = {
   id?: string;
@@ -28,13 +28,14 @@ export type UserDTO = {
 export type EmailAlreadyInUseError = "EmailAlreadyInUse";
 export type UsernameAlreadyTakenError = "UsernameAlreadyTaken";
 export type CreateUserErrors =
-  | GenericErrors
+  | GenericApplicationOrServerError
   | EmailAlreadyInUseError
   | UsernameAlreadyTakenError;
 export type CreateUserResponse = APIResponse<UserDTO, CreateUserErrors>;
 
 export type UserNotFoundError = "UserNotFound";
-export type GetUserByEmailErrors = ServerError | UserNotFoundError;
+export type GetUserByEmailErrors = GenericApplicationOrServerError 
+  | UserNotFoundError;
 export type GetUserByEmailResponse = APIResponse<UserDTO, GetUserByEmailErrors>;
 export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;
 

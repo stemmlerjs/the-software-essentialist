@@ -1,21 +1,105 @@
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
-import { ServerError } from "../errors";
-import { PostType } from "@dddforum/backend/src/modules/posts/domain/postType";
+import { z } from 'zod';
+import { Request } from 'express'
+import { MemberDTO } from "./members";
+import { CommentDTO } from "./comments";
+import { ApplicationErrors } from "../errors/application";
+import { GenericApplicationOrServerError } from "../errors";
 
-export type GetPostsQueryOption = 'popular' | 'recent';
+export namespace Queries {
 
-export type GetPostsParams = {
-  sort: GetPostsQueryOption
-};
+  export class GetPostByIdQuery {
+    constructor(private props: { postId: string }) {}
+  
+    static fromRequest(req: Request) {
+      const postId = req['query'].postId || req['params'].postId;
+  
+      if (!postId) {
+        throw new ServerErrors.MissingRequestParamsException(["postId"]);
+      }
+  
+      return new GetPostByIdQuery({ postId: postId as string });
+    }
+  
+    get postId() {
+      return this.props.postId;
+    }
+  }
 
-export type MemberDTO = {
-  userId: string;
-  memberId: string
-  username: string;
-  reputationLevel: string;
-  reputationScore: number;
+  export type GetPostsQueryInput = { sort: 'popular' | 'recent'; }
+  export class GetPostsQuery {
+
+    constructor(private props: GetPostsQueryInput) {}
+  
+    static fromRequest(query: Request["query"]) {
+      const { sort } = query;
+  
+      console.log("sort", sort);
+  
+      if (!sort) {
+        throw new ServerErrors.MissingRequestParamsException(["sort"]);
+      }
+  
+      if (sort !== "recent" && sort !== "popular") {
+        throw new ServerErrors.InvalidRequestParamsException(["sort"]);
+      }
+  
+      return new GetPostsQuery({ sort });
+    }
+  
+    get sort() {
+      return this.props.sort;
+    }
+  }
 }
+
+export namespace Commands {
+
+  export type CreatePostInput = {
+    title: string;
+    content?: string;
+    link?: string;
+  }
+
+  export class CreatePostsCommand {
+    private props: CreatePostInput;
+
+    private constructor(props: CreatePostInput) {
+      this.props = props;
+    }
+
+    getProps() {
+      return this.props;
+    }
+
+    public static create(input: CreatePostInput) {
+      const schema = z.object({
+        title: z.string().min(1, 'Title is required'),
+        content: z.string().optional(),
+        link: z.string().optional()
+      }).refine(data => {
+        if (!data.content && !data.link) {
+          return false;
+        }
+        return true;
+      }, {
+        message: "Either content or link must be provided"
+      });
+
+      try {
+        const result = schema.parse(input);
+        return new CreatePostsCommand(result);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new ApplicationErrors.ValidationError(error.errors[0].message);
+        }
+        throw error;
+      }
+    }
+  }
+}
+
 
 export type PostDTO = {
   id: string;
@@ -30,22 +114,16 @@ export type PostDTO = {
   lastUpdated: string;
 };
 
-export type CommentDTO = {
-  id: string;
-  text: string;
-  dateCreated: string;
-  member: MemberDTO;
-};
-
-export type GetPostsErrors = ServerError;
+// TODO: tidy functional errors; see users.ts
+export type GetPostsErrors = GenericApplicationOrServerError;
 
 export type GetPostsAPIResponse = APIResponse<PostDTO[], GetPostsErrors>;
 
-export type CreatePostErrors = ServerError;
+export type CreatePostErrors = GenericApplicationOrServerError;
 
 export type CreatePostAPIResponse = APIResponse<PostDTO, CreatePostErrors>;
 
-export type GetPostByIdErrors = ServerError;
+export type GetPostByIdErrors = GenericApplicationOrServerError;
 
 export type GetPostByIdAPIResponse = APIResponse<PostDTO, GetPostByIdErrors>
 
@@ -53,19 +131,11 @@ export type PostsAPIResponse =
     GetPostsAPIResponse 
   | CreatePostAPIResponse;
 
-// clean
-export type CreatePostInput = {
-  title: string;
-  postType: PostType
-  memberId: string;
-  content?: string;
-  link?: string;
-}
 
 export const createPostsAPI = (apiURL: string) => {
 
   return {
-    create: async (command: CreatePostInput, authToken: string): Promise<CreatePostAPIResponse> => {
+    create: async (command: Commands.CreatePostInput, authToken: string): Promise<CreatePostAPIResponse> => {
       try {
         const successResponse = await axios.post(
           `${apiURL}/posts/new`, 
@@ -78,7 +148,7 @@ export const createPostsAPI = (apiURL: string) => {
         return err.response.data as CreatePostAPIResponse;
       }
     },
-    getPosts: async (sort: GetPostsQueryOption): Promise<GetPostsAPIResponse> => {
+    getPosts: async (sort: Queries.GetPostsQueryInput): Promise<GetPostsAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
         return successResponse.data as GetPostsAPIResponse;

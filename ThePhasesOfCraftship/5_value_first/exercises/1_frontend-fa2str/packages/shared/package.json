@@ -17,6 +17,7 @@
     "nats": "^2.29.2"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.6"
+    "@types/amqplib": "^0.10.6",
+    "@types/express": "^5.0.0"
   }
 }
