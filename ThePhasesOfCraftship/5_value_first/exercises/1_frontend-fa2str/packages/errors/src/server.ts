@@ -5,8 +5,6 @@
 
 import { CustomError } from ".";
 
-
-
 export namespace ServerErrors {
 
   export class InvalidRequestBodyException extends CustomError {

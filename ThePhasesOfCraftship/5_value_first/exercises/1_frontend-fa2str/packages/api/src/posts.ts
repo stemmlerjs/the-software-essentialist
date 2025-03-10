@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { Request } from 'express'
 import { MemberDTO } from "./members";
 import { CommentDTO } from "./comments";
-import { ApplicationErrors } from "../errors/application";
-import { GenericApplicationOrServerError, ServerErrors } from "../errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
+import { ServerErrors } from "@dddforum/errors/server";
+import { GenericApplicationOrServerError } from "@dddforum/errors";
 
 export namespace Queries {
 

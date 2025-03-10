@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APIResponse } from ".";
-import { GenericApplicationOrServerError } from '../errors';
+import { GenericApplicationOrServerError } from "@dddforum/errors";
 
 export type VoteType = 'upvote' | 'downvote';
 

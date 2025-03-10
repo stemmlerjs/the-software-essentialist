@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
-import { GenericApplicationOrServerError } from "../errors";
+import { GenericApplicationOrServerError } from "@dddforum/errors";
 
 export const MemberRoles = {
   Level1: 'Level1',

@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "jest"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "./dist", // Specify the output directory
+    "baseUrl": ".",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "ESNext",
+  },
+  "include": ["src/**/*"], // Include the source files
+  "exclude": ["node_modules", "dist"],
+}
+
+

@@ -2,9 +2,7 @@
   "name": "dddforum",
   "version": "1.0.0",
   "description": "",
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@8.15.4",
   "engines": {
     "node": ">=16.16.0"
   },
@@ -15,11 +13,11 @@
     "test:infra:backend": "npm run test:infra --workspace=@dddforum/backend",
     "test:unit:backend": "npm run test:unit --workspace=@dddforum/backend",
     "test:unit": "npm run test:unit --workspaces --if-present",
-    "clean": "npm run clean --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
+    "clean": "pnpm -r run clean",
+    "build": "pnpm -r run build",
     "start:dev:backend": "npm run start:dev --workspace=@dddforum/backend",
     "start:dev:frontend": "npm run start:dev --workspace=@dddforum/frontend",
-    "lint": "npm run lint --workspaces --if-present",
+    "lint": "pnpm -r run lint",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./**/src/**/*.ts\" --write",
     "prettier-format:darwin:linux": "prettier --config .prettierrc './**/src/**/*.ts' --write",
@@ -27,7 +25,9 @@
     "prettier-watch": "run-script-os",
     "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
+    "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+    "dev": "pnpm -r run dev",
+    "test": "pnpm -r run test"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -45,7 +45,8 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.8",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "turbo": "latest"
   },
   "keywords": [],
   "author": "",
@@ -53,5 +54,6 @@
   "dependencies": {
     "nodemailer": "^6.9.13",
     "tsconfig-paths": "^4.2.0"
-  }
+  },
+  "private": true
 }

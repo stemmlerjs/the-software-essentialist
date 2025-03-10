@@ -1,0 +1,26 @@
+{
+  "name": "@dddforum/api",
+  "version": "1.0.0",
+  "description": "The api client",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "test": "jest"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./members": {
+      "types": "./dist/members.d.ts",
+      "default": "./dist/members.js"
+    }
+  },
+  "dependencies": {
+    "@dddforum/errors": "file:../errors"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
