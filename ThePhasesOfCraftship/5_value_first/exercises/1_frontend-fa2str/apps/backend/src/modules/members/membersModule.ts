@@ -1,5 +1,5 @@
 
-import { Database } from "@dddforum/database/src";
+import { Database } from "@dddforum/database;
 import { Config } from "../../shared/config";
 import { WebServer } from "../../shared/http";
 import { ApplicationModule } from "../../shared/modules/applicationModule";

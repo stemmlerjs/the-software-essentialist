@@ -4,7 +4,7 @@ import { CommentDownvoted } from "../../comments/domain/commentDownvoted";
 import { UpdateMemberReputationScoreCommand, VoteOnPostCommand } from "../votesCommands";
 import { VotesService } from "./votesService";
 import { PostCreated } from "../../posts/domain/postCreated";
-import { EventBus } from "@dddforum/bus/src";
+import { EventBus } from "@dddforum/bus;
 import { PostUpvoted } from "../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../posts/domain/postDownvoted";
 

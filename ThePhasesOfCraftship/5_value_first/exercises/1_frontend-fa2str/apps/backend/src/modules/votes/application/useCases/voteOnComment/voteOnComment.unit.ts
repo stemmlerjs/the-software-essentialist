@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
-import { ApplicationErrors } from"@dddforum/errors/src";
+import { ApplicationErrors } from"@dddforum/errors;
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
@@ -11,7 +11,7 @@ import { ProductionVotesRepository } from "../../../repos/adapters/productionVot
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { Commands } from '@dddforum/api/src/votes'
-import { EventOutboxTable } from "@dddforum/outbox/src";
+import { EventOutboxTable } from "@dddforum/outbox;
 
 let prisma = new PrismaClient();
 

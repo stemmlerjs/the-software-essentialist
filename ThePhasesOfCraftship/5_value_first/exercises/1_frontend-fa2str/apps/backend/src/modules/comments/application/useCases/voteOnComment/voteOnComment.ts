@@ -2,7 +2,7 @@
 import { ApplicationErrors } from "@dddforum/errors/src/application";
 import { ServerErrors } from "@dddforum/errors/src/server";
 import { CommentVote } from "../../../domain/commentVote";
-import { UseCase } from "@dddforum/core/src";
+import { UseCase } from "@dddforum/core;
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CommentRepository } from "../../../repos/ports/commentRepository";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";

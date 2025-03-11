@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/core/src";
+import { AggregateRoot } from "@dddforum/core;
 import { randomUUID } from "crypto";
 import { CommentUpvoted } from "./commentUpvoted";
 import { CommentDownvoted } from "./commentDownvoted";
 import { VoteType } from "@dddforum/api/src/votes";
-import { ApplicationErrors } from "@dddforum/errors/src";
+import { ApplicationErrors } from "@dddforum/errors;
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 

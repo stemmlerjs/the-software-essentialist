@@ -1,5 +1,5 @@
 
-import {  ApplicationErrors} from "@dddforum/errors/src";
+import {  ApplicationErrors} from "@dddforum/errors;
 
 // TODO: Oh, this is where you can override the errors and return more specific errors
 // TODO: set it up so that you can do this in each of the classes, because that's pretty cool.

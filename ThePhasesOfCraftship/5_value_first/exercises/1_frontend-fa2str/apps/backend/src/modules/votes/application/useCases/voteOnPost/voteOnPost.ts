@@ -1,6 +1,6 @@
 
-import { ApplicationErrors, ServerErrors } from"@dddforum/errors/src";
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core/src";
+import { ApplicationErrors, ServerErrors } from"@dddforum/errors;
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core;
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
 import { CanVoteOnPostPolicy } from "./canVoteOnPost";

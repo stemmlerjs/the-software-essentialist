@@ -1,9 +1,9 @@
 
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core/src";
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core;
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
 import { CreateMemberCommand } from "../../../memberCommands";
-import { ApplicationErrors } from "@dddforum/errors/src";
+import { ApplicationErrors } from "@dddforum/errors;
 
 // Improvement: These errors can be generalized as 'NotFound' errors, like 'MemberNotFound', 'CommentNotFound', etc.
 // This way, we can have a single error type for all 'NotFound' errors.

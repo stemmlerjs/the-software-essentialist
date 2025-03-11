@@ -1,5 +1,5 @@
 
-import { ApplicationErrors, ServerErrors } from "@dddforum/errors/src";
+import { ApplicationErrors, ServerErrors } from "@dddforum/errors;
 import { CanCreatePostPolicy } from "./canCreatePost";
 import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core/src';
 import { Post } from "../../../domain/post";

@@ -8,12 +8,12 @@ import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { CommentRepository } from "../comments/repos/ports/commentRepository";
 import { PostsRepository } from "../posts/repos/ports/postsRepository";
 import { VotesSubscriptions } from "./application/votesSubscriptions";
-import { EventBus } from "@dddforum/bus/src";
-import { EventOutboxTable } from "@dddforum/outbox/src";
+import { EventBus } from "@dddforum/bus;
+import { EventOutboxTable } from "@dddforum/outbox;
 import { VotesController } from "./votesController";
 import { votesErrorHandler } from "./votesErrors";
 import { WebServer } from "../../shared/http";
-import { Database } from "@dddforum/database/src";
+import { Database } from "@dddforum/database;
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;

@@ -1,10 +1,10 @@
 import { Commands, DTOs, Types } from "@dddforum/api/src/posts";
 import { Post as PostPrismaModel } from "@prisma/client";
-import { ApplicationErrors } from "@dddforum/errors/src";
+import { ApplicationErrors } from "@dddforum/errors;
 // TODO: consider relying upon errors from 'apis'
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { AggregateRoot } from "@dddforum/core/src";
+import { AggregateRoot } from "@dddforum/core;
 import { PostCreated } from "./postCreated";
 
 interface PostProps {

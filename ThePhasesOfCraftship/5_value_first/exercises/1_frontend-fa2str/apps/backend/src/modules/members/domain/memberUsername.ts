@@ -1,5 +1,5 @@
 
-import { ApplicationErrors } from "@dddforum/errors/src";
+import { ApplicationErrors } from "@dddforum/errors;
 import { ValueObject } from '@dddforum/core/src'
 import { z } from "zod";
 

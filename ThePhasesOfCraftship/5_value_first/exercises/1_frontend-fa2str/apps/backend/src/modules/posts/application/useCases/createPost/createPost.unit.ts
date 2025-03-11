@@ -5,10 +5,10 @@ import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { ProductionPostsRepository } from "../../../repos/adapters/productionPostsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
-import { ApplicationErrors } from "@dddforum/errors/src";
+import { ApplicationErrors } from "@dddforum/errors;
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { EventOutboxTable } from "@dddforum/outbox/src";
+import { EventOutboxTable } from "@dddforum/outbox;
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();

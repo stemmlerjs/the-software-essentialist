@@ -6,7 +6,7 @@ import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
 import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
-import { DomainEvent } from "@dddforum/core/src";
+import { DomainEvent } from "@dddforum/core;
 import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 
 export class ProductionPostsRepository implements PostsRepository {

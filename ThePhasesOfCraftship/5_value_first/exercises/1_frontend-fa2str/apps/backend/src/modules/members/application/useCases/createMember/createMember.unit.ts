@@ -4,8 +4,8 @@ import { CreateMember } from "./createMember";
 import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
 import { UserIdentityService } from "../../../../users/application/userIdentityService";
 import { CreateMemberCommand } from "../../../memberCommands";
-import { ApplicationErrors } from "@dddforum/errors/src";
-import { EventOutboxTable } from "@dddforum/outbox/src";
+import { ApplicationErrors } from "@dddforum/errors;
+import { EventOutboxTable } from "@dddforum/outbox;
 import { } from '../../../../users/application/userIdentityService'
 import { FirebaseAuth } from "../../../../users/externalServices/adapters/firebaseAuth";
 

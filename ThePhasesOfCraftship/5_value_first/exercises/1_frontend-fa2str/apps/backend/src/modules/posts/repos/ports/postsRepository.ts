@@ -3,7 +3,7 @@ import { ServerErrors } from "@dddforum/errors/src/server";
 import { PostReadModel } from "../../domain/postReadModel";
 import { Post } from "../../domain/post";
 import { Queries } from "@dddforum/api/src/posts"
-import { DomainEvent } from "@dddforum/core/src";
+import { DomainEvent } from "@dddforum/core;
 
 export interface PostsRepository {
   findPosts(query: Queries.GetPostsQuery): Promise<PostReadModel[]>;

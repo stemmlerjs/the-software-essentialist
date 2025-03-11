@@ -1,5 +1,5 @@
 
-import { ServerErrors, CustomError, ApplicationErrors } from"@dddforum/errors/src";
+import { ServerErrors, CustomError, ApplicationErrors } from"@dddforum/errors;
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
 import { Request, Response, NextFunction } from "express";
 import { UserResponse } from "@dddforum/api/src/users";
