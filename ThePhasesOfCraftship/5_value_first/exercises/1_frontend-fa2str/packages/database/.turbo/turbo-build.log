@@ -1,0 +1,9 @@
+
+
+> @dddforum/database@1.0.0 build /Users/khalilstemmler/Documents/Personal/current/the-software-essentialist/ThePhasesOfCraftship/5_value_first/exercises/1_frontend-fa2str/packages/database
+> npm run clean && tsc
+
+
+> @dddforum/database@1.0.0 clean
+> rimraf dist
+

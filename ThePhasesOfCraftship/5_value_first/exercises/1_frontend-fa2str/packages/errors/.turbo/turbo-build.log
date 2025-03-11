@@ -1,0 +1,9 @@
+
+
+> @dddforum/errors@1.0.0 build /Users/khalilstemmler/Documents/Personal/current/the-software-essentialist/ThePhasesOfCraftship/5_value_first/exercises/1_frontend-fa2str/packages/errors
+> npm run clean && tsc
+
+
+> @dddforum/errors@1.0.0 clean
+> rimraf dist
+

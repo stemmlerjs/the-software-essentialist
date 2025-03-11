@@ -2,9 +2,11 @@
   "name": "@dddforum/api",
   "version": "1.0.0",
   "description": "The api client",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -b tsconfig.json",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc -b tsconfig.json",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
@@ -17,7 +19,7 @@
     "./marketing": "./src/marketing.ts"
   },
   "dependencies": {
-    "@dddforum/errors": "file:../errors",
+    "@dddforum/errors": "*",
     "@dddforum/core": "*",
     "axios": "^1.6.2",
     "express": "^4.21.2",

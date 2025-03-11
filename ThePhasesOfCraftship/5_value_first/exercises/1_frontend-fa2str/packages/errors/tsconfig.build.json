@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./dist", // Pointing to dist where built files are located
+    "outDir": "./dist",
+    "module": "NodeNext", // Or whatever works best
+    "moduleResolution": "node16",
+    "skipLibCheck": true
+  },
+  "include": ["dist/**/*"],
+  "exclude": ["node_modules"]
+}
