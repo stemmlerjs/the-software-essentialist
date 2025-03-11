@@ -5,15 +5,15 @@ import { Route, Routes } from "react-router-dom";
 import { PostsPage } from "./modules/posts/postsPage";
 import { RegisterPage } from "./modules/registration/registerPage";
 import { SpinnerProvider } from "./shared/contexts/spinnerContext";
-import { FirebaseProvider } from './shared/auth/FirebaseProvider';
 import { OnboardingPage } from "./modules/onboarding/onboardingPage";
 import { ErrorBoundary } from "./shared/error/errorBoundary";
 
 import { PresenterProvider } from "./shared/contexts/presentersContext";
-import { StoreProvider } from "./shared/stores/root/StoreContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";
 import { SubmissionPage } from "./modules/submission/submissionPage";
 import { authStore, presenters, rootStore } from "./main";
+import { StoreProvider } from "./shared/contexts/storeContext";
+import { FirebaseProvider } from "./shared/auth/firebaseProvider";
 
 const App = () => {
   return (

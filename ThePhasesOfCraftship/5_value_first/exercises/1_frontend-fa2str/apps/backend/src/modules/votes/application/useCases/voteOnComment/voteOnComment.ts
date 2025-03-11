@@ -3,10 +3,10 @@ import { ApplicationErrors, ServerErrors } from"@dddforum/errors/src";
 import { UseCase } from "@dddforum/core/src";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
-import { VoteOnCommentCommand } from "../../../votesCommands";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
+import * as Votes from '@dddforum/api/src/votes'
 
 type VoteOnCommentResponse = CommentVote 
   | ApplicationErrors.ValidationError 
@@ -14,7 +14,7 @@ type VoteOnCommentResponse = CommentVote
   | ApplicationErrors.NotFoundError
   | ServerErrors.AnyServerError;
 
-export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommentResponse> {
+export class VoteOnComment implements UseCase<Votes.Commands.VoteOnCommentCommand, VoteOnCommentResponse> {
 
   constructor(
     private memberRepository: MembersRepository,
@@ -22,7 +22,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     private voteRepository: VoteRepository
   ) {}
 
-  async execute(request: VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
+  async execute(request: Votes.Commands.VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
     let commentVote: CommentVote;
     const { memberId, commentId, voteType } = request.props;
 

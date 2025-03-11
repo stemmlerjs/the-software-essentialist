@@ -10,7 +10,7 @@ import { ProductionCommentsRepository } from "../../../../comments/repos/adapter
 import { ProductionVotesRepository } from "../../../repos/adapters/productionVotesRepo";
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
-import { VoteOnCommentCommand } from "../../../votesCommands";
+import { Commands } from '@dddforum/api/src/votes'
 import { EventOutboxTable } from "@dddforum/outbox/src";
 
 let prisma = new PrismaClient();
@@ -67,7 +67,7 @@ describe('voteOnComment', () => {
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: 'non-existent-id',
         memberId: 'non-existent-id',
         voteType: 'upvote'
@@ -87,7 +87,7 @@ describe('voteOnComment', () => {
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: 'non-existent-id',
         memberId: 'non-existent-id',
         voteType: 'upvote'
@@ -106,7 +106,7 @@ describe('voteOnComment', () => {
     ])('as a %s member, I can cast a vote on a comment', async (reputationLevel, result) => {
       const { member } = setupCommentAndMember(useCase, reputationLevel);
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: 'existing-comment-id',
         memberId: member.id,
         voteType: 'upvote'
@@ -125,7 +125,7 @@ describe('voteOnComment', () => {
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'upvote'
@@ -151,7 +151,7 @@ describe('voteOnComment', () => {
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'downvote'
@@ -178,7 +178,7 @@ describe('voteOnComment', () => {
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'upvote'
@@ -201,7 +201,7 @@ describe('voteOnComment', () => {
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'downvote'
@@ -224,7 +224,7 @@ describe('voteOnComment', () => {
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'upvote'
@@ -243,7 +243,7 @@ describe('voteOnComment', () => {
 
       const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
 
-      const command = new VoteOnCommentCommand({
+      const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
         memberId: member.id,
         voteType: 'downvote'

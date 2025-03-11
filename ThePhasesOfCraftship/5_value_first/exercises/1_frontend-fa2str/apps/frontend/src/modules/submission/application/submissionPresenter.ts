@@ -25,7 +25,7 @@ export class SubmissionPresenter {
       }
 
       // Validate the creation of the command right here
-      const commandOrError = Posts.Commands.CreatePostsCommand.create(data);
+      const commandOrError = Posts.Commands.CreatePostCommand.create(data);
 
       // TODO: Improve this by just using isSuccess() and .getError()
       if (commandOrError instanceof ApplicationErrors.ValidationError) {

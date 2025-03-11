@@ -25,7 +25,8 @@ export class ProductionPostsRepository implements PostsRepository {
     return this.postsDm;
   }
 
-  async create(command: Posts.Commands.CreatePostsCommand): Promise<PostDm> {
+  // TODO: I think this should use the "input" perhaps. Decide the rule here.
+  async create(command: Posts.Commands.CreatePostCommand): Promise<PostDm> {
     const authToken = this.authRepository.getToken() ?? '';
     const response = await this.api.posts.create(command, authToken);
     if (!response.data) {

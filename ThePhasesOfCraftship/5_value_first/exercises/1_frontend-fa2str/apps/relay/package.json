@@ -4,6 +4,7 @@
   "description": "The transactional outbox/relay which publishes messages into rabbitmq",
   "main": "index.js",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "lab:start-relay":"ts-node lab/start-relay.ts",
     "lab:produce": "ts-node lab/produce.ts",
     "lab:subscribe": "ts-node lab/subscribe.ts",

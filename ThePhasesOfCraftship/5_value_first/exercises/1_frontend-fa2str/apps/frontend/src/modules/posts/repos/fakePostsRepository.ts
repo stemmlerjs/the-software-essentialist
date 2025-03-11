@@ -1,13 +1,14 @@
-import { Posts } from "@dddforum/api";
+import * as Posts from "@dddforum/api/posts";
 import { PostsRepository } from "./postsRepository";
 import { PostDm } from "../domain/postDm";
-import { PostDTO } from "@dddforum/api/posts";
 import { makeAutoObservable } from "mobx";
+
+
 
 export class FakePostsRepository implements PostsRepository {
   postsDm: PostDm[] = [];
 
-  constructor(fakePostsData: PostDTO[]) {
+  constructor(fakePostsData: Posts.DTOs.PostDTO[]) {
     makeAutoObservable(this);
     this.postsDm = fakePostsData.map(postDTO => PostDm.fromDTO(postDTO));
   }
@@ -25,7 +26,7 @@ export class FakePostsRepository implements PostsRepository {
     return this.postsDm;
   }
 
-  async create(command: Posts.Commands.CreatePostsCommand): Promise<PostDm> {
+  async create(command: Posts.Commands.CreatePostCommand): Promise<PostDm> {
     const props = command.getProps();
     const newPost = new PostDm({
       title: props.title,

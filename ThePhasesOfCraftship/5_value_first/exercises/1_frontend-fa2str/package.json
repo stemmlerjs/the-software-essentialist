@@ -7,6 +7,7 @@
     "node": ">=16.16.0"
   },
   "scripts": {
+    "typecheck": "turbo run typecheck",
     "test:e2e:frontend": "npm run test:e2e --workspace=@dddforum/frontend",
     "test:e2e:backend": "npm run test:e2e --workspace=@dddforum/backend",
     "test:infra:all": "npm run test:infra --workspaces --if-present",

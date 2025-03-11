@@ -1,4 +1,4 @@
-import { PostDTO } from "@dddforum/api/posts";
+import * as Posts from "@dddforum/api/posts";
 
 interface PostDmProps {
   title: string;
@@ -17,7 +17,7 @@ export class PostDm {
 
   }
 
-  static fromDTO(dto: PostDTO): PostDm {
+  static fromDTO(dto: Posts.DTOs.PostDTO): PostDm {
     return new PostDm({
       title: dto.title,
       content: dto.content,

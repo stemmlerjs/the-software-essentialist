@@ -4,6 +4,7 @@ import { LocalStorage } from "../../../shared/storage/localStorage";
 import { FirebaseService } from "../externalServices/firebaseService";
 import { UsersRepository } from "./usersRepo";
 
+// TODO: Reconcile these repos; stores and repos. reconcile them.
 export class AuthRepository implements UsersRepository {
   private readonly TOKEN_KEY = 'auth_token';
   currentUser: UserDm | null = null;

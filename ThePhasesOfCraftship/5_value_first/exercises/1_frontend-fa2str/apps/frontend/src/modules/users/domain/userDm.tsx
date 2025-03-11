@@ -1,5 +1,5 @@
 import { Users } from "@dddforum/api";
-import { MemberRoles } from "@dddforum/api/members";
+import { Types } from "@dddforum/api/members";
 import { User, UserCredential } from "firebase/auth";
 import { makeAutoObservable } from "mobx";
 
@@ -47,7 +47,7 @@ export class UserDm {
   }
 
   public canVote () {
-    return this.props.userRoles.includes(MemberRoles.Level1);
+    return this.props.userRoles.includes(Types.MemberRoles.Level1);
   }
 
   public get username () {

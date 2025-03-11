@@ -1,10 +1,10 @@
 // Application exports
 export { Collection } from './application/collection';
-export { IHandle } from './application/eventHandler';
+export { type IHandle } from './application/eventHandler';
 export { ReadModel } from './application/readModel';
 export { 
-  UseCase,
-  UseCaseResponse,
+  type UseCase,
+  type UseCaseResponse,
   fail,
   success
 } from './application/useCase';
@@ -16,9 +16,10 @@ export {
   type DomainEventStatus 
 } from './domain/domainEvent';
 export { ValueObject } from './domain/valueObject';
-export { EventModel } from './domain/eventModel';
+export { type EventModel } from './domain/eventModel';
  
 // Utils exports
 export { DateUtil } from './utils/dateUtil';
 export { NumberUtil } from './utils/numberUtil';
 export { TextUtil } from './utils/textUtil';
+

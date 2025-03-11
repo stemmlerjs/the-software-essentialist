@@ -1,6 +1,6 @@
-import { PostDTO } from "@dddforum/api/posts";
+import * as Posts from "@dddforum/api/posts";
 
-export const fakePostsData: PostDTO[] = [
+export const fakePostsData: Posts.DTOs.PostDTO[] = [
   {
     id: "1",
     title: "First Post",

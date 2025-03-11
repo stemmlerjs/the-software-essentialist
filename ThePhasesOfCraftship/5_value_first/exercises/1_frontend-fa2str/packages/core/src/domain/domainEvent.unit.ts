@@ -1,9 +1,9 @@
 
 
 import { randomUUID } from "node:crypto";
-import { DomainEvent } from "../domainEvent";
-import { DomainEventStatus } from "../domainEvent";
-import { Event as EventModel } from "@prisma/client";
+import { DomainEvent } from "./domainEvent";
+import { DomainEventStatus } from "./domainEvent";
+import { EventModel } from "./eventModel";
 
 interface TestEventProps {
   aggregateId: string

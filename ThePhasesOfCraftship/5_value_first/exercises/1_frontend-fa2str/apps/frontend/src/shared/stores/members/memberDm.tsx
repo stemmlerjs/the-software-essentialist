@@ -1,5 +1,7 @@
 
-interface MemberProps {
+// TODO: Reconcile these and view/read models
+
+interface MemberDmProps {
   id: string;
   username: string;
   email: string;
@@ -7,9 +9,9 @@ interface MemberProps {
 }
 
 export class MemberDm {
-  private props: MemberProps;
+  private props: MemberDmProps;
 
-  constructor(props: MemberProps) {
+  constructor(props: MemberDmProps) {
     this.props = props;
   }
 

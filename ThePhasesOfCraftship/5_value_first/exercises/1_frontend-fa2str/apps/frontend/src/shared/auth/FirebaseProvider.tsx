@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { firebaseConfig } from '../../config';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '../stores/root/StoreContext';
+import { useStore } from '../contexts/storeContext';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

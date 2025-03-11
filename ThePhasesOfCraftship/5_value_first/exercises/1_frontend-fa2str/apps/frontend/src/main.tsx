@@ -23,7 +23,7 @@ import { RegistrationPresenter } from './modules/registration/registrationPresen
 import { Presenters } from './shared/contexts/presenters';
 import { MembersStore } from './shared/stores/members/membersStore';
 import { AuthStore } from './shared/stores/auth/authStore';
-import { RootStore } from './shared/stores/root/RootStore';
+import { RootStore } from './shared/stores/root/rootStore';
 import { SubmissionPresenter } from './modules/submission/application/submissionPresenter';
 import { ProductionPostsRepository } from './modules/posts/repos/productionPostsRepository';
 

@@ -1,18 +1,21 @@
+import * as Posts from "@dddforum/api/posts";
 import { useState } from "react";
 
 interface SubmissionFormProps {
-  onSubmit: (data: { title: string; text: string }) => void;
+  onSubmit: (data: Posts.Commands.CreatePostInput) => void;
   isSubmitting: boolean;
   error: string | null;
 }
 
 export const SubmissionForm = ({ onSubmit, isSubmitting, error }: SubmissionFormProps) => {
   const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ title, text });
+    // TODO: Make this work for link posts as well
+    // TODO: Determine if this should be here
+    onSubmit({ title, content,  postType: 'text' });
   };
 
   return (
@@ -25,8 +28,8 @@ export const SubmissionForm = ({ onSubmit, isSubmitting, error }: SubmissionForm
       />
       <textarea
         placeholder="Write a post!"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
       />
       {error && <div className="error-message">{error}</div>}
       <button type="submit" disabled={isSubmitting}>
