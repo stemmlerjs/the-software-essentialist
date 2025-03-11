@@ -5,17 +5,17 @@ import { ProductionMembersRepository } from "../../../repos/adapters/productionM
 import { UserIdentityService } from "../../../../users/application/userIdentityService";
 import { CreateMemberCommand } from "../../../memberCommands";
 import { ApplicationErrors } from "@dddforum/errors/src";
-import { EventOutboxTable } from "@dddforum/outbox";
+import { EventOutboxTable } from "@dddforum/outbox/src";
 import { } from '../../../../users/application/userIdentityService'
-import { Auth0 } from "../../../../users/externalServices/adapters/auth0";
+import { FirebaseAuth } from "../../../../users/externalServices/adapters/firebaseAuth";
 
 describe('createMember', () => {
   let prisma = new PrismaClient();
-  let auth0 = new Auth0();
-  let usersService = new UserIdentityService(auth0);
+  let firebaseAuth = new FirebaseAuth();
+  let usersService = new UserIdentityService(firebaseAuth);
   let outboxTable = new EventOutboxTable(prisma);
   let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
-  const useCase = new CreateMember(usersService, membersRepo);
+  const useCase = new CreateMember(membersRepo);
 
   beforeEach(() => {
     jest.resetAllMocks();

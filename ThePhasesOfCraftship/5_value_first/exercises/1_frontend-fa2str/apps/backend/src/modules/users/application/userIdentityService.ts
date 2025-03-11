@@ -4,7 +4,7 @@ import {
 } from "../usersExceptions";
 import { UserDetails } from "../domain/userDetails";
 import { IdentityServiceAPI } from "../externalServices/ports/identityServiceAPI";
-import { NotFoundError } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/src";
 
 export class UserIdentityService {
   constructor(
@@ -17,7 +17,7 @@ export class UserIdentityService {
       if (user) {
         return user;
       } 
-      return new NotFoundError();
+      return new ApplicationErrors.NotFoundError('user');
     } catch (err) {
       console.log(err);
       throw new Error('error occurreted getting user from service')

@@ -9,8 +9,8 @@ import { PostVote } from "../../../../posts/domain/postVote";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { Post } from "../../../../posts/domain/post";
 import { randomUUID } from "crypto";
-import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { TextUtil } from "@dddforum/core/src"
+import { EventOutboxTable } from "@dddforum/outbox/src";
 import { PostUpvoted } from "../../../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../../../posts/domain/postDownvoted";
 
@@ -72,11 +72,11 @@ describe('voteOnPost', () => {
 
     // Post use case response
     expect(response).toBeInstanceOf(PostVote);
-    expect((response as PostVote).memberId).toBe(member.id);
-    expect((response as PostVote).postId).toBe(post.id);
+    expect((response.getValue() as PostVote).memberId).toBe(member.id);
+    expect((response.getValue() as PostVote).postId).toBe(post.id);
 
     // Domain event saved
-    const aggregateId = (response as PostVote).id;
+    const aggregateId = (response.getValue() as PostVote).id;
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostUpvoted');
@@ -96,11 +96,11 @@ describe('voteOnPost', () => {
 
     // Post use case response
     expect(response).toBeInstanceOf(PostVote);
-    expect((response as PostVote).memberId).toBe(member.id);
-    expect((response as PostVote).postId).toBe(post.id);
+    expect((response.getValue() as PostVote).memberId).toBe(member.id);
+    expect((response.getValue() as PostVote).postId).toBe(post.id);
 
     // Domain event saved
-    const aggregateId = (response as PostVote).id;
+    const aggregateId = (response.getValue() as PostVote).id;
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostDownvoted');

@@ -1,3 +1,4 @@
+
 export class TextUtil {
   public static createRandomText(length: number): string {
     const charset =
@@ -16,4 +17,16 @@ export class TextUtil {
     const randomSequence = Math.floor(Math.random() * 1000000);
     return `testemail-${randomSequence}@gmail.com`;
   }
+
+  public static isMissingKeys(data: any, keysToCheckFor: string[]) {
+    for (const key of keysToCheckFor) {
+      if (data[key] === undefined) return true;
+    }
+    return false;
+  }
+  
+  public static isBetweenLength(str: string, min: number, max: number) {
+    return str.length >= min && str.length <= max;
+  }
+  
 }

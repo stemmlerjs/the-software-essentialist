@@ -1,4 +1,4 @@
-import { DomainEvent, DomainEventStatus } from '@dddforum/core/domainEvent';
+import { DomainEvent, DomainEventStatus } from '@dddforum/core/src';
 import { Event as EventModel } from '@prisma/client'
 
 interface PostCreatedEventProps {

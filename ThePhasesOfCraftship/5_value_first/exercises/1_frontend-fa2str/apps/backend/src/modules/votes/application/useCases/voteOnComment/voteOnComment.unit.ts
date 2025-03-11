@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
-import { CommentNotFoundError, MemberNotFoundError, PermissionError } from "@dddforum/errors";
+import { ApplicationErrors } from"@dddforum/errors/src";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
@@ -11,7 +11,7 @@ import { ProductionVotesRepository } from "../../../repos/adapters/productionVot
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { VoteOnCommentCommand } from "../../../votesCommands";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/src";
 
 let prisma = new PrismaClient();
 
@@ -75,8 +75,8 @@ describe('voteOnComment', () => {
       
       const response = await useCase.execute(command);
       
-      expect(response instanceof MemberNotFoundError).toBe(true);
-      expect((response as MemberNotFoundError).name).toEqual('MemberNotFoundError');
+      expect(response instanceof ApplicationErrors.NotFoundError).toBe(true);
+      expect((response as ApplicationErrors.NotFoundError).name).toEqual('MemberNotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
     });
 
@@ -95,13 +95,13 @@ describe('voteOnComment', () => {
       
       const response = await useCase.execute(command);
       
-      expect(response instanceof CommentNotFoundError).toBe(true);
-      expect((response as CommentNotFoundError).name).toEqual('CommentNotFoundError');
+      expect(response instanceof ApplicationErrors.NotFoundError).toBe(true);
+      expect((response as ApplicationErrors.NotFoundError).name).toEqual('CommentNotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
     });
 
     it.each([
-      [MemberReputationLevel.Level1, PermissionError],
+      [MemberReputationLevel.Level1, ApplicationErrors.PermissionError],
       [MemberReputationLevel.Level2, CommentVote]
     ])('as a %s member, I can cast a vote on a comment', async (reputationLevel, result) => {
       const { member } = setupCommentAndMember(useCase, reputationLevel);

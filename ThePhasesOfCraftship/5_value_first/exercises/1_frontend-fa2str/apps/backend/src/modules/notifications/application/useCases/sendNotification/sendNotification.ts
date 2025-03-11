@@ -1,9 +1,11 @@
-import { success, UseCase, UseCaseResponse } from "@dddforum/core/useCase";
+import { success, UseCase, UseCaseResponse } from "@dddforum/core/src";
 import { SendNotificationCommand } from "../../../notificationCommands";
-import { MemberNotFoundError, ServerError } from "@dddforum/errors";
+import { ApplicationErrors, ServerErrors } from "@dddforum/errors/src";
 import { TransactionalEmailAPI } from "../../../externalServices/ports/transactionalEmailAPI";
 
-export type SendNotificationResponse = UseCaseResponse<void | undefined, MemberNotFoundError | ServerError>;
+export type SendNotificationResponse = UseCaseResponse<void | undefined, 
+  ApplicationErrors.NotFoundError | 
+  ServerErrors.AnyServerError>; // TODO: cleanup these errors
 
 export class SendNotification implements UseCase<SendNotificationCommand, SendNotificationResponse>  {
 

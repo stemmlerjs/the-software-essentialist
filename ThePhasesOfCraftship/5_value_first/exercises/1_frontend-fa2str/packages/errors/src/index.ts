@@ -4,6 +4,7 @@ import { ServerErrors } from './server';
 export * from './application'
 export * from './server';
 
+// TODO: Lets call this an ApplicationError
 export class CustomError extends Error {
   public type: string;
   constructor(message: string, type: string = "CustomError") {

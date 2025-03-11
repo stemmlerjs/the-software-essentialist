@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
 // Todo: clean these custom exceptions
-import { CustomException } from "../../shared/exceptions";
-import { ApplicationError, ApplicationErrorName } from "@dddforum/errors";
-import { PostsAPIResponse } from "@dddforum/api/posts";
+
+import { ApplicationErrors, ApplicationErrorName } from"@dddforum/errors/src";
 
 type ErrorAPIResponse = {
   success: false;
@@ -21,7 +20,7 @@ export function postsErrorHandler(
   _next: NextFunction,
 ): Response<ErrorAPIResponse> { // Updated return type
 
-  switch ((error as ApplicationError).name) {
+  switch ((error as ApplicationErrors.AnyApplicationError).name) {
     case "PermissionError":
       return res.status(403).json({
         success: false,
@@ -52,3 +51,5 @@ export function postsErrorHandler(
       } as ErrorAPIResponse);
   }
 }
+
+

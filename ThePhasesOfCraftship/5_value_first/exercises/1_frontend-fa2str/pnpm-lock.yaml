@@ -277,6 +277,9 @@ importers:
 
   packages/api:
     dependencies:
+      '@dddforum/core':
+        specifier: '*'
+        version: link:../core
       '@dddforum/errors':
         specifier: file:../errors
         version: file:packages/errors

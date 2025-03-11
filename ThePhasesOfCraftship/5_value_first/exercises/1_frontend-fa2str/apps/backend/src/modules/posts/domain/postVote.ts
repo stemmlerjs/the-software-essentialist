@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/core/aggregateRoot";
-import { ValidationError } from "@dddforum/errors";
+import { AggregateRoot } from "@dddforum/core/src";
+import { ApplicationErrors } from "@dddforum/errors/src";
 import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";
-import { PostVoteDTO, VoteType } from "@dddforum/api/votes";
+import { PostVoteDTO, VoteType } from "@dddforum/api/src/votes";
 
 export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
@@ -88,7 +88,7 @@ export class PostVote extends AggregateRoot {
     return new PostVote(props);
   }
 
-  public static create (memberId: string, postId: string) : PostVote | ValidationError {
+  public static create (memberId: string, postId: string) : PostVote | ApplicationErrors.ValidationError {
     return new PostVote({
       id: randomUUID(),
       memberId: memberId,

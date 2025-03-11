@@ -1,4 +1,4 @@
-import { DomainEvent } from "@dddforum/core/domainEvent";
+import { DomainEvent } from "@dddforum/core/src";
 import { Member } from "../../domain/member";
 
 export interface MembersRepository {

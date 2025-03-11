@@ -1,11 +1,11 @@
 
 
 import { PostsRepository } from "../ports/postsRepository";
-import { DatabaseError } from "../../../../shared/exceptions";
+import { ServerErrors } from "@dddforum/errors/src"
 import { Post } from "../../domain/post";
-import { GetPostsQuery } from "../../postsQuery";
+import { Queries } from "@dddforum/api/src/posts"
 import { PostReadModel } from "../../domain/postReadModel";
-import { DomainEvent } from "@dddforum/core/domainEvent";
+import { DomainEvent } from "@dddforum/core/src";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];
@@ -20,7 +20,7 @@ export class InMemoryPostsRepository implements PostsRepository {
     throw new Error("Method not implemented.");
   }
 
-  async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {
+  async findPosts(query: Queries.GetPostsQuery): Promise<PostReadModel[]> {
     return this.posts;
   }
 
@@ -29,7 +29,7 @@ export class InMemoryPostsRepository implements PostsRepository {
     return new InMemoryPostsRepository();
   }
 
-  public async save(post: Post): Promise<void | DatabaseError> {
+  public async save(post: Post): Promise<void | ServerErrors.DatabaseError> {
 
     return Promise.resolve();
     

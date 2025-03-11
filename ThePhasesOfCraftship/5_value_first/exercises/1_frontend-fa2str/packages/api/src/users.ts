@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APIResponse } from ".";
-import { GenericApplicationOrServerError } from "@dddforum/errors";
+import { GenericApplicationOrServerError, ServerErrors } from "@dddforum/errors";
+import { TextUtil } from "@dddforum/core"
 
 export type ValidatedUser = {
   id?: string;
@@ -31,6 +32,7 @@ export type CreateUserErrors =
   | GenericApplicationOrServerError
   | EmailAlreadyInUseError
   | UsernameAlreadyTakenError;
+  
 export type CreateUserResponse = APIResponse<UserDTO, CreateUserErrors>;
 
 export type UserNotFoundError = "UserNotFound";
@@ -44,6 +46,62 @@ export type UserResponse = APIResponse<
   GetUserByEmailResponse | null,
   GetUserErrors
 >;
+
+export namespace Commands {
+  export class CreateUserCommand {
+    private constructor(public props: CreateUserParams) {}
+  
+    static fromRequest(body: unknown) {
+      const requiredKeys = ["email", "firstName", "lastName", "username"];
+      const isRequestInvalid =
+        !body || typeof body !== "object" || TextUtil.isMissingKeys(body, requiredKeys);
+  
+      if (isRequestInvalid) {
+        throw new ServerErrors.InvalidRequestBodyException(requiredKeys);
+      }
+  
+      const input = body as CreateUserParams;
+  
+      return CreateUserCommand.fromProps(input);
+    }
+  
+    static fromProps(props: CreateUserParams) {
+      const isEmailValid = props.email.indexOf("@") !== -1;
+      const isFirstNameValid = TextUtil.isBetweenLength(props.firstName, 2, 16);
+      const isLastNameValid = TextUtil.isBetweenLength(props.lastName, 2, 25);
+      const isUsernameValid = TextUtil.isBetweenLength(props.username, 2, 25);
+  
+      if (
+        !isEmailValid ||
+        !isFirstNameValid ||
+        !isLastNameValid ||
+        !isUsernameValid
+      ) {
+        throw new ServerErrors.InvalidParamsException();
+      }
+  
+      const { username, email, firstName, lastName } = props;
+  
+      return new CreateUserCommand({ email, firstName, lastName, username });
+    }
+  
+    get email() {
+      return this.props.email;
+    }
+  
+    get firstName() {
+      return this.props.firstName;
+    }
+  
+    get lastName() {
+      return this.props.lastName;
+    }
+  
+    get username() {
+      return this.props.username;
+    }
+  }
+}
 
 // TODO: implement
 type AuthenticateResponse = any;

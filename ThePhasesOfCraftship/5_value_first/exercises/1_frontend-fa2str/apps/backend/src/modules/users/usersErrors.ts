@@ -1,14 +1,13 @@
-import { Request, Response, NextFunction } from "express";
-import { UserResponse } from "@dddforum/api/users";
-import { CustomException } from "../../shared/exceptions";
-import { ServerError, ValidationError } from "@dddforum/errors";
+
+import { ServerErrors, CustomError, ApplicationErrors } from"@dddforum/errors/src";
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
-import { ErrorRequestHandler } from 'express';
+import { Request, Response, NextFunction } from "express";
+import { UserResponse } from "@dddforum/api/src/users";
 
 // Todo: refactor all of these to use the new error handling system
 
 export function userErrorHandler(
-  error: CustomException,
+  error: CustomError,
   _: Request,
   res: Response,
   _next: NextFunction,
@@ -23,7 +22,7 @@ export function userErrorHandler(
       data: null,
       error: {
         message: error.message,
-        code: new ValidationError(error.message)
+        code: new ApplicationErrors.ValidationError(error.message)
       },
     };
     return res.status(400).json(responseBody);
@@ -66,7 +65,7 @@ export function userErrorHandler(
     success: false,
     data: null,
     error: {
-      code: new ServerError(error.message)
+      code: new ServerErrors.ServerErrorException(error.message)
     },
   };
 

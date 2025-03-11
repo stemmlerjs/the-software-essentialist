@@ -1,6 +1,6 @@
 
-import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/errors";
-import { UseCase } from "@dddforum/core/useCase";
+import { ApplicationErrors, ServerErrors } from"@dddforum/errors/src";
+import { UseCase } from "@dddforum/core/src";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
 import { VoteOnCommentCommand } from "../../../votesCommands";
@@ -8,7 +8,11 @@ import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
 
-type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
+type VoteOnCommentResponse = CommentVote 
+  | ApplicationErrors.ValidationError 
+  | ApplicationErrors.PermissionError 
+  | ApplicationErrors.NotFoundError
+  | ServerErrors.AnyServerError;
 
 export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommentResponse> {
 
@@ -29,15 +33,15 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     ]);
 
     if (memberOrNull === null) {
-      return new MemberNotFoundError();
+      return new ApplicationErrors.NotFoundError('member')
     }
 
     if (commentOrNull === null) {
-      return new CommentNotFoundError();
+      return new ApplicationErrors.NotFoundError('comment')
     }
 
     if (!CanVoteOnCommentPolicy.isAllowed(memberOrNull)) {
-      return new PermissionError();
+      return new ApplicationErrors.PermissionError();
     }
 
     if (existingVoteOrNull) {
@@ -46,7 +50,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     } else {
       let commentVoteOrError = CommentVote.create(memberId, commentId);
 
-      if (commentVoteOrError instanceof ValidationError) {
+      if (commentVoteOrError instanceof ApplicationErrors.ValidationError) {
         return commentVoteOrError;
       }
       commentVote = commentVoteOrError;
@@ -63,7 +67,8 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
       
     } catch (error) {
       console.log(error);
-      return new ServerError();
+      // TODO: Do this database error everywhere and test to make sure it's good
+      return new ServerErrors.DatabaseError();
     }
   }
 }

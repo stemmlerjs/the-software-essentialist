@@ -1,14 +1,18 @@
 
-import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/errors";
+import { ApplicationErrors, ServerErrors } from "@dddforum/errors/src";
 import { CanCreatePostPolicy } from "./canCreatePost";
-import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core/useCase';
+import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core/src';
 import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { PostVote } from "../../../domain/postVote";
 
-export type CreatePostResponse = UseCaseResponse<Post | undefined, ValidationError | PermissionError | MemberNotFoundError | ServerError>;
+export type CreatePostResponse = UseCaseResponse<Post | undefined, 
+  ApplicationErrors.ValidationError | 
+  ApplicationErrors.PermissionError | 
+  ApplicationErrors.NotFoundError | 
+  ServerErrors.ServerErrorException>;
 
 export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse> {
 
@@ -23,11 +27,11 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
     const member = await this.memberRepository.getMemberById(memberId);
     
     if (member === null) {
-      return fail(new MemberNotFoundError())
+      return fail(new ApplicationErrors.NotFoundError('member'))
     }
 
     if (!CanCreatePostPolicy.isAllowed(member)) {
-      return fail(new PermissionError());
+      return fail(new ApplicationErrors.PermissionError());
     }
 
     const postOrError = Post.create({
@@ -38,13 +42,13 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       link
     });
 
-    if (postOrError instanceof ValidationError) {
+    if (postOrError instanceof ApplicationErrors.ValidationError) {
       return fail(postOrError);
     }
 
     const initialMemberVoteOrError = PostVote.create(memberId, postOrError.id);
 
-    if (initialMemberVoteOrError instanceof ValidationError) {
+    if (initialMemberVoteOrError instanceof ApplicationErrors.ValidationError) {
       return fail(initialMemberVoteOrError);
     }
 
@@ -57,7 +61,7 @@ export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse
       
     } catch (error) {
       console.log(error);
-      return fail(new ServerError());
+      return fail(new ServerErrors.ServerErrorException());
     }
   }
 }

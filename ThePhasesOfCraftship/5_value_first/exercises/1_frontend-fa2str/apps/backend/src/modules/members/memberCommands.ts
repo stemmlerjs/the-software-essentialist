@@ -1,10 +1,8 @@
 
 import { Request } from "express";
-import {
-  MissingRequestParamsException,
-} from "../../shared/exceptions";
-import { CreateMemberInput } from "@dddforum/api/members";
+import { CreateMemberInput } from "@dddforum/api/src/members";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import { ServerErrors } from '@dddforum/errors/src'
 
 export class CreateMemberCommand {
 
@@ -12,15 +10,15 @@ export class CreateMemberCommand {
 
   static create (token: DecodedIdToken | undefined, body: Request['body']) {
     if (!token?.email) {
-      throw new MissingRequestParamsException(["email"]);
+      throw new ServerErrors.MissingRequestParamsException(["email"]);
     }
 
     if (!token?.uid) {
-      throw new MissingRequestParamsException(["userId"]);
+      throw new ServerErrors.MissingRequestParamsException(["userId"]);
     }
 
     if (!body.username) {
-      throw new MissingRequestParamsException(["username"]);
+      throw new ServerErrors.MissingRequestParamsException(["username"]);
     }
 
     return new CreateMemberCommand({

@@ -1,5 +1,5 @@
 
-import { Collection } from '@dddforum/core/collection';
+import { Collection } from '@dddforum/core/src';
 
 interface VoteProps {
   voteStatus: 'Upvote' | 'Downvote' | 'None';

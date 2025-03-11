@@ -1,4 +1,4 @@
-import { NotFoundError } from "@dddforum/errors";
+import { ApplicationErrors } from"@dddforum/errors/src";
 import { User } from "../../domain/user";
 import { IdentityServiceAPI } from "../ports/identityServiceAPI";
 import { auth } from "firebase-admin";
@@ -20,7 +20,7 @@ export class FirebaseAuth implements IdentityServiceAPI {
     });
   }
 
-  async getUserById(userId: string): Promise<User | NotFoundError> {
+  async getUserById(userId: string): Promise<User | ApplicationErrors.NotFoundError> {
     try {
       const userRecord = await this.firebaseAuth.getUser(userId);
       return {
@@ -31,13 +31,13 @@ export class FirebaseAuth implements IdentityServiceAPI {
       };
     } catch (error) {
       if ((error as any).code === 'auth/user-not-found') {
-        return new NotFoundError();
+        return new ApplicationErrors.NotFoundError('user');
       }
       throw error;
     }
   }
 
-  async findUserByEmail(email: string): Promise<User | NotFoundError> {
+  async findUserByEmail(email: string): Promise<User | ApplicationErrors.NotFoundError> {
     try {
       const userRecord = await this.firebaseAuth.getUserByEmail(email);
       return {
@@ -48,7 +48,7 @@ export class FirebaseAuth implements IdentityServiceAPI {
       };
     } catch (error) {
       if ((error as any).code === 'auth/user-not-found') {
-        return new NotFoundError();
+        return new ApplicationErrors.NotFoundError('user');
       }
       throw error;
     }

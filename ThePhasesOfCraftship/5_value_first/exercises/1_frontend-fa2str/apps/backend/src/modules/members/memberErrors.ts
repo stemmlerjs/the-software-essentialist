@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 // Todo: clean these custom exceptions
 // TODO: Implement proper errors for all of these
 // TODO: Move all of thesen to shared
-import { ApplicationError } from "@dddforum/errors";
+import { ApplicationErrorName, ApplicationErrors } from "@dddforum/errors/src";
 
 type ErrorAPIResponse = {
   success: false;
@@ -21,7 +21,7 @@ export function membersErrorHandler(
   _next: NextFunction,
 ): Response<ErrorAPIResponse> { // Updated return type
 
-  switch ((error as ApplicationError).name) {
+  switch ((error as ApplicationErrors.AnyApplicationError).name) {
     case "PermissionError":
       return res.status(403).json({
         success: false,

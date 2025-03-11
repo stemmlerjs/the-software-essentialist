@@ -1,15 +1,14 @@
 
+import { Database } from "@dddforum/database/src";
 import { Config } from "../../shared/config";
-import { Database } from "../../shared/database";
 import { WebServer } from "../../shared/http";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { UserIdentityService } from "../users/application/userIdentityService";
 import { MemberService } from "./application/membersService";
 import { membersErrorHandler } from "./memberErrors";
 import { MembersController } from "./membersController";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";
 import { MembersRepository } from "./repos/ports/membersRepository";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox";
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: MembersRepository;

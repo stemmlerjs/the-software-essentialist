@@ -1,10 +1,10 @@
-import { CreatePostInput } from "@dddforum/api/posts";
+import { Commands, DTOs, Types } from "@dddforum/api/src/posts";
 import { Post as PostPrismaModel } from "@prisma/client";
-import { ValidationError } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/src";
+// TODO: consider relying upon errors from 'apis'
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { PostType } from "./postType";
-import { AggregateRoot } from "@dddforum/core/aggregateRoot";
+import { AggregateRoot } from "@dddforum/core/src";
 import { PostCreated } from "./postCreated";
 
 interface PostProps {
@@ -13,7 +13,7 @@ interface PostProps {
   title: string;
   link?: string;
   content?: string;
-  postType: PostType;
+  postType: Types.PostType;
   voteScore: number;
 }
 
@@ -62,7 +62,7 @@ export class Post extends AggregateRoot {
     return this.props.voteScore
   }
 
-  public static create (input: CreatePostInput): Post | ValidationError {
+  public static create (input: Commands.CreatePostCommand): Post | ApplicationErrors.ValidationError {
     const isTextPost = input.postType === 'text';
 
     if (isTextPost) {
@@ -70,13 +70,13 @@ export class Post extends AggregateRoot {
       const validationResult = createTextPostSchema.safeParse(input);
 
       if (!validationResult.success) {
-        return new ValidationError(validationResult.error.errors.map(e => e.message).join(", "));
+        return new ApplicationErrors.ValidationError(validationResult.error.errors.map(e => e.message).join(", "));
       }
     } else {
       const linkPostValidationResult = createLinkPostSchema.safeParse(input);
 
       if (!linkPostValidationResult.success) {
-        return new ValidationError(linkPostValidationResult.error.errors.map(e => e.message).join(", "));
+        return new ApplicationErrors.ValidationError(linkPostValidationResult.error.errors.map(e => e.message).join(", "));
       }
     }
 
@@ -101,7 +101,7 @@ export class Post extends AggregateRoot {
       title: prismaModel.title,
       content: prismaModel.content ? prismaModel.content : undefined,
       link: prismaModel.link ? prismaModel.link : undefined,
-      postType: prismaModel.postType as PostType,
+      postType: prismaModel.postType as Types.PostType,
       voteScore: prismaModel.voteScore
     });
   }

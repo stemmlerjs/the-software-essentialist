@@ -1,11 +1,11 @@
 
-import { AggregateRoot } from "@dddforum/core/aggregateRoot";
-import { ValidationError } from "@dddforum/errors";
+import { AggregateRoot } from "@dddforum/core/src";
+import { ApplicationErrors } from "@dddforum/errors/src";
 import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
-import { MemberDTO } from "@dddforum/api/posts";
+import { MemberDTO } from "@dddforum/api/src/members";
 
 interface MemberProps {
   id: string;
@@ -75,11 +75,11 @@ export class Member extends AggregateRoot {
     }
   }
 
-  public static create (inputProps: CreateMemberInput): Member | ValidationError {
+  public static create (inputProps: CreateMemberInput): Member | ApplicationErrors.ValidationError {
     const memberUsername = MemberUsername.create(inputProps.username);
 
     // Example of using value objects to validate input to create the aggregate
-    if (memberUsername instanceof ValidationError) {
+    if (memberUsername instanceof ApplicationErrors.ValidationError) {
       return memberUsername;
     }
 

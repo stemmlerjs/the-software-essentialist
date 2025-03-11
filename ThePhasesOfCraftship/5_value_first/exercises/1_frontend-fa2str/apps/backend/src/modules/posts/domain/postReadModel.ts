@@ -1,8 +1,9 @@
-import { PostDTO } from "@dddforum/api/posts";
+
 import { Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
-import { PostType } from "./postType";
+import { Types, DTOs } from "@dddforum/api/src/posts";
+// TODO: Do this for all types, DTOs through. This is a beautiful pattern.
 
 interface PostReadModelProps {
   id: string;
@@ -12,7 +13,7 @@ interface PostReadModelProps {
   member: MemberReadModel;
   comments: CommentReadModel[];
   voteScore: number;
-  postType: PostType;
+  postType: Types.PostType;
   dateCreated: string;
   lastUpdated: string;
 }
@@ -39,13 +40,13 @@ export class PostReadModel {
       member: member,
       comments: comments,
       voteScore: prismaPost.voteScore,
-      postType: prismaPost.postType as PostType,
+      postType: prismaPost.postType as Types.PostType,
       dateCreated: prismaPost.dateCreated.toISOString(),
       lastUpdated: prismaPost.lastUpdated.toISOString()
     })
   }
 
-  public toDTO (): PostDTO {
+  public toDTO (): DTOs.PostDTO {
     return {
       id: this.props.id,
       title: this.props.title,

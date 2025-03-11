@@ -1,5 +1,5 @@
 
-import { ReadModel } from "@dddforum/core/readModel";
+import { ReadModel } from "@dddforum/core/src";
 
 interface MemberCommentVotesRoundupProps {
   memberId: string;

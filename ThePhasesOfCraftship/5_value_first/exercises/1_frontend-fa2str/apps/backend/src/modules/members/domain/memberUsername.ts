@@ -1,6 +1,6 @@
 
-import { ValidationError } from "@dddforum/errors";
-import { ValueObject } from '@dddforum/core/valueObject'
+import { ApplicationErrors } from "@dddforum/errors/src";
+import { ValueObject } from '@dddforum/core/src'
 import { z } from "zod";
 
 const memberUsernameSchema = z.string().min(5).max(20);
@@ -22,7 +22,7 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
     return new MemberUsername({ value });
   }
 
-  public static create (input: string | undefined): MemberUsername | ValidationError {
+  public static create (input: string | undefined): MemberUsername | ApplicationErrors.ValidationError {
 
     /**
      * Handle validation rules here. There are many possibilities for types of validation rules
@@ -35,6 +35,6 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
       return new MemberUsername({ value: input as string });
     }
 
-    return new ValidationError(`Member username invalid`);
+    return new ApplicationErrors.ValidationError(`Member username invalid`);
   }
 }

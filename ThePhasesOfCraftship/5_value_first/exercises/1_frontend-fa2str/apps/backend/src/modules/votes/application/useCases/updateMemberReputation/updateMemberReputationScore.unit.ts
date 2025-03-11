@@ -8,7 +8,7 @@ import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/src";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();

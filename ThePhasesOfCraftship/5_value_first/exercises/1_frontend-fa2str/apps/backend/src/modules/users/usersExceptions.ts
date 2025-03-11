@@ -1,25 +1,27 @@
-import { ServerError } from "@dddforum/errors";
 
-// TODO: Remove
-// import { CustomException } from "../../shared/exceptions";
+import {  ApplicationErrors} from "@dddforum/errors/src";
 
-class EmailAlreadyInUseException extends ServerError {
+// TODO: Oh, this is where you can override the errors and return more specific errors
+// TODO: set it up so that you can do this in each of the classes, because that's pretty cool.
+class EmailAlreadyInUseException extends ApplicationErrors.ConflictError {
   constructor(email: string) {
-    super(`Email ${email} is already in use`);
+    super('user', `Email ${email} is already in use`);
   }
 }
 
-class UsernameAlreadyTakenException extends ServerError {
+// TODO: Move these to members
+class UsernameAlreadyTakenException extends ApplicationErrors.ConflictError {
   constructor(username: string) {
     super(
-      `Username ${username} is already taken`,
+      'user',
+      `Username ${username} is already taken`
     );
   }
 }
 
-class UserNotFoundException extends ServerError {
+class UserNotFoundException extends ApplicationErrors.NotFoundError {
   constructor(email: string) {
-    super(`User with email ${email} not found`);
+    super('user', `User with email ${email} not found`);
   }
 }
 

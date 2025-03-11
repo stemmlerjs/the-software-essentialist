@@ -2,8 +2,8 @@ import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { z } from 'zod';
 import { Request } from 'express'
-import { MemberDTO } from "./members";
-import { CommentDTO } from "./comments";
+import { DTOs as MemberDTOs } from "./members";
+import { DTOs as CommentDTOs } from "./comments";
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { ServerErrors } from "@dddforum/errors/server";
 import { GenericApplicationOrServerError } from "@dddforum/errors";
@@ -66,9 +66,10 @@ export namespace Commands {
     title: string;
     content?: string;
     link?: string;
+    postType: Types.PostType
   }
 
-  export class CreatePostsCommand {
+  export class CreatePostCommand {
     private props: CreatePostInput;
 
     private constructor(props: CreatePostInput) {
@@ -83,19 +84,23 @@ export namespace Commands {
       const schema = z.object({
         title: z.string().min(1, 'Title is required'),
         content: z.string().optional(),
-        link: z.string().optional()
+        link: z.string().optional(),
+        postType: z.enum(['text', 'link'])
       }).refine(data => {
-        if (!data.content && !data.link) {
+        if (data.postType === 'text' && !data.content) {
+          return false;
+        }
+        if (data.postType === 'link' && !data.link) {
           return false;
         }
         return true;
       }, {
-        message: "Either content or link must be provided"
+        message: "Content required for text posts, link required for link posts"
       });
 
       try {
         const result = schema.parse(input);
-        return new CreatePostsCommand(result);
+        return new Commands.CreatePostCommand(result);
       } catch (error) {
         if (error instanceof z.ZodError) {
           throw new ApplicationErrors.ValidationError(error.errors[0].message);
@@ -103,73 +108,99 @@ export namespace Commands {
         throw error;
       }
     }
+
+    public static fromRequest(body: Request['body']) {
+      const { title, postType, memberId } = body;
+  
+      if (!memberId) {
+        throw new ServerErrors.MissingRequestParamsException(["memberId"]);
+      }
+  
+      if (!title) {
+        throw new ServerErrors.MissingRequestParamsException(["title"]);
+      }
+  
+      if (!postType) {
+        throw new ServerErrors.MissingRequestParamsException(["postType"]);
+      }
+  
+      return new CreatePostCommand({ ...body });
+    }
   }
 }
 
+export namespace Types {
+  export type PostType = 'link' | 'text';
+}
 
-export type PostDTO = {
-  id: string;
-  postType: string;
-  title: string;
-  content?: string;
-  link?: string;
-  dateCreated: string;
-  member: MemberDTO;
-  comments: CommentDTO[];
-  voteScore: number;
-  lastUpdated: string;
-};
+export namespace DTOs {
+  export type PostDTO = {
+    id: string;
+    postType: string;
+    title: string;
+    content?: string;
+    link?: string;
+    dateCreated: string;
+    member: MemberDTOs.MemberDTO;
+    comments: CommentDTOs.CommentDTO[];
+    voteScore: number;
+    lastUpdated: string;
+  };
+}
 
 // TODO: tidy functional errors; see users.ts
+// Errors
 export type GetPostsErrors = GenericApplicationOrServerError;
-
-export type GetPostsAPIResponse = APIResponse<PostDTO[], GetPostsErrors>;
 
 export type CreatePostErrors = GenericApplicationOrServerError;
 
-export type CreatePostAPIResponse = APIResponse<PostDTO, CreatePostErrors>;
-
 export type GetPostByIdErrors = GenericApplicationOrServerError;
 
-export type GetPostByIdAPIResponse = APIResponse<PostDTO, GetPostByIdErrors>
 
-export type PostsAPIResponse = 
+export namespace API {
+  export type GetPostsAPIResponse = APIResponse<DTOs.PostDTO[], GetPostsErrors>;
+
+  export type CreatePostAPIResponse = APIResponse<DTOs.PostDTO, CreatePostErrors>;
+
+  export type GetPostByIdAPIResponse = APIResponse<DTOs.PostDTO, GetPostByIdErrors>;
+
+  export type AnyPostsAPIResponse = 
     GetPostsAPIResponse 
   | CreatePostAPIResponse;
-
+}
 
 export const createPostsAPI = (apiURL: string) => {
 
   return {
-    create: async (command: Commands.CreatePostsCommand, authToken: string): Promise<CreatePostAPIResponse> => {
+    create: async (command: Commands.CreatePostCommand, authToken: string): Promise<API.CreatePostAPIResponse> => {
       try {
         const successResponse = await axios.post(
           `${apiURL}/posts/new`, 
           command.getProps(), 
           getAuthHeaders(authToken)
         );
-        return successResponse.data as CreatePostAPIResponse;
+        return successResponse.data as API.CreatePostAPIResponse;
       } catch (err) {
         //@ts-expect-error
         return err.response.data as CreatePostAPIResponse;
       }
     },
-    getPosts: async (sort: Queries.GetPostsQueryInput): Promise<GetPostsAPIResponse> => {
+    getPosts: async (sort: Queries.GetPostsQueryInput): Promise<API.GetPostsAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
-        return successResponse.data as GetPostsAPIResponse;
+        return successResponse.data as API.GetPostsAPIResponse;
       } catch (err) {
         //@ts-expect-error
-        return err.response.data as GetPostsAPIResponse;
+        return err.response.data as API.GetPostsAPIResponse;
       }
     },
-    getPostById: async (postId: string): Promise<GetPostByIdAPIResponse> => {
+    getPostById: async (postId: string): Promise<API.GetPostByIdAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts/${postId}`);
-        return successResponse.data as GetPostByIdAPIResponse;
+        return successResponse.data as API.GetPostByIdAPIResponse;
       } catch (err) {
         //@ts-expect-error
-        return err.response.data as GetPostByIdAPIResponse;
+        return err.response.data as API.GetPostByIdAPIResponse;
       }
     }
   };

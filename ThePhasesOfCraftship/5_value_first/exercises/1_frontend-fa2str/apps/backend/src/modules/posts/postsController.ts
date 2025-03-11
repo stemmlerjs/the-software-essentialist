@@ -1,9 +1,7 @@
 
 import express from "express";
-import { GetPostByIdQuery, GetPostsQuery } from "./postsQuery";
-import { CreatePostAPIResponse, GetPostByIdAPIResponse, GetPostsAPIResponse } from "@dddforum/api/posts";
+import { Queries, API, Commands } from "@dddforum/api/src/posts";
 import { ErrorHandler } from "../../shared/errors";
-import { CreatePostCommand } from "./postsCommands";
 import { Post } from "./domain/post";
 import { PostsService } from "./application/postsService";
 
@@ -39,10 +37,10 @@ export class PostsController {
     next: express.NextFunction,
   ) {
     try {
-      const query = GetPostsQuery.fromRequest(req.query);
+      const query = Queries.GetPostsQuery.fromRequest(req.query);
       const posts = await this.postsService.getPosts(query);
       
-      const response: GetPostsAPIResponse = {
+      const response: API.GetPostsAPIResponse = {
         success: true,
         data: posts.map((p) => p.toDTO()),
       };
@@ -59,7 +57,7 @@ export class PostsController {
     next: express.NextFunction,
   ) {
     try {
-      const command = CreatePostCommand.fromRequest(req.body);
+      const command = Commands.CreatePostCommand.fromRequest(req.body);
       const result = await this.postsService.createPost(command);
 
       if (!result.isSuccess()) {
@@ -81,7 +79,7 @@ export class PostsController {
           });
         }
 
-        const response: CreatePostAPIResponse = {
+        const response: API.CreatePostAPIResponse = {
           success: true,
           data: postDetails?.toDTO()
         };
@@ -98,7 +96,7 @@ export class PostsController {
     next: express.NextFunction,
   ) {
     try {
-      const query = GetPostByIdQuery.fromRequest(req);
+      const query = Queries.GetPostByIdQuery.fromRequest(req);
       const postOrNothing = await this.postsService.getPostDetailsById(query.postId);
 
       if (postOrNothing === null) {
@@ -112,7 +110,7 @@ export class PostsController {
           }
         });
       } else {
-        const response: GetPostByIdAPIResponse = {
+        const response: API.GetPostByIdAPIResponse = {
           success: true,
           data: postOrNothing.toDTO()
         };

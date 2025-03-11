@@ -5,10 +5,10 @@ import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { ProductionPostsRepository } from "../../../repos/adapters/productionPostsRepository";
 import { CreatePostCommand } from "../../../postsCommands";
-import { MemberNotFoundError, PermissionError, ValidationError } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/src";
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/src";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
@@ -53,8 +53,8 @@ describe ('createPost', () => {
       const response = await useCase.execute(command);
 
       expect(response.isSuccess()).toBe(false);
-      expect(response.getError() instanceof MemberNotFoundError).toBe(true);
-      expect(response.getError().name).toEqual('MemberNotFoundError');
+      expect(response.getError() instanceof ApplicationErrors.NotFoundError).toBe(true);
+      expect(response.getError().name).toEqual('NotFoundError');
       expect(saveSpy).not.toHaveBeenCalled();
     });
   
@@ -77,7 +77,7 @@ describe ('createPost', () => {
       const response = await useCase.execute(command);
   
       expect(response.isSuccess()).toBe(false);
-      expect(response.getError() instanceof PermissionError).toBe(true);
+      expect(response.getError() instanceof ApplicationErrors.PermissionError).toBe(true);
     });
 
     test('as a level 2 member, I should be able to create a new post', async () => {
@@ -141,7 +141,7 @@ describe ('createPost', () => {
       const response = await useCase.execute(command);
 
       expect(response.isSuccess()).toBe(false);
-      expect(response.getError() instanceof ValidationError).toBe(true);
+      expect(response.getError() instanceof ApplicationErrors.ValidationError).toBe(true);
       expect(saveSpy).not.toHaveBeenCalled();
     });
   })
@@ -185,7 +185,7 @@ describe ('createPost', () => {
       const response = await useCase.execute(command);
 
       expect(response.isSuccess()).toBe(false);
-      expect(response.getError() instanceof ValidationError).toBe(true);
+      expect(response.getError() instanceof ApplicationErrors.ValidationError).toBe(true);
       expect(saveSpy).not.toHaveBeenCalled();
     });
   });

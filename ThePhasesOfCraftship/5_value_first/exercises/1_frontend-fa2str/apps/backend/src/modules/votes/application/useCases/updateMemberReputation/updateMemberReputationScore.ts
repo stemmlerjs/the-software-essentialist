@@ -1,12 +1,13 @@
 
-import { UseCase } from "@dddforum/core/useCase";
+import { UseCase } from "@dddforum/core/src";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
-import { MemberNotFoundError } from "@dddforum/errors";
+import { ApplicationErrors } from"@dddforum/errors/src";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member } from "../../../../members/domain/member";
 
-type UpdateMemberReputationScoreResponse = Member | MemberNotFoundError;
+// TODO: Consider ApplicationErrors.NotFoundError<Member>;
+type UpdateMemberReputationScoreResponse = Member | ApplicationErrors.NotFoundError;
 
 // Note: This is also something which could be done on a cron job
 // We could have a cron job that runs every 24 hours and updates the reputation score of all members using 
@@ -28,7 +29,7 @@ export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputati
     ]);
 
     if (memberOrNull === null) {
-      return new MemberNotFoundError();
+      return new ApplicationErrors.NotFoundError('member');
     }
 
     // Get the current score from the read models for this member to calculate

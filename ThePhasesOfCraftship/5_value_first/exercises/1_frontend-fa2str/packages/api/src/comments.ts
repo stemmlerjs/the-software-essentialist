@@ -1,8 +1,11 @@
-import { MemberDTO } from "./members";
+import { DTOs as MemberDTOs } from "./members";
 
-export type CommentDTO = {
-  id: string;
-  text: string;
-  dateCreated: string;
-  member: MemberDTO;
-};
+export namespace DTOs {
+  export type CommentDTO = {
+    id: string;
+    text: string;
+    dateCreated: string;
+    member: MemberDTOs.MemberDTO;
+  };
+}
+

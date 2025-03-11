@@ -4,11 +4,25 @@ import { CustomError } from ".";
 
 export type ApplicationErrorName =
   | "ValidationError"
+  | "ConfictError"
   | "PermissionError"
   | "NotFoundError"
 
 
+export type ApplicationEntity = 'member' | 'comment' | 'user' | 'post'
+
 export namespace ApplicationErrors {
+
+  // TODO: Encapsulate the additional message responsibilty
+  export class ConflictError extends CustomError {
+    constructor(public conflictingEntity: ApplicationEntity, public additionalMessage = "") {
+      super(
+        `Conflicting entity ${conflictingEntity}${additionalMessage ? `: ${additionalMessage}` : ''}`,
+        "ConfictError"
+      );
+    }
+  }
+
   export class ValidationError extends CustomError {
     constructor(public message: string = "ValidationError") {
       super(message, "ValidationError");
@@ -22,8 +36,11 @@ export namespace ApplicationErrors {
   }
 
   export class NotFoundError extends CustomError {
-    constructor(public missingEntityType: 'member' | 'comment') {
-      super(`Could not find ${missingEntityType}`, "NotFoundError");
+    constructor(public missingEntityType: ApplicationEntity, public additionalMessage = "") {
+      super(
+        `Could not find ${missingEntityType}${additionalMessage ? `: ${additionalMessage}` : ''}`,
+        "NotFoundError"
+      );
     }
   }
 

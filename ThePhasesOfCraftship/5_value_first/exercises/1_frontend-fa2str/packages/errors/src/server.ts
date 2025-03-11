@@ -41,8 +41,8 @@ export namespace ServerErrors {
   }
   
   export class ServerErrorException extends CustomError {
-    constructor() {
-      super("An error occurred", "ServerErrorException");
+    constructor(message = "") {
+      super(message ? `An error occurred: ${message}` : "An error occurred", "ServerErrorException");
     }
   }
 

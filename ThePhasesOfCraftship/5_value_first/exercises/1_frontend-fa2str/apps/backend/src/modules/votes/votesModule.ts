@@ -1,7 +1,6 @@
 
 import { Config } from "../../shared/config";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { Database } from "../../shared/database";
 import { VoteRepository } from "./repos/ports/voteRepository";
 import { VotesService } from "./application/votesService";
 import { ProductionVotesRepository } from "./repos/adapters/productionVotesRepo";
@@ -9,11 +8,12 @@ import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { CommentRepository } from "../comments/repos/ports/commentRepository";
 import { PostsRepository } from "../posts/repos/ports/postsRepository";
 import { VotesSubscriptions } from "./application/votesSubscriptions";
-import { EventBus } from "@dddforum/buseventBus";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventBus } from "@dddforum/bus/src";
+import { EventOutboxTable } from "@dddforum/outbox/src";
 import { VotesController } from "./votesController";
 import { votesErrorHandler } from "./votesErrors";
 import { WebServer } from "../../shared/http";
+import { Database } from "@dddforum/database/src";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
