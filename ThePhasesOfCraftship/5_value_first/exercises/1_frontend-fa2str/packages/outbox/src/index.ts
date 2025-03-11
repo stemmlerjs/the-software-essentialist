@@ -1,35 +1,39 @@
 
-// TODO: need to move these around. this should not know about this.
-import { Prisma, PrismaClient, Event as PrismaEventModel } from "@prisma/client";
-import { DomainEvent } from "@dddforum/core"
+import { DomainEvent, EventModel } from "@dddforum/core"
+import { Database } from '@dddforum/database';
+import { Prisma } from '@prisma/client'
 
 export class EventOutboxTable {
-  constructor (private prisma: PrismaClient) {
-    this.prisma = prisma;
+
+  constructor (private database: Database) {
+
   }
 
   async getUnprocessedEvents(): Promise<DomainEvent[]> {
-    const events = await this.prisma.event.findMany({
+    const dbConnection = this.database.getConnection();
+
+    const events = await dbConnection.event.findMany({
       where: {
         status: 'INITIAL'
       }
     });
 
-    return events.map((eventModel) => DomainEvent.toDomain(eventModel))
+    return events.map((eventModel: EventModel) => DomainEvent.toDomain(eventModel))
   }
 
   async getEventsByAggregateId (aggregateId: string): Promise<DomainEvent[]> {
-    const eventModels = await this.prisma.event.findMany({
+    const dbConnection = this.database.getConnection();
+    const eventModels = await dbConnection.event.findMany({
       where: {
         aggregateId
       }
     });
 
-    return eventModels.map((eventModel) => DomainEvent.toDomain(eventModel))
+    return eventModels.map((eventModel: EventModel) => DomainEvent.toDomain(eventModel))
   }
 
   async save(events: DomainEvent[], transaction?: Prisma.TransactionClient) {
-    const prismaInstance = transaction || this.prisma;
+    const prismaInstance = transaction || this.database.getConnection();
 
     for (const event of events) {
       await prismaInstance.event.upsert({

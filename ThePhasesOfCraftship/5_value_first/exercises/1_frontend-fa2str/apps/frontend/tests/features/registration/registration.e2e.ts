@@ -1,7 +1,7 @@
 
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { CreateUserParams } from "@dddforum/api/users";
 import { Pages } from '../../support/pages/pages';
 
 import * as path from 'path';

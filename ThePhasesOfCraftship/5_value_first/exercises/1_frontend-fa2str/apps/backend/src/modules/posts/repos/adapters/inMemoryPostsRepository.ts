@@ -5,7 +5,7 @@ import { DatabaseError } from "../../../../shared/exceptions";
 import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent } from "@dddforum/core/domainEvent";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];

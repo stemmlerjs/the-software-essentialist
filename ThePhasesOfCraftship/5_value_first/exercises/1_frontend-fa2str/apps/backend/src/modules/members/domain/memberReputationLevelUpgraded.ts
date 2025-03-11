@@ -1,5 +1,5 @@
 
-import { DomainEvent, DomainEventStatus } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent, DomainEventStatus } from "@dddforum/core/domainEvent";
 import { MemberReputationLevel } from "./member";
 import { Event as EventModel } from '@prisma/client'
 

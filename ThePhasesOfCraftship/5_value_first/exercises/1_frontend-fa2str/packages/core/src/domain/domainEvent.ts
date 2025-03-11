@@ -1,17 +1,10 @@
 import { randomUUID } from "crypto";
+import { EventModel } from "./eventModel";
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
 
 // Define the expected structure instead of importing from Prisma
-export interface EventModel {
-  id: string;
-  name: string;
-  data: string;
-  aggregateId: string;
-  retries: number;
-  status: string;
-  dateCreated: Date;
-}
+
 
 export class DomainEvent {
 

@@ -1,4 +1,4 @@
-import { APIClient, Posts } from "@dddforum/shared/src/api";
+import { APIClient, Posts } from "@dddforum/api";
 import { makeAutoObservable } from "mobx";
 import { PostDm } from "../domain/postDm";
 import { AuthRepository } from "../../users/repos/authRepository";

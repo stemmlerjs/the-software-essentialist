@@ -6,7 +6,7 @@ import { fakePostsData } from "../__tests__/fakePostsData";
 import { fakeUserData } from "../../users/__tests__/fakeUserData";
 import { SearchFilterViewModel } from "./searchFilterViewModel";
 import { ProductionUsersRepository } from "../../users/repos/productionUsersRepo";
-import { createAPIClient } from "@dddforum/shared/src/api";
+import { createAPIClient } from "@dddforum/api";
 import { LocalStorage } from "../../../shared/storage/localStorage";
 import { FirebaseService } from "../../users/externalServices/firebaseService";
 

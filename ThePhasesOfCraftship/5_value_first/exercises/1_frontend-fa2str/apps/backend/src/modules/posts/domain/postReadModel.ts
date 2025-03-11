@@ -1,4 +1,4 @@
-import { PostDTO } from "@dddforum/shared/src/api/posts";
+import { PostDTO } from "@dddforum/api/posts";
 import { Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../members/domain/memberReadModel";

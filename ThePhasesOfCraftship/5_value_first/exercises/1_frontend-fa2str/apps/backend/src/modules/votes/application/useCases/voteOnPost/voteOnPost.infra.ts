@@ -10,7 +10,7 @@ import { Member, MemberReputationLevel } from "../../../../members/domain/member
 import { Post } from "../../../../posts/domain/post";
 import { randomUUID } from "crypto";
 import { TextUtil } from "@dddforum/shared/src/utils/textUtil";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 import { PostUpvoted } from "../../../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../../../posts/domain/postDownvoted";
 

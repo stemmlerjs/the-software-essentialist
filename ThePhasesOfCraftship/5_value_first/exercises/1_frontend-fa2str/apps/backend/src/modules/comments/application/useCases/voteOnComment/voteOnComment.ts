@@ -1,14 +1,19 @@
 
-import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { ApplicationErrors } from "@dddforum/errors/src/application";
+import { ServerErrors } from "@dddforum/errors/src/server";
 import { CommentVote } from "../../../domain/commentVote";
-import { UseCase } from "@dddforum/shared/src/core/useCase";
+import { UseCase } from "@dddforum/core/src";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CommentRepository } from "../../../repos/ports/commentRepository";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { VoteOnCommentCommand } from "../../../../votes/votesCommands";
 import { CanVoteOnCommentPolicy } from "../../../../votes/application/useCases/voteOnComment/canVoteOnComment";
 
-type VoteOnCommentResponse = CommentVote | ValidationError | PermissionError | MemberNotFoundError | CommentNotFoundError | ServerError;
+type VoteOnCommentResponse = CommentVote 
+  | ApplicationErrors.ValidationError 
+  | ApplicationErrors.PermissionError 
+  | ApplicationErrors.NotFoundError 
+  | ServerErrors.ServerErrorException;
 
 export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommentResponse> {
 
@@ -19,7 +24,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
   ) {}
 
   async execute(request: VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
-    let commentVote: CommentVote;
+    let commentVote: CommentVote
     const { memberId, commentId, voteType } = request.props;
 
     const [memberOrNull, commentOrNull, existingVoteOrNull] = await Promise.all([
@@ -29,15 +34,15 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     ]);
 
     if (memberOrNull === null) {
-      return new MemberNotFoundError();
+      return new ApplicationErrors.NotFoundError('member');
     }
 
     if (commentOrNull === null) {
-      return new CommentNotFoundError();
+      return new ApplicationErrors.NotFoundError('comment');
     }
 
     if (!CanVoteOnCommentPolicy.isAllowed(memberOrNull)) {
-      return new PermissionError();
+      return new ApplicationErrors.PermissionError();
     }
 
     if (existingVoteOrNull) {
@@ -46,10 +51,10 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
     } else {
       let commentVoteOrError = CommentVote.create(memberId, commentId);
 
-      if (commentVoteOrError instanceof ValidationError) {
+      if (commentVoteOrError instanceof ApplicationErrors.ValidationError) {
         return commentVoteOrError;
       }
-      commentVote = commentVoteOrError;
+      commentVote = commentVoteOrError as CommentVote;
     }
 
     commentVote.castVote(voteType)
@@ -61,7 +66,7 @@ export class VoteOnComment implements UseCase<VoteOnCommentCommand, VoteOnCommen
       
     } catch (error) {
       console.log(error);
-      return new ServerError();
+      return new ServerErrors.ServerErrorException();
     }
   }
 }

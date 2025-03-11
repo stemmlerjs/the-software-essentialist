@@ -1,4 +1,4 @@
-import { Queries } from "@dddforum/shared/src/api/posts";
+import { Queries } from "@dddforum/api/posts";
 
 export type PostsFilterValue = Queries.GetPostsQueryOption;
 

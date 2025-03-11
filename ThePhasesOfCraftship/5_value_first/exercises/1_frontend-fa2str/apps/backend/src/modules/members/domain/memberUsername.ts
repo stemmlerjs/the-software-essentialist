@@ -1,6 +1,6 @@
 
-import { ValidationError } from "@dddforum/shared/src/errors";
-import { ValueObject } from '@dddforum/shared/src/core/valueObject'
+import { ValidationError } from "@dddforum/errors";
+import { ValueObject } from '@dddforum/core/valueObject'
 import { z } from "zod";
 
 const memberUsernameSchema = z.string().min(5).max(20);

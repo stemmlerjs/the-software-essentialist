@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "The database for dddforum",
   "main": "index.js",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/shared/database/prisma/schema.prisma",
-    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/shared/database/prisma/schema.prisma",
-    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/shared/database/prisma/schema.prisma",
-    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/shared/database/prisma/schema.prisma && npm run migrate && npm run generate"
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/prisma/schema.prisma",
+    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/prisma/schema.prisma",
+    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/prisma/schema.prisma",
+    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/prisma/schema.prisma && npm run migrate && npm run generate"
   },
   "prisma": {
     "seed": "ts-node ./src/shared/database/prisma/seed.ts"
@@ -16,8 +21,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.16.0",
-    "prisma": "^4.16.0"
+    "@prisma/client": "6.4.1"
+  },
+  "devDependencies": {
+    "prisma": "6.4.1"
   }
 }
-

@@ -10,7 +10,7 @@ import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepos
 import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

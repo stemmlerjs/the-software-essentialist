@@ -1,4 +1,4 @@
-import { DomainEvent, DomainEventStatus } from '@dddforum/shared/src/core/domainEvent';
+import { DomainEvent, DomainEventStatus } from '@dddforum/core/src';
 import { Event as EventModel } from '@prisma/client'
 
 interface CommentUpvotedEventProps {

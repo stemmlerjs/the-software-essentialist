@@ -4,7 +4,7 @@ import {
 } from "../usersExceptions";
 import { UserDetails } from "../domain/userDetails";
 import { IdentityServiceAPI } from "../externalServices/ports/identityServiceAPI";
-import { NotFoundError } from "@dddforum/shared/src/errors";
+import { NotFoundError } from "@dddforum/errors";
 
 export class UserIdentityService {
   constructor(

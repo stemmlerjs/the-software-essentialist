@@ -4,8 +4,8 @@ import { CreateMember } from "./createMember";
 import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
 import { UserIdentityService } from "../../../../users/application/userIdentityService";
 import { CreateMemberCommand } from "../../../memberCommands";
-import { ValidationError } from "@dddforum/shared/src/errors";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { ApplicationErrors } from "@dddforum/errors/src";
+import { EventOutboxTable } from "@dddforum/outbox";
 import { } from '../../../../users/application/userIdentityService'
 import { Auth0 } from "../../../../users/externalServices/adapters/auth0";
 
@@ -75,7 +75,7 @@ describe('createMember', () => {
     const response = await useCase.execute(command);
 
     expect(response.isSuccess()).toBe(false);
-    expect(response.getError() instanceof ValidationError).toBe(true);
+    expect(response.getError() instanceof ApplicationErrors.ValidationError).toBe(true);
     expect(saveSpy).not.toHaveBeenCalled();
   });
 });

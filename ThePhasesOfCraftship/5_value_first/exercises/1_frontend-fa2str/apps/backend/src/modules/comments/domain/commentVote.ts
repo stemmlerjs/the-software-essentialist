@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
-import { ValidationError } from "@dddforum/shared/src/errors";
+import { AggregateRoot } from "@dddforum/core/src";
 import { randomUUID } from "crypto";
 import { CommentUpvoted } from "./commentUpvoted";
 import { CommentDownvoted } from "./commentDownvoted";
-import { VoteType } from "@dddforum/shared/src/api/votes";
+import { VoteType } from "@dddforum/api/src/votes";
+import { ApplicationErrors } from "@dddforum/errors/src";
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
@@ -80,7 +80,7 @@ export class CommentVote extends AggregateRoot {
     return new CommentVote(props);
   }
 
-  public static create (memberId: string, commentId: string) : CommentVote | ValidationError {
+  public static create (memberId: string, commentId: string) : CommentVote | ApplicationErrors.ValidationError {
 
     return new CommentVote({
       id: randomUUID(),
@@ -90,7 +90,7 @@ export class CommentVote extends AggregateRoot {
     });
   }
 
-  public static createUpvote(memberId: string, commentId: string): CommentVote | ValidationError {
+  public static createUpvote(memberId: string, commentId: string): CommentVote | ApplicationErrors.ValidationError {
     return new CommentVote({
       id: randomUUID(),
       memberId: memberId,
@@ -99,7 +99,7 @@ export class CommentVote extends AggregateRoot {
     });
   }
 
-  public static createDownvote(memberId: string, commentId: string): CommentVote | ValidationError {
+  public static createDownvote(memberId: string, commentId: string): CommentVote | ApplicationErrors.ValidationError {
     return new CommentVote({
       id: randomUUID(),
       memberId: memberId,

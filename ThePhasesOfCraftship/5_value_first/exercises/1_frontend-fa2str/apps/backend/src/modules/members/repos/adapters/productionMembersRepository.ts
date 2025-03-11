@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Member } from "../../domain/member";
 import { MembersRepository } from "../ports/membersRepository";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { DomainEvent } from "@dddforum/core";
+import { EventOutboxTable } from "@dddforum/outbox";
 
 export class ProductionMembersRepository implements MembersRepository {
 

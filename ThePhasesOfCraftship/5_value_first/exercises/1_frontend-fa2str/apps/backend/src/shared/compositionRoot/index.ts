@@ -6,7 +6,7 @@ import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
 import { Database } from "../database";
 import { FakeDatabase, PrismaDatabase } from "../database/database";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 import { WebServer } from "../http";
 import {
   UsersModule,
@@ -14,7 +14,7 @@ import {
   NotificationsModule,
   MarketingModule,
 } from "@dddforum/backend/src/modules";
-import { NatsEventBus } from "@dddforum/shared/src/events/bus/adapters/natsEventBus";
+import { NatsEventBus } from "@dddforum/bus/natsEventBus";
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;

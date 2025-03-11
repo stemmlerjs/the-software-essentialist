@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
-import { ValidationError } from "@dddforum/shared/src/errors";
+import { AggregateRoot } from "@dddforum/core/aggregateRoot";
+import { ValidationError } from "@dddforum/errors";
 import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";
-import { PostVoteDTO, VoteType } from "@dddforum/shared/src/api/votes";
+import { PostVoteDTO, VoteType } from "@dddforum/api/votes";
 
 export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 

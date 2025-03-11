@@ -1,4 +1,4 @@
-import { ServerError } from "@dddforum/shared/src/errors";
+import { ServerError } from "@dddforum/errors";
 
 // TODO: Remove
 // import { CustomException } from "../../shared/exceptions";

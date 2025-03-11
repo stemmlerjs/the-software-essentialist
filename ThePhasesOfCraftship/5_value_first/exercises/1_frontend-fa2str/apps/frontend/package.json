@@ -16,6 +16,9 @@
     "test:e2e:dev": "jest -c jest.config.e2e.ts --watch"
   },
   "dependencies": {
+    "@dddforum/api": "*",
+    "@dddforum/errors": "*",
+    "@dddforum/core": "*",
     "@auth0/auth0-react": "^2.3.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",

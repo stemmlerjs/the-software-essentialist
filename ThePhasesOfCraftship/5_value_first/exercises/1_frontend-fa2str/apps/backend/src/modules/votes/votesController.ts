@@ -1,6 +1,6 @@
 
 import express from "express";
-import { VoteOnPostAPIResponse  } from "@dddforum/shared/src/api/votes";
+import { VoteOnPostAPIResponse  } from "@dddforum/api/votes";
 import { ErrorHandler } from "../../shared/errors";
 import { VoteOnPostCommand } from "./votesCommands";
 import { VotesService } from "./application/votesService";

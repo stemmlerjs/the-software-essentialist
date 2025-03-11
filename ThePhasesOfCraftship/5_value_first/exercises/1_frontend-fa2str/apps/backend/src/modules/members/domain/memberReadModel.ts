@@ -1,4 +1,4 @@
-import { MemberDTO } from "@dddforum/shared/src/api/posts";
+import { MemberDTO } from "@dddforum/api/posts";
 import { Member } from "@prisma/client";
 
 interface MemberReadModelProps {

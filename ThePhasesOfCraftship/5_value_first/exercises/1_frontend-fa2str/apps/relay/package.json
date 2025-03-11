@@ -28,6 +28,10 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.0"
+    "@dddforum/database": "*",
+    "@dddforum/config": "*",
+    "@dddforum/bus": "*",
+    "@dddforum/outbox": "*",
+    "@dddforum/core": "*"
   }
 }

@@ -1,4 +1,4 @@
-import { PostDTO } from "@dddforum/shared/src/api/posts";
+import { PostDTO } from "@dddforum/api/posts";
 
 export const fakePostsData: PostDTO[] = [
   {

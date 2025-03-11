@@ -1,4 +1,4 @@
-import { APIClient, Users } from "@dddforum/shared/src/api"
+import { APIClient, Users } from "@dddforum/api"
 import { UserDm } from "../domain/userDm";
 import { makeAutoObservable, toJS } from "mobx";
 import { UsersRepository } from "./usersRepo";

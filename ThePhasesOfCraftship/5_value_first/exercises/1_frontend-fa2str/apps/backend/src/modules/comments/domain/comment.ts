@@ -1,5 +1,5 @@
 
-import { VoteType } from "@dddforum/shared/src/api/votes";
+import { VoteType } from "@dddforum/api/src/votes";
 import { Member } from "../../members/domain/member";
 import { Comment as CommentPrismaModel } from "@prisma/client";
 

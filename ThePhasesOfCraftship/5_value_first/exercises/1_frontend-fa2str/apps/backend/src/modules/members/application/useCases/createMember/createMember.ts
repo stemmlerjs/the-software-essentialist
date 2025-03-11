@@ -1,15 +1,18 @@
 
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/shared/src/core/useCase";
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core/src";
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
 import { CreateMemberCommand } from "../../../memberCommands";
-import {  ValidationError } from "@dddforum/shared/src/errors";
+import { ApplicationErrors } from "@dddforum/errors/src";
 
 // Improvement: These errors can be generalized as 'NotFound' errors, like 'MemberNotFound', 'CommentNotFound', etc.
 // This way, we can have a single error type for all 'NotFound' errors.
 // This is a good example of the 'Generalize Error' refactoring technique.
+
+// TODO: Move these and generalize thm
 class MemberAlreadyExistsError {}
 
+// TODO: Conflict type of error
 export class MemberUsernameTaken extends Error {
   constructor() {
     super();
@@ -17,6 +20,7 @@ export class MemberUsernameTaken extends Error {
   }
 }
 
+// TODO: Not found error
 export class UserIdentityNotFound extends Error {
   constructor() {
     super();
@@ -24,7 +28,10 @@ export class UserIdentityNotFound extends Error {
   }
 }
 
-type CreateMemberResponse = UseCaseResponse<Member | undefined, ValidationError | MemberUsernameTaken | UserIdentityNotFound>;
+type CreateMemberResponse = UseCaseResponse<Member | undefined, 
+  ApplicationErrors.ValidationError 
+  | MemberUsernameTaken 
+  | UserIdentityNotFound>;
 
 export class CreateMember implements UseCase<CreateMemberCommand, CreateMemberResponse> {
   constructor(
@@ -54,7 +61,7 @@ export class CreateMember implements UseCase<CreateMemberCommand, CreateMemberRe
       userId,
     });
 
-    if (memberOrError instanceof ValidationError) {
+    if (memberOrError instanceof ApplicationErrors.ValidationError) {
       return fail(memberOrError);
     }
 

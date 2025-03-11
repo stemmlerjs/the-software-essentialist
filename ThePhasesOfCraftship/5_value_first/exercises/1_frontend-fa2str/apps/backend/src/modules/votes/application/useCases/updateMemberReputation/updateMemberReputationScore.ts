@@ -1,7 +1,7 @@
 
-import { UseCase } from "@dddforum/shared/src/core/useCase";
+import { UseCase } from "@dddforum/core/useCase";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
-import { MemberNotFoundError } from "@dddforum/shared/src/errors";
+import { MemberNotFoundError } from "@dddforum/errors";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member } from "../../../../members/domain/member";

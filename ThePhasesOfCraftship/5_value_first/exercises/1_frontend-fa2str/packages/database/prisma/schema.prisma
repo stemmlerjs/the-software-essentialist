@@ -5,24 +5,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// TODO: let's stop using a fake database; let's practice with a real one always
+
 datasource db {
   provider = "sqlite"
   url      = "file:./../dev.db" // Replace with your SQLite file path
 }
-
-// Todo: get rid of user from here - get user details from an external service (e.g. Auth0)
-// model User {
-//   id        String @id @default(uuid())
-//   email     String @unique
-//   firstName String
-//   lastName  String
-//   password  String
-
-//   // Define a one-to-one relationship with Member
-//   member    Member?
-// }
-
-// Use custom validation in your application code to ensure correct values
 
 model Member {
   id    String @id @default(uuid())

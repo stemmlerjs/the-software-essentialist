@@ -1,10 +1,10 @@
-import { CreatePostInput } from "@dddforum/shared/src/api/posts";
+import { CreatePostInput } from "@dddforum/api/posts";
 import { Post as PostPrismaModel } from "@prisma/client";
-import { ValidationError } from "@dddforum/shared/src/errors";
+import { ValidationError } from "@dddforum/errors";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { PostType } from "./postType";
-import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
+import { AggregateRoot } from "@dddforum/core/aggregateRoot";
 import { PostCreated } from "./postCreated";
 
 interface PostProps {

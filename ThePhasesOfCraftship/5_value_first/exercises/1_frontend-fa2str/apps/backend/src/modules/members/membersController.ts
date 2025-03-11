@@ -5,9 +5,9 @@ import { CreateMemberCommand } from './memberCommands';
 import { Config } from '../../shared/config';
 import { createJwtCheck } from '../users/externalServices/adapters/auth';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import { CreateMemberAPIResponse } from '@dddforum/shared/src/api/members';
+import { CreateMemberAPIResponse } from '@dddforum/api/members';
 import { Member } from './domain/member';
-import { success } from '@dddforum/shared/src/core/useCase';
+import { success } from '@dddforum/core/useCase';
 
 export class MembersController {
   private router: express.Router;

@@ -1,4 +1,4 @@
-import { UserDTO } from "@dddforum/shared/src/api/users";
+import { UserDTO } from "@dddforum/api/users";
 
 export const fakeUserData: UserDTO = {
   id: '23',

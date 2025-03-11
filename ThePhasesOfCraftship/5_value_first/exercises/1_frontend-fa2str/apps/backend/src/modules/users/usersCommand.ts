@@ -6,7 +6,7 @@ import {
   isBetweenLength,
   isMissingKeys,
 } from "@dddforum/backend/src/shared/utils/parser";
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { CreateUserParams } from "@dddforum/api/users";
 
 export class CreateUserCommand {
   private constructor(public props: CreateUserParams) {}

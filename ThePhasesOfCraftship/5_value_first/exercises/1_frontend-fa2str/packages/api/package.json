@@ -9,12 +9,22 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./members": "./src/members.ts"
+    "./members": "./src/members.ts",
+    "./posts": "./src/posts.ts",
+    "./users": "./src/users.ts",
+    "./votes": "./src/votes.ts",
+    "./marketing": "./src/marketing.ts"
   },
   "dependencies": {
-    "@dddforum/errors": "file:../errors"
+    "@dddforum/errors": "file:../errors",
+    "axios": "^1.6.2",
+    "express": "^4.21.2",
+    "zod": "^3.24.2"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17"
+  }
 }

@@ -1,7 +1,7 @@
 
-import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/errors";
 import { CanCreatePostPolicy } from "./canCreatePost";
-import { fail, success, UseCase, UseCaseResponse } from '@dddforum/shared/src/core/useCase';
+import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core/useCase';
 import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
 import { CreatePostCommand } from "../../../postsCommands";

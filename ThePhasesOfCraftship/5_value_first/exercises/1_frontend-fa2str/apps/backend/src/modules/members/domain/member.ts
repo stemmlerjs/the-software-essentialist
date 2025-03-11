@@ -1,11 +1,11 @@
 
-import { AggregateRoot } from "@dddforum/shared/src/core/aggregateRoot";
-import { ValidationError } from "@dddforum/shared/src/errors";
+import { AggregateRoot } from "@dddforum/core/aggregateRoot";
+import { ValidationError } from "@dddforum/errors";
 import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
-import { MemberDTO } from "@dddforum/shared/src/api/posts";
+import { MemberDTO } from "@dddforum/api/posts";
 
 interface MemberProps {
   id: string;

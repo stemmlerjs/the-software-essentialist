@@ -1,7 +1,7 @@
 
 import express from "express";
 import { GetPostByIdQuery, GetPostsQuery } from "./postsQuery";
-import { CreatePostAPIResponse, GetPostByIdAPIResponse, GetPostsAPIResponse } from "@dddforum/shared/src/api/posts";
+import { CreatePostAPIResponse, GetPostByIdAPIResponse, GetPostsAPIResponse } from "@dddforum/api/posts";
 import { ErrorHandler } from "../../shared/errors";
 import { CreatePostCommand } from "./postsCommands";
 import { Post } from "./domain/post";

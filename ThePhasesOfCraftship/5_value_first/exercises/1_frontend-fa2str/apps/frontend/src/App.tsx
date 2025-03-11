@@ -13,14 +13,14 @@ import { PresenterProvider } from "./shared/contexts/presentersContext";
 import { StoreProvider } from "./shared/stores/root/StoreContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";
 import { SubmissionPage } from "./modules/submission/submissionPage";
-import { rootStore } from "./main";
+import { authStore, presenters, rootStore } from "./main";
 
 const App = () => {
   return (
     <ErrorBoundary>
       <StoreProvider store={rootStore}>
         <div>test</div>
-        {/* <AuthProvider store={authStore}>
+        <AuthProvider store={authStore}>
           <FirebaseProvider>
             <PresenterProvider presenters={presenters}>
               <SpinnerProvider>
@@ -35,7 +35,7 @@ const App = () => {
               </SpinnerProvider>
             </PresenterProvider>
           </FirebaseProvider>
-        </AuthProvider> */}
+        </AuthProvider>
       </StoreProvider>
     </ErrorBoundary>
   );

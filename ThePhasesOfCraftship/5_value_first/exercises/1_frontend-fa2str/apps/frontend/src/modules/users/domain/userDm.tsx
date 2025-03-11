@@ -1,5 +1,5 @@
-import { Users } from "@dddforum/shared/src/api";
-import { MemberRoles } from "@dddforum/shared/src/api/members";
+import { Users } from "@dddforum/api";
+import { MemberRoles } from "@dddforum/api/members";
 import { User, UserCredential } from "firebase/auth";
 import { makeAutoObservable } from "mobx";
 

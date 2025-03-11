@@ -22,8 +22,8 @@ export namespace ApplicationErrors {
   }
 
   export class NotFoundError extends CustomError {
-    constructor(public message: string = "NotFoundError") {
-      super(message, "NotFoundError");
+    constructor(public missingEntityType: 'member' | 'comment') {
+      super(`Could not find ${missingEntityType}`, "NotFoundError");
     }
   }
 

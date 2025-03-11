@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
-import { CommentNotFoundError, MemberNotFoundError, PermissionError } from "@dddforum/shared/src/errors";
+import { CommentNotFoundError, MemberNotFoundError, PermissionError } from "@dddforum/errors";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
@@ -11,7 +11,7 @@ import { ProductionVotesRepository } from "../../../repos/adapters/productionVot
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { VoteOnCommentCommand } from "../../../votesCommands";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 
 let prisma = new PrismaClient();
 

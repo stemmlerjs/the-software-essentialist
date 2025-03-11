@@ -1,4 +1,4 @@
-import { NotFoundError } from "@dddforum/shared/src/errors";
+import { NotFoundError } from "@dddforum/errors";
 import { User } from "../../domain/user";
 import { IdentityServiceAPI } from "../ports/identityServiceAPI";
 import { auth } from "firebase-admin";

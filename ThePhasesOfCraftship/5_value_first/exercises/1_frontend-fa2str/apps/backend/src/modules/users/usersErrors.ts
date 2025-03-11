@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { UserResponse } from "@dddforum/shared/src/api/users";
+import { UserResponse } from "@dddforum/api/users";
 import { CustomException } from "../../shared/exceptions";
-import { ServerError, ValidationError } from "@dddforum/shared/src/errors";
+import { ServerError, ValidationError } from "@dddforum/errors";
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
 import { ErrorRequestHandler } from 'express';
 

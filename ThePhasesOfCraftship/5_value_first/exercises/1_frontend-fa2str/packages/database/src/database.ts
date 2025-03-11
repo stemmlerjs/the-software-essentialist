@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+
+import { PrismaClient } from '@prisma/client'
 
 export interface Database {
   getConnection(): PrismaClient
@@ -9,6 +10,8 @@ export class PrismaDatabase implements Database {
   private connection: PrismaClient;
 
   constructor() {
+    // TODO: Import the database connection config here instead of using the prisma
+    // file to do this.
     this.connection = new PrismaClient();
   }
 

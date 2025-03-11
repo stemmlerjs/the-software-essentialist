@@ -8,11 +8,6 @@
     "esModuleInterop": true,
     "types": ["node"],
     "resolveJsonModule": true,
-    "paths": {
-      "@dddforum/backend/*": ["./packages/backend/*"],
-      "@dddforum/frontend/*": ["./packages/frontend/*"],
-      "@dddforum/shared/*": ["./packages/shared/*"],
-      "@dddforum/relay/*": ["./packages/relay/*"]
-    }
+    "typeRoots": ["./node_modules/@types", "./src/@types"]
   }
 }

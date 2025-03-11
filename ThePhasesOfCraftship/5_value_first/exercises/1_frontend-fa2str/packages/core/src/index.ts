@@ -16,7 +16,8 @@ export {
   type DomainEventStatus 
 } from './domain/domainEvent';
 export { ValueObject } from './domain/valueObject';
-
+export { EventModel } from './domain/eventModel';
+ 
 // Utils exports
 export { DateUtil } from './utils/dateUtil';
 export { NumberUtil } from './utils/numberUtil';

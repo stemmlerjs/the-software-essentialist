@@ -1,14 +1,14 @@
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
-import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
-import { PrismaClient } from "@prisma/client";
+import { EventOutboxTable } from "@dddforum/outbox";
 import { Relay } from "./relay";
-import dotenv from 'dotenv';
-import { NatsEventBus } from "@dddforum/shared/src/events/bus/adapters/natsEventBus";
+import { NatsEventBus } from "@dddforum/bus";
+import { Config } from '@dddforum/config'
+import { PrismaDatabase } from '@dddforum/database';
 
-dotenv.config();
+// Config object here to get the constructed items
+const config = Config();
 
-const prisma = new PrismaClient();
-const outboxTable = new EventOutboxTable(prisma);
+const database = new PrismaDatabase();
+const outboxTable = new EventOutboxTable(database);
 const nats = new NatsEventBus();
 const relay = new Relay(outboxTable, nats);
 

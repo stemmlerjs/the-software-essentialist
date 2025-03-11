@@ -4,7 +4,7 @@ import { MembersRepo } from "../members/membersRepo";
 
 export class RootStore {
   constructor(
-    // public auth: AuthRepository,
+    public auth: AuthRepository,
     public members: MembersRepo,
   ) {}
 } 

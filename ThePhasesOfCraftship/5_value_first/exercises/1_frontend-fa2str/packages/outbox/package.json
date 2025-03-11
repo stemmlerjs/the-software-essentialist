@@ -13,7 +13,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@dddforum/core": "*"
+    "@dddforum/core": "*",
+    "@dddforum/database": "*",
+    "@prisma/client": "^4.16.2"
   },
   "keywords": [],
   "author": "",

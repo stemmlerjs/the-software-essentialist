@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CreateUserParams } from '@dddforum/shared/src/api/users'
+import { CreateUserParams } from '@dddforum/api/users'
 import { appSelectors, toClass } from "../selectors";
 
 interface RegistrationFormProps {

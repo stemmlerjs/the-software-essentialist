@@ -3,7 +3,7 @@ import { DatabaseError } from "../../../../shared/exceptions";
 import { PostReadModel } from "../../domain/postReadModel";
 import { Post } from "../../domain/post";
 import { GetPostsQuery } from "../../postsQuery";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
+import { DomainEvent } from "@dddforum/core/domainEvent";
 
 export interface PostsRepository {
   findPosts(query: GetPostsQuery): Promise<PostReadModel[]>;

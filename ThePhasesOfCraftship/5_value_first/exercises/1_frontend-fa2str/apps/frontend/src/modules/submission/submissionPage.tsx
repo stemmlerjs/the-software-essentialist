@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { Layout } from "../layout/layoutComponent";
 import { usePresenters } from "../../shared/contexts/presentersContext";
 import { SubmissionForm } from "./components/submissionForm";
-import { Posts } from "@dddforum/shared/src/api";
+import { Posts } from "@dddforum/api";
 
 export const SubmissionPage = observer(() => {
   const { submission } = usePresenters();

@@ -1,0 +1,19 @@
+{
+  "name": "@dddforum/config",
+  "version": "1.0.0",
+  "description": "The global config location for environment variables throughout the project",
+  "main": "index.js",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

@@ -9,7 +9,7 @@ import { membersErrorHandler } from "./memberErrors";
 import { MembersController } from "./membersController";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";
 import { MembersRepository } from "./repos/ports/membersRepository";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: MembersRepository;

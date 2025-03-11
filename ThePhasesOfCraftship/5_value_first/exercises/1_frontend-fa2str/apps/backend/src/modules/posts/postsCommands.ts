@@ -2,7 +2,7 @@ import { Request } from "express";
 import {
   MissingRequestParamsException,
 } from "../../shared/exceptions";
-import { CreatePostInput } from "@dddforum/shared/src/api/posts";
+import { CreatePostInput } from "@dddforum/api/posts";
 
 export class CreatePostCommand {
 

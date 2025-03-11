@@ -1,12 +1,12 @@
 
 import { fakeUserData } from '../users/__tests__/fakeUserData';
 import { UsersRepository } from '../users/repos/usersRepo';
-import { UserDTO } from '@dddforum/shared/src/api/users';
+import { UserDTO } from '@dddforum/api/users';
 import { LayoutPresenter } from './layoutPresenter';
 import { FakeNavigationRepository } from '../../shared/navigation/repos/fakeNavigationRepository';
 import { NavigationRepository } from '../../shared/navigation/repos/navigationRepository';
 import { ProductionUsersRepository } from '../users/repos/productionUsersRepo';
-import { createAPIClient } from '@dddforum/shared/src/api';
+import { createAPIClient } from '@dddforum/api';
 import { LocalStorage } from '../../shared/storage/localStorage';
 import { FirebaseService } from '../users/externalServices/firebaseService';
 import { MembersStore } from '../../shared/stores/members/membersStore';

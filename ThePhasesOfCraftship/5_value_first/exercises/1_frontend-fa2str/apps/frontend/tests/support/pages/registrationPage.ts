@@ -1,7 +1,7 @@
 import { PuppeteerPageDriver } from "../driver";
 import { PageObject } from "./pageObject";
 import { PageElements, PageElementsConfig } from "../components";
-import { CreateUserParams } from "@dddforum/shared/src/api/users";
+import { CreateUserParams } from "@dddforum/api/users";
 import { appSelectors } from "@dddforum/frontend/src/shared/selectors";
 
 

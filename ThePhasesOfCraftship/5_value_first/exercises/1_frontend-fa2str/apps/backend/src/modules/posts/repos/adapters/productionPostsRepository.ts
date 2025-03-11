@@ -6,8 +6,8 @@ import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
 import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
-import { DomainEvent } from "@dddforum/shared/src/core/domainEvent";
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
+import { DomainEvent } from "@dddforum/core/domainEvent";
+import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
 
 export class ProductionPostsRepository implements PostsRepository {
   constructor(private prisma: PrismaClient, private eventsTable: EventOutboxTable) {}

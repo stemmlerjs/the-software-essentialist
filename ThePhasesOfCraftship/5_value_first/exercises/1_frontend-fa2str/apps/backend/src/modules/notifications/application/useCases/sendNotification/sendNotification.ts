@@ -1,6 +1,6 @@
-import { success, UseCase, UseCaseResponse } from "@dddforum/shared/src/core/useCase";
+import { success, UseCase, UseCaseResponse } from "@dddforum/core/useCase";
 import { SendNotificationCommand } from "../../../notificationCommands";
-import { MemberNotFoundError, ServerError } from "@dddforum/shared/src/errors";
+import { MemberNotFoundError, ServerError } from "@dddforum/errors";
 import { TransactionalEmailAPI } from "../../../externalServices/ports/transactionalEmailAPI";
 
 export type SendNotificationResponse = UseCaseResponse<void | undefined, MemberNotFoundError | ServerError>;

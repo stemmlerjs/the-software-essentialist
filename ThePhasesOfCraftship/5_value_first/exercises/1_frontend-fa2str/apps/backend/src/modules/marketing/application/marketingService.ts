@@ -1,4 +1,4 @@
-import { ServerErrorException } from "../../../shared/exceptions";
+import { ServerErrors } from "@dddforum/errors/src/server";
 import { ContactListAPI } from "../ports/contactListAPI";
 
 export class MarketingService {
@@ -9,7 +9,7 @@ export class MarketingService {
       const result = await this.contactListAPI.addEmailToList(email);
       return result;
     } catch (err) {
-      throw new ServerErrorException();
+      throw new ServerErrors.ServerErrorException();
     }
   }
 }

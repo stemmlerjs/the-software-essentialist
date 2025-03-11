@@ -1,8 +1,7 @@
 
-import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
-import { DomainEvent } from '@dddforum/shared/src/core/domainEvent';
-import { RabbitMQMessageBus } from "@dddforum/shared/src/events/bus/adapters/rabbitMqEventPublisher";
-import { EventBus } from "@dddforum/shared/src/events/bus/ports/eventBus";
+import { EventOutboxTable } from "@dddforum/outbox";
+import { DomainEvent } from '@dddforum/core';
+import { EventBus } from "@dddforum/bus";
 
 export class Relay {
   private queue: DomainEvent[];

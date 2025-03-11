@@ -2,8 +2,8 @@ import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
-import { Posts } from "@dddforum/shared/src/api";
-import { ApplicationErrors } from "@dddforum/shared/src/errors";
+import { Posts } from "@dddforum/api";
+import { ApplicationErrors } from "@dddforum/errors";
 
 export class SubmissionPresenter {
   isSubmitting = false;

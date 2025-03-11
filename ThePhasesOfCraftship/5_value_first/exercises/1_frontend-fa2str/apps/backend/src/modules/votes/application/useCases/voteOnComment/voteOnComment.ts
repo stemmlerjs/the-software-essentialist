@@ -1,6 +1,6 @@
 
-import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/shared/src/errors";
-import { UseCase } from "@dddforum/shared/src/core/useCase";
+import { CommentNotFoundError, MemberNotFoundError, PermissionError, ServerError, ValidationError } from "@dddforum/errors";
+import { UseCase } from "@dddforum/core/useCase";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
 import { VoteOnCommentCommand } from "../../../votesCommands";

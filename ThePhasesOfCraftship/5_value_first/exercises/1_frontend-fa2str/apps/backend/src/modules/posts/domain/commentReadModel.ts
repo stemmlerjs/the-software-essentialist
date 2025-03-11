@@ -1,5 +1,5 @@
 
-import { CommentDTO } from "@dddforum/shared/src/api/posts";
+import { CommentDTO } from "@dddforum/api/posts";
 import { Comment as PrismaCommentModel } from "@prisma/client";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
 

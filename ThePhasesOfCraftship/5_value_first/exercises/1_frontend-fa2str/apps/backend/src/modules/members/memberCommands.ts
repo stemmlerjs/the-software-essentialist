@@ -3,7 +3,7 @@ import { Request } from "express";
 import {
   MissingRequestParamsException,
 } from "../../shared/exceptions";
-import { CreateMemberInput } from "@dddforum/shared/src/api/members";
+import { CreateMemberInput } from "@dddforum/api/members";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 
 export class CreateMemberCommand {
