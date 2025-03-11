@@ -2,7 +2,8 @@
   "name": "@dddforum/bus",
   "description": "Event bus to subscribe and write to.",
   "version": "1.0.0",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts"
   },
