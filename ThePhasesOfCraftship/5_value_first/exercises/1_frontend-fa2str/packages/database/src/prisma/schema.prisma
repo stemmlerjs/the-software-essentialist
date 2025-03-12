@@ -5,11 +5,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// TODO: let's stop using a fake database; let's practice with a real one always
-
 datasource db {
-  provider = "sqlite"
-  url      = "file:./../dev.db" // Replace with your SQLite file path
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Member {

@@ -1,7 +1,7 @@
 
 import { DomainEvent, EventModel } from "@dddforum/core"
 import { Database } from '@dddforum/database';
-import { Prisma } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 
 export class EventOutboxTable {
 

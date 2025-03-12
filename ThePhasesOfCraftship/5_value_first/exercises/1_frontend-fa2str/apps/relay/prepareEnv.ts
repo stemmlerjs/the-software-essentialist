@@ -12,6 +12,7 @@
  */
 
 import { execSync } from 'child_process';
+import { Config } from '@dddforum/config';
 import * as path from 'path';
 
 export const prepareEnv = (): void => {

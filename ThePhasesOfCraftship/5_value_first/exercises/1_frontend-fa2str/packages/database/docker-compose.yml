@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: dddforum-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dddforum
+      POSTGRES_PASSWORD: dddforum
+      POSTGRES_DB: dddforum
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

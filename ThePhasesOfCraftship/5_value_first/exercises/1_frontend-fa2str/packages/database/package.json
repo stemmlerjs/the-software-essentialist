@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
-    "generate": "ts-node prepareEnv.ts prisma generate --schema=./src/prisma/schema.prisma",
-    "migrate": "ts-node prepareEnv.ts prisma migrate dev --schema=./src/prisma/schema.prisma",
+    "generate": "ts-node scripts/generatePrisma.ts",
+    "migrate": "ts-node scripts/migratePrisma.ts",
     "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/prisma/schema.prisma",
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/prisma/schema.prisma && npm run migrate && npm run generate"
   },
@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dddforum/config": "*",
     "@prisma/client": "6.4.1"
   },
   "devDependencies": {

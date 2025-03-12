@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "@dddforum/core": "*",
-    "@dddforum/database": "*",
-    "@prisma/client": "^4.16.2"
+    "@dddforum/database": "*"
   },
   "keywords": [],
   "author": "",

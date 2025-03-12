@@ -1,4 +1,5 @@
 
+import { Config } from '@dddforum/config';
 import { PrismaClient } from '@prisma/client'
 
 export interface Database {
@@ -9,10 +10,14 @@ export interface Database {
 export class PrismaDatabase implements Database {
   private connection: PrismaClient;
 
-  constructor() {
-    // TODO: Import the database connection config here instead of using the prisma
-    // file to do this.
-    this.connection = new PrismaClient();
+  constructor(config: Config) {
+    this.connection = new PrismaClient({
+      datasources: {
+        db: {
+          url: config.database.connectionString, // e.g. "postgresql://user:pass@host:5432/dbname"
+        },
+      },
+    });
   }
 
   getConnection() {

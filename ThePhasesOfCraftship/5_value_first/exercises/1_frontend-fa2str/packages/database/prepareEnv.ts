@@ -13,6 +13,9 @@
 
 import { execSync } from 'child_process';
 import * as path from 'path';
+import { Config } from '@dddforum/config';
+
+const config = Config();
 
 export const prepareEnv = (): void => {
   const env = process.env.NODE_ENV || 'development';
