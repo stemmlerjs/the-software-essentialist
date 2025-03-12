@@ -2,8 +2,10 @@ import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../../shared/navigation/navigationService";
 import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
-import { Posts } from "@dddforum/api";
+
 import { ApplicationErrors } from "@dddforum/errors";
+import * as Posts from "@dddforum/api/posts";
+import { MembersRepo } from "../../../shared/stores/members/membersRepo";
 
 export class SubmissionPresenter {
   isSubmitting = false;
@@ -12,40 +14,47 @@ export class SubmissionPresenter {
   constructor(
     private authRepository: AuthRepository,
     private navigationService: NavigationService,
-    private postsRepository: PostsRepository
+    private postsRepository: PostsRepository,
+    private memberRepo: MembersRepo
   ) {
     makeAutoObservable(this);
   }
 
-  submit = async (data: Posts.Commands.CreatePostInput) => {
+  submit = async (input: { title: string; content: string; link?: string }) => {
     try {
       if (!this.authRepository.isAuthenticated()) {
         this.navigationService.navigate('/join');
         return;
       }
 
-      // Validate the creation of the command right here
-      const commandOrError = Posts.Commands.CreatePostCommand.create(data);
+      const member = await this.memberRepo.getCurrentMember();
+      
+      if (!member) {
+        this.error = 'Not authenticated';
+        return;
+      }
 
-      // TODO: Improve this by just using isSuccess() and .getError()
+      const commandInput: Posts.Inputs.CreatePostInput = {
+        title: input.title,
+        content: input.content,
+        postType: input.link ? 'link' : 'text',
+        memberId: member.id,
+        link: input.link
+      };
+
+      // Validate the creation of the command right here
+      const commandOrError = Posts.Commands.CreatePostCommand.create(commandInput);
+
       if (commandOrError instanceof ApplicationErrors.ValidationError) {
-        // Present the error
         this.error = commandOrError.message;
         return;
       }
-      
-      // If it has validation errors, return the error
-      // Notice how this is exactly the same as the backend. In fact, many
-      // of the domain objects could be reused across the front and the back
-      // if we zoom out and organize the patterns adequately. (Pattern-First)
-      // Input (presenter) -> to repo (command) -> to network -> to controller (command)
-      // -> to Application (command) ->  to Aggregate action.
-      // It's all content and structure. Encapsulation is critical.
 
       this.isSubmitting = true;
       this.error = null;
 
-      await this.postsRepository.create(commandOrError);
+      // Use the validated commandInput instead of raw input
+      await this.postsRepository.create(commandInput);
       
       this.navigationService.navigate('/');
     } catch (error) {

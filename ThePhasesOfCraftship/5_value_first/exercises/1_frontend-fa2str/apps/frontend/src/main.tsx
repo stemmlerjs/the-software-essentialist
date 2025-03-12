@@ -59,7 +59,8 @@ const registrationPresenter = new RegistrationPresenter(authRepository, navigati
 const submissionPresenter = new SubmissionPresenter(
   authRepository,
   navigationService,
-  postsRepository
+  postsRepository,
+  membersStore
 );
 
 const presenters = new Presenters(

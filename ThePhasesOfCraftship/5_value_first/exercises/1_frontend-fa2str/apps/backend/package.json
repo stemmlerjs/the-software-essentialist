@@ -4,10 +4,8 @@
   "description": "The backend for dddforum",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -b tsconfig.json && npm run generate",
-    
-    "start:dev": "npm run migrate && npm run generate && npx nodemon",
-    "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
+    "build": "tsc -b tsconfig.json",
+    "start:dev": "npx nodemon",
     "lint": "eslint . --ext .ts --fix",
     "test": "jest",
     "test:dev": "jest --watchAll",

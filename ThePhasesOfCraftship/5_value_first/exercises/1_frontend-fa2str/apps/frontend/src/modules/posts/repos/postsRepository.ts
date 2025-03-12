@@ -1,8 +1,8 @@
-import { Posts } from "@dddforum/api";
+import * as Posts from '@dddforum/api/posts'
 import { PostDm } from "../domain/postDm";
 
 export interface PostsRepository {
   postsDm: PostDm[];
   getPosts(query?: Posts.Queries.GetPostsQuery): Promise<PostDm[]>;
-  create(command: Posts.Commands.CreatePostCommand): Promise<PostDm>;
+  create(input: Posts.Inputs.CreatePostInput): Promise<PostDm>;
 } 

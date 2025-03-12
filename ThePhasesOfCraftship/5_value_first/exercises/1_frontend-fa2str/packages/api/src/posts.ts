@@ -176,11 +176,11 @@ export namespace API {
 export const createPostsAPI = (apiURL: string) => {
 
   return {
-    create: async (command: Commands.CreatePostCommand, authToken: string): Promise<API.CreatePostAPIResponse> => {
+    create: async (input: Inputs.CreatePostInput, authToken: string): Promise<API.CreatePostAPIResponse> => {
       try {
         const successResponse = await axios.post(
           `${apiURL}/posts/new`, 
-          command.getProps(), 
+          input, 
           getAuthHeaders(authToken)
         );
         return successResponse.data as API.CreatePostAPIResponse;

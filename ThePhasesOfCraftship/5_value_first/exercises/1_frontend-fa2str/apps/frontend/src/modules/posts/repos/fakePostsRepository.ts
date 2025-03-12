@@ -26,11 +26,10 @@ export class FakePostsRepository implements PostsRepository {
     return this.postsDm;
   }
 
-  async create(command: Posts.Commands.CreatePostCommand): Promise<PostDm> {
-    const props = command.getProps();
+  async create(input: Posts.Inputs.CreatePostInput): Promise<PostDm> {
     const newPost = new PostDm({
-      title: props.title,
-      content: props.content || '',
+      title: input.title,
+      content: input.content || '',
       memberId: "fake-member",
       memberUsername: "fake-user",
       numComments: 0,

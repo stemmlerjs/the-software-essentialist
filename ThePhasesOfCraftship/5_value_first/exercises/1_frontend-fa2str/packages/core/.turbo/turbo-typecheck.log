@@ -3,18 +3,3 @@
 > @dddforum/core@1.0.0 typecheck /Users/khalilstemmler/Documents/Personal/current/the-software-essentialist/ThePhasesOfCraftship/5_value_first/exercises/1_frontend-fa2str/packages/core
 > tsc --noEmit
 
-[96mtsconfig.json[0m:[93m7[0m:[93m25[0m - [91merror[0m[90m TS5095: [0mOption 'bundler' can only be used when 'module' is set to 'preserve' or to 'es2015' or later.
-
-[7m7[0m     "moduleResolution": "bundler",
-[7m [0m [91m                        ~~~~~~~~~[0m
-
-[96mtsconfig.json[0m:[93m7[0m:[93m25[0m - [91merror[0m[90m TS5109: [0mOption 'moduleResolution' must be set to 'NodeNext' (or left unspecified) when option 'module' is set to 'NodeNext'.
-
-[7m7[0m     "moduleResolution": "bundler",
-[7m [0m [91m                        ~~~~~~~~~[0m
-
-
-Found 2 errors in the same file, starting at: tsconfig.json[90m:7[0m
-
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m
-[43m[30m WARN [39m[49m  Local package.json exists, but node_modules missing, did you mean to install?

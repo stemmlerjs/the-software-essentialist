@@ -1,5 +1,5 @@
-import { createAPIClient } from "@dddforum/shared/src/api";
-import { CreatePostInput } from "@dddforum/shared/src/api/posts";
+import { createAPIClient } from "@dddforum/api";
+import { Inputs } from "@dddforum/api/posts";
 import { CompositionRoot } from "../../../src/shared/compositionRoot";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { Config } from "../../../src/shared/config";
@@ -54,7 +54,7 @@ describe('posts', () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level1);
       authToken = createTestToken(member.id);
     
-      let postData: CreatePostInput = {
+      let postData: Inputs.CreatePostInput = {
         memberId: member.id,
         title: 'My first post',
         postType: "text",
@@ -72,7 +72,7 @@ describe('posts', () => {
     it ('should have an initial upvote when creating a post', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
     
-      let postData: CreatePostInput = {
+      let postData: Inputs.CreatePostInput = {
         memberId: member.id,
         title: 'My first post',
         postType: "text",
@@ -101,7 +101,7 @@ describe('posts', () => {
     it ('can create a link post', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
-      let postData: CreatePostInput = {
+      let postData: Inputs.CreatePostInput = {
         memberId: member.id,
         title: 'Check out this site',
         postType: 'link',
@@ -119,7 +119,7 @@ describe('posts', () => {
     it ('cannot create a link post without supplying a link', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
-      let postData: CreatePostInput = {
+      let postData: Inputs.CreatePostInput = {
         memberId: member.id,
         title: 'Check out this site',
         postType: 'link',
@@ -137,7 +137,7 @@ describe('posts', () => {
     it ('cannot create a text post without supplying content', async () => {
       const { member } = await setupMember(databaseFixture, MemberReputationLevel.Level2);
 
-      let postData: CreatePostInput = {
+      let postData: Inputs.CreatePostInput = {
         memberId: member.id,
         title: 'A new post',
         postType: "text",

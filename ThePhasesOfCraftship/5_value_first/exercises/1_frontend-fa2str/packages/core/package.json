@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Core classes and utilities used throughout",
   "exports": {
-    ".": "./src/index.ts" 
+    ".": "./src/index.ts"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
-    "typecheck": "tsc --noEmit --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
     "test:unit": "jest -c jest.config.unit.ts"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
   }
 }

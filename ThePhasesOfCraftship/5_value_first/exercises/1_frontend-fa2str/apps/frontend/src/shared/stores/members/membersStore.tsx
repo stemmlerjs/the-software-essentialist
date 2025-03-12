@@ -1,8 +1,9 @@
 
 import { makeAutoObservable } from "mobx";
 import { MemberDm } from "./memberDm";
+import { MembersRepo } from "./membersRepo";
 
-export class MembersStore {
+export class MembersStore implements MembersRepo {
   public member: MemberDm | null;
 
   constructor () {

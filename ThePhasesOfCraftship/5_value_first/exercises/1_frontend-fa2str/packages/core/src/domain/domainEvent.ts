@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from 'uuid';
 import { EventModel } from "./eventModel";
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
@@ -12,7 +12,7 @@ export class DomainEvent {
     public readonly name: string,
     public readonly data: any,
     public readonly aggregateId: string,
-    public readonly id: string = randomUUID(),
+    public readonly id: string = uuidv4(),
     private retries: number = 0,
     private status: DomainEventStatus = 'INITIAL',
     public readonly createdAt: string = new Date().toISOString()

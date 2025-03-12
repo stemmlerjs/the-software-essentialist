@@ -2,7 +2,7 @@ import * as Posts from "@dddforum/api/posts";
 import { useState } from "react";
 
 interface SubmissionFormProps {
-  onSubmit: (data: Posts.Commands.CreatePostInput) => void;
+  onSubmit: (data: { title: string; content: string; link?: string }) => void;
   isSubmitting: boolean;
   error: string | null;
 }
@@ -10,12 +10,15 @@ interface SubmissionFormProps {
 export const SubmissionForm = ({ onSubmit, isSubmitting, error }: SubmissionFormProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [link, setLink] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Make this work for link posts as well
-    // TODO: Determine if this should be here
-    onSubmit({ title, content,  postType: 'text' });
+    onSubmit({ 
+      title, 
+      content,
+      link: link || undefined
+    });
   };
 
   return (
@@ -25,6 +28,12 @@ export const SubmissionForm = ({ onSubmit, isSubmitting, error }: SubmissionForm
         placeholder="Enter the title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Enter link (optional)"
+        value={link}
+        onChange={(e) => setLink(e.target.value)}
       />
       <textarea
         placeholder="Write a post!"

@@ -281,8 +281,8 @@ importers:
         specifier: '*'
         version: link:../core
       '@dddforum/errors':
-        specifier: file:../errors
-        version: file:packages/errors
+        specifier: '*'
+        version: link:../errors
       axios:
         specifier: ^1.6.2
         version: 1.8.2
@@ -312,7 +312,11 @@ importers:
         specifier: ^16.3.1
         version: 16.4.7
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
 
   packages/database:
     dependencies:
@@ -9421,9 +9425,4 @@ packages:
 
   /zod@3.24.2:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
-    dev: false
-
-  file:packages/errors:
-    resolution: {directory: packages/errors, type: directory}
-    name: '@dddforum/errors'
     dev: false

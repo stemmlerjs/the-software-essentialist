@@ -2,12 +2,11 @@ import { observer } from "mobx-react-lite";
 import { Layout } from "../layout/layoutComponent";
 import { usePresenters } from "../../shared/contexts/presentersContext";
 import { SubmissionForm } from "./components/submissionForm";
-import { Posts } from "@dddforum/api";
 
 export const SubmissionPage = observer(() => {
   const { submission } = usePresenters();
 
-  const handleSubmit = (data: Posts.Commands.CreatePostInput) => {
+  const handleSubmit = (data: { title: string; content: string; link?: string }) => {
     submission.submit(data);
   };
 

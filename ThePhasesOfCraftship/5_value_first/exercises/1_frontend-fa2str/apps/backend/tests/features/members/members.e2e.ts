@@ -1,4 +1,4 @@
-import { createAPIClient } from "@dddforum/shared/src/api";
+import { createAPIClient } from "@dddforum/api";
 import { CompositionRoot } from "../../../src/shared/compositionRoot";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { Config } from "../../../src/shared/config";
