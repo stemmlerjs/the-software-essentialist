@@ -3,18 +3,40 @@ version: '3.8'
 services:
   nats:
     image: nats:latest
-    container_name: nats
+    container_name: dddforum-nats
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - "4222:4222"  # Client connections
+      - "8222:8222"  # HTTP monitoring
     environment:
       - NATS_USER=user
       - NATS_PASSWORD=password
     command: ["-js", "--store_dir", "/data/jetstream"]
     volumes:
-      - ./nats-data:/data/jetstream
+      - nats_data:/data/jetstream
+    restart: unless-stopped
 
 # After starting the container, NATS with JetStream is now accessible at 
 # nats://127.0.0.1:4222 for client connections and 
 # http://127.0.0.1:8222 for monitoring.
+  postgres:
+    image: postgres:15
+    container_name: dddforum-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dddforum
+      POSTGRES_PASSWORD: dddforum
+      POSTGRES_DB: dddforum
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
+volumes:
+  postgres_data:
+  nats_data:
+
+# Service endpoints:
+# - NATS: nats://localhost:4222 (client connections)
+# - NATS Monitor: http://localhost:8222 (monitoring interface)
+# - Postgres: postgresql://dddforum:dddforum@localhost:5432/dddforum
+# - pgAdmin: http://localhost:5050 (login: admin@dddforum.com / admin)

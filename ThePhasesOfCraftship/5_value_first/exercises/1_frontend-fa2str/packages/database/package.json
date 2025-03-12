@@ -11,9 +11,7 @@
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "generate": "ts-node scripts/generatePrisma.ts",
-    "migrate": "ts-node scripts/migratePrisma.ts",
-    "db:seed": "ts-node prepareEnv.ts prisma db seed --schema=./src/prisma/schema.prisma",
-    "db:reset": "ts-node prepareEnv.ts prisma migrate reset --preview-feature --schema src/prisma/schema.prisma && npm run migrate && npm run generate"
+    "migrate": "ts-node scripts/migratePrisma.ts"
   },
   "prisma": {
     "seed": "ts-node ./src/shared/database/prisma/seed.ts"

@@ -20,7 +20,7 @@ export class PrismaDatabase implements Database {
     });
   }
 
-  getConnection() {
+  getConnection(): PrismaClient {
     return this.connection;
   }
 
