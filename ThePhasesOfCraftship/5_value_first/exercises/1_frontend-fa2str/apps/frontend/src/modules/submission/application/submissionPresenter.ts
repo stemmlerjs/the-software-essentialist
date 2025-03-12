@@ -3,7 +3,7 @@ import { NavigationService } from "../../../shared/navigation/navigationService"
 import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
 
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import * as Posts from "@dddforum/api/posts";
 import { MembersRepo } from "../../../shared/stores/members/membersRepo";
 
