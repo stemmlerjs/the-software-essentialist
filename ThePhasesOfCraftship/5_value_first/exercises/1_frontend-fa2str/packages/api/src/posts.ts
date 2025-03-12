@@ -1,12 +1,11 @@
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { z } from 'zod';
-import { Request } from 'express'
+import { Request } from "@dddforum/core";
 import { DTOs as MemberDTOs } from "./members";
 import { DTOs as CommentDTOs } from "./comments";
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { ServerErrors } from "@dddforum/errors/server";
-import { GenericApplicationOrServerError } from "@dddforum/errors";
 
 export namespace Inputs {
   export type CreatePostInput = {
@@ -154,11 +153,11 @@ export namespace DTOs {
 
 // TODO: tidy functional errors; see users.ts
 // Errors
-export type GetPostsErrors = GenericApplicationOrServerError;
+export type GetPostsErrors = '';
 
-export type CreatePostErrors = GenericApplicationOrServerError;
+export type CreatePostErrors = '';
 
-export type GetPostByIdErrors = GenericApplicationOrServerError;
+export type GetPostByIdErrors = '';
 
 
 export namespace API {

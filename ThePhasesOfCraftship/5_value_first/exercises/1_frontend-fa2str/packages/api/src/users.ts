@@ -1,6 +1,6 @@
 import axios from "axios";
 import { APIResponse } from ".";
-import { GenericApplicationOrServerError, ServerErrors } from "@dddforum/errors";
+import { ServerErrors } from "@dddforum/errors/server";
 import { TextUtil } from "@dddforum/core"
 
 export namespace Types {
@@ -36,14 +36,13 @@ export type UserDTO = {
 export type EmailAlreadyInUseError = "EmailAlreadyInUse";
 export type UsernameAlreadyTakenError = "UsernameAlreadyTaken";
 export type CreateUserErrors =
-  | GenericApplicationOrServerError
   | EmailAlreadyInUseError
   | UsernameAlreadyTakenError;
   
 export type CreateUserResponse = APIResponse<UserDTO, CreateUserErrors>;
 
 export type UserNotFoundError = "UserNotFound";
-export type GetUserByEmailErrors = GenericApplicationOrServerError 
+export type GetUserByEmailErrors =  
   | UserNotFoundError;
 export type GetUserByEmailResponse = APIResponse<UserDTO, GetUserByEmailErrors>;
 export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;

@@ -11,14 +11,15 @@ import { ErrorBoundary } from "./shared/error/errorBoundary";
 import { PresenterProvider } from "./shared/contexts/presentersContext";
 import { AuthProvider } from "./shared/stores/auth/authContext";
 import { SubmissionPage } from "./modules/submission/submissionPage";
-import { authStore, presenters, rootStore } from "./main";
+// import { authStore, presenters, rootStore } from "./main";
 import { StoreProvider } from "./shared/contexts/storeContext";
 import { FirebaseProvider } from "./shared/auth/firebaseProvider";
 
 const App = () => {
   return (
     <ErrorBoundary>
-      <StoreProvider store={rootStore}>
+      <div>test</div>
+      {/* <StoreProvider store={rootStore}>
         <div>test</div>
         <AuthProvider store={authStore}>
           <FirebaseProvider>
@@ -36,7 +37,7 @@ const App = () => {
             </PresenterProvider>
           </FirebaseProvider>
         </AuthProvider>
-      </StoreProvider>
+      </StoreProvider> */}
     </ErrorBoundary>
   );
 };

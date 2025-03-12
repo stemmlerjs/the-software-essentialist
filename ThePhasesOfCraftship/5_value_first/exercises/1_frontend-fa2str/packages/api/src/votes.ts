@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { APIResponse } from ".";
-import { GenericApplicationOrServerError, ServerErrors } from "@dddforum/errors";
-import { Request } from "express";
+import { ServerErrors } from "@dddforum/errors/server";
+import { Request } from "@dddforum/core";
 
 
 export namespace Commands {
@@ -92,8 +92,10 @@ export namespace DTOs {
 
 }
 
+export type VoteErrors = '';
+
 // TODO: organize into API type; do for all
-export type VoteOnPostAPIResponse = APIResponse<DTOs.PostVoteDTO, GenericApplicationOrServerError>
+export type VoteOnPostAPIResponse = APIResponse<DTOs.PostVoteDTO, VoteErrors>
 
 export const createVotesAPI = (apiUrl: string) => {
   return {
@@ -105,11 +107,11 @@ export const createVotesAPI = (apiUrl: string) => {
             Authorization: `Bearer ${authToken}`
           }
         });
-        return successResponse.data as APIResponse<DTOs.PostVoteDTO, GenericApplicationOrServerError>;
+        return successResponse.data as APIResponse<DTOs.PostVoteDTO, VoteErrors>;
       } catch (err) {
         // TODO: Don't do this, type it strictly. Fix for all
         //@ts-expect-error
-        return err.response.data as APIResponse<DTOs.PostVoteDTO, GenericApplicationOrServerError>;
+        return err.response.data as APIResponse<DTOs.PostVoteDTO, VoteErrors>;
       }
     }
   }

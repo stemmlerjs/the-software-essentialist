@@ -8,6 +8,7 @@ export {
   fail,
   success
 } from './application/useCase';
+export * from './application/request';
 
 // Domain exports
 export { AggregateRoot } from './domain/aggregateRoot';

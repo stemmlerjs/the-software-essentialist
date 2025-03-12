@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc -b tsconfig.json",
+    "build": "npm run clean && esbuild ./src/index.ts --bundle --platform=node --target=node20 --outfile=./dist/index.js",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
@@ -23,7 +23,6 @@
     "@dddforum/errors": "*",
     "@dddforum/core": "*",
     "axios": "^1.6.2",
-    "express": "^4.21.2",
     "zod": "^3.24.2"
   },
   "keywords": [],

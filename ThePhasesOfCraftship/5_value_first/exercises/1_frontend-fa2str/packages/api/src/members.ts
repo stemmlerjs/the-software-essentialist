@@ -1,9 +1,7 @@
-
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
-import { GenericApplicationOrServerError } from "@dddforum/errors";
-import { Request } from "express";
-import { ServerErrors } from '@dddforum/errors'
+import { Request } from "@dddforum/core";
+import { ServerErrors } from '@dddforum/errors/server'
 import { Types as UserTypes } from './users'
 
 export namespace DTOs {
@@ -60,7 +58,7 @@ export namespace Commands {
 
 type CreateMemberErrors = 
   // TODO: put any specific application types of errors here; see users.ts
-  GenericApplicationOrServerError
+  '';
 
 export type CreateMemberAPIResponse = APIResponse<DTOs.MemberDTO, CreateMemberErrors>
 

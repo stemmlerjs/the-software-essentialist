@@ -2,13 +2,15 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "NodeNext",
     "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "declaration": true,
+    "emitDeclarationOnly": false,
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

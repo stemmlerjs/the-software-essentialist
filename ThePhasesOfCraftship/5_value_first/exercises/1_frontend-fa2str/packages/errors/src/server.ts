@@ -3,7 +3,7 @@
 // Todo: ensure all work still in front & back
 // Todo: test
 
-import { CustomError } from ".";
+import { CustomError } from "./custom";
 
 export namespace ServerErrors {
 

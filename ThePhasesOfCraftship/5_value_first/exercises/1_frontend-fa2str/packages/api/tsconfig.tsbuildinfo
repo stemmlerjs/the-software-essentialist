@@ -1,1 +1,1 @@
-{"root":["./src/comments.ts","./src/index.ts","./src/marketing.ts","./src/members.ts","./src/posts.ts","./src/users.ts","./src/votes.ts"],"version":"5.8.2"}
+{"root":["./src/comments.ts","./src/index.ts","./src/marketing.ts","./src/members.ts","./src/posts.ts","./src/users.ts","./src/votes.ts"],"errors":true,"version":"5.8.2"}

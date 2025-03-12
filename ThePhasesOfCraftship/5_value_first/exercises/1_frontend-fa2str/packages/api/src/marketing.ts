@@ -1,9 +1,8 @@
 
 import axios from "axios";
 import { APIResponse } from ".";
-import { GenericApplicationOrServerError } from "@dddforum/errors";
 
-export type AddEmailToListErrors = GenericApplicationOrServerError;
+export type AddEmailToListErrors = '';
 export type AddEmailToListResponse = APIResponse<boolean, AddEmailToListErrors>;
 
 export type MarketingResponse = APIResponse<

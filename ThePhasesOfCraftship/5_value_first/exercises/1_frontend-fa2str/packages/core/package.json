@@ -9,7 +9,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && esbuild ./src/index.ts --bundle --platform=node --target=node20 --outfile=./dist/index.js",
+    
     "typecheck": "tsc --noEmit",
     "test:unit": "jest -c jest.config.unit.ts"
   },

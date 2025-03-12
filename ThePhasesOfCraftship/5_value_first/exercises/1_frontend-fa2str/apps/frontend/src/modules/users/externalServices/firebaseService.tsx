@@ -15,6 +15,7 @@ export class FirebaseService {
   private provider;
 
   constructor() {
+    console.log('firebase')
     const requiredEnvVars = [
       'VITE_FIREBASE_API_KEY',
       'VITE_FIREBASE_AUTH_DOMAIN', 

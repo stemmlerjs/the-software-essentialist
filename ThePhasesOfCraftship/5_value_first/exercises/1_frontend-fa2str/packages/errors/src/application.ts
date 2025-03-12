@@ -1,6 +1,4 @@
-// :check:
-
-import { CustomError } from ".";
+import { CustomError } from "./custom";
 
 export type ApplicationErrorName =
   | "ValidationError"
