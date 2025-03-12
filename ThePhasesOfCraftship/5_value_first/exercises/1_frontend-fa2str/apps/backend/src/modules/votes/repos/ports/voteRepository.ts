@@ -3,7 +3,7 @@ import { PostVote } from "../../../posts/domain/postVote";
 import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundup";
 import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
 import { CommentVote } from "../../../comments/domain/commentVote";
-import { DomainEvent } from "@dddforum/core;
+import { DomainEvent } from "@dddforum/core";
 
 export interface VoteRepository {
   findVoteByMemberAndPostId (memberId: string, postId: string): Promise<PostVote | null>;

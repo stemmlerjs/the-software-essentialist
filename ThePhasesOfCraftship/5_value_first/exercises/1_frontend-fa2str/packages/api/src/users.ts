@@ -3,6 +3,13 @@ import { APIResponse } from ".";
 import { GenericApplicationOrServerError, ServerErrors } from "@dddforum/errors";
 import { TextUtil } from "@dddforum/core"
 
+export namespace Types {
+  export type DecodedIdToken = {
+    email: string;
+    uid: string;
+  }
+}
+
 export type ValidatedUser = {
   id?: string;
   firstName: string;

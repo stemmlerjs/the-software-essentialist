@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { MarketingResponse } from "@dddforum/api/src/marketing";
-import { ServerErrors, ApplicationErrors, CustomError } from "@dddforum/errors;
+import { MarketingResponse } from "@dddforum/api/marketing";
+import { ServerErrors, ApplicationErrors, CustomError } from "@dddforum/errors";
 
 export function marketingErrorHandler(
   error: CustomError,

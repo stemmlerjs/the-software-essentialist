@@ -1,5 +1,5 @@
 
-import { CommentDTO } from "@dddforum/api/src/comments";
+import { DTOs } from "@dddforum/api/comments";
 import { Comment as PrismaCommentModel } from "@prisma/client";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
 
@@ -27,7 +27,7 @@ export class CommentReadModel {
     });
   }
 
-  public toDTO (): CommentDTO {
+  public toDTO (): DTOs.CommentDTO {
     return {
       id: this.props.id,
       text: this.props.text,

@@ -1,10 +1,10 @@
-import { Commands, DTOs, Types } from "@dddforum/api/src/posts";
+import { Inputs, Types } from "@dddforum/api/posts";
 import { Post as PostPrismaModel } from "@prisma/client";
-import { ApplicationErrors } from "@dddforum/errors;
+import { ApplicationErrors } from "@dddforum/errors";
 // TODO: consider relying upon errors from 'apis'
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { AggregateRoot } from "@dddforum/core;
+import { AggregateRoot } from "@dddforum/core";
 import { PostCreated } from "./postCreated";
 
 interface PostProps {
@@ -62,7 +62,8 @@ export class Post extends AggregateRoot {
     return this.props.voteScore
   }
 
-  public static create (input: Commands.CreatePostCommand): Post | ApplicationErrors.ValidationError {
+  // TODO: Ensure we do this with all aggregates
+  public static create (input: Inputs.CreatePostInput): Post | ApplicationErrors.ValidationError {
     const isTextPost = input.postType === 'text';
 
     if (isTextPost) {

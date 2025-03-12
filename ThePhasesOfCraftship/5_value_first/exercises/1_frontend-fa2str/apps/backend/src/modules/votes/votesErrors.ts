@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 // Todo: clean these custom exceptions
-import { ApplicationErrors } from"@dddforum/errors;
+import { ApplicationErrors, ApplicationErrorName } from "@dddforum/errors";
 
 type ErrorAPIResponse = {
   success: false;
@@ -19,7 +19,7 @@ export function votesErrorHandler(
   _next: NextFunction,
 ): Response<ErrorAPIResponse> { // Updated return type
 
-  switch ((error as ApplicationError).name) {
+  switch ((error as ApplicationErrors.AnyApplicationError).name) {
     case "PermissionError":
       return res.status(403).json({
         success: false,

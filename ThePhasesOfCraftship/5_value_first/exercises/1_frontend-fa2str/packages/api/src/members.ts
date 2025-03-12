@@ -2,6 +2,9 @@
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { GenericApplicationOrServerError } from "@dddforum/errors";
+import { Request } from "express";
+import { ServerErrors } from '@dddforum/errors'
+import { Types as UserTypes } from './users'
 
 export namespace DTOs {
   export type MemberDTO = {
@@ -25,6 +28,33 @@ export namespace Inputs {
     username: string; 
     email: string; 
     userId: string;
+  }
+}
+
+export namespace Commands {
+  export class CreateMemberCommand {
+
+    constructor(public props: Inputs.CreateMemberInput) {}
+  
+    static create (token: UserTypes.DecodedIdToken | undefined, body: Request['body']) {
+      if (!token?.email) {
+        throw new ServerErrors.MissingRequestParamsException(["email"]);
+      }
+  
+      if (!token?.uid) {
+        throw new ServerErrors.MissingRequestParamsException(["userId"]);
+      }
+  
+      if (!body.username) {
+        throw new ServerErrors.MissingRequestParamsException(["username"]);
+      }
+  
+      return new CreateMemberCommand({
+        userId: token.uid,
+        username: body.username,
+        email: token.email as string
+      });
+    }
   }
 }
 

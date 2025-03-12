@@ -1,5 +1,5 @@
 
-import { UserDTO } from "@dddforum/api/src/users"
+import { UserDTO } from "@dddforum/api/users"
 // import { User as PrismaUserModel } from "@prisma/client"
 
 export class UserDetails {

@@ -1,6 +1,6 @@
 
-import { ApplicationErrors } from "@dddforum/errors;
-import { ValueObject } from '@dddforum/core/src'
+import { ApplicationErrors } from "@dddforum/errors";
+import { ValueObject } from '@dddforum/core'
 import { z } from "zod";
 
 const memberUsernameSchema = z.string().min(5).max(20);

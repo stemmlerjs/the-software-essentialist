@@ -3,7 +3,7 @@ import { CompositionRoot } from "../../../src/shared/compositionRoot";
 import { DatabaseFixture } from "@dddforum/shared/tests/support/fixtures/databaseFixture";
 import { Config } from "../../../src/shared/config";
 import { EventOutboxTable } from "@dddforum/shared/src/events/outbox/eventOutboxTable";
-import { MembersModule } from "@dddforum/backend/src/modules/members/membersModule";
+import { MembersModule } from "@dddforum/backend/modules/members/membersModule";
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { auth } from 'firebase-admin';
 

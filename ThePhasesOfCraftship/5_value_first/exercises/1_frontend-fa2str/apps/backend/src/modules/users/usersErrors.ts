@@ -1,8 +1,8 @@
 
-import { ServerErrors, CustomError, ApplicationErrors } from"@dddforum/errors;
+import { ServerErrors, CustomError, ApplicationErrors } from "@dddforum/errors";
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from "./usersExceptions";
 import { Request, Response, NextFunction } from "express";
-import { UserResponse } from "@dddforum/api/src/users";
+import { UserResponse } from "@dddforum/api/users";
 
 // Todo: refactor all of these to use the new error handling system
 

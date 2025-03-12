@@ -1,5 +1,5 @@
 
-import { VoteType } from "@dddforum/api/src/votes";
+import { Types } from "@dddforum/api/votes";
 import { Member } from "../../members/domain/member";
 import { Comment as CommentPrismaModel } from "@prisma/client";
 
@@ -16,7 +16,7 @@ export class Comment {
   constructor (private props: CommentProps) {
   }
 
-  public vote (member: Member, voteType: VoteType) {
+  public vote (member: Member, voteType: Types.VoteType) {
 
   }
 

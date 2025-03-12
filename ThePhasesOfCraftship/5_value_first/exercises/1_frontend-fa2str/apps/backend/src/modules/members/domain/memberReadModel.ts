@@ -1,4 +1,4 @@
-import { MemberDTO } from "@dddforum/api/src/members";
+import { DTOs } from "@dddforum/api/members";
 import { Member } from "@prisma/client";
 
 interface MemberReadModelProps {
@@ -47,7 +47,7 @@ export class MemberReadModel {
   }
 
   // Continue to add the remaining properties when necessary
-  public toDTO (): MemberDTO {
+  public toDTO (): DTOs.MemberDTO {
     return {
       memberId: this.props.id,
       username: this.props.username,

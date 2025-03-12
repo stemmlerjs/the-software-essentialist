@@ -4,13 +4,13 @@ import { WebServer } from "../../shared/http/webServer";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { PostsController } from "./postsController";
 import { postsErrorHandler } from "./postsErrors";
-import { Database } from "../../shared/database";
 import { InMemoryPostsRepository } from "./repos/adapters/inMemoryPostsRepository";
 import { ProductionPostsRepository } from "./repos/adapters/productionPostsRepository";
 import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox";
+import { PrismaDatabase } from "@dddforum/database";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;
@@ -18,7 +18,7 @@ export class PostsModule extends ApplicationModule {
   private postsController: PostsController;
 
   private constructor(
-    private db: Database,
+    private db: PrismaDatabase,
     config: Config,
     private eventOutbox: EventOutboxTable,
     private membersRepository: MembersRepository,
@@ -29,7 +29,7 @@ export class PostsModule extends ApplicationModule {
     this.postsController = this.createPostsController();
   }
 
-  static build(db: Database, config: Config, eventOutbox: EventOutboxTable, membersRepository: MembersRepository) {
+  static build(db: PrismaDatabase, config: Config, eventOutbox: EventOutboxTable, membersRepository: MembersRepository) {
     return new PostsModule(db, config, eventOutbox, membersRepository);
   }
 

@@ -1,5 +1,5 @@
 
-import { DomainEvent, DomainEventStatus } from '@dddforum/core/src';
+import { DomainEvent, DomainEventStatus } from '@dddforum/core';
 import { Event as EventModel } from '@prisma/client'
 
 interface PostDownvotedEventProps {

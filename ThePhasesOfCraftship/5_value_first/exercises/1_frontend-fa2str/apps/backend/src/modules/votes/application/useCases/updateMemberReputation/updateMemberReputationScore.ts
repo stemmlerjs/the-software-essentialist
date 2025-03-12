@@ -1,10 +1,10 @@
 
-import { UseCase } from "@dddforum/core;
+import { UseCase } from "@dddforum/core";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
-import { ApplicationErrors } from"@dddforum/errors;
+import { ApplicationErrors } from"@dddforum/errors";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
-import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member } from "../../../../members/domain/member";
+import { Commands  } from "@dddforum/api/votes";
 
 // TODO: Consider ApplicationErrors.NotFoundError<Member>;
 type UpdateMemberReputationScoreResponse = Member | ApplicationErrors.NotFoundError;
@@ -13,13 +13,13 @@ type UpdateMemberReputationScoreResponse = Member | ApplicationErrors.NotFoundEr
 // We could have a cron job that runs every 24 hours and updates the reputation score of all members using 
 // the read models. This would be a good way to ensure that the reputation score is always up to date.
 
-export class UpdateMemberReputationScore implements UseCase<UpdateMemberReputationScoreCommand, UpdateMemberReputationScoreResponse> {
+export class UpdateMemberReputationScore implements UseCase<Commands.UpdateMemberReputationScoreCommand, UpdateMemberReputationScoreResponse> {
   constructor(
     private memberRepository: MembersRepository,
     private votesRepository: VoteRepository
   ) {}
 
-  async execute(request: UpdateMemberReputationScoreCommand): Promise<UpdateMemberReputationScoreResponse> {
+  async execute(request: Commands.UpdateMemberReputationScoreCommand): Promise<UpdateMemberReputationScoreResponse> {
     const { memberId } = request.props;
 
     const [ memberOrNull, commentVotesRoundup, postVotesRoundup ] = await Promise.all([

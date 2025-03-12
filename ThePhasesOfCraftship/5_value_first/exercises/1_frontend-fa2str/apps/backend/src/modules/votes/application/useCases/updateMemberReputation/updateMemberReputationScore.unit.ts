@@ -5,10 +5,11 @@ import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommen
 import { MemberPostVotesRoundup } from "../../../../votes/domain/memberPostVotesRoundup";
 import { ProductionVotesRepository } from "../../../../votes/repos/adapters/productionVotesRepo";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { UpdateMemberReputationScoreCommand } from "../../../votesCommands";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
-import { EventOutboxTable } from "@dddforum/outbox;
+import { EventOutboxTable } from "@dddforum/outbox";
+import { Commands  } from "@dddforum/api/votes";
+import { PrismaDatabase } from "@dddforum/database";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();
@@ -45,7 +46,8 @@ function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore:
 describe('updateMemberReputationScore', () => {
 
   let prisma = new PrismaClient();
-  let eventsTable = new EventOutboxTable(prisma);
+  let database = new PrismaDatabase();
+  let eventsTable = new EventOutboxTable(database);
   let membersRepo = new ProductionMembersRepository(prisma, eventsTable);
   let votesRepo = new ProductionVotesRepository(prisma, eventsTable);
 
@@ -62,7 +64,7 @@ describe('updateMemberReputationScore', () => {
   
       const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
   
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: member.id,
       });
   
@@ -89,7 +91,7 @@ describe('updateMemberReputationScore', () => {
       const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
 
   
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: member.id,
       });
   

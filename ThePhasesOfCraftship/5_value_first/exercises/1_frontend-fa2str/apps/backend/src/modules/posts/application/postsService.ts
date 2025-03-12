@@ -1,18 +1,17 @@
 
 import { MembersRepository } from "../../members/repos/ports/membersRepository";
-import { CreatePostCommand } from "../postsCommands";
 import { PostsRepository } from "../repos/ports/postsRepository";
 import { CreatePost } from "./useCases/createPost/createPost";
-import { Posts } from '@dddforum/api/src'
+import { Commands, Queries } from '@dddforum/api/posts'
 
 export class PostsService {
   constructor(private postsRepo: PostsRepository, private membersRepo: MembersRepository) {}
 
-  async getPosts(query: Posts.Queries.GetPostsQuery) {
+  async getPosts(query: Queries.GetPostsQuery) {
     return this.postsRepo.findPosts(query);
   }
 
-  async createPost (command: CreatePostCommand) {
+  async createPost (command: Commands.CreatePostCommand) {
     return new CreatePost(this.postsRepo, this.membersRepo).execute(command);
   }
 

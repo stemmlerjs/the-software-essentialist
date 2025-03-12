@@ -1,12 +1,12 @@
 
-import { ApplicationErrors, ServerErrors } from"@dddforum/errors;
-import { UseCase } from "@dddforum/core;
+import { ApplicationErrors, ServerErrors } from"@dddforum/errors";
+import { UseCase } from "@dddforum/core";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CanVoteOnCommentPolicy } from "./canVoteOnComment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
 import { CommentRepository } from "../../../../comments/repos/ports/commentRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
-import * as Votes from '@dddforum/api/src/votes'
+import * as Votes from '@dddforum/api/votes'
 
 type VoteOnCommentResponse = CommentVote 
   | ApplicationErrors.ValidationError 

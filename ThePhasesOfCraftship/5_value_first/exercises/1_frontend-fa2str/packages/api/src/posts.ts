@@ -8,6 +8,16 @@ import { ApplicationErrors } from "@dddforum/errors/application";
 import { ServerErrors } from "@dddforum/errors/server";
 import { GenericApplicationOrServerError } from "@dddforum/errors";
 
+export namespace Inputs {
+  export type CreatePostInput = {
+    title: string;
+    memberId: string;
+    content?: string;
+    link?: string;
+    postType: Types.PostType
+  }
+}
+
 export namespace Queries {
 
   export class GetPostByIdQuery {
@@ -62,17 +72,10 @@ export namespace Queries {
 
 export namespace Commands {
 
-  export type CreatePostInput = {
-    title: string;
-    content?: string;
-    link?: string;
-    postType: Types.PostType
-  }
-
   export class CreatePostCommand {
-    private props: CreatePostInput;
+    private props: Inputs.CreatePostInput;
 
-    private constructor(props: CreatePostInput) {
+    private constructor(props: Inputs.CreatePostInput) {
       this.props = props;
     }
 
@@ -80,9 +83,10 @@ export namespace Commands {
       return this.props;
     }
 
-    public static create(input: CreatePostInput) {
+    public static create(input: Inputs.CreatePostInput) {
       const schema = z.object({
         title: z.string().min(1, 'Title is required'),
+        memberId: z.string(),
         content: z.string().optional(),
         link: z.string().optional(),
         postType: z.enum(['text', 'link'])

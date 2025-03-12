@@ -1,6 +1,6 @@
 
 import express from "express";
-import { Queries, API, Commands } from "@dddforum/api/src/posts";
+import { Queries, API, Commands } from "@dddforum/api/posts";
 import { ErrorHandler } from "../../shared/errors";
 import { Post } from "./domain/post";
 import { PostsService } from "./application/postsService";

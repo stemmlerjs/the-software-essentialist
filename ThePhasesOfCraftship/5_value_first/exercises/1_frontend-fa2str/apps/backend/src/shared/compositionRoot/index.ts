@@ -1,27 +1,20 @@
-
 import { CommentsModule } from "../../modules/comments/commentsModule";
 import { MembersModule } from "../../modules/members/membersModule";
 import { VotesModule } from "../../modules/votes/votesModule";
 import { Application } from "../application/applicationInterface";
 import { Config } from "../config";
-import { Database } from "../database";
-import { FakeDatabase, PrismaDatabase } from "../database/database";
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { EventOutboxTable } from "@dddforum/outbox";
 import { WebServer } from "../http";
-import {
-  UsersModule,
-  PostsModule,
-  NotificationsModule,
-  MarketingModule,
-} from "@dddforum/backend/src/modules";
-import { NatsEventBus } from "@dddforum/bus/natsEventBus";
+import { NatsEventBus } from "@dddforum/bus";
+import { MarketingModule, NotificationsModule, PostsModule, UsersModule } from "../../modules";
+import { PrismaDatabase } from "@dddforum/database";
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
 
   
   private eventBus: NatsEventBus;
-  private dbConnection: Database;
+  private dbConnection: PrismaDatabase;
   private config: Config;
   private eventsOutboxTable: EventOutboxTable;
   private webServer!: WebServer;

@@ -2,7 +2,7 @@
 import { Post } from "@prisma/client";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
-import { Types, DTOs } from "@dddforum/api/src/posts";
+import { Types, DTOs } from "@dddforum/api/posts";
 // TODO: Do this for all types, DTOs through. This is a beautiful pattern.
 
 interface PostReadModelProps {

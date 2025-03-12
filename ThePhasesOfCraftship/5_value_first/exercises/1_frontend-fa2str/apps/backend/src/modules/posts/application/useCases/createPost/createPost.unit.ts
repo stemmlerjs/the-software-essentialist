@@ -4,11 +4,12 @@ import { Member, MemberReputationLevel } from "../../../../members/domain/member
 import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { ProductionPostsRepository } from "../../../repos/adapters/productionPostsRepository";
-import { CreatePostCommand } from "../../../postsCommands";
-import { ApplicationErrors } from "@dddforum/errors;
+import { ApplicationErrors } from "@dddforum/errors";
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
-import { EventOutboxTable } from "@dddforum/outbox;
+import { EventOutboxTable } from "@dddforum/outbox";
+import { Commands } from "@dddforum/api/posts"
+import { PrismaDatabase } from "@dddforum/database";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
@@ -29,8 +30,8 @@ function setupTest (useCase: CreatePost) {
 describe ('createPost', () => {
 
   let prisma = new PrismaClient();
-  
-  let outboxTable = new EventOutboxTable(prisma);
+  let database = new PrismaDatabase();
+  let outboxTable = new EventOutboxTable(database);
   let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
   let postsRepo = new ProductionPostsRepository(prisma, outboxTable);
   
@@ -43,7 +44,7 @@ describe ('createPost', () => {
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
       const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
@@ -67,7 +68,7 @@ describe ('createPost', () => {
 
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(level1Member);
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
@@ -85,7 +86,7 @@ describe ('createPost', () => {
       const level2Member = setupTest(useCase);
       const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
@@ -106,7 +107,7 @@ describe ('createPost', () => {
       const level2Member = setupTest(useCase);
       const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'text',
         content: 'This is a new post',
@@ -131,7 +132,7 @@ describe ('createPost', () => {
       const level2Member = setupTest(useCase);
       const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title,
         postType: 'text',
         content,
@@ -151,7 +152,7 @@ describe ('createPost', () => {
 
       const level2Member = setupTest(useCase);
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'link',
         link: 'https://www.google.com',
@@ -175,7 +176,7 @@ describe ('createPost', () => {
       const level2Member = setupTest(useCase);
       const saveSpy = jest.spyOn(useCase['postRepository'], 'save').mockImplementation(async () => {});
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title,
         postType: 'link',
         link,
@@ -197,7 +198,7 @@ describe ('createPost', () => {
 
       const level2Member = setupTest(useCase);
 
-      const command = new CreatePostCommand({
+      const command = Commands.CreatePostCommand.create({
         title: 'A new post',
         postType: 'link',
         link: 'https://www.google.com',

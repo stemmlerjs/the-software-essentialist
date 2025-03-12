@@ -16,7 +16,8 @@
     "./posts": "./src/posts.ts",
     "./users": "./src/users.ts",
     "./votes": "./src/votes.ts",
-    "./marketing": "./src/marketing.ts"
+    "./marketing": "./src/marketing.ts",
+    "./comments": "./src/comments.ts"
   },
   "dependencies": {
     "@dddforum/errors": "*",

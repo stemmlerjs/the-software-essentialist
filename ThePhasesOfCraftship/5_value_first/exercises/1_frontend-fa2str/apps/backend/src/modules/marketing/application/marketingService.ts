@@ -1,4 +1,4 @@
-import { ServerErrors } from "@dddforum/errors/src/server";
+import { ServerErrors } from "@dddforum/errors/server";
 import { ContactListAPI } from "../ports/contactListAPI";
 
 export class MarketingService {

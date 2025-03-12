@@ -2,9 +2,9 @@
 import express from "express";
 import { VoteOnPostAPIResponse  } from "@dddforum/api/votes";
 import { ErrorHandler } from "../../shared/errors";
-import { VoteOnPostCommand } from "./votesCommands";
 import { VotesService } from "./application/votesService";
 import { PostVote } from "../posts/domain/postVote";
+import { Commands } from "@dddforum/api/votes";
 
 export class VotesController {
   private router: express.Router;
@@ -37,7 +37,7 @@ export class VotesController {
   ) {
     try {
 
-      const command = new VoteOnPostCommand({
+      const command = new Commands.VoteOnPostCommand({
         postId: req.params.postId,
         voteType: req.body.voteType,
         memberId: req.body.memberId

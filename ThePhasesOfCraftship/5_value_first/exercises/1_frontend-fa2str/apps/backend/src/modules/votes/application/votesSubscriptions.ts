@@ -1,12 +1,12 @@
 
 import { CommentUpvoted } from "../../comments/domain/commentUpvoted";
 import { CommentDownvoted } from "../../comments/domain/commentDownvoted";
-import { UpdateMemberReputationScoreCommand, VoteOnPostCommand } from "../votesCommands";
 import { VotesService } from "./votesService";
 import { PostCreated } from "../../posts/domain/postCreated";
-import { EventBus } from "@dddforum/bus;
+import { EventBus } from "@dddforum/bus";
 import { PostUpvoted } from "../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../posts/domain/postDownvoted";
+import { Commands } from "@dddforum/api/votes";
 
 export class VotesSubscriptions {
 
@@ -27,7 +27,7 @@ export class VotesSubscriptions {
 
   async onPostCreatedCastInitialUpvote (event: PostCreated) {
     try {
-      const command = new VoteOnPostCommand({
+      const command = new Commands.VoteOnPostCommand({
         postId: event.data.postId,
         voteType: 'upvote',
         memberId: event.data.memberId
@@ -41,7 +41,7 @@ export class VotesSubscriptions {
 
   async onPostUpvotedUpdateReputationScore(event: PostUpvoted) {
     try {
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)
@@ -53,7 +53,7 @@ export class VotesSubscriptions {
 
   async onPostDownvotedUpdateReputationScore(event: PostDownvoted) {
     try {
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)
@@ -65,7 +65,7 @@ export class VotesSubscriptions {
 
   async onCommentUpvotedUpdateReputationScore(event: CommentUpvoted) {
     try {
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)
@@ -77,7 +77,7 @@ export class VotesSubscriptions {
 
   async onCommentDownvotedUpdateReputationScore (event: CommentDownvoted) {
     try {
-      const command = new UpdateMemberReputationScoreCommand({
+      const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: event.data.memberId
       });
       await this.voteService.updateMemberReputationScore(command)

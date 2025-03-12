@@ -4,20 +4,23 @@ import { ProductionMembersRepository } from "../../../../members/repos/adapters/
 import { VoteOnPost } from "./voteOnPost";
 import { ProductionPostsRepository } from "../../../../posts/repos/adapters/productionPostsRepository";
 import { ProductionVotesRepository } from "../../../repos/adapters/productionVotesRepo";
-import { VoteOnPostCommand } from "../../../votesCommands";
 import { PostVote } from "../../../../posts/domain/postVote";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { Post } from "../../../../posts/domain/post";
 import { randomUUID } from "crypto";
-import { TextUtil } from "@dddforum/core
-import { EventOutboxTable } from "@dddforum/outbox;
+import { TextUtil } from "@dddforum/core";
+import { EventOutboxTable } from "@dddforum/outbox";
 import { PostUpvoted } from "../../../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../../../posts/domain/postDownvoted";
+import { PrismaDatabase } from "@dddforum/database";
+import * as Votes from "@dddforum/api/votes"
 
 describe('voteOnPost', () => {
 
+  const database = new PrismaDatabase();
   const prisma = new PrismaClient();
-  const eventsTable = new EventOutboxTable(prisma);
+  const eventsTable = new EventOutboxTable(database);
+  // TODO: Update database references.
   const memberRepository = new ProductionMembersRepository(prisma, eventsTable);
   const postRepository = new ProductionPostsRepository(prisma, eventsTable);
   const voteRepository = new ProductionVotesRepository(prisma, eventsTable);
@@ -67,7 +70,7 @@ describe('voteOnPost', () => {
   it('should be able to cast an upvote', async () => {
     const { member, post } = await setupTest()
 
-    const command = new VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'upvote' });
+    const command = new Votes.Commands.VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'upvote' });
     const response = await useCase.execute(command);
 
     // Post use case response
@@ -91,7 +94,7 @@ describe('voteOnPost', () => {
   it('should be able to cast an downvote', async () => {
     const { member, post } = await setupTest()
 
-    const command = new VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'downvote' });
+    const command = new Votes.Commands.VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'downvote' });
     const response = await useCase.execute(command);
 
     // Post use case response

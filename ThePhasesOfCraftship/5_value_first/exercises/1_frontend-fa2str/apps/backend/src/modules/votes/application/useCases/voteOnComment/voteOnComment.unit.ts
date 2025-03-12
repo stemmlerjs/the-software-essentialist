@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
-import { ApplicationErrors } from"@dddforum/errors;
+import { ApplicationErrors } from"@dddforum/errors";
 import { Member, MemberReputationLevel } from "../../../../members/domain/member";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { VoteState } from "../../../../posts/domain/postVote";
@@ -10,15 +10,16 @@ import { ProductionCommentsRepository } from "../../../../comments/repos/adapter
 import { ProductionVotesRepository } from "../../../repos/adapters/productionVotesRepo";
 import { Comment } from "../../../../comments/domain/comment";
 import { CommentVote } from "../../../../comments/domain/commentVote";
-import { Commands } from '@dddforum/api/src/votes'
-import { EventOutboxTable } from "@dddforum/outbox;
+import { Commands } from '@dddforum/api/votes'
+import { EventOutboxTable } from "@dddforum/outbox";
+import { PrismaDatabase } from "@dddforum/database";
 
 let prisma = new PrismaClient();
-
-let outboxTable = new EventOutboxTable(prisma);
+let database = new PrismaDatabase();
+let outboxTable = new EventOutboxTable(database);
 let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
 let commentsRepo = new ProductionCommentsRepository(prisma);
-let eventsTable = new EventOutboxTable(prisma);
+let eventsTable = new EventOutboxTable(database);
 let votesRepo = new ProductionVotesRepository(prisma, eventsTable);
 
 const useCase = new VoteOnComment(membersRepo, commentsRepo, votesRepo);

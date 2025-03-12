@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/core;
+import { AggregateRoot } from "@dddforum/core";
 import { randomUUID } from "crypto";
 import { CommentUpvoted } from "./commentUpvoted";
 import { CommentDownvoted } from "./commentDownvoted";
-import { VoteType } from "@dddforum/api/src/votes";
-import { ApplicationErrors } from "@dddforum/errors;
+import { Types } from "@dddforum/api/votes";
+import { ApplicationErrors } from "@dddforum/errors";
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
@@ -50,7 +50,7 @@ export class CommentVote extends AggregateRoot {
     }
   }
 
-  castVote(voteType: VoteType) {
+  castVote(voteType: Types.VoteType) {
     if (voteType === 'upvote') {
       this.upvote();
     } else {

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomException } from "../exceptions";
+import { CustomError } from "@dddforum/errors";
 
 export type ErrorHandler = (
-  error: CustomException,
+  error: CustomError,
   req: Request,
   res: Response,
   next: NextFunction,

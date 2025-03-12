@@ -1,10 +1,10 @@
 
-import { AggregateRoot } from "@dddforum/core;
-import { ApplicationErrors } from "@dddforum/errors;
+import { AggregateRoot } from "@dddforum/core";
+import { ApplicationErrors } from "@dddforum/errors";
 import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";
-import { PostVoteDTO, VoteType } from "@dddforum/api/src/votes";
+import { DTOs, Types } from "@dddforum/api/votes";
 
 export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 
@@ -50,7 +50,7 @@ export class PostVote extends AggregateRoot {
     }
   }
 
-  castVote(voteType: VoteType) {
+  castVote(voteType: Types.VoteType) {
     if (voteType === 'upvote') {
       this.upvote();
     } else {
@@ -97,7 +97,7 @@ export class PostVote extends AggregateRoot {
     });
   }
 
-  public toDTO (): PostVoteDTO {
+  public toDTO (): DTOs.PostVoteDTO {
     return {
       memberId: this.props.memberId,
       postId: this.props.postId,

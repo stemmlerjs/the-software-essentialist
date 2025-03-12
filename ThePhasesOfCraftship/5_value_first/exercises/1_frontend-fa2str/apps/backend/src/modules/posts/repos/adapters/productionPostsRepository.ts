@@ -1,13 +1,14 @@
+
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
-import { DatabaseError } from "../../../../shared/exceptions";
 import { Post } from "../../domain/post";
-import { GetPostsQuery } from "../../postsQuery";
 import { PostReadModel } from "../../domain/postReadModel";
 import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
-import { DomainEvent } from "@dddforum/core;
-import { EventOutboxTable } from "@dddforum/outbox/eventOutboxTable";
+import { DomainEvent } from "@dddforum/core";
+import { EventOutboxTable } from "@dddforum/outbox";
+import { ServerErrors } from '@dddforum/errors'
+import { Queries } from "@dddforum/api/posts";
 
 export class ProductionPostsRepository implements PostsRepository {
   constructor(private prisma: PrismaClient, private eventsTable: EventOutboxTable) {}
@@ -41,7 +42,7 @@ export class ProductionPostsRepository implements PostsRepository {
     );
   }
 
-  async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {
+  async findPosts(query: Queries.GetPostsQuery): Promise<PostReadModel[]> {
     const sqlQuery = {
       orderBy: {},
       include: {
@@ -112,7 +113,7 @@ export class ProductionPostsRepository implements PostsRepository {
     );
   }
 
-  async save(post: Post, transaction?: Prisma.TransactionClient): Promise<void | DatabaseError> {
+  async save(post: Post, transaction?: Prisma.TransactionClient): Promise<void | ServerErrors.DatabaseError> {
     const prismaInstance = transaction ? transaction : this.prisma;
 
     try {
@@ -136,7 +137,7 @@ export class ProductionPostsRepository implements PostsRepository {
       });
     } catch (error) {
       console.log(error);
-      throw new DatabaseError();
+      throw new ServerErrors.DatabaseError();
     }
   }
 }

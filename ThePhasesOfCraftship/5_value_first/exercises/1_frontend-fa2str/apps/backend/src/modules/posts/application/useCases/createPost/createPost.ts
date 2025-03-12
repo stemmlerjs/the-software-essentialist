@@ -1,12 +1,12 @@
 
-import { ApplicationErrors, ServerErrors } from "@dddforum/errors;
+import { ApplicationErrors, ServerErrors } from "@dddforum/errors";
 import { CanCreatePostPolicy } from "./canCreatePost";
-import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core/src';
+import { fail, success, UseCase, UseCaseResponse } from '@dddforum/core';
 import { Post } from "../../../domain/post";
 import { PostsRepository } from "../../../repos/ports/postsRepository";
-import { CreatePostCommand } from "../../../postsCommands";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { PostVote } from "../../../domain/postVote";
+import { Commands } from '@dddforum/api/posts'
 
 export type CreatePostResponse = UseCaseResponse<Post | undefined, 
   ApplicationErrors.ValidationError | 
@@ -14,15 +14,16 @@ export type CreatePostResponse = UseCaseResponse<Post | undefined,
   ApplicationErrors.NotFoundError | 
   ServerErrors.ServerErrorException>;
 
-export class CreatePost implements UseCase<CreatePostCommand, CreatePostResponse> {
+export class CreatePost implements UseCase<Commands.CreatePostCommand, CreatePostResponse> {
 
   constructor(
     private postRepository: PostsRepository, 
     private memberRepository: MembersRepository
   ) {}
 
-  async execute(request: CreatePostCommand): Promise<CreatePostResponse> {
-    const { memberId, title, content, postType, link } = request.props;
+  async execute(request: Commands.CreatePostCommand): Promise<CreatePostResponse> {
+    const props = request.getProps();
+    const { memberId, title, content, postType, link } = props;
 
     const member = await this.memberRepository.getMemberById(memberId);
     

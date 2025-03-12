@@ -1,7 +1,7 @@
 
 import { Config } from "../../shared/config"; // TODO: Move this to the shared config
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { Database } from "@dddforum/database
+import { Database } from "@dddforum/database";
 import { CommentRepository } from "../comments/repos/ports/commentRepository";
 import { ProductionCommentsRepository } from "./repos/adapters/productionCommentRepository";
 import { CommentsService } from "./application/commentsService";

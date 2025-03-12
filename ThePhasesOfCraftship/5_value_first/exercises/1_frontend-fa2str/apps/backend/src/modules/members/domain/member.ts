@@ -1,11 +1,11 @@
 
-import { AggregateRoot } from "@dddforum/core;
-import { ApplicationErrors } from "@dddforum/errors;
+import { AggregateRoot } from "@dddforum/core";
+import { ApplicationErrors } from "@dddforum/errors";
 import { Member as MemberPrismaModel } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
-import { MemberDTO } from "@dddforum/api/src/members";
+import { DTOs } from "@dddforum/api/members";
 
 interface MemberProps {
   id: string;
@@ -115,7 +115,7 @@ export class Member extends AggregateRoot {
     }
   }
 
-  public toDTO (): MemberDTO {
+  public toDTO (): DTOs.MemberDTO {
     return {
       userId: this.props.userId,
       memberId: this.id,

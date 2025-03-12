@@ -1,11 +1,11 @@
 
 
 import { PostsRepository } from "../ports/postsRepository";
-import { ServerErrors } from "@dddforum/errors
+import { ServerErrors } from "@dddforum/errors";
 import { Post } from "../../domain/post";
-import { Queries } from "@dddforum/api/src/posts"
+import { Queries } from "@dddforum/api/posts";
 import { PostReadModel } from "../../domain/postReadModel";
-import { DomainEvent } from "@dddforum/core;
+import { DomainEvent } from "@dddforum/core";
 
 export class InMemoryPostsRepository implements PostsRepository {
   private posts: PostReadModel[];

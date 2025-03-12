@@ -1,9 +1,9 @@
 
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core;
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
-import { CreateMemberCommand } from "../../../memberCommands";
-import { ApplicationErrors } from "@dddforum/errors;
+import { ApplicationErrors } from "@dddforum/errors";
+import { Commands } from "@dddforum/api/members"
 
 // Improvement: These errors can be generalized as 'NotFound' errors, like 'MemberNotFound', 'CommentNotFound', etc.
 // This way, we can have a single error type for all 'NotFound' errors.
@@ -33,12 +33,12 @@ type CreateMemberResponse = UseCaseResponse<Member | undefined,
   | MemberUsernameTaken 
   | UserIdentityNotFound>;
 
-export class CreateMember implements UseCase<CreateMemberCommand, CreateMemberResponse> {
+export class CreateMember implements UseCase<Commands.CreateMemberCommand, CreateMemberResponse> {
   constructor(
     private memberRepository: MembersRepository
   ) {}
 
-  async execute(request: CreateMemberCommand): Promise<CreateMemberResponse> {
+  async execute(request: Commands.CreateMemberCommand): Promise<CreateMemberResponse> {
     const { username, userId } = request.props;
     let existingMember: Member | null =  null;
 

@@ -1,13 +1,13 @@
 
-import { ApplicationErrors, ServerErrors } from"@dddforum/errors;
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core;
+import { ApplicationErrors, ServerErrors } from"@dddforum/errors";
+import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
 import { CanVoteOnPostPolicy } from "./canVoteOnPost";
-import { VoteOnPostCommand } from "../../../votesCommands";
 import { PostVote } from "../../../../posts/domain/postVote";
 import { PostsRepository } from "../../../../posts/repos/ports/postsRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
+import { Commands } from "@dddforum/api/votes";
 
 type VoteOnPostResponse = UseCaseResponse<PostVote | undefined, 
   ApplicationErrors.ValidationError | 
@@ -15,7 +15,7 @@ type VoteOnPostResponse = UseCaseResponse<PostVote | undefined,
   ApplicationErrors.NotFoundError | 
   ServerErrors.AnyServerError>;
 
-export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse> {
+export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPostResponse> {
 
   constructor(
     private memberRepository: MembersRepository,
@@ -23,7 +23,7 @@ export class VoteOnPost implements UseCase<VoteOnPostCommand, VoteOnPostResponse
     private voteRepository: VoteRepository
   ) {}
 
-  async execute(request: VoteOnPostCommand): Promise<VoteOnPostResponse> {
+  async execute(request: Commands.VoteOnPostCommand): Promise<VoteOnPostResponse> {
     let postVote: PostVote;
     const { memberId, postId, voteType } = request.props;
 
