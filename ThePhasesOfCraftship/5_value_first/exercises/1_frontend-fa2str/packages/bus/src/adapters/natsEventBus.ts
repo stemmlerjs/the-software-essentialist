@@ -12,8 +12,10 @@ export class NatsEventBus implements EventBus {
   }
 
   public async initialize() {
-    this.nc = await connect({ servers: "nats://localhost:4222" });
-    console.log('initialized');
+    if (!this.nc) {
+      this.nc = await connect({ servers: "nats://localhost:4222" });
+      console.log('initialized event bus');
+    }
   }
 
   public async stop () {
