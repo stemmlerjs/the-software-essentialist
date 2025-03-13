@@ -2,10 +2,10 @@
 import express from 'express';
 import { MemberService } from "./application/membersService";
 import { ErrorRequestHandler } from 'express';
-import { Config } from '../../shared/config';
 import { createJwtCheck } from '../users/externalServices/adapters/auth';
 import { CreateMemberAPIResponse, Commands } from '@dddforum/api/members';
 import { Member } from './domain/member';
+import { Config } from '@dddforum/config';
 
 export class MembersController {
   private router: express.Router;

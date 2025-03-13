@@ -1,4 +1,4 @@
-import { Config } from "../../shared/config";
+
 import { WebServer } from "../../shared/http/webServer";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { ContactListAPISpy } from "./adapters/contactListAPI/contactListSpy";
@@ -7,6 +7,8 @@ import { MarketingController } from "./marketingController";
 import { marketingErrorHandler } from "./marketingErrors";
 import { MarketingService } from "./application/marketingService";
 import { ContactListAPI } from "./ports/contactListAPI";
+import { Config } from "@dddforum/config";
+
 
 export class MarketingModule extends ApplicationModule {
   private marketingService: MarketingService;

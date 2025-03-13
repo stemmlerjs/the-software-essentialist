@@ -1,7 +1,7 @@
 
 import { UseCase } from "@dddforum/core";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
-import { ApplicationErrors } from"@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { Member } from "../../../../members/domain/member";
 import { Commands  } from "@dddforum/api/votes";

@@ -2,7 +2,7 @@
 import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { Commands } from "@dddforum/api/members"
 
 // Improvement: These errors can be generalized as 'NotFound' errors, like 'MemberNotFound', 'CommentNotFound', etc.

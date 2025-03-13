@@ -1,7 +1,11 @@
 
+import { Config } from "@dddforum/config";
 import { CompositionRoot } from "../compositionRoot";
-import { Config } from "../config";
-const config = new Config("start");
+
+// import { AppConfig } from "../config";
+// const config = new AppConfig("start");
+
+const config = Config();
 
 export async function bootstrap() {
   const composition = CompositionRoot.createCompositionRoot(config);

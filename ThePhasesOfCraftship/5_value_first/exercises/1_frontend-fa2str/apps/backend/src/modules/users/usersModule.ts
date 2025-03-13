@@ -1,12 +1,12 @@
 import { UserIdentityService } from "./application/userIdentityService";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
-import { Config } from "../../shared/config";
 import { IdentityServiceAPI } from "./externalServices/ports/identityServiceAPI";
 
 import { WebServer } from "../../shared/http/webServer";
 import { UsersController } from "./usersController";
 import { userErrorHandler } from "./usersErrors"; // You'll need to create this
 import { FirebaseAuth } from "./externalServices/adapters/firebaseAuth";
+import { Config } from "@dddforum/config";
 
 export class UsersModule extends ApplicationModule {
   private usersService: UserIdentityService;

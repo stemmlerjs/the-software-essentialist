@@ -4,12 +4,13 @@ import { Member, MemberReputationLevel } from "../../../../members/domain/member
 import { CreatePost } from "./createPost";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { ProductionPostsRepository } from "../../../repos/adapters/productionPostsRepository";
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { Post } from "../../../domain/post";
 import { MemberUsername } from "../../../../members/domain/memberUsername";
 import { EventOutboxTable } from "@dddforum/outbox";
 import { Commands } from "@dddforum/api/posts"
 import { PrismaDatabase } from "@dddforum/database";
+import { Config } from "@dddforum/config";
 
 function setupTest (useCase: CreatePost) {
   jest.resetAllMocks();
@@ -29,11 +30,11 @@ function setupTest (useCase: CreatePost) {
 
 describe ('createPost', () => {
 
-  let prisma = new PrismaClient();
-  let database = new PrismaDatabase();
+  let config = Config();
+  let database = new PrismaDatabase(config);
   let outboxTable = new EventOutboxTable(database);
-  let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
-  let postsRepo = new ProductionPostsRepository(prisma, outboxTable);
+  let membersRepo = new ProductionMembersRepository(database, outboxTable);
+  let postsRepo = new ProductionPostsRepository(database, outboxTable);
   
   const useCase = new CreatePost(postsRepo, membersRepo);
 

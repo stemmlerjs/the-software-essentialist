@@ -1,20 +1,22 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Member } from "../../domain/member";
 import { MembersRepository } from "../ports/membersRepository";
 import { DomainEvent } from "@dddforum/core";
 import { EventOutboxTable } from "@dddforum/outbox";
+import { Database } from "@dddforum/database";
 
 export class ProductionMembersRepository implements MembersRepository {
 
   constructor (
-    private prisma: PrismaClient, 
+    private database: Database, 
     private eventsTable: EventOutboxTable
   ) {
     
   }
   
   async getMemberByUserId(userId: string): Promise<Member | null> {
-    const memberData = await this.prisma.member.findUnique({
+    const connection = this.database.getConnection();
+    const memberData = await connection.member.findUnique({
       where: { userId: userId },
     });
 
@@ -26,15 +28,16 @@ export class ProductionMembersRepository implements MembersRepository {
   }
 
   saveAggregateAndEvents(member: Member, events: DomainEvent[]): Promise<void> {
-    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const connection = this.database.getConnection();
+    return connection.$transaction(async (tx: Prisma.TransactionClient) => {
       await this.save(member, tx);
       await this.eventsTable.save(events, tx);
     })
   }
 
   async findUserByUsername(username: string): Promise<Member | null> {
-    
-    const memberData = await this.prisma.member.findUnique({
+    const connection = this.database.getConnection();
+    const memberData = await connection.member.findUnique({
       where: { username: username },
     });
 
@@ -46,7 +49,8 @@ export class ProductionMembersRepository implements MembersRepository {
   }
   
   async getMemberById(memberId: string): Promise<Member | null> {
-    const memberData = await this.prisma.member.findUnique({
+    const connection = this.database.getConnection();
+    const memberData = await connection.member.findUnique({
       where: { id: memberId },
     });
 
@@ -58,7 +62,7 @@ export class ProductionMembersRepository implements MembersRepository {
   }
 
   async save(member: Member, transaction?: Prisma.TransactionClient) {
-      const prismaInstance = transaction || this.prisma;
+      const prismaInstance = transaction || this.database.getConnection();;
   
     const memberData = member.toPersistence();
 

@@ -1,7 +1,7 @@
+
 import { Inputs, Types } from "@dddforum/api/posts";
-import { Post as PostPrismaModel } from "@prisma/client";
-import { ApplicationErrors } from "@dddforum/errors";
-// TODO: consider relying upon errors from 'apis'
+import { Post as PostPrismaModel } from "@dddforum/database";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { AggregateRoot } from "@dddforum/core";

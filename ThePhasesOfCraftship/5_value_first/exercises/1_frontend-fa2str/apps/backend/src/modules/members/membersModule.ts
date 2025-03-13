@@ -1,6 +1,5 @@
 
 import { Database } from "@dddforum/database";
-import { Config } from "../../shared/config";
 import { WebServer } from "../../shared/http";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { MemberService } from "./application/membersService";
@@ -9,6 +8,7 @@ import { MembersController } from "./membersController";
 import { ProductionMembersRepository } from "./repos/adapters/productionMembersRepository";
 import { MembersRepository } from "./repos/ports/membersRepository";
 import { EventOutboxTable } from "@dddforum/outbox";
+import { Config } from "@dddforum/config";
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: MembersRepository;
@@ -40,7 +40,7 @@ export class MembersModule extends ApplicationModule {
   }
   
   createMembersRepository (db: Database) {
-    return new ProductionMembersRepository(db.getConnection(), this.eventOutbox)
+    return new ProductionMembersRepository(db, this.eventOutbox)
   }
 
   getMembersRepository () {

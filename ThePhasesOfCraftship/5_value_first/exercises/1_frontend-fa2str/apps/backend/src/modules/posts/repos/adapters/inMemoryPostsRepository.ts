@@ -1,7 +1,7 @@
 
 
 import { PostsRepository } from "../ports/postsRepository";
-import { ServerErrors } from "@dddforum/errors";
+import { ServerErrors } from "@dddforum/errors/server";
 import { Post } from "../../domain/post";
 import { Queries } from "@dddforum/api/posts";
 import { PostReadModel } from "../../domain/postReadModel";

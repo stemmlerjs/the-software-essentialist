@@ -1,5 +1,4 @@
 
-import { Config } from "../../shared/config";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { VoteRepository } from "./repos/ports/voteRepository";
 import { VotesService } from "./application/votesService";
@@ -14,6 +13,7 @@ import { VotesController } from "./votesController";
 import { votesErrorHandler } from "./votesErrors";
 import { WebServer } from "../../shared/http";
 import { Database } from "@dddforum/database";
+import { Config } from "@dddforum/config";
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;
@@ -52,7 +52,7 @@ export class VotesModule extends ApplicationModule {
   private createVotesRepository() {
     if (this.votesRepository) return this.votesRepository;
 
-    return new ProductionVotesRepository(this.db.getConnection(),this.eventsTable);
+    return new ProductionVotesRepository(this.db,this.eventsTable);
   }
 
   public getVotesRepository() {

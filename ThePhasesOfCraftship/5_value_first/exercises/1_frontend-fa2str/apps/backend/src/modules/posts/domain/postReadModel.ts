@@ -1,5 +1,5 @@
 
-import { Post } from "@prisma/client";
+import { Post } from "@dddforum/database";
 import { CommentReadModel } from "./commentReadModel";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
 import { Types, DTOs } from "@dddforum/api/posts";

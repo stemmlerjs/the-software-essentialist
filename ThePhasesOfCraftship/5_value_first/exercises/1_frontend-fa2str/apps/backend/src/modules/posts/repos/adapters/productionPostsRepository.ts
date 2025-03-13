@@ -1,5 +1,5 @@
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PostsRepository } from "../ports/postsRepository";
 import { Post } from "../../domain/post";
 import { PostReadModel } from "../../domain/postReadModel";
@@ -7,21 +7,24 @@ import { CommentReadModel } from "../../domain/commentReadModel";
 import { MemberReadModel } from "../../../members/domain/memberReadModel";
 import { DomainEvent } from "@dddforum/core";
 import { EventOutboxTable } from "@dddforum/outbox";
-import { ServerErrors } from '@dddforum/errors'
+import { ServerErrors } from '@dddforum/errors/server'
 import { Queries } from "@dddforum/api/posts";
+import { Database } from "@dddforum/database";
 
 export class ProductionPostsRepository implements PostsRepository {
-  constructor(private prisma: PrismaClient, private eventsTable: EventOutboxTable) {}
+  constructor(private database: Database, private eventsTable: EventOutboxTable) {}
 
   saveAggregateAndEvents(post: Post, events: DomainEvent[]): Promise<void> {
-    return this.prisma.$transaction(async (tx) => {
+    const connection = this.database.getConnection();
+    return connection.$transaction(async (tx) => {
       await this.save(post, tx);
       await this.eventsTable.save(events, tx);
     })
   }
 
   async getPostById(id: string): Promise<Post | null> {
-    const post = await this.prisma.post.findUnique({
+    const connection = this.database.getConnection();
+    const post = await connection.post.findUnique({
       where: { id },
       include: {
         memberPostedBy: true,
@@ -43,6 +46,7 @@ export class ProductionPostsRepository implements PostsRepository {
   }
 
   async findPosts(query: Queries.GetPostsQuery): Promise<PostReadModel[]> {
+    const connection = this.database.getConnection();
     const sqlQuery = {
       orderBy: {},
       include: {
@@ -68,7 +72,7 @@ export class ProductionPostsRepository implements PostsRepository {
       sqlQuery.orderBy = { dateCreated: "desc" }
     }
 
-    const posts = await this.prisma.post.findMany(sqlQuery);
+    const posts = await connection.post.findMany(sqlQuery);
 
     return posts.map((post) =>
       PostReadModel.fromPrismaToDomain(
@@ -80,7 +84,8 @@ export class ProductionPostsRepository implements PostsRepository {
   }
 
   public async getPostDetailsById(id: string): Promise<PostReadModel | null> {
-    const post = await this.prisma.post.findUnique({
+    const connection = this.database.getConnection();
+    const post = await connection.post.findUnique({
       where: { id },
       include: {
         memberPostedBy: true,
@@ -101,7 +106,7 @@ export class ProductionPostsRepository implements PostsRepository {
       return null;
     }
 
-    const voteScore = await this.prisma.postVote.aggregate({
+    const voteScore = await connection.postVote.aggregate({
       _sum: { value: true },
       where: { postId: id },
     }).then(result => result._sum.value || 0);
@@ -114,7 +119,7 @@ export class ProductionPostsRepository implements PostsRepository {
   }
 
   async save(post: Post, transaction?: Prisma.TransactionClient): Promise<void | ServerErrors.DatabaseError> {
-    const prismaInstance = transaction ? transaction : this.prisma;
+    const prismaInstance = transaction ? transaction : this.database.getConnection()
 
     try {
       await prismaInstance.post.upsert({

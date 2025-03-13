@@ -1,5 +1,4 @@
 
-import { Config } from "../../shared/config";
 import { WebServer } from "../../shared/http/webServer";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { PostsController } from "./postsController";
@@ -10,7 +9,8 @@ import { PostsRepository } from "./repos/ports/postsRepository";
 import { MembersRepository } from "../members/repos/ports/membersRepository";
 import { PostsService } from "./application/postsService";
 import { EventOutboxTable } from "@dddforum/outbox";
-import { PrismaDatabase } from "@dddforum/database";
+import { Database, PrismaDatabase } from "@dddforum/database";
+import { Config } from "@dddforum/config";
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;
@@ -18,7 +18,7 @@ export class PostsModule extends ApplicationModule {
   private postsController: PostsController;
 
   private constructor(
-    private db: PrismaDatabase,
+    private db: Database,
     config: Config,
     private eventOutbox: EventOutboxTable,
     private membersRepository: MembersRepository,
@@ -40,7 +40,7 @@ export class PostsModule extends ApplicationModule {
       return InMemoryPostsRepository.createWithSeedData();
     }
 
-    return new ProductionPostsRepository(this.db.getConnection(), this.eventOutbox);
+    return new ProductionPostsRepository(this.db, this.eventOutbox);
   }
 
   private createPostsService(membersRepository: MembersRepository) {

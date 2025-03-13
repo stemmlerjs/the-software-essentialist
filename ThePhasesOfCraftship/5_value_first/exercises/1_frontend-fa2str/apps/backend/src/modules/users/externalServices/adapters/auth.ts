@@ -1,6 +1,6 @@
 import { auth } from 'firebase-admin';
 import { Request, Response, NextFunction } from 'express';
-import { Config } from '../../../../shared/config';
+import { Config } from '@dddforum/config';
 
 export function createJwtCheck(config: Config) {
   return async (req: Request, res: Response, next: NextFunction) => {

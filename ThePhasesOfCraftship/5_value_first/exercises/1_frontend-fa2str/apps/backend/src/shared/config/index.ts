@@ -7,7 +7,7 @@ export type Script =
   | "start"
   | "test:infra";
 
-export class Config {
+export class AppConfig {
   env: Environment;
   script: Script;
   apiURL: string;

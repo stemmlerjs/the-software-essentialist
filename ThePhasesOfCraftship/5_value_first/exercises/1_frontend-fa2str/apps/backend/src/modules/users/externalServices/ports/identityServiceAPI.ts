@@ -1,4 +1,4 @@
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { User } from "../../domain/user";
 
 export interface IdentityServiceAPI {

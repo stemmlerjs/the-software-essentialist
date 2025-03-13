@@ -1,8 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+
 import { CommentRepository } from "../ports/commentRepository";
+import { Database } from "@dddforum/database";
 
 export class ProductionCommentsRepository implements CommentRepository {
-  constructor (private prisma: PrismaClient) {
+  constructor (private database: Database) {
   }
   
   async getCommentById(commentId: string) {

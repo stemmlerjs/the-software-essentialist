@@ -2,12 +2,12 @@ import { CommentsModule } from "../../modules/comments/commentsModule";
 import { MembersModule } from "../../modules/members/membersModule";
 import { VotesModule } from "../../modules/votes/votesModule";
 import { Application } from "../application/applicationInterface";
-import { Config } from "../config";
 import { EventOutboxTable } from "@dddforum/outbox";
 import { WebServer } from "../http";
 import { NatsEventBus } from "@dddforum/bus";
 import { MarketingModule, NotificationsModule, PostsModule, UsersModule } from "../../modules";
 import { PrismaDatabase } from "@dddforum/database";
+import { Config } from "@dddforum/config";
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
@@ -72,7 +72,7 @@ export class CompositionRoot {
   }
 
   createEventsTable () {
-    return new EventOutboxTable(this.dbConnection.getConnection());
+    return new EventOutboxTable(this.dbConnection);
   }
 
   createCommentsModule () {
@@ -141,7 +141,7 @@ export class CompositionRoot {
   }
 
   createWebServer() {
-    return new WebServer({ port: 3000, env: this.config.env });
+    return new WebServer(this.config);
   }
 
   getWebServer() {
@@ -156,7 +156,8 @@ export class CompositionRoot {
   }
 
   private createDBConnection() {
-    const dbConnection = new PrismaDatabase();
+    const config = this.config;
+    const dbConnection = new PrismaDatabase(config);
     if (!this.dbConnection) {
       this.dbConnection = dbConnection;
     }
@@ -204,12 +205,5 @@ export class CompositionRoot {
     return {
       posts: this.postsModule.getPostsRepository(),
     };
-  }
-
-  private shouldBuildFakeRepository() {
-    return (
-      this.config.getScript() === "test:unit" ||
-      this.config.getEnvironment() === "development"
-    );
   }
 }

@@ -1,4 +1,4 @@
-import { Config } from "../config";
+import { Config } from "@dddforum/config";
 
 export class ApplicationModule {
   constructor(private config: Config) {}

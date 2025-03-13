@@ -1,6 +1,6 @@
 
 import { DomainEvent, DomainEventStatus } from '@dddforum/core';
-import { Event as EventModel } from '@prisma/client'
+import { Event as EventModel } from '@dddforum/database'
 
 interface PostUpdatedEventProps {
   postVoteId: string

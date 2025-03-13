@@ -1,7 +1,7 @@
 
 import { AggregateRoot } from "@dddforum/core";
-import { ApplicationErrors } from "@dddforum/errors";
-import { Member as MemberPrismaModel } from "@prisma/client";
+import { ApplicationErrors } from "@dddforum/errors/application";
+import { Member as MemberPrismaModel } from "@dddforum/database";
 import { randomUUID } from "crypto";
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";

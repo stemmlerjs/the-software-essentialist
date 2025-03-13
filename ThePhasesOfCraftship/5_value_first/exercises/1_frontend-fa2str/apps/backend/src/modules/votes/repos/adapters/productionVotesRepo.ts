@@ -1,5 +1,5 @@
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PostVote } from "../../../posts/domain/postVote";
 import { CommentVote } from "../../../comments/domain/commentVote";
 import { VoteRepository } from "../ports/voteRepository";
@@ -7,17 +7,19 @@ import { MemberCommentVotesRoundup } from "../../domain/memberCommentVotesRoundu
 import { MemberPostVotesRoundup } from "../../domain/memberPostVotesRoundup";
 import { DomainEvent } from "@dddforum/core";
 import { EventOutboxTable } from "@dddforum/outbox";
+import { Database } from "@dddforum/database";
 
 export class ProductionVotesRepository implements VoteRepository {
-  constructor (private prisma: PrismaClient, private eventsTable: EventOutboxTable) {
+  constructor (private database: Database, private eventsTable: EventOutboxTable) {
   }
 
   async getMemberCommentVotesRoundup(memberId: string): Promise<MemberCommentVotesRoundup> {
+    const connection = this.database.getConnection();
     const [allCommentsCount, allCommentsUpvoteCount, allCommentsDownvoteCount] = await Promise.all([
-      this.prisma.commentVote.count({
+      connection.commentVote.count({
         where: { memberId },
       }),
-      this.prisma.commentVote.count({
+      connection.commentVote.count({
         where: { 
           commentBelongsTo: {
             memberId,
@@ -25,7 +27,7 @@ export class ProductionVotesRepository implements VoteRepository {
           value: 1
         },
       }),
-      this.prisma.commentVote.count({
+      connection.commentVote.count({
         where: { 
           commentBelongsTo: {
             memberId,
@@ -44,15 +46,16 @@ export class ProductionVotesRepository implements VoteRepository {
 
   async getMemberPostVotesRoundup(memberId: string): Promise<MemberPostVotesRoundup> {
     try {
+      const connection = this.database.getConnection();
       const [allPostsCount, allPostsUpvoteCount, allPostsDownvoteCount] = await Promise.all([
-        this.prisma.postVote.count({
+        connection.postVote.count({
           where: { 
             postBelongsTo: {
               memberId
             }
           },
         }),
-        this.prisma.postVote.count({
+        connection.postVote.count({
           where: { 
             postBelongsTo: {
               memberId
@@ -60,7 +63,7 @@ export class ProductionVotesRepository implements VoteRepository {
             value: 1
           },
         }),
-        this.prisma.postVote.count({
+        connection.postVote.count({
           where: { 
             postBelongsTo: {
               memberId
@@ -83,7 +86,8 @@ export class ProductionVotesRepository implements VoteRepository {
   }
   
   async findVoteByMemberAndCommentId(memberId: string, commentId: string): Promise<CommentVote | null> {
-    const vote = await this.prisma.commentVote.findUnique({
+    const connection = this.database.getConnection();
+    const vote = await connection.commentVote.findUnique({
       where: {
         memberId_commentId: {
           memberId,
@@ -103,7 +107,8 @@ export class ProductionVotesRepository implements VoteRepository {
   }
 
   async findVoteByMemberAndPostId(memberId: string, postId: string): Promise<PostVote | null> {
-    const vote = await this.prisma.postVote.findUnique({
+    const connection = this.database.getConnection();
+    const vote = await connection.postVote.findUnique({
       where: {
         memberId_postId: {
           memberId,
@@ -123,7 +128,8 @@ export class ProductionVotesRepository implements VoteRepository {
   }
 
   async save(vote: PostVote | CommentVote, transaction?: Prisma.TransactionClient) {
-    const prismaInstance = transaction || this.prisma;
+    const connection = this.database.getConnection();
+    const prismaInstance = transaction || connection;
 
     if (vote instanceof PostVote) {
       await prismaInstance.postVote.upsert({
@@ -163,7 +169,8 @@ export class ProductionVotesRepository implements VoteRepository {
     }
 
     async saveAggregateAndEvents(vote: PostVote | CommentVote, events: DomainEvent[]) {
-      return this.prisma.$transaction(async (tx) => {
+      const connection = this.database.getConnection();
+      return connection.$transaction(async (tx) => {
         await this.save(vote, tx);
         await this.eventsTable.save(events, tx);
       })

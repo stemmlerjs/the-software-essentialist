@@ -75,6 +75,9 @@ importers:
       '@dddforum/bus':
         specifier: '*'
         version: link:../../packages/bus
+      '@dddforum/config':
+        specifier: '*'
+        version: link:../../packages/config
       '@dddforum/core':
         specifier: '*'
         version: link:../../packages/core

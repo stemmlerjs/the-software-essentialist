@@ -1,5 +1,5 @@
-import { Request, Response, Router } from 'express';
-import { Config } from '../../shared/config';
+import { Config } from '@dddforum/config';
+import { Router } from 'express';
 import { ErrorRequestHandler } from 'express';
 
 export class UsersController {

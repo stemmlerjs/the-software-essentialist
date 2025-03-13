@@ -10,6 +10,7 @@ import { ProductionMembersRepository } from "../../../../members/repos/adapters/
 import { EventOutboxTable } from "@dddforum/outbox";
 import { Commands  } from "@dddforum/api/votes";
 import { PrismaDatabase } from "@dddforum/database";
+import { Config } from "@dddforum/config";
 
 function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore: number, commentVotes: { upvotes: number, downvotes: number }, postVotes: { upvotes: number, downvotes: number }) {
   jest.resetAllMocks();
@@ -45,11 +46,11 @@ function setupTest(useCase: UpdateMemberReputationScore, initialReputationScore:
 
 describe('updateMemberReputationScore', () => {
 
-  let prisma = new PrismaClient();
-  let database = new PrismaDatabase();
+  let config = Config();
+  let database = new PrismaDatabase(config);
   let eventsTable = new EventOutboxTable(database);
-  let membersRepo = new ProductionMembersRepository(prisma, eventsTable);
-  let votesRepo = new ProductionVotesRepository(prisma, eventsTable);
+  let membersRepo = new ProductionMembersRepository(database, eventsTable);
+  let votesRepo = new ProductionVotesRepository(database, eventsTable);
 
   const useCase = new UpdateMemberReputationScore(membersRepo, votesRepo);
 

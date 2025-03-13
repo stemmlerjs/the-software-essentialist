@@ -14,10 +14,12 @@ import { PostUpvoted } from "../../../../posts/domain/postUpvoted";
 import { PostDownvoted } from "../../../../posts/domain/postDownvoted";
 import { PrismaDatabase } from "@dddforum/database";
 import * as Votes from "@dddforum/api/votes"
+import { Config } from "@dddforum/config";
 
 describe('voteOnPost', () => {
 
-  const database = new PrismaDatabase();
+  let config = Config();
+  const database = new PrismaDatabase(config);
   const prisma = new PrismaClient();
   const eventsTable = new EventOutboxTable(database);
   // TODO: Update database references.

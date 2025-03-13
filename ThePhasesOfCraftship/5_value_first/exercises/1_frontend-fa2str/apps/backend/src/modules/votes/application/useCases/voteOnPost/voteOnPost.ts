@@ -1,5 +1,6 @@
 
-import { ApplicationErrors, ServerErrors } from"@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
+import { ServerErrors } from "@dddforum/errors/server";
 import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 

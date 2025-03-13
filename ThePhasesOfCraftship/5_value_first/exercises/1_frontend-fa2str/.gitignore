@@ -6,4 +6,4 @@ dist
 nats-data
 service-key.json
 .turbo
-.env.json 
+.env.json

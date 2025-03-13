@@ -3,18 +3,14 @@ import express from "express";
 import cors from "cors";
 import { Server } from "http";
 import { ProcessService } from "../processes/processService";
-
-interface WebServerConfig {
-  port: number;
-  env: string;
-}
+import { Config } from "@dddforum/config";
 
 export class WebServer {
   private express: express.Express;
   private state: "stopped" | "started";
   private instance: Server | undefined;
 
-  constructor(private config: WebServerConfig) {
+  constructor(private config: Config) {
     this.state = "stopped";
     this.express = express();
     this.initializeServer();
@@ -39,13 +35,11 @@ export class WebServer {
 
   async start(): Promise<void> {
     return new Promise((resolve, _reject) => {
-      ProcessService.killProcessOnPort(this.config.port, () => {
-        if (this.config.env === "test") {
-          resolve();
-        }
+      const wsConfig = this.config.webserver;
+      ProcessService.killProcessOnPort(wsConfig.port, () => {
         console.log("Starting the server");
-        this.instance = this.express.listen(this.config.port, () => {
-          console.log(`Server is running on port ${this.config.port}`);
+        this.instance = this.express.listen(wsConfig.port, () => {
+          console.log(`Server is running on port ${wsConfig.port}`);
           this.state = "started";
           resolve();
         });

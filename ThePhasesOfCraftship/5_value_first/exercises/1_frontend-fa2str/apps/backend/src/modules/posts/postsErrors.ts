@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 // Todo: clean these custom exceptions
 
-import { ApplicationErrors, ApplicationErrorName } from"@dddforum/errors";
+import { ApplicationErrors, ApplicationErrorName } from "@dddforum/errors/application";
 
 type ErrorAPIResponse = {
   success: false;

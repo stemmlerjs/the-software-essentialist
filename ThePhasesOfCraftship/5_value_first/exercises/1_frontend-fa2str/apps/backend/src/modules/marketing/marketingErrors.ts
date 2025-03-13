@@ -1,14 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { MarketingResponse } from "@dddforum/api/marketing";
-import { ServerErrors, ApplicationErrors, CustomError } from "@dddforum/errors";
+import { ServerErrors } from "@dddforum/errors/server";
+import { ApplicationErrors } from "@dddforum/errors/application";
 
+// TODO: Change the way I'm handling this. I don't really like it.
 export function marketingErrorHandler(
   error: CustomError,
   _: Request,
   res: Response,
   _next: NextFunction,
 ): Response<MarketingResponse> {
+
   let responseBody: MarketingResponse;
+
   if (error.type === "InvalidRequestBodyException") {
     responseBody = {
       success: false,

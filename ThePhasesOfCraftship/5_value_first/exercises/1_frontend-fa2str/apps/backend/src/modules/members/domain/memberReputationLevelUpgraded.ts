@@ -1,7 +1,7 @@
 
 import { DomainEvent, DomainEventStatus } from "@dddforum/core";
 import { MemberReputationLevel } from "./member";
-import { Event as EventModel } from '@prisma/client'
+import { Event as EventModel } from '@dddforum/database'
 
 interface MemberReputationLevelUpgradedEventProps {
   memberId: string;

@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { CommentUpvoted } from "./commentUpvoted";
 import { CommentDownvoted } from "./commentDownvoted";
 import { Types } from "@dddforum/api/votes";
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 

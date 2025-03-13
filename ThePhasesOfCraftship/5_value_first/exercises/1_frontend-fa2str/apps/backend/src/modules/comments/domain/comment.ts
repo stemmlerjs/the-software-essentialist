@@ -1,7 +1,7 @@
 
 import { Types } from "@dddforum/api/votes";
 import { Member } from "../../members/domain/member";
-import { Comment as CommentPrismaModel } from "@prisma/client";
+import { Comment as CommentPrismaModel } from "@dddforum/database";
 
 interface CommentProps {
   id: string;

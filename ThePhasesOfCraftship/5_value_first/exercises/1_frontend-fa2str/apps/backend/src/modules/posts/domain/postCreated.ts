@@ -1,6 +1,6 @@
+
 import { DomainEvent, DomainEventStatus } from '@dddforum/core';
-// TODO: We can remove all of these event models 
-import { Event as EventModel } from '@prisma/client'
+import { Event as EventModel } from '@dddforum/database'
 
 interface PostCreatedEventProps {
   postId: string;

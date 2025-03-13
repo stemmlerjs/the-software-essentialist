@@ -1,6 +1,6 @@
 
 import { AggregateRoot } from "@dddforum/core";
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { randomUUID } from "crypto";
 import { PostUpvoted } from "./postUpvoted";
 import { PostDownvoted } from "./postDownvoted";

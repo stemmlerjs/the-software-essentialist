@@ -1,6 +1,7 @@
 import { success, UseCase, UseCaseResponse } from "@dddforum/core";
 import { SendNotificationCommand } from "../../../notificationCommands";
-import { ApplicationErrors, ServerErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
+import { ServerErrors } from "@dddforum/errors/server";
 import { TransactionalEmailAPI } from "../../../externalServices/ports/transactionalEmailAPI";
 
 export type SendNotificationResponse = UseCaseResponse<void | undefined, 

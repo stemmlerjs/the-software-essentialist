@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { TextUtil } from "@dddforum/core"
 
 export namespace Types {
@@ -50,7 +51,9 @@ export type GetUserErrors = GetUserByEmailErrors | CreateUserErrors;
 export type UserResponse = APIResponse<
   CreateUserResponse | 
   GetUserByEmailResponse | null,
-  GetUserErrors
+  GetUserErrors |
+  ServerErrors.AnyServerError |
+  ApplicationErrors.AnyApplicationError
 >;
 
 export namespace Commands {

@@ -1,10 +1,11 @@
-import { Config } from "../../shared/config";
+
 import { EventBus } from "@dddforum/bus";
 import { ApplicationModule } from "../../shared/modules/applicationModule";
 import { NotificationsService } from "./application/notificationsService";
 import { NotificationsSubscriptions } from "./application/notificationSubscriptions";
 import { TransactionalEmailAPISpy } from "./externalServices/adapters/transactionalEmailAPI/transactionalEmailAPISpy";
 import { TransactionalEmailAPI } from "./externalServices/ports/transactionalEmailAPI";
+import { Config } from "@dddforum/config";
 
 export class NotificationsModule extends ApplicationModule {
   private transactionalEmailAPI: TransactionalEmailAPI;

@@ -1,5 +1,5 @@
 import { DTOs } from "@dddforum/api/members";
-import { Member } from "@prisma/client";
+import { Member } from "@dddforum/database";
 
 interface MemberReadModelProps {
   id: string;

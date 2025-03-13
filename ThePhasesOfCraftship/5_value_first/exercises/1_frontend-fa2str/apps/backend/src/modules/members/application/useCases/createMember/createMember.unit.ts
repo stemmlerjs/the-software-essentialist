@@ -3,17 +3,19 @@ import { Member } from "../../../domain/member";
 import { CreateMember } from "./createMember";
 import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
 import { UserIdentityService } from "../../../../users/application/userIdentityService";
-import { ApplicationErrors } from "@dddforum/errors";
+import { ApplicationErrors } from "@dddforum/errors/application";
 import { EventOutboxTable } from "@dddforum/outbox";
 import { } from '../../../../users/application/userIdentityService'
 import { FirebaseAuth } from "../../../../users/externalServices/adapters/firebaseAuth";
 import { PrismaDatabase } from "@dddforum/database";
 import { Commands } from '@dddforum/api/members'
+import { Config } from "@dddforum/config";
 
 describe('createMember', () => {
   let prisma = new PrismaClient();
   let firebaseAuth = new FirebaseAuth();
-  let database = new PrismaDatabase();
+  let config = Config();
+  let database = new PrismaDatabase(config);
   let usersService = new UserIdentityService(firebaseAuth);
   let outboxTable = new EventOutboxTable(database);
   let membersRepo = new ProductionMembersRepository(prisma, outboxTable);
