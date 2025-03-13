@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
+import { ApplicationErrors} from '@dddforum/errors/application'
 import { Request } from "@dddforum/core";
 
 
@@ -92,7 +93,8 @@ export namespace DTOs {
 
 }
 
-export type VoteErrors = '';
+export type VoteErrors = ServerErrors.AnyServerError |
+ApplicationErrors.AnyApplicationError
 
 // TODO: organize into API type; do for all
 export type VoteOnPostAPIResponse = APIResponse<DTOs.PostVoteDTO, VoteErrors>

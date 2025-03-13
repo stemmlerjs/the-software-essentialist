@@ -1,8 +1,14 @@
 
 import axios from "axios";
 import { APIResponse } from ".";
+import { ServerErrors } from "@dddforum/errors/server";
+import { ApplicationErrors } from "@dddforum/errors/application";
 
-export type AddEmailToListErrors = '';
+
+export type AddEmailToListErrors = 
+ServerErrors.AnyServerError |
+ApplicationErrors.AnyApplicationError;
+
 export type AddEmailToListResponse = APIResponse<boolean, AddEmailToListErrors>;
 
 export type MarketingResponse = APIResponse<

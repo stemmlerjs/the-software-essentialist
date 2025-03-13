@@ -5,7 +5,7 @@ import { ApplicationErrors } from "@dddforum/errors/application";
 
 // TODO: Change the way I'm handling this. I don't really like it.
 export function marketingErrorHandler(
-  error: CustomError,
+  error: Error,
   _: Request,
   res: Response,
   _next: NextFunction,
@@ -13,7 +13,7 @@ export function marketingErrorHandler(
 
   let responseBody: MarketingResponse;
 
-  if (error.type === "InvalidRequestBodyException") {
+  if (error.name === "InvalidRequestBodyException") {
     responseBody = {
       success: false,
       data: null,
