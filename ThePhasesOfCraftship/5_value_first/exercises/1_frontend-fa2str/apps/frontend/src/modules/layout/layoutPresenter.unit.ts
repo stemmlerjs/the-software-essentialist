@@ -1,13 +1,12 @@
 import { fakeUserData } from '../users/__tests__/fakeUserData';
 import { UsersRepository } from '../users/repos/usersRepo';
-import { UserDTO } from '@dddforum/api/users';
+import { Users } from '@dddforum/api';
 import { LayoutPresenter } from './layoutPresenter';
 import { FakeNavigationRepository } from '../../shared/navigation/repos/fakeNavigationRepository';
 import { NavigationRepository } from '../../shared/navigation/repos/navigationRepository';
 import { ProductionUsersRepository } from '../users/repos/productionUsersRepo';
 import { createAPIClient } from '@dddforum/api';
-import { LocalStorage } from '../../shared/storage/localStorage';
-import { FirebaseService } from '../users/externalServices/firebaseService';
+import { FakeAuthService } from '../users/externalServices/fakeAuthService';
 import { MembersStore } from '../../shared/stores/members/membersStore';
 import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
@@ -20,14 +19,14 @@ describe('navLoginPresnter', () => {
   let presenter: LayoutPresenter;
   let loadedVm: UserLoginLayoutViewModel;
 
-  let fakeLocalStorage: FakeLocalStorage;
-  const apiClient = createAPIClient('http://localhost:3000');
-  const firebaseService = new FirebaseService();
+  let fakeLocalStorage: FakeLocalStorage
+  let mockedApi = createAPIClient('');
+  const fakeAuthService = new FakeAuthService();
   const membersRepository = new MembersStore(); // TODO: lots of organizing to do here.
 
-  function setup (userDTO: UserDTO | null, currentRoute: string = "/") {
+  function setup (userDTO: Users.UserDTO | null, currentRoute: string = "/") {
     fakeLocalStorage = new FakeLocalStorage();
-    usersRepository = new ProductionUsersRepository(apiClient, fakeLocalStorage, firebaseService);
+    usersRepository = new ProductionUsersRepository(mockedApi, fakeLocalStorage, fakeAuthService);
     navigationRepository = new FakeNavigationRepository(currentRoute);
     presenter = new LayoutPresenter(
       usersRepository, 

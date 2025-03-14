@@ -1,4 +1,4 @@
-import * as Posts from "@dddforum/api/posts";
+import { Posts } from "@dddforum/api";
 import { PostsRepository } from "./postsRepository";
 import { PostDm } from "../domain/postDm";
 import { makeAutoObservable } from "mobx";

@@ -48,7 +48,7 @@ export class OnboardingPresenter {
         return false;
       }
 
-      const idToken = await user.getIdToken();
+      const idToken = await this.firebaseService.getAuthToken();
       if (!idToken) {
         throw new Error("No authentication token found");
       }
@@ -56,7 +56,7 @@ export class OnboardingPresenter {
       const result = await this.membersStore.createMember({
         username: details.username,
         email: user.email,
-        userId: user.uid,
+        userId: user.id,
         idToken,
         allowMarketing: details.allowMarketing
       });
@@ -66,7 +66,7 @@ export class OnboardingPresenter {
         return true;
       }
       
-      this.error = result.error || "Failed to register member";
+      this.error = result.error?.message || "Failed to register member";
       return false;
     } catch (error) {
       this.error = error instanceof Error ? error.message : "An error occurred";

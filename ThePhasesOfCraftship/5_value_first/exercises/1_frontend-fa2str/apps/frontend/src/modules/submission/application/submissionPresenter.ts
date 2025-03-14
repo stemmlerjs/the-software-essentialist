@@ -4,7 +4,7 @@ import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
 
 import { ApplicationErrors } from "@dddforum/errors/application";
-import * as Posts from "@dddforum/api/posts";
+import { Posts } from "@dddforum/api";
 import { MembersRepo } from "../../../shared/stores/members/membersRepo";
 
 export class SubmissionPresenter {

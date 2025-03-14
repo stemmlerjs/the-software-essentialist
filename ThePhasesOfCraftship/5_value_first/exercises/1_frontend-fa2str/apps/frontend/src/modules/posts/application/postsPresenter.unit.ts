@@ -6,17 +6,15 @@ import { fakeUserData } from "../../users/__tests__/fakeUserData";
 import { SearchFilterViewModel } from "./searchFilterViewModel";
 import { ProductionUsersRepository } from "../../users/repos/productionUsersRepo";
 import { createAPIClient } from "@dddforum/api";
-import { LocalStorage } from "../../../shared/storage/localStorage";
-import { FirebaseService } from "../../users/externalServices/firebaseService";
 import { FakeLocalStorage } from '../../../shared/storage/fakeLocalStorage';
+import { FakeAuthService } from "../../users/externalServices/fakeAuthService";
 
 export {};
 
 describe('PostsPresenter', () => {
 
   const mockedApi = createAPIClient('');
-  const mockedLocalStorage = new LocalStorage();
-  const mockedFirebase = new FirebaseService(); // TODO: use "mocked" for the name on all tests
+  const authService = new FakeAuthService(); // TODO: use "mocked" for the name on all tests
 
   let loadedPostsVm: PostViewModel[] = [];
   let fakeLocalStorage: FakeLocalStorage;
@@ -26,22 +24,18 @@ describe('PostsPresenter', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
-    
     fakeLocalStorage = new FakeLocalStorage();
-
-    // Mock specific localStorage methods if needed
-    (window.localStorage.getItem as jest.MockedFunction<(key: string) => string|null>)
-      .mockReturnValue(null);
+    usersRepository = new ProductionUsersRepository(mockedApi, fakeLocalStorage, authService);
   })
 
   it ('can render a list of posts', async () => {
     
-
     let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 
     await postsPresenter.load((postsVm) => {
       loadedPostsVm = postsVm;
     });
+    
     expect(loadedPostsVm).toHaveLength(3);
 
     let firstPost = loadedPostsVm[0];

@@ -1,4 +1,4 @@
-import * as Posts from '@dddforum/api/posts'
+import { Posts } from '@dddforum/api'
 import { PostDm } from "../domain/postDm";
 
 export interface PostsRepository {

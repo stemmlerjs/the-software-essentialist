@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { PostDm } from "../domain/postDm";
 import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "./postsRepository";
-import * as Posts from "@dddforum/api/posts"
+import { Posts } from "@dddforum/api"
 
 export class ProductionPostsRepository implements PostsRepository {
   public postsDm: PostDm[];

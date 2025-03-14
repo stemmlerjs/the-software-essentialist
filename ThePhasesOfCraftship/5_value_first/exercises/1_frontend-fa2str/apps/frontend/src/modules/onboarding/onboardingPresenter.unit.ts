@@ -13,8 +13,6 @@ describe('OnboardingPresenter', () => {
     let fakeLocalStorage: FakeLocalStorage;
 
     beforeEach(() => {
-      // Remove the old window.localStorage spy
-      // jest.spyOn(window.localStorage, 'getItem').mockImplementation(...);
 
       // If local storage is needed by your store or repository:
       fakeLocalStorage = new FakeLocalStorage();
@@ -72,7 +70,7 @@ describe('OnboardingPresenter', () => {
       const errorMessage = 'Registration failed';
       jest.spyOn(membersStore, 'createMember').mockResolvedValue({ 
         success: false, 
-        error: errorMessage 
+        error: { message: errorMessage }
       });
 
       const result = await presenter.registerMember({

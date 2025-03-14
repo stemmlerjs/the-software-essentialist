@@ -1,4 +1,4 @@
-import * as Posts from "@dddforum/api/posts";
+import { Posts } from "@dddforum/api";
 import { useState } from "react";
 
 interface SubmissionFormProps {

@@ -1,27 +1,18 @@
-export class FakeLocalStorage implements Storage {
-  private store: Record<string, string> = {};
+import { LocalStorage } from "./localStorage";
 
-  get length(): number {
-    return Object.keys(this.store).length;
+export class FakeLocalStorage implements LocalStorage {
+  private storage: Record<string, string> = {};
+
+  store(key: "currentUser", value: any): void {
+    this.storage[key] = JSON.stringify(value);
   }
 
-  clear(): void {
-    this.store = {};
+  retrieve(key: "currentUser"): any {
+    const value = this.storage[key];
+    return value ? JSON.parse(value) : null;
   }
 
-  getItem(key: string): string | null {
-    return this.store[key] || null;
+  remove(key: "currentUser"): void {
+    delete this.storage[key];
   }
-
-  key(index: number): string | null {
-    return Object.keys(this.store)[index] || null;
-  }
-
-  removeItem(key: string): void {
-    delete this.store[key];
-  }
-
-  setItem(key: string, value: string): void {
-    this.store[key] = value;
-  }
-} 
+}

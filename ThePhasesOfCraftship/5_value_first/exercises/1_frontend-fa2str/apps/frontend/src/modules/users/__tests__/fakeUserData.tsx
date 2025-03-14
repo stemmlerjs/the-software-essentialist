@@ -1,6 +1,6 @@
-import { UserDTO } from "@dddforum/api/users";
+import { Users } from "@dddforum/api";
 
-export const fakeUserData: UserDTO = {
+export const fakeUserData: Users.UserDTO = {
   id: '23',
   email: 'khalil@essentialist.dev',
   firstName: 'Khalil',

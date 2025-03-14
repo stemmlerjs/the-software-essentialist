@@ -1,14 +1,17 @@
-import { Users } from "@dddforum/api";
-import { Types } from "@dddforum/api/members";
+import { Users, Members } from "@dddforum/api";
 import { User, UserCredential } from "firebase/auth";
 import { makeAutoObservable } from "mobx";
 
+// Unify all props in one interface
 interface UserDmProps {
-  // TODO: Remove
-  firebaseCredentials?: UserCredential;
+  id: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
   isAuthenticated: boolean;
   username?: string;
   userRoles: string[];
+  firebaseCredentials?: UserCredential;
 }
 
 export class UserDm {
@@ -22,24 +25,37 @@ export class UserDm {
     makeAutoObservable(this);
   }
 
+  get id () {
+    return this.props.id;
+  }
+
+  get email () {
+    return this.props.email;
+  }
+
   public static fromFirebaseCredentials (credentials: UserCredential) {
     return new UserDm({
       isAuthenticated: true,
-      username: undefined,
+      id: credentials.user.uid,
+      email: credentials.user.email ?? '',
+      firstName: '(unknown)',
+      lastName: '(unknown)',
+      username: credentials.user.email ?? undefined,
       userRoles: [],
       firebaseCredentials: credentials
     })
   }
 
   public static fromDTO (dto: Users.UserDTO): UserDm {
-    return new UserDm(
-      {
-        isAuthenticated: false,
-        // TODO: Cleanup
-        username: '',
-        userRoles: dto.roles ? dto.roles : [],
-      }
-    );
+    return new UserDm({
+      isAuthenticated: true,
+      id: dto.id,
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      username: dto.email,
+      userRoles: dto.roles ?? [],
+    });
   }
 
   public isAuthenticated () {
@@ -47,7 +63,7 @@ export class UserDm {
   }
 
   public canVote () {
-    return this.props.userRoles.includes(Types.MemberRoles.Level1);
+    return this.props.userRoles.includes(Members.Types.MemberRoles.Level1);
   }
 
   public get username () {
@@ -63,22 +79,51 @@ export class UserDm {
   }
 
   public static fromLocalStorage(rawUser: {
+    id: string;
     isAuthenticated: boolean;
     username?: string;
     userRoles: string[];
   }): UserDm {
     return new UserDm({
+      id: rawUser.id,
       isAuthenticated: rawUser.isAuthenticated,
       username: rawUser.username,
       userRoles: rawUser.userRoles || []
     });
   }
 
-  public static fromFirebaseUser(user: User): UserDm {
+  /**
+   * Creates a user from the raw Firebase User (without the full credential)
+   */
+  public static fromFirebaseUser(firebaseUser: import('firebase/auth').User): UserDm {
     return new UserDm({
       isAuthenticated: true,
-      username: user.email || undefined,
-      userRoles: []  // Firebase doesn't store roles, we get those from our backend
+      id: firebaseUser.uid,
+      email: firebaseUser.email ?? '',
+      firstName: '(unknown)',
+      lastName: '(unknown)',
+      username: firebaseUser.email || undefined,
+      userRoles: [],
+    });
+  }
+
+  /**
+   * Creates a user from simple primitives (e.g. your own test data)
+   */
+  public static fromPrimitives(props: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  }): UserDm {
+    return new UserDm({
+      isAuthenticated: true,
+      id: props.id,
+      email: props.email,
+      firstName: props.firstName,
+      lastName: props.lastName,
+      username: props.email, // or any other logic
+      userRoles: [],
     });
   }
 }

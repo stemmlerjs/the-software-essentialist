@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { MemberDm } from "./memberDm";
 import { MembersRepo } from "./membersRepo";
 import { apiClient } from "../../../main";
+import { Members } from "@dddforum/api";
 
 interface CreateMemberProps {
   username: string;
@@ -27,7 +28,7 @@ export class MembersStore implements MembersRepo {
     this.member = member;
   }
 
-  async createMember(props: CreateMemberProps): Promise<{ success: boolean; error?: string }> {
+  async createMember(props: CreateMemberProps): Promise<Members.API.CreateMemberAPIResponse> {
     try {
       const registerMemberResponse = await apiClient.members.create({
         username: props.username,
@@ -51,14 +52,11 @@ export class MembersStore implements MembersRepo {
         return { success: true };
       }
 
-      return { 
-        success: false, 
-        error: registerMemberResponse.error || "Failed to register member" 
-      };
+      return registerMemberResponse;
     } catch (error) {
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : "An error occurred" 
+        error: { message: "" } // Return error object with empty message
       };
     }
   }

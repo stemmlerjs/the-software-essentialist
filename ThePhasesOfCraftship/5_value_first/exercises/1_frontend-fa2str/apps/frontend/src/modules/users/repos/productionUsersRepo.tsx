@@ -3,7 +3,7 @@ import { UserDm } from "../domain/userDm";
 import { makeAutoObservable, toJS } from "mobx";
 import { UsersRepository } from "./usersRepo";
 import { LocalStorage } from "../../../shared/storage/localStorage";
-import { FirebaseService } from "../externalServices/firebaseService";
+import { AuthService } from "../ports/authService";
 
 export class ProductionUsersRepository implements UsersRepository {
 
@@ -13,7 +13,7 @@ export class ProductionUsersRepository implements UsersRepository {
   constructor (
     api: APIClient, 
     private localStorage: LocalStorage, 
-    private firebase: FirebaseService
+    private authService: AuthService
   ) {
     makeAutoObservable(this);
     this.api = api;
@@ -31,43 +31,34 @@ export class ProductionUsersRepository implements UsersRepository {
   private async loadInitialUserState(): Promise<void> {
     try {
       const rawUser = this.localStorage.retrieve('currentUser');
-      const isAuthenticated = await this.firebase.isAuthenticated();
+      const isAuthenticated = await this.authService.isAuthenticated();
       
       if (rawUser && isAuthenticated) {
-        const firebaseUser = await this.firebase.getCurrentUser();
-        
-        if (firebaseUser) {
-          const user = UserDm.fromFirebaseUser(firebaseUser);
+        const user = await this.authService.getCurrentUser();
+
+        if (user) {
           this.localStorage.store('currentUser', user.toLocalStorage());
           this.currentUser = user;
           return;
-        }
+          }
       }
 
       // If we get here, either there's no stored user, no Firebase user,
       // or authentication failed - clean up and set unauthenticated user
       this.localStorage.remove('currentUser');
-      this.currentUser = new UserDm({ 
-        isAuthenticated: false, 
-        username: '', 
-        userRoles: [] 
-      });
+      this.currentUser = null;
       
     } catch (error) {
       // Handle any errors by setting unauthenticated user
       console.error('Error loading initial user state:', error);
       this.localStorage.remove('currentUser');
-      this.currentUser = new UserDm({ 
-        isAuthenticated: false, 
-        username: '', 
-        userRoles: [] 
-      });
+      this.currentUser = null;
     }
   }
 
   async getCurrentUser(): Promise<UserDm | null> {
     // If the user is already loaded, just return it.
-    console.log('current user', toJS(this.currentUser) )
+
     if (this.currentUser?.isAuthenticated()) return this.currentUser;
 
     // // If the user isn't already loaded, see if there's an auth token in cookie storage.

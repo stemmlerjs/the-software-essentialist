@@ -1,41 +1,26 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, FirebaseOptions } from 'firebase/app';
 import { 
   getAuth, 
   signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  User as FirebaseUser,
   signInWithPopup, 
-  GoogleAuthProvider, 
-  UserCredential
+  GoogleAuthProvider
 } from 'firebase/auth';
+import { AuthService } from '../ports/authService';
+import { UserDm } from '../domain/userDm';
 
-export class FirebaseService {
+export class FirebaseService implements AuthService {
   private auth;
   private provider;
 
-  constructor() {
-    console.log('firebase')
-    const requiredEnvVars = [
-      'VITE_FIREBASE_API_KEY',
-      'VITE_FIREBASE_AUTH_DOMAIN', 
-      'VITE_FIREBASE_PROJECT_ID'
-    ];
-
-    requiredEnvVars.forEach(envVar => {
-      if (!import.meta.env[envVar]) {
-        console.log(`Missing required environment variable: ${envVar}`)
-        throw new Error(`Missing required environment variable: ${envVar}`);
-      }
-    });
-
-    const firebaseConfig = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    };
-
-    const app = initializeApp(firebaseConfig);
+  constructor(firebaseConfig?: FirebaseOptions) {
+    const options: FirebaseOptions = {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY!,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID!,
+    }
+    const app = initializeApp(firebaseConfig ? firebaseConfig : options);
     this.auth = getAuth(app);
     this.provider = new GoogleAuthProvider();
   }
@@ -50,25 +35,35 @@ export class FirebaseService {
     });
   }
 
-  public async getCurrentUser(): Promise<FirebaseUser | null> {
+  public async getCurrentUser(): Promise<UserDm | null> {
     return new Promise((resolve) => {
       const unsubscribe = onAuthStateChanged(this.auth, (user) => {
         unsubscribe();
-        resolve(user);
+        resolve(user ? UserDm.fromFirebaseUser(user) : null);
       });
     });
   }
 
-  public async signInWithGoogle(): Promise<UserCredential> {
-    return signInWithPopup(this.auth, this.provider);
+  public async signInWithGoogle(): Promise<UserDm> {
+    const userCredential = await signInWithPopup(this.auth, this.provider);
+    return UserDm.fromFirebaseUser(userCredential.user);
   }
 
-  public async signIn(email: string, password: string): Promise<FirebaseUser> {
+  public async signIn(email: string, password: string): Promise<UserDm> {
     const result = await signInWithEmailAndPassword(this.auth, email, password);
-    return result.user;
+    return UserDm.fromFirebaseUser(result.user);
   }
 
   public async signOut(): Promise<void> {
     await signOut(this.auth);
+  }
+
+  public async getAuthToken(): Promise<string | null> {
+    const current = this.auth.currentUser;
+    if (!current) {
+      return null;
+    }
+    // Now we can use Firebase's built-in method:
+    return await current.getIdToken();
   }
 }
