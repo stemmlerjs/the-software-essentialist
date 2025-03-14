@@ -1,9 +1,9 @@
 import { APIClient, Users } from "@dddforum/api"
-import { UserDm } from "../domain/userDm";
+import { UserDm } from "./domain/userDm.js";
 import { makeAutoObservable } from "mobx";
-import { UsersRepository } from "./usersRepo";
-import { LocalStorage } from "../../../shared/storage/localStorageAPI";
-import { AuthService } from "../../../services/auth/authService";
+import { UsersRepository } from "./repos/usersRepo.js";
+import { LocalStorage } from "../../shared/storage/localStorageAPI.js";
+import { AuthService } from "../../services/auth/authService.js";
 
 export class ProductionUsersRepository implements UsersRepository {
   private readonly TOKEN_KEY = 'auth_token';

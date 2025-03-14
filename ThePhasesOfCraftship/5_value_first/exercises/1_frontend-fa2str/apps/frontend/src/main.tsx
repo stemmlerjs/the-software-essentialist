@@ -9,82 +9,73 @@ import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
 // import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
 // import { fakeUserData } from './modules/users/__tests__/fakeUserData';
 
-import { ToastService } from './shared/services/toastService';
-import { MarketingService } from './shared/services/marketingService';
-import { LocalStorage } from './shared/storage/localStorage';
-import { FirebaseService } from './modules/users/externalServices/firebaseService';
-import { NavigationService } from './shared/navigation/navigationService';
-import { OnboardingPresenter } from './modules/onboarding/onboardingPresenter';
-
 import { configure } from "mobx"
-import { LayoutPresenter } from './modules/layout/layoutPresenter';
-import { RegistrationPresenter } from './modules/registration/registrationPresenter';
-import { Presenters } from './shared/contexts/presenters';
-import { MembersStore } from './shared/stores/members/membersStore';
-import { AuthStore } from './shared/stores/auth/authStore';
-import { RootStore } from './shared/stores/root/rootStore';
-import { SubmissionPresenter } from './modules/submission/application/submissionPresenter';
-import { ProductionPostsRepository } from './modules/posts/repos/productionPostsRepository';
+import { Presenters } from './shared/presenters/presenters';
+import { PostsStore } from './modules/posts/repos/postsStore';
 import { appConfig } from '@/config';
-import { ProductionUsersRepository } from './modules/users/repos/productionUsersRepo';
+import { OnboardingPresenter } from './pages/onboarding/onboardingPresenter';
+import { RegistrationPresenter } from './pages/join/registrationPresenter';
+import { LayoutPresenter } from './shared/layout/layoutPresenter';
+import { AuthStore } from './services/auth/auth/authStore';
+import { NavigationService } from './modules/navigation/navigationService';
+import { SubmissionPresenter } from './pages/submission/application/submissionPresenter';
+import { ToastService } from './services/toast/toastService';
+import { MarketingService } from './services/marketing/marketingService';
+import { Stores } from './shared/store/stores';
+import { MembersStore } from './modules/members/membersStore';
+import { FirebaseAPI } from './modules/members/firebaseAPI';
+import { LocalStorageAPI } from './shared/storage/localStorageAPI';
 
 configure({ enforceActions: "never" })
 
 const apiClient = createAPIClient('http://localhost:3000');
 
-const localStorage = new LocalStorage();
-const firebaseService = new FirebaseService(appConfig.firebase);
-const usersRepository = new ProductionUsersRepository(
-  apiClient,
-  localStorage,
-  firebaseService
-);
-
-const membersStore = new MembersStore();
-const authStore = new AuthStore(
-  usersRepository,
-  firebaseService
-)
-
+const toastService = new ToastService();
+const marketingService = new MarketingService();
 const navigationService = new NavigationService();
 
+const localStorageAPI = new LocalStorageAPI();
+const firebaseAPI = new FirebaseAPI(appConfig.firebase);
+
+// Make stores
+const authStore = new AuthStore(
+  apiClient,
+  firebaseAPI,
+  localStorageAPI
+)
+
+const postsStore = new PostsStore(apiClient, authStore);
+const stores = new Stores(
+  authStore,
+  postsStore
+);
+
+// Make presenters
 const onboardingPresenter = new OnboardingPresenter(
-  membersStore,
   navigationService,
-  firebaseService
+  authStore
 );
-
-const postsRepository = new ProductionPostsRepository(apiClient, usersRepository);
-const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
-
-const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
-
+const postsPresenter = new PostsPresenter(postsStore, authStore);
+const registrationPresenter = new RegistrationPresenter(
+  navigationService, 
+  authStore
+);
 const submissionPresenter = new SubmissionPresenter(
-  usersRepository,
+  authStore,
   navigationService,
-  postsRepository,
-  membersStore
+  postsStore
 );
 
+const layoutPresenter = new LayoutPresenter(authStore);
 const presenters = new Presenters(
   onboardingPresenter, 
   registrationPresenter, 
   postsPresenter,
-  submissionPresenter
+  submissionPresenter,
+  layoutPresenter
 );
 
-const navLoginPresenter = new LayoutPresenter(usersRepository, membersStore);
-const toastService = new ToastService();
-const marketingService = new MarketingService();
-
-
-// TODO: clean as repos/stores are the same thing
-const rootStore = new RootStore(
-  usersRepository,
-  membersStore
-);
-
-// Initialize stores
+// Initialize app
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
@@ -94,29 +85,14 @@ createRoot(document.getElementById('root')!).render(
 
 export {
   apiClient,
-
-  // Global cross-cutting stores
-  rootStore,
-  authStore,
-  membersStore,
-  presenters,
   
-  // Repositories
-  postsRepository,
-  usersRepository,
-  
-
-  // Presenters
-  postsPresenter,
-  navLoginPresenter,
-  registrationPresenter,
-  onboardingPresenter,
-  submissionPresenter,
-
-  // Services
-  marketingService,
   toastService,
+
+  marketingService,
   navigationService,
-  firebaseService,
+
+  // Bundle it all up and export
+  stores,
+  presenters,
 }
 

@@ -1,4 +1,4 @@
-import { LocalStorage } from "./localStorage";
+import { LocalStorage } from "./localStorageAPI";
 
 export class FakeLocalStorage implements LocalStorage {
   private storage: Record<string, string> = {};

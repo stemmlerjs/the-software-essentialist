@@ -1,24 +1,21 @@
-import { APIClient, Users } from "@dddforum/api"
-import { UserDm } from "../domain/userDm";
 import { makeAutoObservable } from "mobx";
-import { UsersRepository } from "./usersRepo";
+import { UserDm } from "../domain/userDm";
 import { LocalStorage } from "../../../shared/storage/localStorageAPI";
-import { AuthService } from "../../../services/auth/authService";
+import { FirebaseService } from "../externalServices/firebaseService";
+import { UsersRepository } from "./usersRepo";
 
-export class ProductionUsersRepository implements UsersRepository {
+// TODO: Reconcile these repos; stores and repos. reconcile them.
+export class AuthRepository implements UsersRepository {
   private readonly TOKEN_KEY = 'auth_token';
-  public api: APIClient;
-  public currentUser: UserDm | null = null;
+  currentUser: UserDm | null = null;
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor (
-    api: APIClient, 
-    private localStorage: LocalStorage, 
-    private authService: AuthService
+  constructor(
+    private localStorage: LocalStorage,
+    private firebaseService: FirebaseService
   ) {
     makeAutoObservable(this);
-    this.api = api;
     this.initialize();
   }
 
@@ -47,13 +44,6 @@ export class ProductionUsersRepository implements UsersRepository {
     return !!this.currentUser;
   }
 
-  public save(user: UserDm): void {
-    this.currentUser = user;
-    if (user.isAuthenticated()) {
-      this.localStorage.store('currentUser', user.toLocalStorage());
-    }
-  }
-
   async getCurrentUser(): Promise<UserDm | null> {
     const savedUser = this.localStorage.retrieve('currentUser');
     if (savedUser) {
@@ -64,7 +54,7 @@ export class ProductionUsersRepository implements UsersRepository {
 
   async signOut() {
     try {
-      await this.authService.signOut();
+      await this.firebaseService.signOut();
       this.setCurrentUser(null);
       this.localStorage.remove('currentUser');
       window.location.href = '/';
@@ -74,14 +64,23 @@ export class ProductionUsersRepository implements UsersRepository {
     }
   }
 
+  public save(user: UserDm): void {
+    this.currentUser = user;
+    if (user.isAuthenticated()) {
+      this.localStorage.store('currentUser', user.toLocalStorage());
+    }
+  }
+
   private async loadInitialUserState(): Promise<void> {
     try {
       const rawUser = this.localStorage.retrieve('currentUser');
-      const isAuthenticated = await this.authService.isAuthenticated();
+      const isAuthenticated = await this.firebaseService.isAuthenticated();
       
       if (rawUser && isAuthenticated) {
-        const user = await this.authService.getCurrentUser();
-        if (user) {
+        const firebaseUser = await this.firebaseService.getCurrentUser();
+        
+        if (firebaseUser) {
+          const user = UserDm.fromFirebaseUser(firebaseUser);
           this.localStorage.store('currentUser', user.toLocalStorage());
           this.currentUser = user;
           return;
@@ -91,19 +90,27 @@ export class ProductionUsersRepository implements UsersRepository {
       // If we get here, either there's no stored user, no Firebase user,
       // or authentication failed - clean up and set unauthenticated user
       this.localStorage.remove('currentUser');
-      this.currentUser = null;
+      this.currentUser = new UserDm({ 
+        isAuthenticated: false, 
+        username: '', 
+        userRoles: [] 
+      });
+      
     } catch (error) {
+      // Handle any errors by setting unauthenticated user
       console.error('Error loading initial user state:', error);
       this.localStorage.remove('currentUser');
-      this.currentUser = null;
+      this.currentUser = new UserDm({ 
+        isAuthenticated: false, 
+        username: '', 
+        userRoles: [] 
+      });
     }
   }
 
   getToken(): string | null {
+    // TODO: we should use authToken instead lik the static method defined
     return this.localStorage.retrieve('currentUser');
   }
 
-  public register(registrationDetails: Users.CreateUserParams) {
-    return this.api.users.register(registrationDetails);
-  }
 }

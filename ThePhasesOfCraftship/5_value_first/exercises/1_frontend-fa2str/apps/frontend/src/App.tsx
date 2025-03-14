@@ -2,27 +2,30 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
-import { PostsPage } from "./modules/posts/postsPage";
-import { RegisterPage } from "./modules/registration/registerPage";
-import { SpinnerProvider } from "./shared/contexts/spinnerContext";
-import { OnboardingPage } from "./modules/onboarding/onboardingPage";
+
 import { ErrorBoundary } from "./shared/error/errorBoundary";
 
-import { PresenterProvider } from "./shared/contexts/presentersContext";
-import { AuthProvider } from "./shared/stores/auth/authContext";
-import { SubmissionPage } from "./modules/submission/submissionPage";
-import { authStore, presenters, rootStore } from "./main";
-import { StoreProvider } from "./shared/contexts/storeContext";
-import { FirebaseProvider } from "./shared/auth/firebaseProvider";
+
+
+import { StoreProvider } from "./shared/store/storesContext";
+import { PresenterProvider } from "./shared/presenters/presentersContext";
+import { AuthProvider } from "./services/auth/auth/authContext";
+import { SpinnerProvider } from "./services/spinner/spinnerContext";
+
+import { SubmissionPage } from "./pages/submission/submissionPage";
+import { RegisterPage } from "./pages/join/registerPage";
+import { OnboardingPage } from "./pages/onboarding/onboardingPage";
+import { PostsPage } from "./modules/posts/postsPage";
+
+import { authService, presenters, stores } from "./main";
 
 const App = () => {
   return (
     <ErrorBoundary>
-      <StoreProvider store={rootStore}>
-        <AuthProvider store={authStore}>
-          <FirebaseProvider>
+      <StoreProvider stores={stores}>
+      <AuthProvider service={authService}>
+        <SpinnerProvider>
             <PresenterProvider presenters={presenters}>
-              <SpinnerProvider>
                 <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<PostsPage />} />
@@ -31,10 +34,9 @@ const App = () => {
                     <Route path="/submit" element={<SubmissionPage />} />
                   </Routes>
                 </BrowserRouter>
-              </SpinnerProvider>
             </PresenterProvider>
-          </FirebaseProvider>
-        </AuthProvider>
+          </SpinnerProvider>
+          </AuthProvider>
       </StoreProvider>
     </ErrorBoundary>
   );
