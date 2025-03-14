@@ -1,30 +1,28 @@
-
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { ServerErrors } from "@dddforum/errors/server";
 import { CommentVote } from "../../../domain/commentVote";
-import { UseCase } from "@dddforum/core";
+import { Result, UseCase } from "@dddforum/core";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { CommentRepository } from "../../../repos/ports/commentRepository";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { CanVoteOnCommentPolicy } from "../../../../votes/application/useCases/voteOnComment/canVoteOnComment";
-import { Commands }from "@dddforum/api/votes"
+import { Commands } from "@dddforum/api/votes"
 
-type VoteOnCommentResponse = CommentVote 
+type VoteOnCommentError = 
   | ApplicationErrors.ValidationError 
   | ApplicationErrors.PermissionError 
   | ApplicationErrors.NotFoundError 
-  | ServerErrors.ServerErrorException;
+  | ServerErrors.DatabaseError;
 
-export class VoteOnComment implements UseCase<Commands.VoteOnCommentCommand, VoteOnCommentResponse> {
-
+export class VoteOnComment implements UseCase<Commands.VoteOnCommentCommand, Result<CommentVote, VoteOnCommentError>> {
   constructor(
     private memberRepository: MembersRepository,
     private commentRepository: CommentRepository,
     private voteRepository: VoteRepository
   ) {}
 
-  async execute(request: Commands.VoteOnCommentCommand): Promise<VoteOnCommentResponse> {
-    let commentVote: CommentVote
+  async execute(request: Commands.VoteOnCommentCommand): Promise<Result<CommentVote, VoteOnCommentError>> {
+    let commentVote: CommentVote;
     const { memberId, commentId, voteType } = request.props;
 
     const [memberOrNull, commentOrNull, existingVoteOrNull] = await Promise.all([
@@ -34,39 +32,36 @@ export class VoteOnComment implements UseCase<Commands.VoteOnCommentCommand, Vot
     ]);
 
     if (memberOrNull === null) {
-      return new ApplicationErrors.NotFoundError('member');
+      return Result.failure(new ApplicationErrors.NotFoundError('member'));
     }
 
     if (commentOrNull === null) {
-      return new ApplicationErrors.NotFoundError('comment');
+      return Result.failure(new ApplicationErrors.NotFoundError('comment'));
     }
 
     if (!CanVoteOnCommentPolicy.isAllowed(memberOrNull)) {
-      return new ApplicationErrors.PermissionError();
+      return Result.failure(new ApplicationErrors.PermissionError());
     }
 
     if (existingVoteOrNull) {
-      commentVote = existingVoteOrNull
-      
+      commentVote = existingVoteOrNull;
     } else {
       let commentVoteOrError = CommentVote.create(memberId, commentId);
 
       if (commentVoteOrError instanceof ApplicationErrors.ValidationError) {
-        return commentVoteOrError;
+        return Result.failure(commentVoteOrError);
       }
-      commentVote = commentVoteOrError as CommentVote;
+      commentVote = commentVoteOrError;
     }
 
-    commentVote.castVote(voteType)
+    commentVote.castVote(voteType);
 
     try {
       await this.voteRepository.saveAggregateAndEvents(commentVote, commentVote.getDomainEvents());
-
-      return commentVote;
-      
+      return Result.success(commentVote);
     } catch (error) {
       console.log(error);
-      return new ServerErrors.ServerErrorException();
+      return Result.failure(new ServerErrors.DatabaseError());
     }
   }
 }

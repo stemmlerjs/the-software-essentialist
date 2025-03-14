@@ -139,7 +139,7 @@ defineFeature(feature, (test) => {
   
       then('I should see an error notifying me that my input is invalid', async () => {
         expect(error).toBeDefined();
-        expect(error.type).toEqual('InvalidParamsException');
+        expect(error.type).toEqual('InvalidParamsError');
       });
   
       and('I should not have been sent access to account details', () => {

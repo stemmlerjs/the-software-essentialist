@@ -1,13 +1,6 @@
 import { CustomError } from "./custom";
 
-export type ApplicationErrorName =
-  | "ValidationError"
-  | "ConfictError"
-  | "PermissionError"
-  | "NotFoundError"
-
-
-export type ApplicationEntity = 'member' | 'comment' | 'user' | 'post'
+export type ApplicationEntity = 'member' | 'comment' | 'user' | 'post';
 
 export namespace ApplicationErrors {
 

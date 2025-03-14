@@ -1,7 +1,6 @@
-
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { ServerErrors } from "@dddforum/errors/server";
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
+import { Result, UseCase } from "@dddforum/core";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 
 import { CanVoteOnPostPolicy } from "./canVoteOnPost";
@@ -10,13 +9,13 @@ import { PostsRepository } from "../../../../posts/repos/ports/postsRepository";
 import { VoteRepository } from "../../../repos/ports/voteRepository";
 import { Commands } from "@dddforum/api/votes";
 
-type VoteOnPostResponse = UseCaseResponse<PostVote | undefined, 
-  ApplicationErrors.ValidationError | 
-  ApplicationErrors.PermissionError | 
-  ApplicationErrors.NotFoundError | 
-  ServerErrors.AnyServerError>;
+type VoteOnPostError = 
+  | ApplicationErrors.ValidationError 
+  | ApplicationErrors.PermissionError 
+  | ApplicationErrors.NotFoundError 
+  | ServerErrors.DatabaseError;
 
-export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPostResponse> {
+export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, Result<PostVote, VoteOnPostError>> {
 
   constructor(
     private memberRepository: MembersRepository,
@@ -24,7 +23,7 @@ export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPos
     private voteRepository: VoteRepository
   ) {}
 
-  async execute(request: Commands.VoteOnPostCommand): Promise<VoteOnPostResponse> {
+  async execute(request: Commands.VoteOnPostCommand): Promise<Result<PostVote, VoteOnPostError>> {
     let postVote: PostVote;
     const { memberId, postId, voteType } = request.props;
 
@@ -35,15 +34,15 @@ export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPos
     ]);
 
     if (memberOrNull === null) {
-      return fail(new ApplicationErrors.NotFoundError('member'));
+      return Result.failure(new ApplicationErrors.NotFoundError('member'));
     }
 
     if (postOrNull === null) {
-      return fail(new ApplicationErrors.NotFoundError('post'));
+      return Result.failure(new ApplicationErrors.NotFoundError('post'));
     }
 
     if (!CanVoteOnPostPolicy.isAllowed(memberOrNull)) {
-      return fail(new ApplicationErrors.PermissionError()); 
+      return Result.failure(new ApplicationErrors.PermissionError()); 
       // TODO: these need to specify their policy
       // TODO: these need tests
     }
@@ -56,7 +55,7 @@ export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPos
 
       if (postVoteOrError instanceof ApplicationErrors.ValidationError) {
         // TODO: should be using 'fail' all throughout
-        return fail(postVoteOrError);
+        return Result.failure(postVoteOrError);
       }
       postVote = postVoteOrError;
     }
@@ -68,12 +67,12 @@ export class VoteOnPost implements UseCase<Commands.VoteOnPostCommand, VoteOnPos
       
       await this.voteRepository.saveAggregateAndEvents(postVote, domainEvents);
 
-      return success(postVote);
+      return Result.success(postVote);
       
     } catch (error) {
       console.log(error);
       // TODO: should encapsulate the database error
-      return fail(new ServerErrors.DatabaseError());
+      return Result.failure(new ServerErrors.DatabaseError());
     }
   }
 }

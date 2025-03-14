@@ -1,7 +1,23 @@
 
+type ErrorType = 
+  // Application
+  'ValidationError' |
+  'PermissionError' |
+  'NotFoundError' |
+  'ConfictError' |
+  'CustomError' |
+
+  // Server
+  'InvalidRequestBodyError' |
+  'InvalidParamsError' |
+  'MissingRequestParamsError' | 
+  'DatabaseError' |
+  'GenericServerError'
+
+
 export class CustomError extends Error {
-  public type: string;
-  constructor(message: string, type: string = "CustomError") {
+  public type: ErrorType;
+  constructor(message: string, type: ErrorType = "CustomError") {
     super(message)
     this.type = type;
   }

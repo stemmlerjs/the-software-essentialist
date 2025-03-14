@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnPost } from "./voteOnPost";
@@ -72,16 +71,23 @@ describe('voteOnPost', () => {
   it('should be able to cast an upvote', async () => {
     const { member, post } = await setupTest()
 
-    const command = new Votes.Commands.VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'upvote' });
-    const response = await useCase.execute(command);
+    const command = new Votes.Commands.VoteOnPostCommand({ 
+      memberId: member.id, 
+      postId: post.id, 
+      voteType: 'upvote' 
+    });
+    const result = await useCase.execute(command);
 
-    // Post use case response
-    expect(response).toBeInstanceOf(PostVote);
-    expect((response.getValue() as PostVote).memberId).toBe(member.id);
-    expect((response.getValue() as PostVote).postId).toBe(post.id);
+    expect(result.isSuccess()).toBe(true);
+    if (!result.isSuccess()) return;
+
+    const postVote = result.getValue();
+    expect(postVote).toBeInstanceOf(PostVote);
+    expect(postVote.memberId).toBe(member.id);
+    expect(postVote.postId).toBe(post.id);
 
     // Domain event saved
-    const aggregateId = (response.getValue() as PostVote).id;
+    const aggregateId = postVote.id;
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostUpvoted');
@@ -96,21 +102,28 @@ describe('voteOnPost', () => {
   it('should be able to cast an downvote', async () => {
     const { member, post } = await setupTest()
 
-    const command = new Votes.Commands.VoteOnPostCommand({ memberId: member.id, postId: post.id, voteType: 'downvote' });
-    const response = await useCase.execute(command);
+    const command = new Votes.Commands.VoteOnPostCommand({ 
+      memberId: member.id, 
+      postId: post.id, 
+      voteType: 'downvote' 
+    });
+    const result = await useCase.execute(command);
 
-    // Post use case response
-    expect(response).toBeInstanceOf(PostVote);
-    expect((response.getValue() as PostVote).memberId).toBe(member.id);
-    expect((response.getValue() as PostVote).postId).toBe(post.id);
+    expect(result.isSuccess()).toBe(true);
+    if (!result.isSuccess()) return;
+
+    const postVote = result.getValue();
+    expect(postVote).toBeInstanceOf(PostVote);
+    expect(postVote.memberId).toBe(member.id);
+    expect(postVote.postId).toBe(post.id);
 
     // Domain event saved
-    const aggregateId = (response.getValue() as PostVote).id;
+    const aggregateId = postVote.id;
     const eventsFromTable = await eventsTable.getEventsByAggregateId(aggregateId);
     expect(eventsFromTable.length).toBe(1);
     expect(eventsFromTable[0].name).toBe('PostDownvoted');
 
-    const event = eventsFromTable[0] as PostDownvoted
+    const event = eventsFromTable[0] as PostDownvoted;
     expect(event.aggregateId).toBe(aggregateId);
     expect(event.data.postVoteId).toBe(aggregateId);
     expect(event.data.postId).toBe(post.id);

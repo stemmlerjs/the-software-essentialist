@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "types": ["node", "jest", "express"],
     "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
     "typeRoots": [
       "./src/types",
       "./node_modules/@types"

@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { UpdateMemberReputationScore } from "./updateMemberReputationScore";
 import { MemberCommentVotesRoundup } from "../../../../votes/domain/memberCommentVotesRoundup";
@@ -63,18 +62,22 @@ describe('updateMemberReputationScore', () => {
   
       const { member } = setupTest(useCase, 0, { upvotes: 2, downvotes: 0 }, { upvotes: 0, downvotes: 0 });
   
-      const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
+      const saveSpy = jest.spyOn(useCase['memberRepository'], 'saveAggregateAndEvents')
+        .mockImplementation(async () => {});
   
       const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: member.id,
       });
   
-      let response = await useCase.execute(command);
+      const result = await useCase.execute(command);
   
-      expect(response instanceof Member).toBe(true);
-      expect((response as Member).reputationScore).toBe(2);
-      expect((response as Member).reputationLevel).toBe(MemberReputationLevel.Level1);
-      expect((response as Member).getDomainEvents().length).toBe(0);
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const updatedMember = result.getValue();
+        expect(updatedMember.reputationScore).toBe(2);
+        expect(updatedMember.reputationLevel).toBe(MemberReputationLevel.Level1);
+        expect(updatedMember.getDomainEvents().length).toBe(0);
+      }
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -89,20 +92,23 @@ describe('updateMemberReputationScore', () => {
   
       const { member } = setupTest(useCase, 0, { upvotes: 7, downvotes: 0 }, { upvotes: 0, downvotes: 0 });
   
-      const saveSpy = jest.spyOn(useCase['memberRepository'], 'save').mockImplementation(async () => {});
-
+      const saveSpy = jest.spyOn(useCase['memberRepository'], 'saveAggregateAndEvents')
+        .mockImplementation(async () => {});
   
       const command = new Commands.UpdateMemberReputationScoreCommand({
         memberId: member.id,
       });
   
-      let response = await useCase.execute(command);
+      const result = await useCase.execute(command);
   
-      expect(response instanceof Member).toBe(true);
-      expect((response as Member).reputationScore).toBe(7);
-      expect((response as Member).reputationLevel).toBe(MemberReputationLevel.Level2);
-      expect((response as Member).getDomainEvents().length).toBe(1);
-      expect((response as Member).getDomainEvents()[0].constructor.name).toBe('MemberReputationLevelUpgraded');
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const updatedMember = result.getValue();
+        expect(updatedMember.reputationScore).toBe(7);
+        expect(updatedMember.reputationLevel).toBe(MemberReputationLevel.Level2);
+        expect(updatedMember.getDomainEvents().length).toBe(1);
+        expect(updatedMember.getDomainEvents()[0].constructor.name).toBe('MemberReputationLevelUpgraded');
+      }
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
   });

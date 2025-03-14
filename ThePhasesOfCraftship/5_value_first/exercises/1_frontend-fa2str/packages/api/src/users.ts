@@ -66,7 +66,7 @@ export namespace Commands {
         !body || typeof body !== "object" || TextUtil.isMissingKeys(body, requiredKeys);
   
       if (isRequestInvalid) {
-        throw new ServerErrors.InvalidRequestBodyException(requiredKeys);
+        throw new ServerErrors.InvalidRequestBodyError(requiredKeys);
       }
   
       const input = body as CreateUserParams;
@@ -86,7 +86,7 @@ export namespace Commands {
         !isLastNameValid ||
         !isUsernameValid
       ) {
-        throw new ServerErrors.InvalidParamsException();
+        throw new ServerErrors.InvalidParamsError();
       }
   
       const { username, email, firstName, lastName } = props;

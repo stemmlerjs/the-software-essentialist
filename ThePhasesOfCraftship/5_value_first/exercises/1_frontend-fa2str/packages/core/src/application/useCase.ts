@@ -1,35 +1,58 @@
-
 export interface UseCase<Request, Response> { 
   execute(request: Request): Promise<Response>;
 }
 
-export class UseCaseResponse<T, U> {
-  private value: T | undefined;
-  private success: boolean;
-  private error: U;
+interface SuccessResponse<T> {
+  readonly success: true;
+  readonly value: T;
+}
 
-  constructor (value: T, success: boolean, error: U) {
-    this.value = value;
-    this.success = success;
-    this.error = error
-  }
-  public isSuccess () : boolean {
-    return this.success;
+interface FailureResponse<E> {
+  readonly success: false;
+  readonly error: E;
+}
+
+export type UseCaseResponse<T, E> = SuccessResponse<T> | FailureResponse<E>;
+
+export class Result<T, E> {
+  protected constructor(protected readonly response: UseCaseResponse<T, E>) {}
+
+  public isSuccess(): this is { getValue(): T, getError(): never } {
+    return this.response.success;
   }
 
-  public getValue (): T | undefined {
-    return this.value
+  public isFailure(): this is { getError(): E, getValue(): never } {
+    return !this.response.success;
   }
 
-  public getError (): U {
-    return this.error;
+  public getValue(): T {
+    if (!this.response.success) {
+      throw new Error('Cannot get value from failed response');
+    }
+    return this.response.value;
+  }
+
+  public getError(): E {
+    if (this.response.success) {
+      throw new Error('Cannot get error from successful response');
+    }
+    return this.response.error;
+  }
+
+  static success<T, E>(value: T): Result<T, E> {
+    return new Result<T, E>({ success: true, value });
+  }
+
+  static failure<T, E>(error: E): Result<T, E> {
+    return new Result<T, E>({ success: false, error });
   }
 }
 
-export function fail<U> (error: U) {
-  return new UseCaseResponse<undefined, U>(undefined, false, error)
+// Helper functions
+export function fail<T, E>(error: E): Result<T, E> {
+  return Result.failure(error);
 }
 
-export function success<T, U> (value: T) {
-  return new UseCaseResponse<T, U>(value, true, undefined as unknown as U)
+export function success<T, E>(value: T): Result<T, E> {
+  return Result.success(value);
 }

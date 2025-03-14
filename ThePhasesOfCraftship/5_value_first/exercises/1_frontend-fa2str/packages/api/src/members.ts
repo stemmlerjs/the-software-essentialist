@@ -1,8 +1,9 @@
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
-import { Request } from "@dddforum/core";
+import { Request, Result } from "@dddforum/core";
 import { ServerErrors } from '@dddforum/errors/server'
 import { Types as UserTypes } from './users'
+import { ApplicationErrors } from "@dddforum/errors/application";
 
 export namespace DTOs {
   export type MemberDTO = {
@@ -31,47 +32,65 @@ export namespace Inputs {
 
 export namespace Commands {
   export class CreateMemberCommand {
-
-    constructor(public props: Inputs.CreateMemberInput) {}
+    private constructor(public props: Inputs.CreateMemberInput) {}
   
-    static create (token: UserTypes.DecodedIdToken | undefined, body: Request['body']) {
+    static create(
+      token: UserTypes.DecodedIdToken | undefined, 
+      body: Request['body']
+    ): Result<CreateMemberCommand, ServerErrors.MissingRequestParamsError> {
       if (!token?.email) {
-        throw new ServerErrors.MissingRequestParamsException(["email"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["email"]));
       }
   
       if (!token?.uid) {
-        throw new ServerErrors.MissingRequestParamsException(["userId"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["userId"]));
       }
   
       if (!body.username) {
-        throw new ServerErrors.MissingRequestParamsException(["username"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["username"]));
       }
   
-      return new CreateMemberCommand({
+      return Result.success(new CreateMemberCommand({
         userId: token.uid,
         username: body.username,
         email: token.email as string
-      });
+      }));
+    }
+
+    static fromRequest(
+      user: UserTypes.DecodedIdToken | undefined,
+      body: Request['body']
+    ): Result<CreateMemberCommand, ServerErrors.MissingRequestParamsError> {
+      return this.create(user, body);
     }
   }
 }
 
-type CreateMemberErrors = 
-  // TODO: put any specific application types of errors here; see users.ts
-  '';
+export namespace Errors {
 
-export type CreateMemberAPIResponse = APIResponse<DTOs.MemberDTO, CreateMemberErrors>
+  export type CreateMemberError = '';
+
+  export type AnyMemberError = 
+    CreateMemberError |
+    ApplicationErrors.AnyApplicationError |
+    ServerErrors.AnyServerError
+}
+
+export namespace API {
+  export type CreateMemberAPIResponse = APIResponse<DTOs.MemberDTO, Errors.CreateMemberError>;
+  export type AnyMemberAPIResponse = CreateMemberAPIResponse;
+}
 
 export const createMembersAPI = (apiURL: string) => {
   return {
-    create: async (command: Inputs.CreateMemberInput, authToken: string) => {
+    create: async (input: Inputs.CreateMemberInput, authToken: string) => {
       try {
         const successResponse = await axios.post(
           `${apiURL}/members/new`, 
-          command, 
+          input, 
           getAuthHeaders(authToken)
         );
-        return successResponse.data as CreateMemberAPIResponse;
+        return successResponse.data as API.CreateMemberAPIResponse;
       } catch (err) {
         //@ts-expect-error
         return err.response.data as CreatePostAPIResponse;

@@ -4,29 +4,31 @@ import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
 import { ApplicationErrors } from "@dddforum/errors/application";
 
+export namespace API {
+  export type AddEmailToListResponse = APIResponse<boolean, Errors.AddEmailToListErrors>;
 
-export type AddEmailToListErrors = 
-ServerErrors.AnyServerError |
-ApplicationErrors.AnyApplicationError;
+  export type AnyMarketingAPIResponse = AddEmailToListResponse
+}
 
-export type AddEmailToListResponse = APIResponse<boolean, AddEmailToListErrors>;
-
-export type MarketingResponse = APIResponse<
-  AddEmailToListResponse | null,
-  AddEmailToListErrors
->;
+export namespace Errors {
+  export type AddEmailToListErrors = '';
+  
+  export type AnyMarketingError = 
+    ServerErrors.AnyServerError |
+    ApplicationErrors.AnyApplicationError;
+}
 
 export const createMarketingAPI = (apiURL: string) => {
   return {
-    addEmailToList: async (email: string): Promise<AddEmailToListResponse> => {
+    addEmailToList: async (email: string): Promise<API.AddEmailToListResponse> => {
       try {
         const successResponse = await axios.post(`${apiURL}/marketing/new`, {
           email,
         });
-        return successResponse.data as AddEmailToListResponse;
+        return successResponse.data as API.AddEmailToListResponse;
       } catch (err) {
         //@ts-expect-error
-        return err.response.data as APIResponse;
+        return err.response.data as AnyMarketingAPIResponse; // TODO: signal api error response
       }
     },
   };

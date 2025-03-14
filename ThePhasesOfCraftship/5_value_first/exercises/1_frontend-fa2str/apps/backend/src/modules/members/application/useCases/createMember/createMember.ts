@@ -1,5 +1,4 @@
-
-import { fail, success, UseCase, UseCaseResponse } from "@dddforum/core";
+import { Result, UseCase } from "@dddforum/core";
 import { MembersRepository } from "../../../repos/ports/membersRepository";
 import { Member } from "../../../domain/member";
 import { ApplicationErrors } from "@dddforum/errors/application";
@@ -28,46 +27,41 @@ export class UserIdentityNotFound extends Error {
   }
 }
 
-type CreateMemberResponse = UseCaseResponse<Member | undefined, 
-  ApplicationErrors.ValidationError 
+export type CreateMemberError = 
+  | ApplicationErrors.ValidationError 
   | MemberUsernameTaken 
-  | UserIdentityNotFound>;
+  | UserIdentityNotFound;
 
-export class CreateMember implements UseCase<Commands.CreateMemberCommand, CreateMemberResponse> {
+export class CreateMember implements UseCase<Commands.CreateMemberCommand, Result<Member, CreateMemberError>> {
   constructor(
     private memberRepository: MembersRepository
   ) {}
 
-  async execute(request: Commands.CreateMemberCommand): Promise<CreateMemberResponse> {
+  async execute(request: Commands.CreateMemberCommand): Promise<Result<Member, CreateMemberError>> {
     const { username, userId } = request.props;
-    let existingMember: Member | null =  null;
+    let existingMember: Member | null = null;
 
-    // Check if user already exists; if they do, then we will just return 
-    // them and not do anything else. All good.
     existingMember = await this.memberRepository.getMemberByUserId(userId);
     if (existingMember) {
-      return success(existingMember);
+      return Result.success(existingMember);
     }
 
-    // Check if username is taken
     existingMember = await this.memberRepository.findUserByUsername(username);
     if (existingMember) {
-      return fail(new MemberUsernameTaken());
+      return Result.failure(new MemberUsernameTaken());
     }
 
-    // Create member
     const memberOrError = Member.create({
       username,
       userId,
     });
 
     if (memberOrError instanceof ApplicationErrors.ValidationError) {
-      return fail(memberOrError);
+      return Result.failure(memberOrError);
     }
 
-    // Save member
     await this.memberRepository.saveAggregateAndEvents(memberOrError, memberOrError.getDomainEvents());
 
-    return success(memberOrError);
+    return Result.success(memberOrError);
   }
 }

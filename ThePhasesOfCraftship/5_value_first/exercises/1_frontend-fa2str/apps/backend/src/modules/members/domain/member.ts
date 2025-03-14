@@ -2,7 +2,7 @@
 import { AggregateRoot } from "@dddforum/core";
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { Member as MemberPrismaModel } from "@dddforum/database";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from 'uuid';
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
 import { DTOs } from "@dddforum/api/members";
@@ -88,7 +88,7 @@ export class Member extends AggregateRoot {
 
     return new Member({
       ...inputProps,
-      id: randomUUID(),
+      id: uuidv4(),
       reputationScore: 0,
       reputationLevel: MemberReputationLevel.Level1,
       username: memberUsername

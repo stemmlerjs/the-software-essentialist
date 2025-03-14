@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import { ProductionMembersRepository } from "../../../../members/repos/adapters/productionMembersRepository";
 import { VoteOnComment } from "./voteOnComment";
@@ -65,9 +64,8 @@ describe('voteOnComment', () => {
 
   describe('permissions & identity', () => {
     test('if the member was not found, they should not be able to vote on the comment', async () => {
-
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue(null);
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: 'non-existent-id',
@@ -75,19 +73,20 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
       
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
       
-      expect(response instanceof ApplicationErrors.NotFoundError).toBe(true);
-      expect((response as ApplicationErrors.NotFoundError).name).toEqual('MemberNotFoundError');
-      expect(saveSpy).not.toHaveBeenCalled();
+      expect(result.isSuccess()).toBe(false);
+      if (result.isFailure()) {
+        expect(result.getError().type === 'NotFoundError').toBeTruthy();
+      }
+      expect(saveSpy).not.toHaveBeenCalled(); 
     });
 
     test('if the comment was not found, they should not be able to vote on the comment', async () => {
-
       useCase['commentRepository'].getCommentById = jest.fn().mockResolvedValue(null);
       useCase['memberRepository'].getMemberById = jest.fn().mockResolvedValue({});
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: 'non-existent-id',
@@ -95,17 +94,19 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
       
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
       
-      expect(response instanceof ApplicationErrors.NotFoundError).toBe(true);
-      expect((response as ApplicationErrors.NotFoundError).name).toEqual('CommentNotFoundError');
+      expect(result.isSuccess()).toBe(false);
+      if (result.isFailure()) {
+        expect(result.getError().type === 'NotFoundError').toBeTruthy();
+      }
       expect(saveSpy).not.toHaveBeenCalled();
     });
 
     it.each([
-      [MemberReputationLevel.Level1, ApplicationErrors.PermissionError],
-      [MemberReputationLevel.Level2, CommentVote]
-    ])('as a %s member, I can cast a vote on a comment', async (reputationLevel, result) => {
+      [MemberReputationLevel.Level1, false],
+      [MemberReputationLevel.Level2, true]
+    ])('as a %s member, I can cast a vote on a comment', async (reputationLevel, success) => {
       const { member } = setupCommentAndMember(useCase, reputationLevel);
 
       const command = new Commands.VoteOnCommentCommand({
@@ -114,10 +115,10 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof result).toBeTruthy();
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(success);
     });
   });
 
@@ -125,7 +126,7 @@ describe('voteOnComment', () => {
     test('as a level 2 member, when I upvote a comment I have not yet upvoted, the comment should be upvoted and an upvoted event should get dispatched', async () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -133,25 +134,24 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
-      expect((response as CommentVote).getValue()).toEqual(1);
-      expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
-      expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentUpvoted');
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const commentVote = result.getValue();
+        expect(commentVote.getValue()).toEqual(1);
+        expect(commentVote.getDomainEvents()).toHaveLength(1);
+        expect(commentVote.getDomainEvents()[0].name).toEqual('CommentUpvoted');
+      }
       expect(saveSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
-      //   expect.objectContaining({ name: 'CommentUpvoted' })
-      // ]));
     });
 
     test('as a level 2 member, when I downvote a comment I have not yet downvoted, the comment should be downvoted and a downvoted event should get dispatched', async () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Default');
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -159,26 +159,24 @@ describe('voteOnComment', () => {
         voteType: 'downvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
-      expect((response as CommentVote).getValue()).toEqual(-1);
-      expect((response as CommentVote).getDomainEvents()).toHaveLength(1);
-      expect((response as CommentVote).getDomainEvents()[0].name).toEqual('CommentDownvoted');
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const commentVote = result.getValue();
+        expect(commentVote.getValue()).toEqual(-1);
+        expect(commentVote.getDomainEvents()).toHaveLength(1);
+        expect(commentVote.getDomainEvents()[0].name).toEqual('CommentDownvoted');
+      }
       expect(saveSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
-      //   expect.objectContaining({ name: 'CommentDownvoted' })
-      // ]));
     });
 
     test('as a level 2 member, when I upvote a comment I have already upvoted, the comment should remain upvoted and no upvoted event should get dispatched', async () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Upvoted');
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
-
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -186,22 +184,23 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
-      expect((response as CommentVote).getValue()).toEqual(1);
-      expect((response as CommentVote).getDomainEvents()).toHaveLength(0);
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const commentVote = result.getValue();
+        expect(commentVote.getValue()).toEqual(1);
+        expect(commentVote.getDomainEvents()).toHaveLength(0);
+      }
       expect(saveSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalledWith([]);
     });
 
     test('as a level 2 member, when I downvote a comment I have already downvoted, the comment should remain downvoted', async () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
       setupCommentVote(member, comment, 'Downvoted');
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
-
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -209,13 +208,15 @@ describe('voteOnComment', () => {
         voteType: 'downvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
-      expect((response as CommentVote).getValue()).toEqual(-1);
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
+      if (result.isSuccess()) {
+        const commentVote = result.getValue();
+        expect(commentVote.getValue()).toEqual(-1);
+      }
       expect(saveSpy).toHaveBeenCalled();
-
     });
   });
 
@@ -224,7 +225,7 @@ describe('voteOnComment', () => {
     test('upvote existing: as a level 2 member, when I upvote a comment with existing votes that I have not yet upvoted, the comment score should get incremented', async () => {
       const {member, comment} = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -232,18 +233,17 @@ describe('voteOnComment', () => {
         voteType: 'upvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
-      expect(response instanceof CommentVote).toBeTruthy();
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
       expect(saveSpy).toHaveBeenCalled();
-
     });
 
     test('downvote existing: as a level 2 member, when I downvote a comment with existing votes that I have not yet downvoted, the comment score should get decremented', async () => {
       const {member, comment } = setupCommentAndMember(useCase, MemberReputationLevel.Level2);
 
-      const saveSpy = jest.spyOn(useCase['voteRepository'], 'save');
+      const saveSpy = jest.spyOn(useCase['voteRepository'], 'saveAggregateAndEvents');
 
       const command = new Commands.VoteOnCommentCommand({
         commentId: comment.id,
@@ -251,14 +251,11 @@ describe('voteOnComment', () => {
         voteType: 'downvote'
       });
 
-      const response = await useCase.execute(command);
+      const result = await useCase.execute(command);
 
-      expect(response).toBeDefined();
+      expect(result).toBeDefined();
+      expect(result.isSuccess()).toBe(true);
       expect(saveSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalled();
-      // expect(eventBusSpy).toHaveBeenCalledWith(expect.arrayContaining([
-      //   expect.objectContaining({ name: 'CommentDownvoted' })
-      // ]));
     });
 
   });

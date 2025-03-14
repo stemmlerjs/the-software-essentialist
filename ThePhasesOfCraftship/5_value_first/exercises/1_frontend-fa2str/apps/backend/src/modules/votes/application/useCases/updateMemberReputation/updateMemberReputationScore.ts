@@ -1,35 +1,37 @@
-
-import { UseCase } from "@dddforum/core";
+import { Result, UseCase } from "@dddforum/core";
 import { VoteRepository } from "../../../../votes/repos/ports/voteRepository";
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { MembersRepository } from "../../../../members/repos/ports/membersRepository";
 import { Member } from "../../../../members/domain/member";
-import { Commands  } from "@dddforum/api/votes";
+import { Commands } from "@dddforum/api/votes";
+import { ServerErrors } from "@dddforum/errors/server";
 
 // TODO: Consider ApplicationErrors.NotFoundError<Member>;
-type UpdateMemberReputationScoreResponse = Member | ApplicationErrors.NotFoundError;
+type UpdateMemberReputationError = 
+  | ApplicationErrors.NotFoundError
+  | ServerErrors.DatabaseError;
 
 // Note: This is also something which could be done on a cron job
 // We could have a cron job that runs every 24 hours and updates the reputation score of all members using 
 // the read models. This would be a good way to ensure that the reputation score is always up to date.
 
-export class UpdateMemberReputationScore implements UseCase<Commands.UpdateMemberReputationScoreCommand, UpdateMemberReputationScoreResponse> {
+export class UpdateMemberReputationScore implements UseCase<Commands.UpdateMemberReputationScoreCommand, Result<Member, UpdateMemberReputationError>> {
   constructor(
     private memberRepository: MembersRepository,
     private votesRepository: VoteRepository
   ) {}
 
-  async execute(request: Commands.UpdateMemberReputationScoreCommand): Promise<UpdateMemberReputationScoreResponse> {
+  async execute(request: Commands.UpdateMemberReputationScoreCommand): Promise<Result<Member, UpdateMemberReputationError>> {
     const { memberId } = request.props;
 
-    const [ memberOrNull, commentVotesRoundup, postVotesRoundup ] = await Promise.all([
+    const [memberOrNull, commentVotesRoundup, postVotesRoundup] = await Promise.all([
       this.memberRepository.getMemberById(memberId),
       this.votesRepository.getMemberCommentVotesRoundup(memberId),
       this.votesRepository.getMemberPostVotesRoundup(memberId)
     ]);
 
     if (memberOrNull === null) {
-      return new ApplicationErrors.NotFoundError('member');
+      return Result.failure(new ApplicationErrors.NotFoundError('member'));
     }
 
     // Get the current score from the read models for this member to calculate
@@ -44,13 +46,11 @@ export class UpdateMemberReputationScore implements UseCase<Commands.UpdateMembe
 
     memberOrNull.updateReputationScore(newScore);
 
-    await this.memberRepository.saveAggregateAndEvents(memberOrNull, memberOrNull.getDomainEvents());
-
-    // There's a chance that the member's reputation level has changed as a result of the 
-    // new score as well.
-    // await this.eventBus.publishEvents(memberOrNull.getDomainEvents());
-
-    return memberOrNull;
+    try {
+      await this.memberRepository.saveAggregateAndEvents(memberOrNull, memberOrNull.getDomainEvents());
+      return Result.success(memberOrNull);
+    } catch (err) {
+      return Result.failure(new ServerErrors.DatabaseError());
+    }
   }
-  
 }

@@ -9,7 +9,7 @@ export class MarketingService {
       const result = await this.contactListAPI.addEmailToList(email);
       return result;
     } catch (err) {
-      throw new ServerErrors.ServerErrorException();
+      throw new ServerErrors.GenericServerError();
     }
   }
 }

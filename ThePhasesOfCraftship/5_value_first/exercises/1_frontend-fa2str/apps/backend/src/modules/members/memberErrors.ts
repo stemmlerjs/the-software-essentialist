@@ -1,25 +1,17 @@
 import { Request, Response, NextFunction } from "express";
+import { API } from '@dddforum/api/members'
 
 // Todo: clean these custom exceptions
 // TODO: Implement proper errors for all of these
 // TODO: Move all of thesen to shared
-import { ApplicationErrorName, ApplicationErrors } from "@dddforum/errors/application";
-
-type ErrorAPIResponse = {
-  success: false;
-  data: undefined;
-  error: {
-    message: string;
-    code: ApplicationErrorName
-  }
-}
+import { ApplicationErrors } from "@dddforum/errors/application";
 
 export function membersErrorHandler(
   error: Error,
   _: Request,
   res: Response,
   _next: NextFunction,
-): Response<ErrorAPIResponse> { // Updated return type
+): Response<API.AnyMemberAPIResponse> { // Updated return type
 
   switch ((error as ApplicationErrors.AnyApplicationError).name) {
     case "PermissionError":
@@ -39,7 +31,7 @@ export function membersErrorHandler(
           code: error.name,
           message: error.message,
         }
-      } as ErrorAPIResponse);
+      });
     case 'ServerError':
     default:
       return res.status(500).json({
@@ -49,6 +41,6 @@ export function membersErrorHandler(
           code: error.name,
           message: error.message,
         }
-      } as ErrorAPIResponse);
+      });
   }
 }

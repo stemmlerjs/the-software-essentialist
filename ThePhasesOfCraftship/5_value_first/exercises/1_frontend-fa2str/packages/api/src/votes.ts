@@ -22,15 +22,15 @@ export namespace Commands {
       const { voteType, commentId, memberId } = body;
   
       if (!commentId) {
-        throw new ServerErrors.MissingRequestParamsException(["commentId"]);
+        throw new ServerErrors.MissingRequestParamsError(["commentId"]);
       }
   
       if (!voteType) {
-        throw new ServerErrors.MissingRequestParamsException(["voteType"]);
+        throw new ServerErrors.MissingRequestParamsError(["voteType"]);
       }
   
       if (!memberId) {
-        throw new ServerErrors.MissingRequestParamsException(["memberId"]);
+        throw new ServerErrors.MissingRequestParamsError(["memberId"]);
       }
   
       return new VoteOnCommentCommand({ ...body });
@@ -44,15 +44,15 @@ export namespace Commands {
       const { voteType, postId, memberId } = body;
   
       if (!postId) {
-        throw new ServerErrors.MissingRequestParamsException(["postId"]);
+        throw new ServerErrors.MissingRequestParamsError(["postId"]);
       }
   
       if (!voteType) {
-        throw new ServerErrors.MissingRequestParamsException(["voteType"]);
+        throw new ServerErrors.MissingRequestParamsError(["voteType"]);
       }
   
       if (!memberId) {
-        throw new ServerErrors.MissingRequestParamsException(["memberId"]);
+        throw new ServerErrors.MissingRequestParamsError(["memberId"]);
       }
   
       return new VoteOnCommentCommand({ ...body });
@@ -93,27 +93,32 @@ export namespace DTOs {
 
 }
 
-export type VoteErrors = ServerErrors.AnyServerError |
-ApplicationErrors.AnyApplicationError
+export namespace API {
+  export type VoteOnPostAPIResponse = APIResponse<DTOs.PostVoteDTO, VoteErrors>
 
-// TODO: organize into API type; do for all
-export type VoteOnPostAPIResponse = APIResponse<DTOs.PostVoteDTO, VoteErrors>
+  export type AnyVotesAPIResponse = 
+  VoteOnPostAPIResponse;
+}
+
+export type VoteErrors = 
+  ServerErrors.AnyServerError |
+  ApplicationErrors.AnyApplicationError
 
 export const createVotesAPI = (apiUrl: string) => {
   return {
     // TODO: ensure all of these are called "inputs"
-    voteOnPost: async (input: Inputs.VoteOnPostInput, authToken: string): Promise<VoteOnPostAPIResponse> => {
+    voteOnPost: async (input: Inputs.VoteOnPostInput, authToken: string): Promise<API.VoteOnPostAPIResponse> => {
       try {
         const successResponse = await axios.post(`${apiUrl}/votes/post/${input.postId}/new`, input, {
           headers: {
             Authorization: `Bearer ${authToken}`
           }
         });
-        return successResponse.data as APIResponse<DTOs.PostVoteDTO, VoteErrors>;
+        return successResponse.data as API.VoteOnPostAPIResponse;
       } catch (err) {
         // TODO: Don't do this, type it strictly. Fix for all
         //@ts-expect-error
-        return err.response.data as APIResponse<DTOs.PostVoteDTO, VoteErrors>;
+        return err.response.data as API.VoteOnPostAPIResponse;
       }
     }
   }

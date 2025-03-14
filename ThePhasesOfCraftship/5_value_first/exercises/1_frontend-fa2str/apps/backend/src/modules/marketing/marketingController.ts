@@ -1,6 +1,6 @@
 import express from "express";
 import { MarketingService } from "./application/marketingService";
-import { AddEmailToListResponse } from "@dddforum/api/marketing";
+import { API } from "@dddforum/api/marketing";
 import { ErrorHandler } from "../../shared/errors";
 
 export class MarketingController {
@@ -35,7 +35,7 @@ export class MarketingController {
     try {
       const email = req.body.email;
       const result = await this.marketingService.addEmailToList(email);
-      const response: AddEmailToListResponse = {
+      const response: API.AddEmailToListResponse = {
         success: true,
         data: result,
         error: {},

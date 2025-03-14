@@ -2,23 +2,15 @@ import { Request, Response, NextFunction } from "express";
 
 // Todo: clean these custom exceptions
 
-import { ApplicationErrors, ApplicationErrorName } from "@dddforum/errors/application";
-
-type ErrorAPIResponse = {
-  success: false;
-  data: undefined;
-  error: {
-    message: string;
-    code: ApplicationErrorName
-  }
-}
+import { ApplicationErrors } from "@dddforum/errors/application";
+import { API } from '@dddforum/api/posts'
 
 export function postsErrorHandler(
   error: Error,
   _: Request,
   res: Response,
   _next: NextFunction,
-): Response<ErrorAPIResponse> { // Updated return type
+): Response<API.AnyPostsAPIResponse> {
 
   switch ((error as ApplicationErrors.AnyApplicationError).name) {
     case "PermissionError":
@@ -38,7 +30,7 @@ export function postsErrorHandler(
           code: error.name,
           message: error.message,
         }
-      } as ErrorAPIResponse);
+      });
     case 'ServerError':
     default:
       return res.status(500).json({
@@ -48,7 +40,7 @@ export function postsErrorHandler(
           code: error.name,
           message: error.message,
         }
-      } as ErrorAPIResponse);
+      });
   }
 }
 

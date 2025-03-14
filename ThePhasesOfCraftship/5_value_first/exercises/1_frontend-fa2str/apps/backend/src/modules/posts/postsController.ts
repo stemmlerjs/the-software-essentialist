@@ -1,4 +1,3 @@
-
 import express from "express";
 import { Queries, API, Commands } from "@dddforum/api/posts";
 import { ErrorHandler } from "../../shared/errors";
@@ -57,36 +56,27 @@ export class PostsController {
     next: express.NextFunction,
   ) {
     try {
-      const command = Commands.CreatePostCommand.fromRequest(req.body);
-      const result = await this.postsService.createPost(command);
-
-      if (!result.isSuccess()) {
-        const error = result.getError();
-        return next(error);
-      } else {
-        const newPost = result.getValue() as Post;
-        const postDetails = await this.postsService.getPostDetailsById(newPost.id);
-
-        if (!postDetails) {
-          // Improvement: Handle these consistently and with strict types
-          return res.status(500).json({
-            success: false,
-            data: undefined,
-            error: {
-              code: "ServerError",
-              message: "Server error: post created but could not be retrieved."
-            }
-          });
-        }
-
-        const response: API.CreatePostAPIResponse = {
-          success: true,
-          data: postDetails?.toDTO()
-        };
-        return res.status(200).json(response);
+      const commandOrError = Commands.CreatePostCommand.fromRequest(req.body);
+      if (!commandOrError.isSuccess()) {
+        return next(commandOrError.getError());
       }
-    } catch (error) {
-      next(error);
+
+      const result = await this.postsService.createPost(commandOrError.getValue());
+      if (!result.isSuccess()) {
+        return next(result.getError());
+      }
+
+      const newPost = result.getValue();
+      const postDetails = await this.postsService.getPostDetailsById(newPost.id);
+
+      const response: API.CreatePostAPIResponse = {
+        success: true,
+        data: postDetails?.toDTO()
+      };
+
+      return res.status(200).json(response);
+    } catch (err) {
+      next(err);
     }
   }
 

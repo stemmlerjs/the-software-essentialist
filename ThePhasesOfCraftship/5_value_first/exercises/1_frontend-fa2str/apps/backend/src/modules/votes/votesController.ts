@@ -1,6 +1,5 @@
-
 import express from "express";
-import { VoteOnPostAPIResponse  } from "@dddforum/api/votes";
+import { API } from "@dddforum/api/votes";
 import { ErrorHandler } from "../../shared/errors";
 import { VotesService } from "./application/votesService";
 import { PostVote } from "../posts/domain/postVote";
@@ -36,7 +35,6 @@ export class VotesController {
     next: express.NextFunction,
   ) {
     try {
-
       const command = new Commands.VoteOnPostCommand({
         postId: req.params.postId,
         voteType: req.body.voteType,
@@ -46,17 +44,15 @@ export class VotesController {
       const result = await this.votesService.castVoteOnPost(command);
 
       if (!result.isSuccess()) {
-        const error = result.getError();
-        return next(error);
-      } else {
-        const postVote = result.getValue() as PostVote;
-
-        const response: VoteOnPostAPIResponse = {
-          success: true,
-          data: postVote.toDTO()
-        };
-        return res.status(200).json(response);
+        return next(result.getError());
       }
+
+      const postVote = result.getValue();
+      const response: API.VoteOnPostAPIResponse = {
+        success: true,
+        data: postVote.toDTO()
+      };
+      return res.status(200).json(response);
     } catch (error) {
       next(error);
     }

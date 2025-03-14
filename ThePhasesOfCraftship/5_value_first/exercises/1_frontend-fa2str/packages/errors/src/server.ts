@@ -7,42 +7,42 @@ import { CustomError } from "./custom";
 
 export namespace ServerErrors {
 
-  export class InvalidRequestBodyException extends CustomError {
+  export class InvalidRequestBodyError extends CustomError {
     constructor(missingKeys: string[]) {
       super(
         "Body is missing required key: " + missingKeys.join(", "),
-        "InvalidRequestBodyException",
+        "InvalidRequestBodyError",
       );
     }
   }
 
-  export class InvalidParamsException extends CustomError {
+  export class InvalidParamsError extends CustomError {
     constructor() {
-      super("Params are invalid", "InvalidParamsException");
+      super("Params are invalid", "InvalidParamsError");
     }
   }
   
-  export class MissingRequestParamsException extends CustomError {
+  export class MissingRequestParamsError extends CustomError {
     constructor(missingKeys: string[]) {
       super(
         "Params is missing required key: " + missingKeys.join(", "),
-        "InvalidRequestParamsException",
+        "MissingRequestParamsError",
       );
     }
   }
   
-  export class InvalidRequestParamsException extends CustomError {
+  export class InvalidRequestParamsError extends CustomError {
     constructor(invalidKeys: string[]) {
       super(
         "Params has invalid key: " + invalidKeys.join(", "),
-        "InvalidRequestParamsException",
+        "MissingRequestParamsError",
       );
     }
   }
   
-  export class ServerErrorException extends CustomError {
+  export class GenericServerError extends CustomError {
     constructor(message = "") {
-      super(message ? `An error occurred: ${message}` : "An error occurred", "ServerErrorException");
+      super(message ? `An error occurred: ${message}` : "An error occurred", "GenericServerError");
     }
   }
 
@@ -56,10 +56,10 @@ export namespace ServerErrors {
   }
 
   export type AnyServerError = 
-    | ServerErrors.InvalidRequestBodyException 
-    | ServerErrors.InvalidParamsException 
-    | ServerErrors.MissingRequestParamsException 
-    | ServerErrors.InvalidRequestParamsException 
-    | ServerErrors.ServerErrorException 
+    | ServerErrors.InvalidRequestBodyError 
+    | ServerErrors.InvalidParamsError 
+    | ServerErrors.MissingRequestParamsError 
+    | ServerErrors.InvalidParamsError 
+    | ServerErrors.GenericServerError 
     | ServerErrors.DatabaseError;
 }

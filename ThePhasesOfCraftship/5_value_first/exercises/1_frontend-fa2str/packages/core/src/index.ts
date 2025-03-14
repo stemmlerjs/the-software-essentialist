@@ -5,6 +5,7 @@ export { ReadModel } from './application/readModel';
 export { 
   type UseCase,
   type UseCaseResponse,
+  Result,
   fail,
   success
 } from './application/useCase';

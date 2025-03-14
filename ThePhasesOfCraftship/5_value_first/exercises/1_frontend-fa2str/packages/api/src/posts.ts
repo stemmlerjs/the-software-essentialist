@@ -1,7 +1,7 @@
 import axios from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { z } from 'zod';
-import { Request } from "@dddforum/core";
+import { Request, Result } from "@dddforum/core";
 import { DTOs as MemberDTOs } from "./members";
 import { DTOs as CommentDTOs } from "./comments";
 import { ApplicationErrors } from "@dddforum/errors/application";
@@ -26,7 +26,7 @@ export namespace Queries {
       const postId = req['query'].postId || req['params'].postId;
   
       if (!postId) {
-        throw new ServerErrors.MissingRequestParamsException(["postId"]);
+        throw new ServerErrors.MissingRequestParamsError(["postId"]);
       }
   
       return new GetPostByIdQuery({ postId: postId as string });
@@ -53,11 +53,11 @@ export namespace Queries {
       console.log("sort", sort);
   
       if (!sort) {
-        throw new ServerErrors.MissingRequestParamsException(["sort"]);
+        throw new ServerErrors.MissingRequestParamsError(["sort"]);
       }
   
       if (sort !== "recent" && sort !== "popular") {
-        throw new ServerErrors.InvalidRequestParamsException(["sort"]);
+        throw new ServerErrors.InvalidRequestParamsError(["sort"]);
       }
   
       return new GetPostsQuery({ sort });
@@ -82,12 +82,12 @@ export namespace Commands {
       return this.props;
     }
 
-    public static create(input: Inputs.CreatePostInput) {
+    public static create(input: Inputs.CreatePostInput): Result<CreatePostCommand, ApplicationErrors.ValidationError> {
       const schema = z.object({
-        title: z.string().min(1, 'Title is required'),
+        title: z.string().min(6, 'Title is required'),
         memberId: z.string(),
-        content: z.string().optional(),
-        link: z.string().optional(),
+        content: z.string().min(5, 'Content must be at least 5 characters').optional(),
+        link: z.string().url('Link must be a valid URL').optional(),
         postType: z.enum(['text', 'link'])
       }).refine(data => {
         if (data.postType === 'text' && !data.content) {
@@ -103,31 +103,32 @@ export namespace Commands {
 
       try {
         const result = schema.parse(input);
-        return new Commands.CreatePostCommand(result);
+        return Result.success(new CreatePostCommand(result));
       } catch (error) {
         if (error instanceof z.ZodError) {
-          throw new ApplicationErrors.ValidationError(error.errors[0].message);
+          const missingKeys = error.errors.map(err => err.path.join('.')).join(', ');
+          return Result.failure(new ApplicationErrors.ValidationError(`Missing or invalid fields: ${missingKeys}`));
         }
-        throw error;
+        return Result.failure(new ApplicationErrors.ValidationError("Validation error"));
       }
     }
 
-    public static fromRequest(body: Request['body']) {
+    public static fromRequest(body: Request['body']): Result<CreatePostCommand, ServerErrors.MissingRequestParamsError> {
       const { title, postType, memberId } = body;
   
       if (!memberId) {
-        throw new ServerErrors.MissingRequestParamsException(["memberId"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["memberId"]));
       }
   
       if (!title) {
-        throw new ServerErrors.MissingRequestParamsException(["title"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["title"]));
       }
   
       if (!postType) {
-        throw new ServerErrors.MissingRequestParamsException(["postType"]);
+        return Result.failure(new ServerErrors.MissingRequestParamsError(["postType"]));
       }
   
-      return new CreatePostCommand({ ...body });
+      return Result.success(new CreatePostCommand({ ...body }));
     }
   }
 }
@@ -151,25 +152,32 @@ export namespace DTOs {
   };
 }
 
-// TODO: tidy functional errors; see users.ts
-// Errors
-export type GetPostsErrors = '';
+export namespace Errors {
 
-export type CreatePostErrors = '';
+  // TODO: define errors
+  export type GetPostsErrors = '';
 
-export type GetPostByIdErrors = '';
+  export type CreatePostErrors = '';
 
+  export type GetPostByIdErrors = '';
+
+  export type AnyPostError = 
+    ServerErrors.AnyServerError |
+    ApplicationErrors.AnyApplicationError
+}
 
 export namespace API {
-  export type GetPostsAPIResponse = APIResponse<DTOs.PostDTO[], GetPostsErrors>;
+  export type GetPostsAPIResponse = APIResponse<DTOs.PostDTO[], Errors.GetPostsErrors>;
 
-  export type CreatePostAPIResponse = APIResponse<DTOs.PostDTO, CreatePostErrors>;
+  export type CreatePostAPIResponse = APIResponse<DTOs.PostDTO, Errors.CreatePostErrors>;
 
-  export type GetPostByIdAPIResponse = APIResponse<DTOs.PostDTO, GetPostByIdErrors>;
+  export type GetPostByIdAPIResponse = APIResponse<DTOs.PostDTO, Errors.GetPostByIdErrors>;
 
   export type AnyPostsAPIResponse = 
-    GetPostsAPIResponse 
-  | CreatePostAPIResponse;
+    GetPostsAPIResponse | 
+    CreatePostAPIResponse | 
+    Errors.AnyPostError; // TODO: this pattern throughout
+    // TODO: tidy functional errors; see users.ts
 }
 
 export const createPostsAPI = (apiURL: string) => {
