@@ -3,6 +3,21 @@ import { NavigationService } from "../../shared/navigation/navigationService";
 import { FirebaseService } from "../users/externalServices/firebaseService";
 import { MembersStore } from "../../shared/stores/members/membersStore";
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
+import { AppConfig } from "@/config";
+
+// You have to replicate the way it's imported. We export "appConfig"
+jest.mock('@/config', () => ({
+  appConfig: {
+    apiURL: 'http://localhost:3000',
+    firebase: {
+      apiKey: 'test-api-key',
+      authDomain: 'test-auth-domain', 
+      projectId: 'test-project-id'
+    }
+  }
+}));
+
+// Your existing test code...
 
 describe('OnboardingPresenter', () => {
   describe('member registration', () => {
@@ -13,8 +28,6 @@ describe('OnboardingPresenter', () => {
     let fakeLocalStorage: FakeLocalStorage;
 
     beforeEach(() => {
-
-      // If local storage is needed by your store or repository:
       fakeLocalStorage = new FakeLocalStorage();
 
       membersStore = new MembersStore();
@@ -27,7 +40,6 @@ describe('OnboardingPresenter', () => {
         })
       } as any;
 
-      // If your membersStore or userRepo needs localStorage, pass in fakeLocalStorage instead
       presenter = new OnboardingPresenter(
         membersStore,
         navigationService,
@@ -36,7 +48,6 @@ describe('OnboardingPresenter', () => {
     });
   
     afterEach(() => {
-      // Restore the original mock so other tests won't be affected
       jest.restoreAllMocks();
     });
   

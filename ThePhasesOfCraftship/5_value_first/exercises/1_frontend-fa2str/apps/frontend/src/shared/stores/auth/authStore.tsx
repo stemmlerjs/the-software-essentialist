@@ -1,4 +1,3 @@
-
 import { makeAutoObservable } from 'mobx';
 import { NavigateFunction } from 'react-router-dom';
 import { UserDm } from '../../../modules/users/domain/userDm';

@@ -1,7 +1,7 @@
 import { APIClient } from "@dddforum/api";
 import { makeAutoObservable } from "mobx";
 import { PostDm } from "../domain/postDm";
-import { AuthRepository } from "../../users/repos/authRepository";
+import { UsersRepository } from "../../users/repos/usersRepo";
 import { PostsRepository } from "./postsRepository";
 import { Posts } from "@dddforum/api"
 
@@ -10,7 +10,7 @@ export class ProductionPostsRepository implements PostsRepository {
 
   constructor(
     private api: APIClient,
-    private authRepository: AuthRepository
+    private usersRepository: UsersRepository
   ) {
     makeAutoObservable(this);
     this.postsDm = [];
@@ -27,7 +27,7 @@ export class ProductionPostsRepository implements PostsRepository {
   }
 
   async create(input: Posts.Inputs.CreatePostInput): Promise<PostDm> {
-    const authToken = this.authRepository.getToken() ?? '';
+    const authToken = this.usersRepository.getToken() ?? '';
     const response = await this.api.posts.create(input, authToken);
     if (!response.data) {
       throw new Error('Failed to create post');

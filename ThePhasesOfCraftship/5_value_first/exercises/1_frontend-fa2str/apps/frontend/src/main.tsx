@@ -14,7 +14,6 @@ import { MarketingService } from './shared/services/marketingService';
 import { LocalStorage } from './shared/storage/localStorage';
 import { FirebaseService } from './modules/users/externalServices/firebaseService';
 import { NavigationService } from './shared/navigation/navigationService';
-import { AuthRepository } from './modules/users/repos/authRepository';
 import { OnboardingPresenter } from './modules/onboarding/onboardingPresenter';
 
 import { configure } from "mobx"
@@ -26,20 +25,24 @@ import { AuthStore } from './shared/stores/auth/authStore';
 import { RootStore } from './shared/stores/root/rootStore';
 import { SubmissionPresenter } from './modules/submission/application/submissionPresenter';
 import { ProductionPostsRepository } from './modules/posts/repos/productionPostsRepository';
+import { appConfig } from '@/config';
+import { ProductionUsersRepository } from './modules/users/repos/productionUsersRepo';
 
 configure({ enforceActions: "never" })
 
 const apiClient = createAPIClient('http://localhost:3000');
 
 const localStorage = new LocalStorage();
-const firebaseService = new FirebaseService();
-const authRepository = new AuthRepository(localStorage, 
+const firebaseService = new FirebaseService(appConfig.firebase);
+const usersRepository = new ProductionUsersRepository(
+  apiClient,
+  localStorage,
   firebaseService
 );
 
 const membersStore = new MembersStore();
 const authStore = new AuthStore(
-  authRepository,
+  usersRepository,
   firebaseService
 )
 
@@ -51,13 +54,13 @@ const onboardingPresenter = new OnboardingPresenter(
   firebaseService
 );
 
-const postsRepository = new ProductionPostsRepository(apiClient, authRepository);
-const postsPresenter = new PostsPresenter(postsRepository, authRepository);
+const postsRepository = new ProductionPostsRepository(apiClient, usersRepository);
+const postsPresenter = new PostsPresenter(postsRepository, usersRepository);
 
-const registrationPresenter = new RegistrationPresenter(authRepository, navigationService, firebaseService);
+const registrationPresenter = new RegistrationPresenter(usersRepository, navigationService, firebaseService);
 
 const submissionPresenter = new SubmissionPresenter(
-  authRepository,
+  usersRepository,
   navigationService,
   postsRepository,
   membersStore
@@ -70,14 +73,14 @@ const presenters = new Presenters(
   submissionPresenter
 );
 
-const navLoginPresenter = new LayoutPresenter(authRepository, membersStore);
+const navLoginPresenter = new LayoutPresenter(usersRepository, membersStore);
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 
 
 // TODO: clean as repos/stores are the same thing
 const rootStore = new RootStore(
-  authRepository,
+  usersRepository,
   membersStore
 );
 
@@ -100,7 +103,7 @@ export {
   
   // Repositories
   postsRepository,
-  authRepository,
+  usersRepository,
   
 
   // Presenters

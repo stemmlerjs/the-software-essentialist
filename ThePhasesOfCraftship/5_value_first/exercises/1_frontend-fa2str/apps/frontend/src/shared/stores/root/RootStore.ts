@@ -1,10 +1,12 @@
-
-import { AuthRepository } from "../../../modules/users/repos/authRepository";
-import { MembersRepo } from "../members/membersRepo";
+import { makeAutoObservable } from "mobx";
+import { MembersStore } from "../members/membersStore";
+import { UsersRepository } from "../../../modules/users/repos/usersRepo";
 
 export class RootStore {
   constructor(
-    public auth: AuthRepository,
-    public members: MembersRepo,
-  ) {}
+    public users: UsersRepository,
+    public members: MembersStore
+  ) {
+    makeAutoObservable(this);
+  }
 } 

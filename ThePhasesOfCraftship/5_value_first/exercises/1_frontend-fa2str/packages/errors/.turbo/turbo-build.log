@@ -1,9 +1,16 @@
 
-
 > @dddforum/errors@1.0.0 build /Users/khalilstemmler/Documents/Personal/current/the-software-essentialist/ThePhasesOfCraftship/5_value_first/exercises/1_frontend-fa2str/packages/errors
-> npm run clean && tsc
+> npm run clean && esbuild ./src/index.ts --bundle --platform=node --target=node20 --outfile=./dist/index.js && npm run build:types
 
 
 > @dddforum/errors@1.0.0 clean
 > rimraf dist
+
+
+  dist/index.js  14b 
+
+⚡ Done in 13ms
+
+> @dddforum/errors@1.0.0 build:types
+> tsc --declaration ./src/index.ts --emitDeclarationOnly --outDir ./dist --moduleResolution nodenext --module nodenext
 

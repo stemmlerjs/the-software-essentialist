@@ -21,8 +21,13 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client", "jest", "node"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src", "src/typings.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -14,13 +14,8 @@ export class FirebaseService implements AuthService {
   private auth;
   private provider;
 
-  constructor(firebaseConfig?: FirebaseOptions) {
-    const options: FirebaseOptions = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY!,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID!,
-    }
-    const app = initializeApp(firebaseConfig ? firebaseConfig : options);
+  constructor(config: FirebaseOptions) {
+    const app = initializeApp(config);
     this.auth = getAuth(app);
     this.provider = new GoogleAuthProvider();
   }

@@ -1,18 +1,18 @@
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../../shared/navigation/navigationService";
-import { AuthRepository } from "../../users/repos/authRepository";
 import { PostsRepository } from "../../posts/repos/postsRepository";
 
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { Posts } from "@dddforum/api";
 import { MembersRepo } from "../../../shared/stores/members/membersRepo";
+import { UsersRepository } from "@/modules/users/repos/usersRepo";
 
 export class SubmissionPresenter {
   isSubmitting = false;
   error: string | null = null;
 
   constructor(
-    private authRepository: AuthRepository,
+    private authRepository: UsersRepository,
     private navigationService: NavigationService,
     private postsRepository: PostsRepository,
     private memberRepo: MembersRepo
