@@ -1,5 +1,4 @@
-
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
 import { ApplicationErrors } from "@dddforum/errors/application";
@@ -26,9 +25,15 @@ export const createMarketingAPI = (apiURL: string) => {
           email,
         });
         return successResponse.data as API.AddEmailToListResponse;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as AnyMarketingAPIResponse; // TODO: signal api error response
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.AddEmailToListResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.AddEmailToListResponse;
       }
     },
   };

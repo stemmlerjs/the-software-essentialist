@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { Request, Result } from "@dddforum/core";
 import { ServerErrors } from '@dddforum/errors/server'
@@ -91,9 +91,15 @@ export const createMembersAPI = (apiURL: string) => {
           getAuthHeaders(authToken)
         );
         return successResponse.data as API.CreateMemberAPIResponse;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as CreatePostAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.CreateMemberAPIResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.CreateMemberAPIResponse;
       }
     }
   }

@@ -10,15 +10,7 @@
     "lab:subscribe": "ts-node lab/subscribe.ts",
     "build": "tsc -b tsconfig.json",
     "start:dev": "npx nodemon",
-    "start": "npm run build && node dist/relay/src/index.js",
-    "test": "jest",
-    "test:dev": "jest --watchAll",
-    "test:e2e": "jest -c jest.config.e2e.ts",
-    "test:e2e:dev": "jest -c jest.config.e2e.ts --watch",
-    "test:infra": "jest -c jest.config.infra.ts",
-    "test:infra:dev": "jest -c jest.config.infra.ts --watch",
-    "test:unit": "jest -c jest.config.unit.ts",
-    "test:unit:dev": "jest -c jest.config.unit.ts --watchAll"
+    "start": "npm run build && node dist/relay/src/index.js"
   },
   "keywords": [],
   "author": "",

@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && esbuild ./src/index.ts --bundle --platform=node --target=node20 --outfile=./dist/index.js",
+    "build": "npm run clean && esbuild ./src/index.ts --bundle --platform=node --target=node20 --outfile=./dist/index.js && npm run build:types",
+    "build:types": "tsc --declaration ./src/index.ts --emitDeclarationOnly --outDir ./dist --moduleResolution nodenext --module nodenext",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },

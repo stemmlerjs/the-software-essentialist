@@ -1,7 +1,6 @@
 import { Member } from "../../../domain/member";
 import { CreateMember } from "./createMember";
 import { ProductionMembersRepository } from "../../../repos/adapters/productionMembersRepository";
-import { ApplicationErrors } from "@dddforum/errors/application";
 import { EventOutboxTable } from "@dddforum/outbox";
 import { PrismaDatabase } from "@dddforum/database";
 import { Commands } from '@dddforum/api/members'
@@ -39,10 +38,8 @@ describe('createMember', () => {
     const result = await useCase.execute(commandOrError.getValue());
 
     expect(result.isSuccess()).toBe(true);
-    if (result.isSuccess()) {
-      expect(result.getValue()).toBeInstanceOf(Member);
-      expect(saveSpy).toHaveBeenCalled();
-    }
+    expect(result.getValue()).toBeInstanceOf(Member);
+    expect(saveSpy).toHaveBeenCalled();
   });
 
   test('should fail if username is already taken', async () => {
@@ -65,9 +62,7 @@ describe('createMember', () => {
     const result = await useCase.execute(commandOrError.getValue());
 
     expect(result.isSuccess()).toBe(false);
-    if (result.isFailure()) {
-      expect(result.getError().name).toBe('MemberUsernameTaken');
-    }
+    expect(result.getError().name).toBe('MemberUsernameTaken');
     expect(saveSpy).not.toHaveBeenCalled();
   });
 

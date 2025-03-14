@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
 import { ApplicationErrors } from "@dddforum/errors/application";
@@ -123,9 +123,15 @@ export const createUsersAPI = (apiURL: string) => {
           code
         });
         return successResponse.data as AuthenticateResponse;
-      } catch (err) {
-        //@ts-ignore
-        return err.response.data as AuthenticateResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as AuthenticateResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as AuthenticateResponse;
       }
     },
     register: async (input: CreateUserParams): Promise<CreateUserResponse> => {
@@ -134,18 +140,30 @@ export const createUsersAPI = (apiURL: string) => {
           ...input,
         });
         return successResponse.data as CreateUserResponse;
-      } catch (err) {
-        //@ts-ignore
-        return err.response.data as CreateUserResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as CreateUserResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as CreateUserResponse;
       }
     },
     getUserByEmail: async (email: string): Promise<GetUserByEmailResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/users/${email}`);
         return successResponse.data as GetUserByEmailResponse;
-      } catch (err) {
-        //@ts-ignore
-        return err.response.data as GetUserByEmailResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as GetUserByEmailResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as GetUserByEmailResponse;
       }
     },
   };

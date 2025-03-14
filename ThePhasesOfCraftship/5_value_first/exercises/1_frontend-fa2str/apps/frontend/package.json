@@ -17,10 +17,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@dddforum/api": "*",
-    "@dddforum/errors": "*",
-    "@dddforum/core": "*",
     "@auth0/auth0-react": "^2.3.0",
+    "@dddforum/api": "*",
+    "@dddforum/core": "*",
+    "@dddforum/errors": "*",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "axios": "^1.6.2",
@@ -38,7 +38,6 @@
     "react-toastify": "^9.1.3"
   },
   "devDependencies": {
-    "esbuild": "0.24.2",
     "@types/auth0": "^3.3.10",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.2.37",
@@ -46,9 +45,11 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "esbuild": "0.24.2",
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
+    "jest-environment-jsdom": "^29.7.0",
     "puppeteer": "^22.10.0",
     "vite": "^5.0.0"
   },

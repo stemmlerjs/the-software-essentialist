@@ -36,7 +36,7 @@ export class Result<T, E> {
     if (this.response.success) {
       throw new Error('Cannot get error from successful response');
     }
-    return this.response.error;
+    return (this.response as FailureResponse<E>).error;
   }
 
   static success<T, E>(value: T): Result<T, E> {

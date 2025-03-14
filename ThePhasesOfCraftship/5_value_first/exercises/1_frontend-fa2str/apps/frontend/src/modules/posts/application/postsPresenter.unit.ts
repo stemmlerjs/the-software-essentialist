@@ -1,4 +1,3 @@
-
 import { PostsPresenter } from "./postsPresenter";
 import { PostViewModel } from "./postViewModel";
 import { FakePostsRepository } from "../repos/fakePostsRepository";
@@ -9,6 +8,9 @@ import { ProductionUsersRepository } from "../../users/repos/productionUsersRepo
 import { createAPIClient } from "@dddforum/api";
 import { LocalStorage } from "../../../shared/storage/localStorage";
 import { FirebaseService } from "../../users/externalServices/firebaseService";
+import { FakeLocalStorage } from '../../../shared/storage/fakeLocalStorage';
+
+export {};
 
 describe('PostsPresenter', () => {
 
@@ -17,11 +19,19 @@ describe('PostsPresenter', () => {
   const mockedFirebase = new FirebaseService(); // TODO: use "mocked" for the name on all tests
 
   let loadedPostsVm: PostViewModel[] = [];
+  let fakeLocalStorage: FakeLocalStorage;
   let postsRepository = new FakePostsRepository(fakePostsData);
-  let usersRepository = new ProductionUsersRepository(mockedApi, mockedLocalStorage, mockedFirebase);
+  let usersRepository: ProductionUsersRepository;
 
   beforeEach(() => {
-    // Todo: set this up
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+    
+    fakeLocalStorage = new FakeLocalStorage();
+
+    // Mock specific localStorage methods if needed
+    (window.localStorage.getItem as jest.MockedFunction<(key: string) => string|null>)
+      .mockReturnValue(null);
   })
 
   it ('can render a list of posts', async () => {

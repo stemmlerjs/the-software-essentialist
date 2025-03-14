@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { APIResponse, getAuthHeaders } from ".";
 import { z } from 'zod';
 import { Request, Result } from "@dddforum/core";
@@ -103,7 +103,7 @@ export namespace Commands {
 
       try {
         const result = schema.parse(input);
-        return Result.success(new CreatePostCommand(result));
+        return Result.success(new CreatePostCommand(result as Inputs.CreatePostInput));
       } catch (error) {
         if (error instanceof z.ZodError) {
           const missingKeys = error.errors.map(err => err.path.join('.')).join(', ');
@@ -191,27 +191,45 @@ export const createPostsAPI = (apiURL: string) => {
           getAuthHeaders(authToken)
         );
         return successResponse.data as API.CreatePostAPIResponse;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as CreatePostAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.CreatePostAPIResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.CreatePostAPIResponse;
       }
     },
     getPosts: async (sort: Queries.GetPostsQueryInput): Promise<API.GetPostsAPIResponse> => {
       try {
-        const successResponse = await axios.get(`${apiURL}/posts?sort=${sort}`);
+        const successResponse = await axios.get(`${apiURL}/posts?sort=${sort.sort}`);
         return successResponse.data as API.GetPostsAPIResponse;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as API.GetPostsAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.GetPostsAPIResponse;
+        }
+        return {
+          data: [],
+          error: "Unknown error",
+          success: false
+        } as API.GetPostsAPIResponse;
       }
     },
     getPostById: async (postId: string): Promise<API.GetPostByIdAPIResponse> => {
       try {
         const successResponse = await axios.get(`${apiURL}/posts/${postId}`);
         return successResponse.data as API.GetPostByIdAPIResponse;
-      } catch (err) {
-        //@ts-expect-error
-        return err.response.data as API.GetPostByIdAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.GetPostByIdAPIResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.GetPostByIdAPIResponse;
       }
     }
   };

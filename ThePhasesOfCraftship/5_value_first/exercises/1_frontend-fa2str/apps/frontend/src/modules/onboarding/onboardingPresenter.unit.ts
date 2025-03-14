@@ -1,95 +1,88 @@
 import { OnboardingPresenter } from "./onboardingPresenter";
-import { UsersRepository } from "../users/repos/usersRepo";
 import { NavigationService } from "../../shared/navigation/navigationService";
 import { FirebaseService } from "../users/externalServices/firebaseService";
-import { AuthStore } from "../../shared/stores/auth/authStore";
+import { MembersStore } from "../../shared/stores/members/membersStore";
+import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
 
 describe('OnboardingPresenter', () => {
-  let presenter: OnboardingPresenter;
-  let usersRepository: jest.Mocked<UsersRepository>;
-  let navigationService: jest.Mocked<NavigationService>;
-  let firebaseService: jest.Mocked<FirebaseService>;
-  let authStore: jest.Mocked<AuthStore>; // TODO: make this into a repo or consolidate w/ users
+  describe('member registration', () => {
+    let presenter: OnboardingPresenter;
+    let membersStore: MembersStore;
+    let navigationService: jest.Mocked<NavigationService>;
+    let firebaseService: jest.Mocked<FirebaseService>;
+    let fakeLocalStorage: FakeLocalStorage;
 
-  const mockDetails = {
-    username: 'testuser',
-    email: 'test@example.com',
-    userId: 'user123',
-    allowMarketing: true
-  };
+    beforeEach(() => {
+      // Remove the old window.localStorage spy
+      // jest.spyOn(window.localStorage, 'getItem').mockImplementation(...);
 
-  // TODO: Implement these tests
+      // If local storage is needed by your store or repository:
+      fakeLocalStorage = new FakeLocalStorage();
 
-  // beforeEach(() => {
-  //   // TODO: Note this is another technique for mocking; not as good
-  //   usersRepository = {
-  //     register: jest.fn(),
-  //     getCurrentUser: jest.fn(),
-  //   } as any;
+      membersStore = new MembersStore();
+      navigationService = { navigate: jest.fn() } as any;
+      firebaseService = {
+        getCurrentUser: jest.fn().mockResolvedValue({
+          email: 'test@example.com',
+          uid: 'test-uid',
+          getIdToken: jest.fn().mockResolvedValue('mock-token')
+        })
+      } as any;
 
-  //   navigationService = {
-  //     goTo: jest.fn(),
-  //   } as any;
+      // If your membersStore or userRepo needs localStorage, pass in fakeLocalStorage instead
+      presenter = new OnboardingPresenter(
+        membersStore,
+        navigationService,
+        firebaseService
+      );
+    });
+  
+    afterEach(() => {
+      // Restore the original mock so other tests won't be affected
+      jest.restoreAllMocks();
+    });
+  
+    test('should read from localStorage', () => {
+      expect(window.localStorage.getItem('someKey')).toBe('myCustomValue');
+    });
 
-  //   firebaseService = {
-  //     getCurrentUser: jest.fn().mockReturnValue({
-  //       getIdToken: jest.fn().mockResolvedValue('mock-token')
-  //     }),
-  //   } as any;
 
-  //   authStore = {
-  //     setCurrentUser: jest.fn()
-  //   } as any;
+    test('should successfully register a member', async () => {
+      jest.spyOn(membersStore, 'createMember').mockResolvedValue({ success: true });
 
-  //   presenter = new OnboardingPresenter(
-  //     usersRepository,
-  //     navigationService,
-  //     firebaseService,
-  //   );
-  // });
+      const result = await presenter.registerMember({
+        username: 'testuser',
+        allowMarketing: false
+      });
 
-  // it('should successfully register a member', async () => {
-  //   const mockUser = { /* mock user object */ };
-  //   // usersRepository.save.mockResolvedValue({}); // TODO: clean
-  //   usersRepository.getCurrentUser.mockResolvedValue(mockUser);
+      expect(result).toBe(true);
+      expect(membersStore.createMember).toHaveBeenCalledWith({
+        username: 'testuser',
+        email: 'test@example.com',
+        userId: 'test-uid',
+        idToken: 'mock-token',
+        allowMarketing: false
+      });
+      expect(navigationService.navigate).toHaveBeenCalledWith('/');
+      expect(presenter.isSubmitting).toBe(false);
+      expect(presenter.error).toBeNull();
+    });
 
-  //   const result = await presenter.registerMember(mockDetails);
+    test('should handle registration failure', async () => {
+      const errorMessage = 'Registration failed';
+      jest.spyOn(membersStore, 'createMember').mockResolvedValue({ 
+        success: false, 
+        error: errorMessage 
+      });
 
-  //   expect(result).toBe(true);
-  //   expect(usersRepository.register).toHaveBeenCalledWith({
-  //     username: mockDetails.username,
-  //     email: mockDetails.email,
-  //     userId: mockDetails.userId,
-  //     idToken: 'mock-token'
-  //   });
-  //   expect(navigationService.goTo).toHaveBeenCalledWith('/');
-  //   expect(presenter.isSubmitting).toBe(false);
-  //   expect(presenter.error).toBeNull();
-  //   expect(usersRepository.getCurrentUser).toHaveBeenCalled();
-  //   expect(authStore.setCurrentUser).toHaveBeenCalledWith(mockUser);
-  // });
+      const result = await presenter.registerMember({
+        username: 'testuser',
+        allowMarketing: false
+      });
 
-  // it('should handle registration failure', async () => {
-  //   const errorMessage = 'Registration failed';
-  //   usersRepository.register.mockResolvedValue({ 
-  //     success: false, 
-  //     error: errorMessage 
-  //   });
-
-  //   const result = await presenter.registerMember(mockDetails);
-
-  //   expect(result).toBe(false);
-  //   expect(presenter.error).toBe(errorMessage);
-  //   expect(navigationService.goTo).not.toHaveBeenCalled();
-  // });
-
-  // it('should handle missing authentication token', async () => {
-  //   firebaseService.getCurrentUser.mockReturnValue(null);
-
-  //   const result = await presenter.registerMember(mockDetails);
-
-  //   expect(result).toBe(false);
-  //   expect(presenter.error).toBe('No authentication token found');
-  //   expect(usersRepository.register).not.toHaveBeenCalled();
-  // });
+      expect(result).toBe(false);
+      expect(presenter.error).toBe(errorMessage);
+      expect(navigationService.navigate).not.toHaveBeenCalled();
+    });
+  });
 });

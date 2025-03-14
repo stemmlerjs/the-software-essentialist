@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { APIResponse } from ".";
 import { ServerErrors } from "@dddforum/errors/server";
 import { ApplicationErrors} from '@dddforum/errors/application'
@@ -110,15 +110,18 @@ export const createVotesAPI = (apiUrl: string) => {
     voteOnPost: async (input: Inputs.VoteOnPostInput, authToken: string): Promise<API.VoteOnPostAPIResponse> => {
       try {
         const successResponse = await axios.post(`${apiUrl}/votes/post/${input.postId}/new`, input, {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
+          headers: { Authorization: `Bearer ${authToken}` }
         });
         return successResponse.data as API.VoteOnPostAPIResponse;
-      } catch (err) {
-        // TODO: Don't do this, type it strictly. Fix for all
-        //@ts-expect-error
-        return err.response.data as API.VoteOnPostAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.VoteOnPostAPIResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.VoteOnPostAPIResponse;
       }
     }
   }

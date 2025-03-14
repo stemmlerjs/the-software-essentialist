@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "../../shared/navigation/navigationService";
 import { FirebaseService } from "../users/externalServices/firebaseService";
-import { apiClient } from "../../main";
 import { MembersStore } from "../../shared/stores/members/membersStore";
 import { MemberDm } from "../../shared/stores/members/memberDm";
 
@@ -54,30 +53,20 @@ export class OnboardingPresenter {
         throw new Error("No authentication token found");
       }
 
-      const registerMemberResponse = await apiClient.members.create({
+      const result = await this.membersStore.createMember({
         username: details.username,
         email: user.email,
-        userId: user.uid
-      }, idToken);
+        userId: user.uid,
+        idToken,
+        allowMarketing: details.allowMarketing
+      });
 
-      if (details.allowMarketing) {
-        await apiClient.marketing.addEmailToList(user.email);
-      }
-
-      if (registerMemberResponse.success && registerMemberResponse.data) {
-        const member = new MemberDm({
-          id: registerMemberResponse.data.memberId,
-          username: details.username,
-          email: user.email,
-          userId: user.uid
-        });
-
-        this.membersStore.save(member);
+      if (result.success) {
         this.navigationService.navigate('/');
         return true;
       }
       
-      this.error = registerMemberResponse.error || "Failed to register member";
+      this.error = result.error || "Failed to register member";
       return false;
     } catch (error) {
       this.error = error instanceof Error ? error.message : "An error occurred";

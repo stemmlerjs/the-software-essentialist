@@ -1,4 +1,3 @@
-
 import { fakeUserData } from '../users/__tests__/fakeUserData';
 import { UsersRepository } from '../users/repos/usersRepo';
 import { UserDTO } from '@dddforum/api/users';
@@ -11,6 +10,7 @@ import { LocalStorage } from '../../shared/storage/localStorage';
 import { FirebaseService } from '../users/externalServices/firebaseService';
 import { MembersStore } from '../../shared/stores/members/membersStore';
 import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
+import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
 
 
 describe('navLoginPresnter', () => {
@@ -20,14 +20,14 @@ describe('navLoginPresnter', () => {
   let presenter: LayoutPresenter;
   let loadedVm: UserLoginLayoutViewModel;
 
+  let fakeLocalStorage: FakeLocalStorage;
   const apiClient = createAPIClient('http://localhost:3000');
-  const localStorage = new LocalStorage();
   const firebaseService = new FirebaseService();
   const membersRepository = new MembersStore(); // TODO: lots of organizing to do here.
 
   function setup (userDTO: UserDTO | null, currentRoute: string = "/") {
-
-    usersRepository = new ProductionUsersRepository(apiClient, localStorage, firebaseService);
+    fakeLocalStorage = new FakeLocalStorage();
+    usersRepository = new ProductionUsersRepository(apiClient, fakeLocalStorage, firebaseService);
     navigationRepository = new FakeNavigationRepository(currentRoute);
     presenter = new LayoutPresenter(
       usersRepository, 
