@@ -2,40 +2,38 @@ import { PostsPresenter } from "./postsPresenter";
 import { PostViewModel } from "./postViewModel";
 import { FakePostsRepository } from "../repos/fakePostsRepository";
 import { fakePostsData } from "../__tests__/fakePostsData";
-import { fakeUserData } from "../../users/__tests__/fakeUserData";
 import { SearchFilterViewModel } from "./searchFilterViewModel";
-import { ProductionUsersRepository } from "../../users/repos/productionUsersRepo";
 import { createAPIClient } from "@dddforum/api";
 import { FakeLocalStorage } from '../../../shared/storage/fakeLocalStorage';
-import { FakeAuthService } from "../../users/externalServices/fakeAuthService";
-
-export {};
+import { AuthStore } from "@/services/auth/auth/authStore";
+import { FirebaseAPI } from "@/modules/members/firebaseAPI";
+import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
 
 describe('PostsPresenter', () => {
 
   const mockedApi = createAPIClient('');
-  const authService = new FakeAuthService(); // TODO: use "mocked" for the name on all tests
-
   let loadedPostsVm: PostViewModel[] = [];
   let fakeLocalStorage: FakeLocalStorage;
   let postsRepository = new FakePostsRepository(fakePostsData);
-  let usersRepository: ProductionUsersRepository;
+  let authStore: AuthStore;
+  let fakeFirebaseAPI: FirebaseAPI;
 
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
+    fakeFirebaseAPI = new FakeFirebaseAPI();
     fakeLocalStorage = new FakeLocalStorage();
-    usersRepository = new ProductionUsersRepository(mockedApi, fakeLocalStorage, authService);
+    authStore = new AuthStore(mockedApi, fakeFirebaseAPI, fakeLocalStorage);
   })
 
   it ('can render a list of posts', async () => {
     
-    let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
+    let postsPresenter = new PostsPresenter(postsRepository, authStore);
 
     await postsPresenter.load((postsVm) => {
       loadedPostsVm = postsVm;
     });
-    
+
     expect(loadedPostsVm).toHaveLength(3);
 
     let firstPost = loadedPostsVm[0];
@@ -49,7 +47,7 @@ describe('PostsPresenter', () => {
     let loadedPostsVm: PostViewModel[] = [];
     let activeSearchFilter: SearchFilterViewModel = new SearchFilterViewModel('popular');
 
-    let postsPresenter = new PostsPresenter(postsRepository, usersRepository);
+    let postsPresenter = new PostsPresenter(postsRepository, authStore);
 
     await postsPresenter.load((postsVm, searchFilterVm) => {
       loadedPostsVm = postsVm;

@@ -2,16 +2,16 @@
 import { useEffect, useState } from 'react';
 import { observe } from 'mobx';
 
-import { UserDm } from '../../modules/users/domain/userDm';
-import { useAuth } from '../stores/auth/authContext';
+import { useStore } from '@/shared/store/storesContext';
+import { UserDm } from '@/modules/members/domain/userDm';
 
 export const useAuthStore = () => {
-  const authStore = useAuth();
-  const [currentUser, setCurrentUser] = useState<UserDm | null>(authStore.currentUser);
-  const [isLoading, setIsLoading] = useState(authStore.isLoading);
+  const { auth } = useStore()
+  const [currentUser, setCurrentUser] = useState<UserDm | null>(auth.currentUser);
+  const [isLoading, setIsLoading] = useState(auth.isLoading);
 
   useEffect(() => {
-    const disposer = observe(authStore, (change) => {
+    const disposer = observe(auth, (change) => {
       if (change.name === 'currentUser') {
         setCurrentUser(change.object.currentUser);
       }
@@ -21,12 +21,12 @@ export const useAuthStore = () => {
     });
 
     return () => disposer();
-  }, [authStore]);
+  }, [auth]);
 
   return {
     currentUser,
-    isAuthenticated: authStore.isAuthenticated,
+    isAuthenticated: auth.isAuthenticated,
     isLoading,
-    signOut: () => authStore.signOut(),
+    signOut: () => auth.signOut(),
   };
 }; 

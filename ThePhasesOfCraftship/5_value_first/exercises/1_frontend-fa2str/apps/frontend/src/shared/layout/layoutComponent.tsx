@@ -3,9 +3,9 @@ import logo from "../../shared/assets/dddforumlogo.png";
 import { Link, useLocation } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { appSelectors, toClass } from '../../shared/selectors';
-import { navLoginPresenter } from '../../main';
 import { useEffect, useState } from 'react';
 import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
+import { usePresenters } from '../presenters/presentersContext';
 
 export const Content = ({ children }: any) => (
   <div className='content-container'>
@@ -15,14 +15,15 @@ export const Content = ({ children }: any) => (
 
 // All components which use observables must use 'observer'
 export const Layout = observer(({ children }: any) => {
+  const { layout } = usePresenters()
   const location = useLocation();
   const [vm, setVmToLocalState] = useState<UserLoginLayoutViewModel>();
 
   useEffect(() => {
-    navLoginPresenter.load((userLoginVm) => {
+    layout.load((userLoginVm) => {
       setVmToLocalState(userLoginVm);
     })
-  }, [navLoginPresenter.userLoginVm]) // We observe the view model in the presenter
+  }, [layout.userLoginVm]) // We observe the view model in the presenter
 
   return (
     <>
@@ -43,7 +44,7 @@ export const Layout = observer(({ children }: any) => {
                   {vm.username}
                 </div>
                 <u>
-                  <div onClick={navLoginPresenter.signOut}>Logout</div>
+                  <div onClick={layout.signOut}>Logout</div>
                 </u>
               </div>
             ) : (

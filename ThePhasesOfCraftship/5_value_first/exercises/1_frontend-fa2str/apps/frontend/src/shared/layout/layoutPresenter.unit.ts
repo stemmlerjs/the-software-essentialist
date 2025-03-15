@@ -2,37 +2,30 @@
 import { Users } from '@dddforum/api';
 import { LayoutPresenter } from './layoutPresenter';
 import { createAPIClient } from '@dddforum/api';
-
 import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
-import { FakeAuthService } from '@/modules/users/externalServices/fakeAuthService';
-import { ProductionUsersRepository } from '@/modules/users/repos/productionUsersRepo';
-import { fakeUserData } from '@/modules/users/__tests__/fakeUserData';
-import { UsersRepository } from '@/modules/users/repos/usersRepo';
-import { NavigationRepository } from '@/modules/navigation/repos/navigationRepository';
-import { MembersStore } from '@/modules/members/members/membersStore';
-import { FakeNavigationRepository } from '@/modules/navigation/repos/fakeNavigationRepository';
+import { AuthStore } from '@/services/auth/auth/authStore';
+import { FirebaseAPI } from '@/modules/members/firebaseAPI';
+import { FakeFirebaseAPI } from '@/modules/members/fakeFirebaseAPI';
+import { fakeUserData } from '@/modules/members/__tests__/fakeUserData';
 
 
 describe('navLoginPresnter', () => {
   
-  let usersRepository: UsersRepository;
-  let navigationRepository: NavigationRepository;
   let presenter: LayoutPresenter;
   let loadedVm: UserLoginLayoutViewModel;
 
   let fakeLocalStorage: FakeLocalStorage
   let mockedApi = createAPIClient('');
-  const fakeAuthService = new FakeAuthService();
-  const membersRepository = new MembersStore(); // TODO: lots of organizing to do here.
+  let fakeFirebaseAPI: FirebaseAPI;
+  let authStore: AuthStore;
 
   function setup (userDTO: Users.UserDTO | null, currentRoute: string = "/") {
     fakeLocalStorage = new FakeLocalStorage();
-    usersRepository = new ProductionUsersRepository(mockedApi, fakeLocalStorage, fakeAuthService);
-    navigationRepository = new FakeNavigationRepository(currentRoute);
+    fakeFirebaseAPI = new FakeFirebaseAPI();
+    authStore = new AuthStore(mockedApi, fakeFirebaseAPI, fakeLocalStorage);
     presenter = new LayoutPresenter(
-      usersRepository, 
-      membersRepository
+      authStore
     );
   }
 

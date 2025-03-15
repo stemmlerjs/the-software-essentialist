@@ -1,4 +1,5 @@
-import { UserDm } from "../../users/domain/userDm";
+
+import { UserDm } from "@/modules/members/domain/userDm";
 import { PostDm } from "../domain/postDm";
 
 export interface PostViewModelProps {

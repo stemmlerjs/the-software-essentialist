@@ -1,13 +1,10 @@
 import { makeAutoObservable } from "mobx";
-import { NavigationService } from "../../../shared/navigation/navigationService";
-import { PostsRepository } from "../../posts/repos/postsRepository";
 
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { Posts } from "@dddforum/api";
-import { MembersRepo } from "../../../shared/stores/members/membersRepo";
-import { UsersRepository } from "@/modules/users/repos/usersRepo";
 import { AuthStore } from "@/services/auth/auth/authStore";
 import { PostsStore } from "@/modules/posts/repos/postsStore";
+import { NavigationService } from "@/modules/navigation/navigationService";
 
 export class SubmissionPresenter {
   isSubmitting = false;

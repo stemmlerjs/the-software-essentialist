@@ -31,7 +31,7 @@ export class OnboardingPresenter {
       email: 'mtroidman@gmail',
       userId: '2342343'
     })
-    this.membersStore.save(member);
+    this.authStore.saveMemberDetails(member);
     console.log('saved member in onboarding presenter')
   }
 
@@ -46,7 +46,7 @@ export class OnboardingPresenter {
         return false;
       }
 
-      const idToken = await this.authStore.getAuthToken();
+      const idToken = await this.authStore.getToken();
       if (!idToken) {
         throw new Error("No authentication token found");
       }

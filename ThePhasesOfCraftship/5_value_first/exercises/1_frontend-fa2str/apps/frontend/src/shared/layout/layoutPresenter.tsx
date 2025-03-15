@@ -16,7 +16,7 @@ export class LayoutPresenter {
     // perhaps they use APIs. Perhaps both. Doesn't matter to the presenter. What is important
     // is that repositories expose the domain objects we need in order to construct the 
     // view models (see 'setupSubscriptions' below).
-    public usersRepository: AuthStore
+    public authStore: AuthStore
   ) {
     // Always make this presenter observable so that the component can subscribe to
     // the view model changes (see the load pattern we use).
@@ -33,8 +33,8 @@ export class LayoutPresenter {
   private setupSubscriptions () {
     reaction(
       () => ({
-        user: this.usersRepository.currentUser,
-        member: this.membersRepository.member,
+        user: this.authStore.currentUser,
+        member: this.authStore.currentMember,
       }),
       ({ user, member }) => {
         // When any of these properties of the store/repos (domain models) changes,
@@ -56,8 +56,8 @@ export class LayoutPresenter {
   // This is the last part 
   async load(callback?: (userLoginVm: UserLoginLayoutViewModel) => void) {
     if (this.userLoginVm === null) {
-      let user = await this.usersRepository.getCurrentUser();
-      let member = await this.membersRepository.getCurrentMember();
+      let user = await this.authStore.getCurrentUser();
+      let member = await this.authStore.getCurrentMember();
 
       console.log('new userlogin', UserLoginLayoutViewModel.fromDomain(user, member))
       this.userLoginVm = UserLoginLayoutViewModel.fromDomain(user, member);

@@ -2,6 +2,7 @@
 import { NavigationService } from '@/modules/navigation/navigationService';
 import { makeAutoObservable, observe } from "mobx";
 import { AuthStore } from '@/services/auth/auth/authStore';
+import { UserDm } from '@/modules/members/domain/userDm';
 
 export class RegistrationPresenter {
 
@@ -18,13 +19,13 @@ export class RegistrationPresenter {
   }
 
   private setupSubscriptions () {
-    observe(this.usersRepository, 'currentUser', (userDm) => {
+    observe(this.authStore, 'currentUser', (userDm) => {
       this.user = userDm.newValue;
     });
   }
 
   async load(callback?: (user: UserDm | null) => void) {
-    let user = await this.usersRepository.getCurrentUser();
+    let user = await this.authStore.getCurrentUser();
     this.user = user;
     callback && callback(this.user);
   }
@@ -38,7 +39,7 @@ export class RegistrationPresenter {
   async registerWithGoogle () {
     try {
       // Check if user is already authenticated
-      const currentUser = await this.usersRepository.getCurrentUser();
+      const currentUser = await this.authStore.getCurrentUser();
       console.log('currentuser', currentUser);
       if (currentUser?.isAuthenticated()) {
         // If already authenticated, just navigate to onboarding
@@ -47,8 +48,8 @@ export class RegistrationPresenter {
       }
 
       // Attempt Google sign in
-      const userDm = await this.authService.signInWithGoogle();
-      this.usersRepository.save(userDm);
+      const userDm = await this.authStore.signInWithGoogle();
+      this.authStore.saveUserDetails(userDm);
       
       // Navigate to onboarding
       this.navigationService.navigate('/onboarding');

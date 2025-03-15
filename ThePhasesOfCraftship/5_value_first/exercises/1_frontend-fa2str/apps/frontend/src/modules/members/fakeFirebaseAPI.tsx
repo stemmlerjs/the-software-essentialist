@@ -1,7 +1,8 @@
-import { AuthService } from '../../services/auth/authService.js';
-import { UserDm } from './domain/userDm.js';
 
-export class FakeAuthService implements AuthService {
+import { UserDm } from './domain/userDm.js';
+import { FirebaseAPI } from './firebaseAPI.js';
+
+export class FakeFirebaseAPI implements FirebaseAPI {
   private user: UserDm | null = null;
   private authenticated = false;
 
@@ -34,5 +35,17 @@ export class FakeAuthService implements AuthService {
   public async getAuthToken(): Promise<string | null> {
     // Return a dummy token or null, if you prefer
     return this.authenticated ? "fake-auth-token" : null;
+  }
+
+  async signIn(email: string, password: string): Promise<UserDm> {
+    const mockUser = UserDm.fromPrimitives({
+      id: 'fake-user-id',
+      email,
+      firstName: 'Test',
+      lastName: 'User',
+    });
+    this.user = mockUser;
+    this.authenticated = true;
+    return mockUser;
   }
 } 

@@ -1,4 +1,3 @@
-
 import { initializeApp, FirebaseOptions } from 'firebase/app';
 import { 
   getAuth, 
@@ -10,7 +9,16 @@ import {
 } from 'firebase/auth';
 import { UserDm } from './domain/userDm.js';
 
-export class FirebaseAPI {
+export interface FirebaseAPI {
+  isAuthenticated(): Promise<boolean>;
+  getCurrentUser(): Promise<UserDm | null>;
+  signInWithGoogle(): Promise<UserDm>;
+  signIn(email: string, password: string): Promise<UserDm>;
+  signOut(): Promise<void>;
+  getAuthToken(): Promise<string | null>;
+}
+
+export class FirebaseAPIClient implements FirebaseAPI {
   private auth;
   private provider;
 

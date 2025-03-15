@@ -1,8 +1,12 @@
-
-
 type ValidKeys = 'currentUser';
 
-export class LocalStorageAPI {
+export interface LocalStorageAPI {
+  store(key: ValidKeys, value: any): void;
+  retrieve(key: ValidKeys): any;
+  remove(key: ValidKeys): void;
+}
+
+export class LocalStorageAPIClient implements LocalStorageAPI {
   public store(key: ValidKeys, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
   }
