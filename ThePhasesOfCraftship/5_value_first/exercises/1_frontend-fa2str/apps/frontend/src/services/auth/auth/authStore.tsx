@@ -25,10 +25,9 @@ export class AuthStore {
     private localStorageAPI: LocalStorageAPI
   ) {
     makeAutoObservable(this);
-    this.initialize();
   }
 
-  private async initialize() {
+  public async initialize() {
     try {
       const isAuthenticated = await this.firebaseAPI.isAuthenticated();
       if (isAuthenticated) {

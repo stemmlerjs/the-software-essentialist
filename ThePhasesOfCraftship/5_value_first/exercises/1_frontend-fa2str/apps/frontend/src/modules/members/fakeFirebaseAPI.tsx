@@ -1,6 +1,6 @@
 
-import { UserDm } from './domain/userDm.js';
-import { FirebaseAPI } from './firebaseAPI.js';
+import { UserDm } from './domain/userDm';
+import { FirebaseAPI } from './firebaseAPI';
 
 export class FakeFirebaseAPI implements FirebaseAPI {
   private user: UserDm | null = null;
