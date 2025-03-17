@@ -1,7 +1,7 @@
 
 import { makeAutoObservable, reaction } from "mobx";
 import { UserLoginLayoutViewModel } from "./userLoginLayoutVm";
-import { AuthStore } from "@/services/auth/auth/authStore";
+import { AuthStore } from "@/services/auth/authStore";
 import { NavigationStore } from "@/services/navigation/navigationStore";
 
 export class LayoutPresenter {

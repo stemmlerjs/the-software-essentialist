@@ -4,7 +4,7 @@ import { LayoutPresenter } from './layoutPresenter';
 import { createAPIClient } from '@dddforum/api';
 import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
-import { AuthStore } from '@/services/auth/auth/authStore';
+import { AuthStore } from '@/services/auth/authStore';
 import { FirebaseAPI } from '@/modules/members/firebaseAPI';
 import { FakeFirebaseAPI } from '@/modules/members/fakeFirebaseAPI';
 import { fakeUserData } from '@/modules/members/__tests__/fakeUserData';

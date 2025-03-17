@@ -1,5 +1,5 @@
 import { PostsStore } from "@/modules/posts/repos/postsStore";
-import { AuthStore } from "@/services/auth/auth/authStore";
+import { AuthStore } from "@/services/auth/authStore";
 import { NavigationStore } from "@/services/navigation/navigationStore";
 import { makeAutoObservable } from "mobx";
 

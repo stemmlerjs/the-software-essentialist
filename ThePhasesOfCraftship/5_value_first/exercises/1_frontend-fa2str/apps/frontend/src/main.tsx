@@ -4,11 +4,6 @@ import App from './App'
 import './index.css'
 import { createAPIClient } from '@dddforum/api';
 import { PostsPresenter } from './modules/posts/application/postsPresenter';
-import { FakePostsRepository } from './modules/posts/repos/fakePostsRepository';
-import { fakePostsData } from './modules/posts/__tests__/fakePostsData';
-// import { FakeUsersRepository } from './modules/users/repos/fakeUsersRepo';
-// import { fakeUserData } from './modules/users/__tests__/fakeUserData';
-
 import { configure } from "mobx"
 import { Presenters } from './shared/presenters/presenters';
 import { PostsStore } from './modules/posts/repos/postsStore';
@@ -16,8 +11,7 @@ import { appConfig } from '@/config';
 import { OnboardingPresenter } from './pages/onboarding/onboardingPresenter';
 import { RegistrationPresenter } from './pages/join/registrationPresenter';
 import { LayoutPresenter } from './shared/layout/layoutPresenter';
-import { AuthStore } from './services/auth/auth/authStore';
-import { NavigationService } from './modules/navigation/navigationService';
+import { AuthStore } from './services/auth/authStore';
 import { SubmissionPresenter } from './pages/submission/application/submissionPresenter';
 import { ToastService } from './services/toast/toastService';
 import { MarketingService } from './services/marketing/marketingService';
@@ -33,7 +27,6 @@ const apiClient = createAPIClient('http://localhost:3000');
 
 const toastService = new ToastService();
 const marketingService = new MarketingService();
-const navigationService = new NavigationService();
 
 const localStorageAPI = new LocalStorageAPIClient();
 const firebaseAPI = new FirebaseAPIClient(appConfig.firebase);
@@ -55,17 +48,17 @@ const stores = new Stores(
 
 // Make presenters
 const onboardingPresenter = new OnboardingPresenter(
-  navigationService,
+  navigationStore,
   authStore
 );
 const postsPresenter = new PostsPresenter(postsStore, authStore);
 const registrationPresenter = new RegistrationPresenter(
-  navigationService, 
+  navigationStore, 
   authStore
 );
 const submissionPresenter = new SubmissionPresenter(
   authStore,
-  navigationService,
+  navigationStore,
   postsStore
 );
 
@@ -91,9 +84,7 @@ export {
   apiClient,
   
   toastService,
-
   marketingService,
-  navigationService,
 
   // Bundle it all up and export
   stores,

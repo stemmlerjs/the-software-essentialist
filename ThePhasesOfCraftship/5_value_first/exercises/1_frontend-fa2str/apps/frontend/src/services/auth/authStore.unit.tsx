@@ -2,7 +2,6 @@ import { createAPIClient } from "@dddforum/api";
 import { AuthStore } from "./authStore";
 import { FirebaseAPIClient } from "@/modules/members/firebaseAPI";
 import { LocalStorageAPIClient } from "@/shared/storage/localStorageAPI";
-import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
 import { Auth, User } from "firebase/auth";
 
 describe('authStore', () => {
@@ -11,7 +10,7 @@ describe('authStore', () => {
   let fakeIdToken = 'fake-id-token';
 
   let apiClient = createAPIClient('');
-  let firebaseAPI = new FirebaseAPIClient();
+  let firebaseAPI = new FirebaseAPIClient({});
   let localStorageAPI = new LocalStorageAPIClient();
 
   // Create a mock auth object

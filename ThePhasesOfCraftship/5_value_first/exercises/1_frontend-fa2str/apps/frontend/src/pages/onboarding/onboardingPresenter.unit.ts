@@ -1,6 +1,6 @@
 import { OnboardingPresenter } from "./onboardingPresenter";
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
-import { AuthStore } from "@/services/auth/auth/authStore";
+import { AuthStore } from "@/services/auth/authStore";
 import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
 import { createAPIClient } from "@dddforum/api";
 import { NavigationService } from "@/modules/navigation/navigationService";
@@ -19,14 +19,14 @@ jest.mock('@/config', () => ({
 }));
 
 function setupAuthStoreWithAuthenticatedUser(authStore: AuthStore) {
+  authStore['idToken']
   authStore['currentUser'] = new UserDm({
     id: 'test-user-id',
     email: 'test@example.com',
     firstName: 'Test',
     lastName: 'User',
     userRoles: []
-  })
-  authStore
+  });
   return { authStore }
 }
 

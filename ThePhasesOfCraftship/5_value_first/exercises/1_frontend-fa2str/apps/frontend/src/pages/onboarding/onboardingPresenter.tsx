@@ -2,7 +2,7 @@
 import { makeAutoObservable } from "mobx";
 import { NavigationService } from "@/modules/navigation/navigationService";
 import { MemberDm } from "@/modules/members/domain/memberDm";
-import { AuthStore } from "@/services/auth/auth/authStore";
+import { AuthStore } from "@/services/auth/authStore";
 
 interface OnboardingDetails {
   username: string;

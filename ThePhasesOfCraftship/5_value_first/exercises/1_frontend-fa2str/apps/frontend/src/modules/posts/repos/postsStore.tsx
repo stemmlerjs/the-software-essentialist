@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { PostDm } from "../domain/postDm.js";
 import { PostsRepository } from "./postsRepository.js";
 import { Posts } from "@dddforum/api"
-import { AuthStore } from "@/services/auth/auth/authStore.js";
+import { AuthStore } from "@/services/auth/authStore.js";
 
 export class PostsStore implements PostsRepository {
   public postsDm: PostDm[];
