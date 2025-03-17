@@ -18,7 +18,6 @@ import { MarketingService } from './services/marketing/marketingService';
 import { Stores } from './shared/store/stores';
 
 import { FirebaseAPIClient } from './modules/members/firebaseAPI';
-import { LocalStorageAPIClient } from './shared/storage/localStorageAPI';
 import { NavigationStore } from './services/navigation/navigationStore';
 
 configure({ enforceActions: "never" })
@@ -28,15 +27,13 @@ const apiClient = createAPIClient('http://localhost:3000');
 const toastService = new ToastService();
 const marketingService = new MarketingService();
 
-const localStorageAPI = new LocalStorageAPIClient();
 const firebaseAPI = new FirebaseAPIClient(appConfig.firebase);
 
 // Make stores
 const authStore = new AuthStore(
   apiClient,
-  firebaseAPI,
-  localStorageAPI
-)
+  firebaseAPI
+);
 
 const postsStore = new PostsStore(apiClient, authStore);
 const navigationStore = new NavigationStore();

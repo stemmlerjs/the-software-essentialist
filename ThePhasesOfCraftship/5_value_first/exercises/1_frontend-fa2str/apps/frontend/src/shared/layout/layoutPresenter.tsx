@@ -80,10 +80,8 @@ export class LayoutPresenter {
   // these are the Use Case methods. These are the vertical slices. Everything else is
   // just convention to get things working.
   async signOut () {
-    console.log('here', this);
+    await this.authStore.logout();
     // Log out and then take them back to main
     this.navigation.navigate('/');
-
-    // this.authStore.logout();
   }
 }

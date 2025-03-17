@@ -1,9 +1,8 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { UserDm } from "@/modules/members/domain/userDm";
 import { MemberDm } from "@/modules/members/domain/memberDm";
 import { APIClient, Members } from "@dddforum/api";
 import { FirebaseAPI } from "@/modules/members/firebaseAPI";
-import { LocalStorageAPI } from "@/shared/storage/localStorageAPI";
 
 interface CreateMemberProps {
   username: string;
@@ -24,7 +23,6 @@ export class AuthStore {
   constructor(
     private apiClient: APIClient,
     private firebaseAPI: FirebaseAPI,
-    private localStorageAPI: LocalStorageAPI
   ) {
     makeAutoObservable(this);
     this.initialize();
@@ -33,10 +31,15 @@ export class AuthStore {
   private async initialize() {
     try {
       const user = await this.firebaseAPI.getCurrentUser();
-      this.currentUser = user;
-      this.isLoading = false;
+      if (user) {
+        const idToken = await this.firebaseAPI.getAuthToken();
+        this.currentUser = user;
+        this.idToken = idToken;
+      }
     } catch (error) {
-      this.currentUser = null;
+      console.error('Failed to initialize auth:', error);
+      this.error = 'Failed to initialize auth';
+    } finally {
       this.isLoading = false;
     }
   }
@@ -69,45 +72,41 @@ export class AuthStore {
       this.isLoading = true;
       this.error = null;
       const user = await this.firebaseAPI.signInWithGoogle();
-      this.saveUser(user);
+      const idToken = await this.firebaseAPI.getAuthToken();
+      
+      this.currentUser = user;
+      this.idToken = idToken;
       return user;
     } catch (error) {
-      this.setError('Failed to sign in with Google');
+      this.error = 'Failed to sign in with Google';
       throw error;
     } finally {
       this.isLoading = false;
     }
   }
 
-  async signOut(): Promise<void> {
+  async logout(): Promise<void> {
     try {
+      this.isLoading = true;
       await this.firebaseAPI.signOut();
-      this.setCurrentUser(null);
-      this.localStorageAPI.remove('currentUser');
-      window.location.href = '/';
+      
+      // Clear all state
+      this.currentUser = null;
+      this.currentMember = null;
+      this.idToken = null;
+      this.authToken = null;
+      this.error = null;
     } catch (error) {
-      this.setError('Failed to sign out');
-      console.error('Sign out error:', error);
-    }
-  }
-
-  setCurrentUser(user: UserDm | null) {
-    this.currentUser = user;
-  }
-
-  setError(error: string | null) {
-    this.error = error;
-  }
-
-  saveUser(user: UserDm): void {
-    this.currentUser = user;
-    if (this.isAuthenticated()) {
-      this.localStorageAPI.store('currentUser', user.toLocalStorage());
+      console.error('Logout error:', error);
+      this.error = 'Failed to logout';
+      throw error;
+    } finally {
+      this.isLoading = false;
     }
   }
 
   getToken(): string | null {
-    return this.localStorageAPI.retrieve('idToken');
+    return this.idToken;
   }
 
   async createMember(props: CreateMemberProps): Promise<Members.API.CreateMemberAPIResponse> {
