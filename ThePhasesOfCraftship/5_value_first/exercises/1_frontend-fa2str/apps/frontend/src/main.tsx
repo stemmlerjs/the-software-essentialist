@@ -46,7 +46,8 @@ const stores = new Stores(
 // Make presenters
 const onboardingPresenter = new OnboardingPresenter(
   navigationStore,
-  authStore
+  authStore,
+  marketingService
 );
 const postsPresenter = new PostsPresenter(postsStore, authStore);
 const registrationPresenter = new RegistrationPresenter(

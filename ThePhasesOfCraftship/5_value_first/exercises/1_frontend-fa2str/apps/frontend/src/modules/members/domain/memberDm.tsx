@@ -1,11 +1,12 @@
 
-// TODO: Reconcile these and view/read models
+import { Members } from '@dddforum/api'
 
 interface MemberDmProps {
   id: string;
   username: string;
   email: string;
   userId: string;
+  reputationLevel: Members.Types.ReputationLevel
 }
 
 export class MemberDm {
@@ -29,6 +30,10 @@ export class MemberDm {
 
   get userId(): string {
     return this.props.userId;
+  }
+
+  get reputationLevel (): Members.Types.ReputationLevel {
+    return this.props.reputationLevel
   }
 
   toDTO() {

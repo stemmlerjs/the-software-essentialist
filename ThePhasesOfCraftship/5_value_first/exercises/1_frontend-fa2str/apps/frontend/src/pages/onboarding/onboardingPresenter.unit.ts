@@ -3,8 +3,9 @@ import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
 import { AuthStore } from "@/services/auth/authStore";
 import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
 import { createAPIClient } from "@dddforum/api";
-import { NavigationService } from "@/modules/navigation/navigationService";
 import { UserDm } from "@/modules/members/domain/userDm";
+import { MarketingService } from "@/services/marketing/marketingService";
+import { NavigationStore } from '@/services/navigation/navigationStore'
 
 // You have to replicate the way it's imported. We export "appConfig"
 jest.mock('@/config', () => ({
@@ -19,43 +20,47 @@ jest.mock('@/config', () => ({
 }));
 
 function setupAuthStoreWithAuthenticatedUser(authStore: AuthStore) {
-  authStore['idToken']
-  authStore['currentUser'] = new UserDm({
+  let idToken = 'test-id-token';
+  let user = new UserDm({
     id: 'test-user-id',
     email: 'test@example.com',
     firstName: 'Test',
     lastName: 'User',
     userRoles: []
   });
-  return { authStore }
+  authStore['idToken'] = idToken;
+  authStore['currentUser'] = user;
+
+  return { authStore, idToken, user }
 }
 
 describe('OnboardingPresenter', () => {
+
   describe('member registration', () => {
     let presenter: OnboardingPresenter;
-    let navigationService: jest.Mocked<NavigationService>;
+    let navigationStore: NavigationStore
     let fakeFirebaseAPI: FakeFirebaseAPI;
     let fakeLocalStorage: FakeLocalStorage;
     let authStore: AuthStore;
+    let marketingService: MarketingService;
 
     beforeEach(() => {
       let apiClient = createAPIClient('');
       fakeLocalStorage = new FakeLocalStorage();
       fakeFirebaseAPI = new FakeFirebaseAPI();
+      marketingService = new MarketingService();
+
+      navigationStore = new NavigationStore();
 
       authStore = new AuthStore(
         apiClient,
         fakeFirebaseAPI,
-        fakeLocalStorage
       );
 
-      navigationService = {
-        navigate: jest.fn()
-      } as jest.Mocked<NavigationService>;
-
       presenter = new OnboardingPresenter(
-        navigationService,
-        authStore
+        navigationStore,
+        authStore,
+        marketingService
       );
     });
   
@@ -64,43 +69,71 @@ describe('OnboardingPresenter', () => {
     });
 
     test('Given the user exits, then it should successfully be able to register a member', async () => {
-      // Arrange
-      setupAuthStoreWithAuthenticatedUser(authStore);
-      jest.spyOn(authStore, 'createMember').mockResolvedValue({ success: true });
+      
+      /**
+       * If the user happens to be on the onboarding page, this is where we can verify that it works correctly.
+       * We are testing the registerMember method on the onboarding presenter. As a unit test, this may simply
+       * verify using State Verification on the associated presenters, that they end up with the right details.
+       */
+
+      let { user, idToken } = setupAuthStoreWithAuthenticatedUser(authStore);
+      let memberDetails = {
+        username: 'testuser'
+      }
+      jest.spyOn(authStore['apiClient']['members'], 'create').mockResolvedValue({
+        success: true,
+        data: {
+          memberId: 'test-member-id',
+          userId: user.id,
+          username: memberDetails.username,
+          reputationLevel: 'Level1',
+          reputationScore: 0
+        }
+      });
+
+      let navigationSpy = jest.spyOn(navigationStore, 'navigate');
 
       const result = await presenter.registerMember({
-        username: 'testuser',
+        username: memberDetails.username,
         allowMarketing: false
       });
 
       expect(result).toBe(true);
-      expect(authStore.createMember).toHaveBeenCalledWith({
-        username: 'testuser',
-        email: 'test@example.com',
-        userId: 'test-uid',
-        idToken: 'mock-token',
-        allowMarketing: false
-      });
-      expect(navigationService.navigate).toHaveBeenCalledWith('/');
+      expect(authStore.currentMember).not.toBe(null);
+      expect(authStore.currentMember?.username).toBe(memberDetails.username);
+      expect(authStore.currentMember?.reputationLevel === 'Level1').toBe(true)
+      expect(navigationSpy).toHaveBeenCalledWith('/');
       expect(presenter.isSubmitting).toBe(false);
       expect(presenter.error).toBeNull();
     });
 
-    it('Should fail to complete onboarding if the user has not yet been created', async () => {
-      const errorMessage = 'No authenticated user found';
-      jest.spyOn(authStore, 'createMember').mockResolvedValue({ 
-        success: false, 
-        error: { message: errorMessage }
-      });
+    test('Should fail to complete onboarding if the user has not yet been created', async () => {
+      /**
+       * If under some circumstance, the user is on the onboarding page and they are not authenticated,
+       * then this should fail. This test is useful, however, a more useful test and functionality would be
+       * to subscribe to the auth state changes of firebase, and redirect to the "/" page when auth state
+       * changes.
+       */
 
+      // Setup
+      authStore['currentUser'] = null;
+      let memberDetails = {
+        username: 'testuser'
+      };
+      let navigationSpy = jest.spyOn(navigationStore, 'navigate');
+
+      // Execute
       const result = await presenter.registerMember({
-        username: 'testuser',
+        username: memberDetails.username,
         allowMarketing: false
       });
 
+      // Assert
       expect(result).toBe(false);
-      expect(presenter.error).toBe(errorMessage);
-      expect(navigationService.navigate).not.toHaveBeenCalled();
+      expect(presenter.error).toBe('No authenticated user found');
+      expect(navigationSpy).not.toHaveBeenCalled();
+      expect(presenter.isSubmitting).toBe(false);
+      expect(authStore.currentMember).toBe(null);
     });
   });
 });

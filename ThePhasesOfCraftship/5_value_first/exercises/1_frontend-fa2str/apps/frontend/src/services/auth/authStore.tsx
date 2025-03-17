@@ -9,7 +9,6 @@ interface CreateMemberProps {
   email: string;
   userId: string;
   idToken: string;
-  allowMarketing?: boolean;
 }
 
 export class AuthStore {
@@ -123,16 +122,13 @@ export class AuthStore {
         userId: props.userId
       }, props.idToken);
 
-      if (props.allowMarketing) {
-        await this.apiClient.marketing.addEmailToList(props.email);
-      }
-
       if (registerMemberResponse.success && registerMemberResponse.data) {
         const member = new MemberDm({
           id: registerMemberResponse.data.memberId,
           username: props.username,
           email: props.email,
-          userId: props.userId
+          userId: props.userId,
+          reputationLevel: registerMemberResponse.data.reputationLevel
         });
 
         this.currentMember = member;
@@ -141,6 +137,7 @@ export class AuthStore {
 
       return registerMemberResponse;
     } catch (error) {
+      console.log(error);
       return { 
         success: false, 
         error: { message: "" }

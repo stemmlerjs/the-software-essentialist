@@ -43,7 +43,8 @@ export class MembersStore {
           id: registerMemberResponse.data.memberId,
           username: props.username,
           email: props.email,
-          userId: props.userId
+          userId: props.userId,
+          reputationLevel: registerMemberResponse.data.reputationLevel
         });
 
         this.save(member);
