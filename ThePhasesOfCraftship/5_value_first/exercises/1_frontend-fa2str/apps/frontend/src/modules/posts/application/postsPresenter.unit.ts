@@ -23,7 +23,7 @@ describe('PostsPresenter', () => {
     jest.clearAllMocks();
     fakeFirebaseAPI = new FakeFirebaseAPI();
     fakeLocalStorage = new FakeLocalStorage();
-    authStore = new AuthStore(mockedApi, fakeFirebaseAPI, fakeLocalStorage);
+    authStore = new AuthStore(mockedApi, fakeFirebaseAPI);
   })
 
   it ('can render a list of posts', async () => {

@@ -1,8 +1,9 @@
 
-import { NavigationService } from '@/modules/navigation/navigationService';
+
 import { makeAutoObservable, observe } from "mobx";
 import { AuthStore } from '@/services/auth/authStore';
 import { UserDm } from '@/modules/members/domain/userDm';
+import { NavigationStore } from "@/services/navigation/navigationStore";
 
 export class RegistrationPresenter {
 
@@ -10,7 +11,7 @@ export class RegistrationPresenter {
   public user: UserDm | null;
 
   constructor (
-    public navigationService: NavigationService,
+    public navigationStore: NavigationStore,
     public authStore: AuthStore
   ) {
     makeAutoObservable(this);
@@ -40,7 +41,7 @@ export class RegistrationPresenter {
     try {
       if (this.authStore.isAuthenticated()) {
         // If already authenticated, just navigate to onboarding
-        this.navigationService.navigate('/onboarding');
+        this.navigationStore.navigate('/onboarding');
         return;
       }
 
@@ -49,7 +50,7 @@ export class RegistrationPresenter {
       this.authStore.saveUserDetails(userDm);
       
       // Navigate to onboarding
-      this.navigationService.navigate('/onboarding');
+      this.navigationStore.navigate('/onboarding');
 
     } catch (err) {
       console.error('Auth error:', err);

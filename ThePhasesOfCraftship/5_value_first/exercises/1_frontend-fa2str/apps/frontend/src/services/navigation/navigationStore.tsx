@@ -19,8 +19,6 @@ export class NavigationStore {
   }
 
   navigate(to: string) {
-    console.log(this);
-    console.log('hre')
     if (this._navigate) {
       this._navigate(to);
       this._currentPath = to;

@@ -4,7 +4,7 @@ import { ApplicationErrors } from "@dddforum/errors/application";
 import { Posts } from "@dddforum/api";
 import { AuthStore } from "@/services/auth/authStore";
 import { PostsStore } from "@/modules/posts/repos/postsStore";
-import { NavigationService } from "@/modules/navigation/navigationService";
+import { NavigationStore } from "@/services/navigation/navigationStore";
 
 export class SubmissionPresenter {
   isSubmitting = false;
@@ -12,7 +12,7 @@ export class SubmissionPresenter {
 
   constructor(
     private authStore: AuthStore,
-    private navigationService: NavigationService,
+    private navigationStore: NavigationStore,
     private postsStore: PostsStore,
   ) {
     makeAutoObservable(this);
@@ -21,7 +21,7 @@ export class SubmissionPresenter {
   submit = async (input: { title: string; content: string; link?: string }) => {
     try {
       if (!this.authStore.isAuthenticated()) {
-        this.navigationService.navigate('/join');
+        this.navigationStore.navigate('/join');
         return;
       }
 
@@ -53,8 +53,7 @@ export class SubmissionPresenter {
 
       // Use the validated commandInput instead of raw input
       await this.postsStore.create(commandInput);
-      
-      this.navigationService.navigate('/');
+      this.navigationStore.navigate('/');
     } catch (error) {
       this.error = 'Failed to submit post';
     } finally {

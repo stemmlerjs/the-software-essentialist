@@ -1,3 +1,5 @@
+import { configure } from "mobx";
+
 // Mock Vite's import.meta.env
 Object.defineProperty(window, 'import', {
   value: {
@@ -14,3 +16,5 @@ Object.defineProperty(window, 'import', {
 });
 
 // Add any other global test setup here
+
+configure({ enforceActions: "never" })

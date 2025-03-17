@@ -60,8 +60,6 @@ export class LayoutPresenter {
     if (this.userLoginVm === null) {
       let user = await this.authStore.getCurrentUser();
       let member = await this.authStore.getCurrentMember();
-
-      console.log('new userlogin', UserLoginLayoutViewModel.fromDomain(user, member))
       this.userLoginVm = UserLoginLayoutViewModel.fromDomain(user, member);
     }
 

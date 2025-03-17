@@ -1,71 +1,93 @@
+import { LayoutPresenter } from "./layoutPresenter";
+import { AuthStore } from "@/services/auth/authStore";
+import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
+import { createAPIClient } from "@dddforum/api";
+import { NavigationStore } from "@/services/navigation/navigationStore";
+import { 
+  setupAuthStoreWithAuthenticatedUser,
+  setupAuthStoreWithOnboardedMember 
+} from "../testUtils";
+import { UserLoginLayoutViewModel } from "./userLoginLayoutVm";
 
-import { Users } from '@dddforum/api';
-import { LayoutPresenter } from './layoutPresenter';
-import { createAPIClient } from '@dddforum/api';
-import { UserLoginLayoutViewModel } from './userLoginLayoutVm';
-import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
-import { AuthStore } from '@/services/auth/authStore';
-import { FirebaseAPI } from '@/modules/members/firebaseAPI';
-import { FakeFirebaseAPI } from '@/modules/members/fakeFirebaseAPI';
-import { fakeUserData } from '@/modules/members/__tests__/fakeUserData';
-
-
-describe('navLoginPresnter', () => {
-  
+describe('LayoutPresenter', () => {
   let presenter: LayoutPresenter;
+  let authStore: AuthStore;
+  let navigationStore: NavigationStore;
   let loadedVm: UserLoginLayoutViewModel;
 
-  let fakeLocalStorage: FakeLocalStorage
-  let mockedApi = createAPIClient('');
-  let fakeFirebaseAPI: FirebaseAPI;
-  let authStore: AuthStore;
-
-  function setup (userDTO: Users.UserDTO | null, currentRoute: string = "/") {
-    fakeLocalStorage = new FakeLocalStorage();
-    fakeFirebaseAPI = new FakeFirebaseAPI();
-    authStore = new AuthStore(mockedApi, fakeFirebaseAPI, fakeLocalStorage);
-    presenter = new LayoutPresenter(
-      authStore
-    );
-  }
-
-  it ('should render the username if the user is logged in', async () => {
-    setup(fakeUserData);
-
-    await presenter.load((userLoginLayoutVm) => {
-      loadedVm = userLoginLayoutVm;
-    });
-
-    expect(loadedVm.username).toBe('khalilstemmler');
-  });
-  it ('should not render the username if user details arent present', async () => {
-    setup(null);
-
-    await presenter.load((userLoginLayoutVm) => {
-      loadedVm = userLoginLayoutVm;
-    });
-
-    expect(loadedVm.username).toBeNull();
+  beforeEach(() => {
+    const apiClient = createAPIClient('');
+    const fakeFirebaseAPI = new FakeFirebaseAPI();
+    
+    authStore = new AuthStore(apiClient, fakeFirebaseAPI);
+    navigationStore = new NavigationStore();
+    presenter = new LayoutPresenter(authStore, navigationStore);
   });
 
-  // TODO: Clean this up.
-  // it ('should render "Join" if user details arent present and is not on the register (/join) page', async () => {
-  //   setup(null);
+  describe('layout view model', () => {
+    it('should show username when user is authenticated and has completed onboarding', async () => {
+      // Setup
+      const { user } = setupAuthStoreWithAuthenticatedUser(authStore);
+      setupAuthStoreWithOnboardedMember(authStore, user, {
+        username: 'khalilstemmler'
+      });
 
-  //   await presenter.load((userLoginLayoutVm) => {
-  //     loadedVm = userLoginLayoutVm;
-  //   });
+      // Execute
+      await presenter.load((vm) => {
+        loadedVm = vm;
+      });
 
-  //   expect(loadedVm.linkText).toBe('Join');
-  //   expect(loadedVm.pathname).toBe('/');
+      // Assert
+      expect(loadedVm.username).toBe('khalilstemmler');
+      expect(loadedVm.isAuthenticated).toBe(true);
+      expect(loadedVm.hasCompletedOnboarding).toBe(true);
+    });
 
-  //   setup(null, '/join');
+    it('should show no username when user is not authenticated', async () => {
+      // Execute
+      await presenter.load((vm) => {
+        loadedVm = vm;
+      });
 
-  //   await presenter.load((userLoginLayoutVm) => {
-  //     loadedVm = userLoginLayoutVm;
-  //   });
+      // Assert
+      expect(loadedVm.username).toBeNull();
+      expect(loadedVm.isAuthenticated).toBe(false);
+      expect(loadedVm.hasCompletedOnboarding).toBe(false);
+    });
 
-  //   expect(loadedVm.linkText).toBe("")
-  //   expect(loadedVm.pathname).toBe('/join');
-  // });
+    it('should show authenticated but not onboarded state when appropriate', async () => {
+      // Setup - user authenticated but no member details
+      setupAuthStoreWithAuthenticatedUser(authStore);
+      // Note: Explicitly not calling setupAuthStoreWithOnboardedMember
+
+      // Execute
+      await presenter.load((vm) => {
+        loadedVm = vm;
+      });
+
+      // Assert
+      expect(loadedVm.username).toBeNull();
+      expect(loadedVm.isAuthenticated).toBe(true);
+      expect(loadedVm.hasCompletedOnboarding).toBe(false);
+    });
+  });
+
+  describe('actions', () => {
+    it('should sign out the user and navigate to home', async () => {
+      // Setup
+      const { user } = setupAuthStoreWithAuthenticatedUser(authStore);
+      setupAuthStoreWithOnboardedMember(authStore, user, {
+        username: 'testuser'
+      });
+      const logoutSpy = jest.spyOn(authStore, 'logout');
+      const navigateSpy = jest.spyOn(navigationStore, 'navigate');
+
+      // Execute
+      await presenter.signOut();
+
+      // Assert
+      expect(logoutSpy).toHaveBeenCalled();
+      expect(navigateSpy).toHaveBeenCalledWith('/');
+    });
+  });
 });

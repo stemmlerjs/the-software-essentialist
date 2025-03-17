@@ -5,6 +5,7 @@ import { UserDm } from "@/modules/members/domain/userDm";
 interface UserLoginLayoutViewModelProps {
   isAuthenticated: boolean;
   username: string | null;
+  hasCompletedOnboarding: boolean;
 }
 
 export class UserLoginLayoutViewModel {
@@ -23,13 +24,18 @@ export class UserLoginLayoutViewModel {
     return this.props.username;
   }
 
+  get hasCompletedOnboarding () {
+    return this.props.hasCompletedOnboarding;
+  }
+
   public static fromDomain (user: UserDm | null, member: MemberDm | null): UserLoginLayoutViewModel {
 
-    const dm = new UserLoginLayoutViewModel({
+    const vm = new UserLoginLayoutViewModel({
       isAuthenticated: user ? true : false,
-      username: member ? member.username : null
+      username: member ? member.username : null,
+      hasCompletedOnboarding: member ? true : false
     });
 
-    return dm
+    return vm;
   }
 }

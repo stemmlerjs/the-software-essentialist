@@ -12,7 +12,7 @@ export const fakePostsData: Posts.DTOs.PostDTO[] = [
       memberId: "member-1",
       userId: "user-1", 
       username: "testuser1",
-      reputationLevel: "newbie",
+      reputationLevel: 'Level1',
       reputationScore: 0
     },
     comments: [],
@@ -29,7 +29,7 @@ export const fakePostsData: Posts.DTOs.PostDTO[] = [
       memberId: "member-2",
       userId: "user-2",
       username: "testuser2",
-      reputationLevel: "newbie",
+      reputationLevel: 'Level1',
       reputationScore: 0
     },
     comments: [],
@@ -46,7 +46,7 @@ export const fakePostsData: Posts.DTOs.PostDTO[] = [
       memberId: "member-3",
       userId: "user-3",
       username: "testuser3",
-      reputationLevel: "newbie",
+      reputationLevel: 'Level1',
       reputationScore: 0
     },
     comments: [],

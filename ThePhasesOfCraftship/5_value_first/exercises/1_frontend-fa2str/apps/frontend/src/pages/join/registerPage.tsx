@@ -1,17 +1,16 @@
 
 import { useEffect, useState } from 'react';
 import { OverlaySpinner } from '../../services/spinner/overlaySpinner';
-import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { usePresenters } from '../../shared/presenters/presentersContext';
 
 export const RegisterPage = observer(() => {
   const { registration: presenter } = usePresenters()
-  // const navigate = useNavigate(); // TODO: get this to the presenter with dep injection
   const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
     const signIn = async () => {
+      // TODO: use the registration presenter for signing in state
       if (!signingIn) {
         setSigningIn(true);
         try {

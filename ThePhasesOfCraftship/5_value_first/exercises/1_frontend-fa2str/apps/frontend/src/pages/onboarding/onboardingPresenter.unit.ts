@@ -6,6 +6,7 @@ import { createAPIClient } from "@dddforum/api";
 import { UserDm } from "@/modules/members/domain/userDm";
 import { MarketingService } from "@/services/marketing/marketingService";
 import { NavigationStore } from '@/services/navigation/navigationStore'
+import { setupAuthStoreWithAuthenticatedUser } from "@/shared/testUtils";
 
 // You have to replicate the way it's imported. We export "appConfig"
 jest.mock('@/config', () => ({
@@ -18,21 +19,6 @@ jest.mock('@/config', () => ({
     }
   }
 }));
-
-function setupAuthStoreWithAuthenticatedUser(authStore: AuthStore) {
-  let idToken = 'test-id-token';
-  let user = new UserDm({
-    id: 'test-user-id',
-    email: 'test@example.com',
-    firstName: 'Test',
-    lastName: 'User',
-    userRoles: []
-  });
-  authStore['idToken'] = idToken;
-  authStore['currentUser'] = user;
-
-  return { authStore, idToken, user }
-}
 
 describe('OnboardingPresenter', () => {
 
