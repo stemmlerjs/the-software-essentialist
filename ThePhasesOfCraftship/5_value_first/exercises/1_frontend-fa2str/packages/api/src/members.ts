@@ -5,22 +5,28 @@ import { ServerErrors } from '@dddforum/errors/server'
 import { Types as UserTypes } from './users'
 import { ApplicationErrors } from "@dddforum/errors/application";
 
+export namespace Types {
+
+  export const ReputationLevel = {
+    Level1: 'Level1',
+    Level2: 'Level2',
+    Level3: 'Level3'
+  } as const;
+  
+  export type ReputationLevel = typeof ReputationLevel[keyof typeof ReputationLevel];
+}
+
 export namespace DTOs {
   export type MemberDTO = {
     userId: string;
     memberId: string
     username: string;
-    reputationLevel: string;
+    reputationLevel: Types.ReputationLevel;
     reputationScore: number;
   }
 }
 
-export namespace Types {
-  export const MemberRoles = {
-    Level1: 'Level1',
-    Level2: 'Level2'
-  }
-}
+
 
 export namespace Inputs {
   export type CreateMemberInput = { 
@@ -68,7 +74,9 @@ export namespace Commands {
 
 export namespace Errors {
 
-  export type CreateMemberError = '';
+  export type UsernameAlreadyTakenError = "UsernameAlreadyTaken";
+
+  export type CreateMemberError = UsernameAlreadyTakenError;
 
   export type AnyMemberError = 
     CreateMemberError |
@@ -78,11 +86,14 @@ export namespace Errors {
 
 export namespace API {
   export type CreateMemberAPIResponse = APIResponse<DTOs.MemberDTO, Errors.CreateMemberError>;
+
   export type AnyMemberAPIResponse = CreateMemberAPIResponse;
 }
 
 export const createMembersAPI = (apiURL: string) => {
   return {
+    // This is the best place to use the Result type to improve the design of your 
+    // responses. Get your API to a point where it is extremely pleasing and correct to use.
     create: async (input: Inputs.CreateMemberInput, authToken: string) => {
       try {
         const successResponse = await axios.post(

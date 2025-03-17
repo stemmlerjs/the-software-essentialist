@@ -11,14 +11,14 @@ import { appConfig } from '@/config';
 import { OnboardingPresenter } from './pages/onboarding/onboardingPresenter';
 import { RegistrationPresenter } from './pages/join/registrationPresenter';
 import { LayoutPresenter } from './shared/layout/layoutPresenter';
-import { AuthStore } from './services/auth/authStore';
+import { AuthStore } from './modules/auth/authStore';
 import { SubmissionPresenter } from './pages/submission/application/submissionPresenter';
-import { ToastService } from './services/toast/toastService';
-import { MarketingService } from './services/marketing/marketingService';
+import { ToastService } from './shared/toast/toastService';
+import { MarketingService } from './modules/marketing/marketingService';
 import { Stores } from './shared/store/stores';
 
-import { FirebaseAPIClient } from './modules/members/firebaseAPI';
-import { NavigationStore } from './services/navigation/navigationStore';
+import { FirebaseAPIClient } from './modules/auth/firebaseAPI';
+import { NavigationStore } from './shared/navigation/navigationStore';
 
 configure({ enforceActions: "never" })
 

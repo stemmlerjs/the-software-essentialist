@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { UserDm } from './domain/userDm';
 
+
 export interface FirebaseAPI {
   isAuthenticated(): Promise<boolean>;
   getCurrentUser(): Promise<UserDm | null>;

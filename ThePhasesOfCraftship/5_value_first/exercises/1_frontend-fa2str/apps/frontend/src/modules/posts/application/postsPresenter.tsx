@@ -4,7 +4,7 @@ import { PostViewModel } from "./postViewModel";
 import { PostsRepository } from "../repos/postsRepository";
 import { PostsFilterValue, SearchFilterViewModel } from "./searchFilterViewModel";
 import { Posts } from "@dddforum/api";
-import { AuthStore } from "@/services/auth/authStore";
+import { AuthStore } from "@/modules/auth/authStore";
 
 export class PostsPresenter {
   postVMs: PostViewModel[];

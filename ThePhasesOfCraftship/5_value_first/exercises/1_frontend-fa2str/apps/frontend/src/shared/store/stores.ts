@@ -1,6 +1,6 @@
 import { PostsStore } from "@/modules/posts/repos/postsStore";
-import { AuthStore } from "@/services/auth/authStore";
-import { NavigationStore } from "@/services/navigation/navigationStore";
+import { AuthStore } from "@/modules/auth/authStore";
+import { NavigationStore } from "@/shared/navigation/navigationStore";
 import { makeAutoObservable } from "mobx";
 
 export class Stores {

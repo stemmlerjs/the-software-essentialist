@@ -1,9 +1,9 @@
 
 import { useState } from 'react';
-import { OverlaySpinner } from '../../services/spinner/overlaySpinner';
 import { observer } from 'mobx-react-lite';
 import { usePresenters } from '../../shared/presenters/presentersContext';
 import { Layout } from '@/shared/layout/layoutComponent';
+import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
 
 export const OnboardingPage = observer(() => {
   const { onboarding: presenter } = usePresenters()

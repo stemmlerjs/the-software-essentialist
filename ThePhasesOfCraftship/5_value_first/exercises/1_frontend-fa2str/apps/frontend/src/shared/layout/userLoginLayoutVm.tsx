@@ -1,6 +1,7 @@
 
-import { MemberDm } from "@/modules/members/domain/memberDm";
-import { UserDm } from "@/modules/members/domain/userDm";
+
+import { MemberDm } from "@/modules/auth/domain/memberDm";
+import { UserDm } from "@/modules/auth/domain/userDm";
 
 interface UserLoginLayoutViewModelProps {
   isAuthenticated: boolean;

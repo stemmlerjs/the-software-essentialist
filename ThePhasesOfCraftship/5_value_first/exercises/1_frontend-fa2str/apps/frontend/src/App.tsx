@@ -7,15 +7,15 @@ import { ErrorBoundary } from "./shared/error/errorBoundary";
 
 import { StoreProvider } from "./shared/store/storesContext";
 import { PresenterProvider } from "./shared/presenters/presentersContext";
-import { SpinnerProvider } from "./services/spinner/spinnerContext";
-import { NavigationProvider } from "./services/navigation/navigationProvider";
 
 import { SubmissionPage } from "./pages/submission/submissionPage";
 import { RegisterPage } from "./pages/join/registerPage";
 import { OnboardingPage } from "./pages/onboarding/onboardingPage";
-import { PostsPage } from "./modules/posts/postsPage";
+import { PostsPage } from "./pages/posts/postsPage";
 import { presenters, stores } from "./main";
-import { ProtectedRoute } from "./services/auth/protectedRoute";
+import { SpinnerProvider } from "./shared/spinner/spinnerContext";
+import { NavigationProvider } from "./shared/navigation/navigationProvider";
+import { ProtectedRoute } from "./modules/auth/protectedRoute";
 
 const App = () => {
   return (

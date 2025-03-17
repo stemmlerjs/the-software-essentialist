@@ -1,9 +1,7 @@
-
-
 import { makeAutoObservable, observe } from "mobx";
-import { AuthStore } from '@/services/auth/authStore';
-import { UserDm } from '@/modules/members/domain/userDm';
-import { NavigationStore } from "@/services/navigation/navigationStore";
+import { AuthStore } from '@/modules/auth/authStore';
+import { NavigationStore } from "@/shared/navigation/navigationStore";
+import { UserDm } from "@/modules/auth/domain/userDm";
 
 export class RegistrationPresenter {
 

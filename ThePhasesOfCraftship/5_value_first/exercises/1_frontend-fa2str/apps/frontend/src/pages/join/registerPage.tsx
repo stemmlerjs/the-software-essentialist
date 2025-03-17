@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from 'react';
-import { OverlaySpinner } from '../../services/spinner/overlaySpinner';
 import { observer } from 'mobx-react-lite';
 import { usePresenters } from '../../shared/presenters/presentersContext';
+import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
 
 export const RegisterPage = observer(() => {
   const { registration: presenter } = usePresenters()

@@ -1,9 +1,8 @@
 
 import { makeAutoObservable } from "mobx";
-import { AuthStore } from "@/services/auth/authStore";
-import { MarketingService } from "@/services/marketing/marketingService";
-import { NavigationStore } from "@/services/navigation/navigationStore";
-import { Result } from '@dddforum/core'
+import { MarketingService } from "@/modules/marketing/marketingService";
+import { NavigationStore } from "@/shared/navigation/navigationStore";
+import { AuthStore } from "@/modules/auth/authStore";
 
 interface OnboardingDetails {
   username: string;

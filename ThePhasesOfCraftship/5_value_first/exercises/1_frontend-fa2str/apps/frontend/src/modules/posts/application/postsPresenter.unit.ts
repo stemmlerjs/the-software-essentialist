@@ -5,9 +5,9 @@ import { fakePostsData } from "../__tests__/fakePostsData";
 import { SearchFilterViewModel } from "./searchFilterViewModel";
 import { createAPIClient } from "@dddforum/api";
 import { FakeLocalStorage } from '../../../shared/storage/fakeLocalStorage';
-import { AuthStore } from "@/services/auth/authStore";
-import { FirebaseAPI } from "@/modules/members/firebaseAPI";
-import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
+import { FakeFirebaseAPI } from "@/modules/auth/fakeFirebaseAPI";
+import { AuthStore } from "@/modules/auth/authStore";
+import { FirebaseAPI } from "@/modules/auth/firebaseAPI";
 
 describe('PostsPresenter', () => {
 

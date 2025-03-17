@@ -2,9 +2,9 @@ import { makeAutoObservable } from "mobx";
 
 import { ApplicationErrors } from "@dddforum/errors/application";
 import { Posts } from "@dddforum/api";
-import { AuthStore } from "@/services/auth/authStore";
+import { AuthStore } from "@/modules/auth/authStore";
 import { PostsStore } from "@/modules/posts/repos/postsStore";
-import { NavigationStore } from "@/services/navigation/navigationStore";
+import { NavigationStore } from "@/shared/navigation/navigationStore";
 
 export class SubmissionPresenter {
   isSubmitting = false;

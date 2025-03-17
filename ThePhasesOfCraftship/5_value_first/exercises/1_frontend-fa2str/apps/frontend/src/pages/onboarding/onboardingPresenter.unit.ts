@@ -1,11 +1,10 @@
 import { OnboardingPresenter } from "./onboardingPresenter";
 import { FakeLocalStorage } from '../../shared/storage/fakeLocalStorage';
-import { AuthStore } from "@/services/auth/authStore";
-import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
+import { AuthStore } from "@/modules/auth/authStore";
+import { FakeFirebaseAPI } from "@/modules/auth/fakeFirebaseAPI";
 import { createAPIClient } from "@dddforum/api";
-import { UserDm } from "@/modules/members/domain/userDm";
-import { MarketingService } from "@/services/marketing/marketingService";
-import { NavigationStore } from '@/services/navigation/navigationStore'
+import { MarketingService } from "@/modules/marketing/marketingService";
+import { NavigationStore } from '@/shared/navigation/navigationStore'
 import { setupAuthStoreWithAuthenticatedUser } from "@/shared/testUtils";
 
 // You have to replicate the way it's imported. We export "appConfig"
@@ -62,7 +61,7 @@ describe('OnboardingPresenter', () => {
        * verify using State Verification on the associated presenters, that they end up with the right details.
        */
 
-      let { user, idToken } = setupAuthStoreWithAuthenticatedUser(authStore);
+      let { user } = setupAuthStoreWithAuthenticatedUser(authStore);
       let memberDetails = {
         username: 'testuser'
       }

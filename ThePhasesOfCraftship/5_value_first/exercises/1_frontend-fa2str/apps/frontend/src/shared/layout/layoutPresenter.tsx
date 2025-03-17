@@ -1,8 +1,8 @@
 
 import { makeAutoObservable, reaction } from "mobx";
 import { UserLoginLayoutViewModel } from "./userLoginLayoutVm";
-import { AuthStore } from "@/services/auth/authStore";
-import { NavigationStore } from "@/services/navigation/navigationStore";
+import { AuthStore } from "@/modules/auth/authStore";
+import { NavigationStore } from "@/shared/navigation/navigationStore";
 
 export class LayoutPresenter {
   // Declare a view model. This is what the component will use to 

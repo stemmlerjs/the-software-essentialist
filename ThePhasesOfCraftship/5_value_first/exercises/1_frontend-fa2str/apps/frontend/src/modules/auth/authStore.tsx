@@ -1,8 +1,9 @@
 import { makeAutoObservable } from "mobx";
-import { UserDm } from "@/modules/members/domain/userDm";
-import { MemberDm } from "@/modules/members/domain/memberDm";
+
 import { APIClient, Members } from "@dddforum/api";
-import { FirebaseAPI } from "@/modules/members/firebaseAPI";
+import { FirebaseAPI } from "./firebaseAPI";
+import { UserDm } from "./domain/userDm";
+import { MemberDm } from "./domain/memberDm";
 
 interface CreateMemberProps {
   username: string;

@@ -2,11 +2,11 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { observe } from "mobx";
-import { PostViewModel } from "./application/postViewModel";
-import { PostsViewSwitcher } from "./components/postsViewSwitcher";
-import { PostsList } from "./components/postsList";
-import { PostsFilterValue } from "./application/searchFilterViewModel";
-import { usePresenters } from "../../shared/presenters/presentersContext";
+import { PostViewModel } from "../../modules/posts/application/postViewModel.js";
+import { PostsViewSwitcher } from "../../modules/posts/components/postsViewSwitcher.js";
+import { PostsList } from "../../modules/posts/components/postsList.js";
+import { PostsFilterValue } from "../../modules/posts/application/searchFilterViewModel.js";
+import { usePresenters } from "../../shared/presenters/presentersContext.js";
 import { Layout } from "@/shared/layout/layoutComponent";
 
 export const PostsPage = observer(() => {

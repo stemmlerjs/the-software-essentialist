@@ -1,8 +1,8 @@
 import { LayoutPresenter } from "./layoutPresenter";
-import { AuthStore } from "@/services/auth/authStore";
-import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
+import { AuthStore } from "@/modules/auth/authStore";
+import { FakeFirebaseAPI } from "@/modules/auth/fakeFirebaseAPI";
 import { createAPIClient } from "@dddforum/api";
-import { NavigationStore } from "@/services/navigation/navigationStore";
+import { NavigationStore } from "@/shared/navigation/navigationStore";
 import { 
   setupAuthStoreWithAuthenticatedUser,
   setupAuthStoreWithOnboardedMember 

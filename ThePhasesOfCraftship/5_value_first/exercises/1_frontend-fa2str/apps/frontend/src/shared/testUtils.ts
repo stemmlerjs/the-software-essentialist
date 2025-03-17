@@ -1,6 +1,6 @@
-import { AuthStore } from "@/services/auth/authStore";
-import { UserDm } from "@/modules/members/domain/userDm";
-import { MemberDm } from "@/modules/members/domain/memberDm";
+import { MemberDm } from "@/modules/auth/domain/memberDm";
+import { AuthStore } from "@/modules/auth/authStore";
+import { UserDm } from "@/modules/auth/domain/userDm";
 
 export function setupAuthStoreWithAuthenticatedUser(authStore: AuthStore, overrides?: {
   username?: string;
