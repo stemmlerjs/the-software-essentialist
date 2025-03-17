@@ -44,6 +44,12 @@ export class AuthStore {
     }
   }
 
+  hasCompletedOnboarding () {
+    // We know if they've completed onboarding if we also have their member details in the
+    // store.
+    return !(this.currentMember === null)
+  }
+
   getCurrentUser(): UserDm | null {
     if (this.isLoading) {
       return null;
