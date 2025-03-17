@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum MemberReputationLevel {
+  Level1 @map("Level 1")
+  Level2 @map("Level 2")
+  Level3 @map("Level 3")
+}
+
 model Member {
   id    String @id @default(uuid())
 
@@ -20,7 +26,7 @@ model Member {
   comments  Comment[]
   username  String @unique
   reputationScore Int @default(0)
-  reputationLevel String
+  reputationLevel MemberReputationLevel @default(Level1)
 
   dateCreated    DateTime  @default(now())
   lastUpdated    DateTime  @updatedAt

@@ -8,7 +8,6 @@ interface UserDmProps {
   email?: string;
   firstName?: string;
   lastName?: string;
-  isAuthenticated: boolean;
   username?: string;
   userRoles: string[];
   firebaseCredentials?: UserCredential;
@@ -35,7 +34,6 @@ export class UserDm {
 
   public static fromFirebaseCredentials (credentials: UserCredential) {
     return new UserDm({
-      isAuthenticated: true,
       id: credentials.user.uid,
       email: credentials.user.email ?? '',
       firstName: '(unknown)',
@@ -48,7 +46,6 @@ export class UserDm {
 
   public static fromDTO (dto: Users.UserDTO): UserDm {
     return new UserDm({
-      isAuthenticated: true,
       id: dto.id,
       email: dto.email,
       firstName: dto.firstName,
@@ -56,10 +53,6 @@ export class UserDm {
       username: dto.email,
       userRoles: dto.roles ?? [],
     });
-  }
-
-  public isAuthenticated () {
-    return this.props.isAuthenticated;
   }
 
   public canVote () {
@@ -72,7 +65,6 @@ export class UserDm {
 
   public toLocalStorage() {
     return {
-      isAuthenticated: this.props.isAuthenticated,
       username: this.props.username,
       userRoles: this.props.userRoles
     };
@@ -86,7 +78,6 @@ export class UserDm {
   }): UserDm {
     return new UserDm({
       id: rawUser.id,
-      isAuthenticated: rawUser.isAuthenticated,
       username: rawUser.username,
       userRoles: rawUser.userRoles || []
     });
@@ -97,7 +88,6 @@ export class UserDm {
    */
   public static fromFirebaseUser(firebaseUser: import('firebase/auth').User): UserDm {
     return new UserDm({
-      isAuthenticated: true,
       id: firebaseUser.uid,
       email: firebaseUser.email ?? '',
       firstName: '(unknown)',
@@ -117,7 +107,6 @@ export class UserDm {
     lastName: string;
   }): UserDm {
     return new UserDm({
-      isAuthenticated: true,
       id: props.id,
       email: props.email,
       firstName: props.firstName,

@@ -35,7 +35,7 @@ export class NatsEventBus implements EventBus {
   async subscribe<T extends DomainEvent>(eventTypeName: string, handler: (event: T) => void): Promise<void> {
     const subscription = this.nc.subscribe(eventTypeName, {
       callback: (err, msg) => {
-        console.log('message')
+        console.log('message', msg)
         if (err) {
           console.error(`Error receiving message: ${err.message}`);
           return;

@@ -49,8 +49,7 @@ export namespace Queries {
   
     static fromRequest(query: Request["query"]) {
       const { sort } = query;
-  
-      console.log("sort", sort);
+      console.log()
   
       if (!sort) {
         throw new ServerErrors.MissingRequestParamsError(["sort"]);

@@ -11,10 +11,8 @@
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "generate": "ts-node scripts/generatePrisma.ts",
-    "migrate": "ts-node scripts/migratePrisma.ts"
-  },
-  "prisma": {
-    "seed": "ts-node ./src/shared/database/prisma/seed.ts"
+    "migrate": "ts-node scripts/migratePrisma.ts",
+    "seed": "ts-node ./scripts/seed.ts"
   },
   "keywords": [],
   "author": "",

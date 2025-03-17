@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { UserDm } from "@/modules/members/domain/userDm";
 import { MemberDm } from "@/modules/members/domain/memberDm";
 import { APIClient, Members } from "@dddforum/api";
@@ -17,6 +17,8 @@ export class AuthStore {
   isLoading: boolean = true;
   currentUser: UserDm | null = null;
   currentMember: MemberDm | null = null;
+  idToken: string | null = null;
+  authToken: string | null = null;
   error: string | null = null;
 
   constructor(
@@ -25,28 +27,25 @@ export class AuthStore {
     private localStorageAPI: LocalStorageAPI
   ) {
     makeAutoObservable(this);
+    this.initialize();
   }
 
-  public async initialize() {
+  private async initialize() {
     try {
-      const isAuthenticated = await this.firebaseAPI.isAuthenticated();
-      if (isAuthenticated) {
-        const user = await this.getCurrentUser();
-        this.setCurrentUser(user);
-      }
+      const user = await this.firebaseAPI.getCurrentUser();
+      this.currentUser = user;
+      this.isLoading = false;
     } catch (error) {
-      this.setError('Failed to initialize auth');
-    } finally {
+      this.currentUser = null;
       this.isLoading = false;
     }
   }
 
-  async getCurrentUser(): Promise<UserDm | null> {
-    const savedUser = this.localStorageAPI.retrieve('currentUser');
-    if (savedUser) {
-      return UserDm.fromLocalStorage(savedUser);
+  getCurrentUser(): UserDm | null {
+    if (this.isLoading) {
+      return null;
     }
-    return null;
+    return this.currentUser;
   }
 
   async getCurrentMember(): Promise<MemberDm | null> {
@@ -102,13 +101,13 @@ export class AuthStore {
 
   saveUser(user: UserDm): void {
     this.currentUser = user;
-    if (user.isAuthenticated()) {
+    if (this.isAuthenticated()) {
       this.localStorageAPI.store('currentUser', user.toLocalStorage());
     }
   }
 
   getToken(): string | null {
-    return this.localStorageAPI.retrieve('currentUser');
+    return this.localStorageAPI.retrieve('idToken');
   }
 
   async createMember(props: CreateMemberProps): Promise<Members.API.CreateMemberAPIResponse> {

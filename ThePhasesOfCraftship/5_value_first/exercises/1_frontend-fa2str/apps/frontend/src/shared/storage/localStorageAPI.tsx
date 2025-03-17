@@ -1,4 +1,4 @@
-type ValidKeys = 'currentUser';
+type ValidKeys = 'currentUser' | 'idToken' | 'authToken';
 
 export interface LocalStorageAPI {
   store(key: ValidKeys, value: any): void;

@@ -29,7 +29,7 @@ describe('navLoginPresnter', () => {
     );
   }
 
-  it ('should render the username if is present', async () => {
+  it ('should render the username if the user is logged in', async () => {
     setup(fakeUserData);
 
     await presenter.load((userLoginLayoutVm) => {

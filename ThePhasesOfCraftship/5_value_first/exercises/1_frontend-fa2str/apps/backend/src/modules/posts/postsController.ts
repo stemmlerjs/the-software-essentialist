@@ -37,6 +37,7 @@ export class PostsController {
   ) {
     try {
       const query = Queries.GetPostsQuery.fromRequest(req.query);
+      console.log(query.sort);
       const posts = await this.postsService.getPosts(query);
       
       const response: API.GetPostsAPIResponse = {

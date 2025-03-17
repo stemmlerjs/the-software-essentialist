@@ -2,6 +2,7 @@
 import { makeAutoObservable, reaction } from "mobx";
 import { UserLoginLayoutViewModel } from "./userLoginLayoutVm";
 import { AuthStore } from "@/services/auth/auth/authStore";
+import { NavigationStore } from "@/services/navigation/navigationStore";
 
 export class LayoutPresenter {
   // Declare a view model. This is what the component will use to 
@@ -16,7 +17,8 @@ export class LayoutPresenter {
     // perhaps they use APIs. Perhaps both. Doesn't matter to the presenter. What is important
     // is that repositories expose the domain objects we need in order to construct the 
     // view models (see 'setupSubscriptions' below).
-    public authStore: AuthStore
+    public authStore: AuthStore,
+    public navigation: NavigationStore
   ) {
     // Always make this presenter observable so that the component can subscribe to
     // the view model changes (see the load pattern we use).
@@ -78,6 +80,10 @@ export class LayoutPresenter {
   // these are the Use Case methods. These are the vertical slices. Everything else is
   // just convention to get things working.
   async signOut () {
-    
+    console.log('here', this);
+    // Log out and then take them back to main
+    this.navigation.navigate('/');
+
+    // this.authStore.logout();
   }
 }

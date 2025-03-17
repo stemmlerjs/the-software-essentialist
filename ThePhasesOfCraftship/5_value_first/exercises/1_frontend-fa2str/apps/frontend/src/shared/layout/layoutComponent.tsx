@@ -44,7 +44,7 @@ export const Layout = observer(({ children }: any) => {
                   {vm.username}
                 </div>
                 <u>
-                  <div onClick={layout.signOut}>Logout</div>
+                  <div onClick={(e) => layout.signOut()}>Logout</div>
                 </u>
               </div>
             ) : (

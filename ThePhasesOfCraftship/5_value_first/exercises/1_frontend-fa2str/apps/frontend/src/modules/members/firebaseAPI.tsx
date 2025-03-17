@@ -5,9 +5,10 @@ import {
   signOut, 
   onAuthStateChanged,
   signInWithPopup, 
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  signInWithCredential
 } from 'firebase/auth';
-import { UserDm } from './domain/userDm.js';
+import { UserDm } from './domain/userDm';
 
 export interface FirebaseAPI {
   isAuthenticated(): Promise<boolean>;
@@ -18,14 +19,18 @@ export interface FirebaseAPI {
   getAuthToken(): Promise<string | null>;
 }
 
-export class FirebaseAPIClient implements FirebaseAPI {
+export class FirebaseAPIClient {
   private auth;
   private provider;
 
   constructor(config: FirebaseOptions) {
-    const app = initializeApp(config);
-    this.auth = getAuth(app);
     this.provider = new GoogleAuthProvider();
+    this.auth = this.initialize(config);
+  }
+
+  public initialize (config: FirebaseOptions) {
+    const app = initializeApp(config);
+    return getAuth(app);
   }
 
   public async isAuthenticated(): Promise<boolean> {
@@ -68,5 +73,26 @@ export class FirebaseAPIClient implements FirebaseAPI {
     }
     // Now we can use Firebase's built-in method:
     return await current.getIdToken();
+  }
+
+  public async authenticateWithStoredToken() {
+    const auth = getAuth();
+    const idToken = localStorage.getItem('idToken');
+    
+    if (!idToken) {
+      throw new Error('No ID token found');
+    }
+
+    try {
+      // For Google Auth:
+      const credential = GoogleAuthProvider.credential(idToken);
+      const result = await signInWithCredential(auth, credential);
+      return result.user;
+    } catch (error) {
+      console.error('Authentication error:', error);
+      // Token might be expired or invalid
+      localStorage.removeItem('idToken');
+      throw error;
+    }
   }
 }

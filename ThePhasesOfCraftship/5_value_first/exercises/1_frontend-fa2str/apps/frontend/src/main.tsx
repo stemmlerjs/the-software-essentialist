@@ -22,8 +22,10 @@ import { SubmissionPresenter } from './pages/submission/application/submissionPr
 import { ToastService } from './services/toast/toastService';
 import { MarketingService } from './services/marketing/marketingService';
 import { Stores } from './shared/store/stores';
+
 import { FirebaseAPIClient } from './modules/members/firebaseAPI';
 import { LocalStorageAPIClient } from './shared/storage/localStorageAPI';
+import { NavigationStore } from './services/navigation/navigationStore';
 
 configure({ enforceActions: "never" })
 
@@ -44,9 +46,11 @@ const authStore = new AuthStore(
 )
 
 const postsStore = new PostsStore(apiClient, authStore);
+const navigationStore = new NavigationStore();
 const stores = new Stores(
   authStore,
-  postsStore
+  postsStore,
+  navigationStore
 );
 
 // Make presenters
@@ -65,7 +69,7 @@ const submissionPresenter = new SubmissionPresenter(
   postsStore
 );
 
-const layoutPresenter = new LayoutPresenter(authStore);
+const layoutPresenter = new LayoutPresenter(authStore, navigationStore);
 
 const presenters = new Presenters(
   onboardingPresenter, 

@@ -4,6 +4,7 @@ import { AuthStore } from "@/services/auth/auth/authStore";
 import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
 import { createAPIClient } from "@dddforum/api";
 import { NavigationService } from "@/modules/navigation/navigationService";
+import { UserDm } from "@/modules/members/domain/userDm";
 
 // You have to replicate the way it's imported. We export "appConfig"
 jest.mock('@/config', () => ({
@@ -17,7 +18,17 @@ jest.mock('@/config', () => ({
   }
 }));
 
-// Your existing test code...
+function setupAuthStoreWithAuthenticatedUser(authStore: AuthStore) {
+  authStore['currentUser'] = new UserDm({
+    id: 'test-user-id',
+    email: 'test@example.com',
+    firstName: 'Test',
+    lastName: 'User',
+    userRoles: []
+  })
+  authStore
+  return { authStore }
+}
 
 describe('OnboardingPresenter', () => {
   describe('member registration', () => {
@@ -51,13 +62,10 @@ describe('OnboardingPresenter', () => {
     afterEach(() => {
       jest.restoreAllMocks();
     });
-  
-    test('should read from localStorage', () => {
-      expect(window.localStorage.getItem('someKey')).toBe('myCustomValue');
-    });
 
-
-    test('should successfully register a member', async () => {
+    test('Given the user exits, then it should successfully be able to register a member', async () => {
+      // Arrange
+      setupAuthStoreWithAuthenticatedUser(authStore);
       jest.spyOn(authStore, 'createMember').mockResolvedValue({ success: true });
 
       const result = await presenter.registerMember({
@@ -78,8 +86,8 @@ describe('OnboardingPresenter', () => {
       expect(presenter.error).toBeNull();
     });
 
-    test('should handle registration failure', async () => {
-      const errorMessage = 'Registration failed';
+    it('Should fail to complete onboarding if the user has not yet been created', async () => {
+      const errorMessage = 'No authenticated user found';
       jest.spyOn(authStore, 'createMember').mockResolvedValue({ 
         success: false, 
         error: { message: errorMessage }

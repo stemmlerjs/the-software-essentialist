@@ -36,9 +36,9 @@ export class PostsModule extends ApplicationModule {
   private createPostsRepository() {
     if (this.postsRepository) return this.postsRepository;
 
-    if (this.shouldBuildFakeRepository) {
-      return InMemoryPostsRepository.createWithSeedData();
-    }
+    // if (this.shouldBuildFakeRepository) {
+    //   return InMemoryPostsRepository.createWithSeedData();
+    // }
 
     return new ProductionPostsRepository(this.db, this.eventOutbox);
   }

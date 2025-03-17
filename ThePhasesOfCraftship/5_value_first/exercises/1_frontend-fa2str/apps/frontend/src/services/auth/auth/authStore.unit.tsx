@@ -1,9 +1,37 @@
+import { createAPIClient } from "@dddforum/api";
 import { AuthStore } from "./authStore";
+import { FirebaseAPIClient } from "@/modules/members/firebaseAPI";
+import { LocalStorageAPIClient } from "@/shared/storage/localStorageAPI";
+import { FakeFirebaseAPI } from "@/modules/members/fakeFirebaseAPI";
+import { Auth, User } from "firebase/auth";
 
 describe('authStore', () => {
 
   let store: AuthStore;
   let fakeIdToken = 'fake-id-token';
+
+  let apiClient = createAPIClient('');
+  let firebaseAPI = new FirebaseAPIClient();
+  let localStorageAPI = new LocalStorageAPIClient();
+
+  // Create a mock auth object
+  const mockUser = {
+    uid: 'fake-user-id',
+    email: 'test@example.com',
+    displayName: 'Test User'
+  } as User;
+
+  const mockAuth: Partial<Auth> = {
+    currentUser: mockUser,
+    signOut: jest.fn().mockResolvedValue(undefined),
+    onAuthStateChanged: jest.fn().mockImplementation((callback) => {
+      callback(mockUser);
+      return () => {}; // Unsubscribe function
+    })
+  };
+
+  jest.spyOn(firebaseAPI, 'initialize').mockImplementation(() => mockAuth as Auth);
+  store = new AuthStore(apiClient, firebaseAPI, localStorageAPI);
 
   describe('initialization', () => {
 
@@ -26,7 +54,7 @@ describe('authStore', () => {
 
     test(`Failed re-authentication: Given the user has not already logged in therefore the token does not live in local storage,
       Upon initialization, it should attempt to authenticate and fail due to no token present,
-      And the user should not be present in the store`, () => {
+      And the user should not be present in the store`, async () => {
         const localStorageSpy = jest.spyOn(store['localStorageAPI'], 'retrieve').mockImplementation(async () => null);
 
         // Act
