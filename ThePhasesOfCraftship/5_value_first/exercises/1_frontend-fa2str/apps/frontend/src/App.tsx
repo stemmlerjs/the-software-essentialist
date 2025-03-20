@@ -16,6 +16,7 @@ import { presenters, stores } from "./main";
 import { SpinnerProvider } from "./shared/spinner/spinnerContext";
 import { NavigationProvider } from "./shared/navigation/navigationProvider";
 import { ProtectedRoute } from "./modules/auth/protectedRoute";
+import { OnboardingGuard } from "./modules/auth/onboardingGuard";
 
 const App = () => {
   return (
@@ -26,10 +27,20 @@ const App = () => {
             <BrowserRouter>
               <NavigationProvider>
                 <Routes>
-                  <Route path="/" element={<PostsPage />} />
+                  <Route path="/" element={
+                    <OnboardingGuard>
+                      <PostsPage />
+                    </OnboardingGuard>
+                  } />
                   <Route path="/join" element={<RegisterPage />} />
                   <Route path="/onboarding" element={<OnboardingPage />} />
-                  <Route path="/submit" element={<ProtectedRoute><SubmissionPage /></ProtectedRoute>} />
+                  <Route path="/submit" element={
+                    <ProtectedRoute>
+                      <OnboardingGuard>
+                        <SubmissionPage />
+                      </OnboardingGuard>
+                    </ProtectedRoute>
+                  } />
                 </Routes>
               </NavigationProvider>
             </BrowserRouter>
