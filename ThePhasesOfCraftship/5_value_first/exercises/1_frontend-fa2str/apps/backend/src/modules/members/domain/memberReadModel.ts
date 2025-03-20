@@ -1,11 +1,11 @@
-import { DTOs } from "@dddforum/api/members";
+import { DTOs, Types } from "@dddforum/api/members";
 import { Member } from "@dddforum/database";
 
 interface MemberReadModelProps {
   id: string;
   username: string;
   userId: string;
-  reputationLevel: string;
+  reputationLevel: Types.ReputationLevel;
   reputationScore: number;
 }
 

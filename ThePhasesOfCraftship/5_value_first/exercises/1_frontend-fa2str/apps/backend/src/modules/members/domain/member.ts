@@ -5,14 +5,14 @@ import { Member as MemberPrismaModel } from "@dddforum/database";
 import { v4 as uuidv4 } from 'uuid';
 import { MemberReputationLevelUpgraded } from "./memberReputationLevelUpgraded";
 import { MemberUsername } from "./memberUsername";
-import { DTOs } from "@dddforum/api/members";
+import { DTOs, Types } from "@dddforum/api/members";
 
 interface MemberProps {
   id: string;
   userId: string;
   username: MemberUsername;
   reputationScore: number;
-  reputationLevel: MemberReputationLevel
+  reputationLevel: Types.ReputationLevel
 }
 
 export enum MemberReputationLevel { Level1 = 'Level 1', Level2 = 'Level 2', Level3 = 'Level 3' }
@@ -60,15 +60,15 @@ export class Member extends AggregateRoot {
   updateReputationScore (newScore: number) {
     this.props.reputationScore = newScore;
 
-    if (this.reputationLevel === MemberReputationLevel.Level1 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level1) {
-      this.props.reputationLevel = MemberReputationLevel.Level2;
+    if (this.reputationLevel === Types.ReputationLevel.Level1 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level1) {
+      this.props.reputationLevel = Types.ReputationLevel.Level2;
       const event = MemberReputationLevelUpgraded.create({ memberId: this.id, newLevel: this.reputationLevel, newRepuationScore: newScore });
       this.domainEvents.push(event);
       return;
     }
 
-    if (this.reputationLevel === MemberReputationLevel.Level2 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level2) {
-      this.props.reputationLevel = MemberReputationLevel.Level3;
+    if (this.reputationLevel === Types.ReputationLevel.Level2 && newScore >= Member.REPUTATION_SCORE_THRESHOLD.Level2) {
+      this.props.reputationLevel = Types.ReputationLevel.Level3;
       const event = MemberReputationLevelUpgraded.create({ memberId: this.id, newLevel: this.reputationLevel, newRepuationScore: newScore });
       this.domainEvents.push(event);
       return;
@@ -90,7 +90,7 @@ export class Member extends AggregateRoot {
       ...inputProps,
       id: uuidv4(),
       reputationScore: 0,
-      reputationLevel: MemberReputationLevel.Level1,
+      reputationLevel: Types.ReputationLevel.Level1,
       username: memberUsername
     });
   }
@@ -101,7 +101,7 @@ export class Member extends AggregateRoot {
       reputationScore: recreationProps.reputationScore,
       userId: recreationProps.userId,
       username: recreationProps.username instanceof MemberUsername ? recreationProps.username : MemberUsername.toDomain(recreationProps.username),
-      reputationLevel: recreationProps.reputationLevel as MemberReputationLevel
+      reputationLevel: recreationProps.reputationLevel as Types.ReputationLevel
     });
   }
 

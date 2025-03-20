@@ -2,10 +2,11 @@
 import { DomainEvent, DomainEventStatus } from "@dddforum/core";
 import { MemberReputationLevel } from "./member";
 import { Event as EventModel } from '@dddforum/database'
+import { Types } from '@dddforum/api/members'
 
 interface MemberReputationLevelUpgradedEventProps {
   memberId: string;
-  newLevel: MemberReputationLevel;
+  newLevel: Types.ReputationLevel;
   newRepuationScore: number;
 }
 

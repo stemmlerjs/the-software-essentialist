@@ -2,6 +2,7 @@
 import { DTOs } from "@dddforum/api/comments";
 import { Comment as PrismaCommentModel } from "@dddforum/database";
 import { MemberReadModel } from "../../members/domain/memberReadModel";
+import { Types } from '@dddforum/api/members'
 
 interface CommentReadModelProps {
   id: string;
