@@ -6,6 +6,7 @@ type ErrorType =
   'NotFoundError' |
   'ConfictError' |
   'CustomError' |
+  'UnauthorizedError' |
 
   // Server
   'InvalidRequestBodyError' |

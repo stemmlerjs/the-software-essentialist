@@ -4,7 +4,7 @@ import { ErrorRequestHandler } from 'express';
 import { createJwtCheck } from '../users/externalServices/adapters/auth';
 import { API, Commands } from '@dddforum/api/members';
 import { Config } from '@dddforum/config';
-import { ApplicationErrors } from '@dddforum/errors/application';
+import { authenticateRequest } from '../users/middleware';
 
 export class MembersController {
   private router: express.Router;
@@ -26,7 +26,9 @@ export class MembersController {
   private setupRoutes() {
     let jwtCheck = createJwtCheck(this.config);
     this.router.post("/new", jwtCheck, this.createMember.bind(this));
+    this.router.get("/me", authenticateRequest, this.getMemberDetails.bind(this));
   }
+  
 
   private async createMember(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
@@ -53,6 +55,43 @@ export class MembersController {
       }
     } catch (err) {
       next(err);
+    }
+  }
+
+  private async getMemberDetails(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    try {
+      const userId = req.user?.uid;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+          data: undefined
+        });
+      }
+
+      const result = await this.memberService.getMemberDetails(userId);
+      
+      if (result.isSuccess()) {
+        const response: API.GetMemberDetailsAPIResponse = {
+          success: true,
+          data: result.getValue().toDTO(),
+          error: undefined
+        };
+        return res.json(response);
+      }
+
+      const response: API.GetMemberDetailsAPIResponse = {
+        success: false,
+        data: undefined,
+        error: result.getError()
+      };
+      return res.status(404).json(response);
+    } catch (error) {
+      next(error);
     }
   }
 

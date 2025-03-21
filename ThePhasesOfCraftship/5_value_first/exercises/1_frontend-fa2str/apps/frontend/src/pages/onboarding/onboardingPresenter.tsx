@@ -1,5 +1,5 @@
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, observe } from "mobx";
 import { MarketingService } from "@/modules/marketing/marketingService";
 import { NavigationStore } from "@/shared/navigation/navigationStore";
 import { AuthStore } from "@/modules/auth/authStore";
@@ -17,6 +17,7 @@ export class OnboardingPresenter {
   
   isSubmitting: boolean = false;
   error: string | null = null;
+  hasOnboardingCompleted = false;
 
   constructor(
     private navigationStore: NavigationStore,
@@ -24,6 +25,15 @@ export class OnboardingPresenter {
     private marketingService: MarketingService
   ) {
     makeAutoObservable(this);
+    this.setupSubscriptions();
+  }
+
+  private setupSubscriptions () {
+    observe(this.authStore, 'currentMember', (currentMember) => {
+      if (currentMember) {
+        this.hasOnboardingCompleted = true;
+      }
+    });
   }
 
   // This method is basically the application use case / vertical slice. 

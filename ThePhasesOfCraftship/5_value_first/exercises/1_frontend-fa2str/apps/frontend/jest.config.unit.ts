@@ -1,6 +1,5 @@
 import * as path from 'path';
 import type { JestConfigWithTsJest } from 'ts-jest';
-import { pathsToModuleNameMapper } from 'ts-jest';
 
 const config: JestConfigWithTsJest = {
   preset: 'ts-jest',
@@ -19,7 +18,7 @@ const config: JestConfigWithTsJest = {
   // Add test match pattern for .unit.ts and .unit.tsx files
   testMatch: [
     '<rootDir>/src/**/*.unit.ts',
-    '<rootDir>/src/**/*.unit.tsx'
+    '<rootDir>/src/**/*.unit.tsx',
   ],
   testPathIgnorePatterns: [
     '<rootDir>/jest.config.unit.ts'

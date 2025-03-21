@@ -1,12 +1,14 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { usePresenters } from '../../shared/presenters/presentersContext';
 import { Layout } from '@/shared/layout/layoutComponent';
 import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
+import { useStore } from '@/shared/store/storesContext';
 
 export const OnboardingPage = observer(() => {
-  const { onboarding: presenter } = usePresenters()
+  const { navigation } = useStore();
+  const { onboarding: presenter } = usePresenters();
   const [username, setUsername] = useState('');
   const [allowMarketing, setAllowMarketing] = useState(false);
 
@@ -17,6 +19,13 @@ export const OnboardingPage = observer(() => {
       allowMarketing
     });
   };
+
+  // Should use a guard for this instead
+  useEffect(() => {
+    if (presenter.hasOnboardingCompleted) {
+      navigation.navigate('/')
+    }
+  }, [presenter.hasOnboardingCompleted])
 
   return (
     <Layout>

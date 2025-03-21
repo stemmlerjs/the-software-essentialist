@@ -35,7 +35,15 @@ export namespace ApplicationErrors {
     }
   }
 
+  export class UnauthorizedError extends CustomError {
+    constructor(public message: string = 'UnauthorizedError') {
+      super(message, "UnauthorizedError"); 
+    }
+  }
+
   export type AnyApplicationError = ValidationError
+    | ConflictError
     | PermissionError
+    | UnauthorizedError
     | NotFoundError;
 }

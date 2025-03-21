@@ -27,13 +27,16 @@ const App = () => {
             <BrowserRouter>
               <NavigationProvider>
                 <Routes>
+                  {/* Public routes */}
+                  <Route path="/join" element={<RegisterPage />} />
+                  <Route path="/onboarding" element={<OnboardingPage />} />
+                  
+                  {/* Protected routes that need onboarding check */}
                   <Route path="/" element={
                     <OnboardingGuard>
                       <PostsPage />
                     </OnboardingGuard>
                   } />
-                  <Route path="/join" element={<RegisterPage />} />
-                  <Route path="/onboarding" element={<OnboardingPage />} />
                   <Route path="/submit" element={
                     <ProtectedRoute>
                       <OnboardingGuard>

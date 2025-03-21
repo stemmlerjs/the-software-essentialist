@@ -87,6 +87,8 @@ export namespace Errors {
 export namespace API {
   export type CreateMemberAPIResponse = APIResponse<DTOs.MemberDTO, Errors.CreateMemberError>;
 
+  export type GetMemberDetailsAPIResponse = APIResponse<DTOs.MemberDTO, Errors.AnyMemberError>;
+
   export type AnyMemberAPIResponse = CreateMemberAPIResponse;
 }
 
@@ -111,6 +113,25 @@ export const createMembersAPI = (apiURL: string) => {
           error: "Unknown error",
           success: false
         } as API.CreateMemberAPIResponse;
+      }
+    },
+
+    getMemberDetails: async (authToken: string): Promise<API.GetMemberDetailsAPIResponse> => {
+      try {
+        const successResponse = await axios.get(
+          `${apiURL}/members/me`,
+          getAuthHeaders(authToken)
+        );
+        return successResponse.data as API.GetMemberDetailsAPIResponse;
+      } catch (_err: unknown) {
+        if (axios.isAxiosError(_err) && _err.response) {
+          return _err.response.data as API.GetMemberDetailsAPIResponse;
+        }
+        return {
+          data: undefined,
+          error: "Unknown error",
+          success: false
+        } as API.GetMemberDetailsAPIResponse;
       }
     }
   }

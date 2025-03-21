@@ -31,16 +31,51 @@ export class AuthStore {
   private async initialize() {
     try {
       const user = await this.firebaseAPI.getCurrentUser();
+      this.currentUser = user;
+
       if (user) {
         const idToken = await this.firebaseAPI.getAuthToken();
-        this.currentUser = user;
         this.idToken = idToken;
+      }
+
+      if (this.idToken) {
+        const member = await this.loadMemberDetails();
+        this.currentMember = member;
       }
     } catch (error) {
       console.error('Failed to initialize auth:', error);
       this.error = 'Failed to initialize auth';
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  private async loadMemberDetails () {
+    try {
+      if (!this.idToken) {
+        return null;
+      }
+
+      if (!this.currentUser) {
+        return null;
+      }
+  
+      const response = await this.apiClient.members.getMemberDetails(this.idToken);
+      
+      if (response.success && response.data) {
+        return new MemberDm({
+          id: response.data.memberId,
+          username: response.data.username,
+          email: this.currentUser?.email,
+          userId: response.data.userId,
+          reputationLevel: response.data.reputationLevel
+        });
+      }
+  
+      return null;
+    } catch (err) {
+      console.error('Failed to load member details:', err);
+      return null;
     }
   }
 
